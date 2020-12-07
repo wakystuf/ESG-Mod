@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="PlanetReserveDefinition" nillable="true" type="PlanetReserveDefinition" />
+  <xs:complexType name="PlanetReserveDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ResourceLevel" type="ReserveLevelDefinition" />
+        </xs:sequence>
+        <xs:attribute name="StockProperty" type="xs:string" />
+        <xs:attribute name="PerTurnProperty" type="xs:string" />
+        <xs:attribute name="MinimumProperty" type="xs:string" />
+        <xs:attribute name="MaximumProperty" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ReserveLevelDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Condition" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

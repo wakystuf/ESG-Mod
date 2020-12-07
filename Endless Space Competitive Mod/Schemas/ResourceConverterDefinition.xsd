@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="ResourceConverterDefinition" nillable="true" type="ResourceConverterDefinition" />
+  <xs:complexType name="ResourceConverterDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ToConverter" type="ToConverter" />
+    </xs:sequence>
+    <xs:attribute name="ResourceName" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="ToConverter">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Modifier" type="ToConverterModifier" />
+      <xs:element minOccurs="0" maxOccurs="1" name="InterpreterModifier" type="ToConverterInterpreterModifier" />
+    </xs:sequence>
+    <xs:attribute name="To" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="ToConverterModifier">
+    <xs:attribute name="Value" type="xs:float" use="required" />
+  </xs:complexType>
+  <xs:complexType name="ToConverterInterpreterModifier">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="InterpreterModifier" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+</xs:schema>

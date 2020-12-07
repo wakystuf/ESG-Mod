@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="GovernmentDefinition" nillable="true" type="GovernmentDefinition" />
+  <xs:complexType name="GovernmentDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Tags" type="Tags" />
+          <xs:element minOccurs="0" maxOccurs="1" default="" name="DurationFormula" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RepresentativesElectionProcessReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SenateElectionProcessReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SurveyElectionProcessReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" default="0" name="BuyoutCostModifier" type="xs:float" />
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="CustomCost" type="CustomConstructionCost" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Cost" type="ConstructionCost" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="1" name="NextGovernmentReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AnarchyGovernmentReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PopulationEvent" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="OnStart" type="ArrayOfChoice1" />
+          <xs:element minOccurs="0" maxOccurs="1" name="OnEnd" type="ArrayOfChoice2" />
+        </xs:sequence>
+        <xs:attribute default="false" name="Fixed" type="xs:boolean" />
+        <xs:attribute default="false" name="Hidden" type="xs:boolean" />
+        <xs:attribute default="0" name="InitialRepresentativeCount" type="xs:int" />
+        <xs:attribute default="0" name="InitialGovernmentCost" type="xs:int" />
+        <xs:attribute name="RequiredHappiness" type="xs:float" use="required" />
+        <xs:attribute default="0" name="ChangeGovernmentCooldown" type="xs:int" />
+        <xs:attribute default="false" name="CancelNextForcedElection" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Tags">
+    <xs:simpleContent>
+      <xs:extension base="xs:string" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="CustomConstructionCost">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Instant" type="xs:boolean" />
+        <xs:attribute default="false" name="InstantOnCompletion" type="xs:boolean" />
+        <xs:attribute name="ResourceName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ConstructionCost">
+    <xs:simpleContent>
+      <xs:extension base="xs:float">
+        <xs:attribute default="false" name="Instant" type="xs:boolean" />
+        <xs:attribute default="false" name="InstantOnCompletion" type="xs:boolean" />
+        <xs:attribute name="ResourceName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfChoice1">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_TransferResources" type="GovernmentAction_TransferResources" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_TriggerTemporaryEffect" type="GovernmentAction_TriggerTemporaryEffect" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_TriggerPoliticalPopulationEvent" type="GovernmentAction_TriggerPoliticalPopulationEvent" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_Notify" type="GovernmentAction_Notify" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_ForceElection" type="GovernmentAction_ForceElections" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_CreateOppositeSenator" type="GovernmentAction_CreateOppositeSenator" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_ClearSenators" type="GovernmentAction_ClearSenators" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_ClearLaws" type="GovernmentAction_ClearLaws" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="GovernmentAction_TransferResources">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GovernmentAction">
+        <xs:attribute name="ResourceName" type="xs:string" />
+        <xs:attribute name="Amount" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GovernmentAction" />
+  <xs:complexType name="GovernmentAction_TriggerTemporaryEffect">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GovernmentAction">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GovernmentAction_TriggerPoliticalPopulationEvent">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GovernmentAction">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GovernmentAction_Notify">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GovernmentAction">
+        <xs:attribute name="Class" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GovernmentAction_ForceElections">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GovernmentAction" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GovernmentAction_CreateOppositeSenator">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GovernmentAction" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GovernmentAction_ClearSenators">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GovernmentAction" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GovernmentAction_ClearLaws">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GovernmentAction" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfChoice2">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_TransferResources" type="GovernmentAction_TransferResources" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_TriggerTemporaryEffect" type="GovernmentAction_TriggerTemporaryEffect" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_TriggerPoliticalPopulationEvent" type="GovernmentAction_TriggerPoliticalPopulationEvent" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_Notify" type="GovernmentAction_Notify" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_ForceElection" type="GovernmentAction_ForceElections" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_CreateOppositeSenator" type="GovernmentAction_CreateOppositeSenator" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_ClearSenators" type="GovernmentAction_ClearSenators" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Action_ClearLaws" type="GovernmentAction_ClearLaws" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

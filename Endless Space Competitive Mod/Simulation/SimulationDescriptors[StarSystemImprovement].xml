@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+  <!-- Sustainable Farms -->
+  <SimulationDescriptor Name="StarSystemImprovementFood1" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="SystemGrowth"		Operation="Addition"	Left="10"    BinaryOperation="Multiplication"    Right="$(OwnedPlanets)"		    Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="SystemGrowth"		Operation="Addition"	Left="10"    BinaryOperation="Multiplication"    Right="$(OwnedHotPlanets)"		Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="SystemGrowth"		Operation="Addition"	Left="10"    BinaryOperation="Multiplication"    Right="$(OwnedColdPlanets)"     Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!-- Drone Networks -->
+  <SimulationDescriptor Name="StarSystemImprovementStartingFoodIndustry" Type="StarSystemImprovement">
+    <Modifier TargetProperty="SystemProduction"    Operation="Addition" Value="15" Path="./ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="SystemGrowth"        Operation="Addition" Value="15" Path="./ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+
+  <!-- Vaulter -->
+  <SimulationDescriptor Name="StarSystemImprovementUniqueStrategicVaulters" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="NetStrategic2" Operation="Addition" Left="$(SystemLevel)" BinaryOperation="Multiplication" Right="1" Path="./ClassColonizedStarSystem" />
+    <BinaryModifier TargetProperty="NetStrategic1" Operation="Addition" Left="$(SystemLevel)" BinaryOperation="Multiplication" Right="1" Path="./ClassColonizedStarSystem" />
+  </SimulationDescriptor>
+
+  <!-- Vodyani -->
+  <SimulationDescriptor Name="StarSystemImprovementDustToLifeforceEffect" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="SystemLifeforceFromMoneyConversion"     Operation="Addition" Left="0.5"  BinaryOperation="Multiplication" Right="$(SystemMoney)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemMoneyFromMoneyConversion"         Operation="Addition" Left="-0.5" BinaryOperation="Multiplication" Right="$(SystemMoney)"  Path="ClassColonizedStarSystem" TooltipHidden="true" />
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="StarSystemImprovementScience2Templars" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="SciencePerRelicPerAnomaly" Operation="Force" Left="$(AnomalyCount)" BinaryOperation="Multiplication" Right="$(SystemResearchRelics)"  Path="./ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="0.75" BinaryOperation="Multiplication" Right="$(SciencePerRelicPerAnomaly)"  Path="./ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementScience2TemplarsTooltipEffect"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="PlanetImprovementTemple1Descriptor" Type="PlanetImprovement">
+
+    <Property Name="TemplePlanetPopulation" BaseValue="0"/>
+    <Property Name="ModifierA" BaseValue="1"/>
+    <Property Name="ModifierC" BaseValue="1"/>
+    <Property Name="TempleMalus" BaseValue="0.5"/>
+    <Modifier TargetProperty="PlanetFood" Operation="Multiplication" Value="$(TempleMalus)"  Path="./ClassColonizedPlanet"  TooltipHidden="false"/>
+    <Modifier TargetProperty="PlanetIndustry" Operation="Multiplication" Value="$(TempleMalus)"  Path="./ClassColonizedPlanet"  TooltipHidden="false"/>
+    <Modifier TargetProperty="PlanetScience" Operation="Multiplication" Value="$(TempleMalus)"  Path="./ClassColonizedPlanet"  TooltipHidden="false"/>
+    <Modifier TargetProperty="PlanetDust" Operation="Multiplication" Value="$(TempleMalus)"  Path="./ClassColonizedPlanet"  TooltipHidden="false"/>
+    <Modifier TargetProperty="NumberOfTemples" Operation="Addition" Value="1"  Path="../ClassColonizedStarSystem"  TooltipHidden="false"/>
+
+    <Modifier TargetProperty="TemplePopulationCount"  Operation="Addition"    Value="$(Population)" Path="./ClassColonizedPlanet" TooltipHidden="false"  SearchValueFromPath="true"/>
+
+    <Modifier TargetProperty="TemplePlanetPopulation"  Operation="Force"     Value="$(Population)" Path="./ClassColonizedPlanet" TooltipHidden="false"  SearchValueFromPath="true"/>
+
+
+    <Modifier TargetProperty="EcologistVoicesModifier" Operation="Force" Value="1"  Path="../ClassColonizedStarSystem"  TooltipHidden="false"/>
+    <Modifier TargetProperty="PlanetRawPrestige" Operation="Addition" Value="10"  Path="./ClassColonizedPlanet"  TooltipHidden="false"/>
+
+    <Modifier TargetProperty="RawMaximumPopulation"         Operation="Addition" Value="1" Path="./ClassColonizedPlanet"/>
+    <Modifier TargetProperty="CanConvertSystem" Value="1"  Operation="Addition" Path="../ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="HasTemple" Operation="Addition" Value="1" Path="./ClassColonizedPlanet" TooltipHidden="true"/>
+
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="EmpireImprovementTemplarsFinalQuest1" Type="EmpireImprovement">
+    <Modifier TargetProperty="TempleMalus" Operation="Force" Value="1" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassImprovement" TooltipOverride="%EmpireImprovementTemplarsFinalQuest1TooltipEffect"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="StarSystemImprovementDefense3Templars" Type="StarSystemImprovement">
+    <Modifier TargetProperty="GroundBattleRoundImprovementDestructionProbability"   Operation="Addition"    Value="-0.2"    Path="./ColonizedStarSystemStateColony,ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="GroundBattleRoundPopulationDestructionProbability"    Operation="Addition"    Value="-0.2"    Path="./ColonizedStarSystemStateColony,ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="MaximumSystemManpower"                                Operation="Addition"    Value="300"     Path="./ColonizedStarSystemStateColony,ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="GroundBattleDefenderManpowerLimit"                    Operation="Addition"    Value="150"     Path="./ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Percent" Left="0.05" BinaryOperation="Multiplication" Right="$(NumberOfTemples)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementDefense3TemplarsEffectOverride"/>
+  </SimulationDescriptor>
+
+  <!-- Nakalim Quest Rewards -->
+  <SimulationDescriptor Name="StarSystemImprovementQuestTemplars01" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="PlanetsWithoutTemples" Operation="Force" Left="$(OwnedPlanets)" BinaryOperation="Subtraction" Right="$(NumberOfTemples)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Left="25" BinaryOperation="Multiplication" Right="$(PlanetsWithoutTemples)" Path="./ClassColonizedStarSystem" TooltipOverride="%StarSystemImprovementQuestTemplars01Effect" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="StarSystemImprovementQuestTemplars02" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(NumberOfTemples)" Path="./ClassColonizedStarSystem" TooltipOverride="%StarSystemImprovementQuestTemplars02Effect" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="StarSystemImprovementQuestTemplars03" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(NumberOfTemples)" Path="./ClassColonizedStarSystem" TooltipOverride="%StarSystemImprovementQuestTemplars03Effect" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="StarSystemImprovementQuestTemplars04" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(NumberOfTemples)" Path="./ClassColonizedStarSystem" TooltipOverride="%StarSystemImprovementQuestTemplars04Effect" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+  
+  <!-- Temple of Temporal Paradox -->
+  <SimulationDescriptor Name="StarSystemImprovementUniqueTimeLords" Type="StarSystemImprovement">
+    <Property Name="MaximumDustOverTimeStock" BaseValue="9999"/>
+    <Property Name="MinimumDustOverTimeStock"/>
+    <Property Name="DustOverTimeStock" />
+    <Property Name="NetDustOverTime" BaseValue="15"/>
+    <Property Name="DustOverTimeCount"/>
+    <BinaryModifier TargetProperty="SystemMoney"              Operation="Addition" Left="15"   BinaryOperation="Addition"  Right="$(DustOverTimeStock)" Path="./ClassColonizedStarSystem" TooltipOverride="%StarSystemImprovementUniqueTimeLordsTooltipEffect" />
+  </SimulationDescriptor>
+</Datatable>

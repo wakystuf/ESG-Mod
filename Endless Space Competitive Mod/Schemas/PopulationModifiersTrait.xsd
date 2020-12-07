@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="PopulationModifiersTrait" nillable="true" type="PopulationModifiersTrait" />
+  <xs:complexType name="PopulationModifiersTrait">
+    <xs:complexContent mixed="false">
+      <xs:extension base="PopulationTrait">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Modifiers" type="ArrayOfPopulationModifierDefinition" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AssimilatedModifiers" type="ArrayOfPopulationModifierDefinition" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfPopulationModifierDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Modifier" type="PopulationModifierDefinition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PopulationModifierDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+    </xs:sequence>
+    <xs:attribute name="Class" type="xs:string" />
+    <xs:attribute default="false" name="DisplayWhenBoostedOnly" type="xs:boolean" />
+    <xs:attribute default="false" name="SuperPopulationOnly" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="PopulationTrait">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Tags" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Subtrait" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Command" type="Command" />
+        </xs:sequence>
+        <xs:attribute name="Category" type="xs:string" />
+        <xs:attribute name="SubCategory" type="xs:string" />
+        <xs:attribute default="0" name="Cost" type="xs:int" />
+        <xs:attribute default="true" name="ShowInCustom" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="Command">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Arguments" type="xs:string" />
+    <xs:attribute default="0" name="Priority" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

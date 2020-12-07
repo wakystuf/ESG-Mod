@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="GroundBattleOutcomeDefinition" nillable="true" type="GroundBattleOutcomeDefinition" />
+  <xs:complexType name="GroundBattleOutcomeDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Prerequisites" type="ArrayOfChoice1" />
+          <xs:element minOccurs="0" maxOccurs="1" name="FleetPrerequisites" type="ArrayOfChoice2" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MinimumImprovementsLossFormula" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MaximumImprovementsLossFormula" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MinimumPopulationsLossFormula" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MaximumPopulationsLossFormula" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="WarPointsRewardReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TemporaryEffectReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticPressureEffectReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" default="" name="EmpireHonorChange" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute name="Priority" type="xs:int" use="required" />
+        <xs:attribute default="false" name="RequiresFleet" type="xs:boolean" />
+        <xs:attribute default="0" name="OwnershipLoss" type="xs:float" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfChoice1">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="DatePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="GameSettingPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathValidityPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TechnologyPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="PathValidityPrerequisite">
+        <xs:attribute default="false" name="UnlockHidden" type="xs:boolean" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfChoice2">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="GroundBattleOutcomeCaptureDefinition" nillable="true" type="GroundBattleOutcomeCaptureDefinition" />
+  <xs:complexType name="GroundBattleOutcomeCaptureDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GroundBattleOutcomeDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GroundBattleOutcomeLootDefinition" nillable="true" type="GroundBattleOutcomeLootDefinition" />
+  <xs:complexType name="GroundBattleOutcomeLootDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GroundBattleOutcomeDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ResourceLoot" type="LootableResource" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PopulationLoot" type="LootablePopulation" />
+        </xs:sequence>
+        <xs:attribute default="false" name="CaptureTraitors" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="LootableResource" mixed="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="FormulaTokens" type="ArrayOfAnyType" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute default="true" name="StealFromOtherEmpire" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="ArrayOfAnyType">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="anyType" nillable="true" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="LootablePopulation" mixed="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="FormulaTokens" type="ArrayOfAnyType" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="GroundBattleOutcomeRazeDefinition" nillable="true" type="GroundBattleOutcomeRazeDefinition" />
+  <xs:complexType name="GroundBattleOutcomeRazeDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GroundBattleOutcomeDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="LostSystemSimulationDescriptorReference" type="SimulationDescriptorReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:element name="GroundBattleOutcomeRazeGhostDefinition" nillable="true" type="GroundBattleOutcomeRazeGhostDefinition" />
+  <xs:complexType name="GroundBattleOutcomeRazeGhostDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GroundBattleOutcomeDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="MinimumPopulationCaptureFormula" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MaximumPopulationCaptureFormula" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PopulationTransformations" type="PopulationTransformation" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PopulationTransformation">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PathPrerequisite" type="PathPrerequisite" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Resource" type="PopulationTransformationResource" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PopulationTransformationResource" mixed="true">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="FormulaTokens" type="ArrayOfAnyType" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="GroundBattleOutcomeCreateGhostDefinition" nillable="true" type="GroundBattleOutcomeCreateGhostDefinition" />
+  <xs:complexType name="GroundBattleOutcomeCreateGhostDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GroundBattleOutcomeRazeDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

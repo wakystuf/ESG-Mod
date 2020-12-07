@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="RankPattern" nillable="true" type="RankPattern" />
+  <xs:complexType name="RankPattern">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="RankReference" type="XmlNamedReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

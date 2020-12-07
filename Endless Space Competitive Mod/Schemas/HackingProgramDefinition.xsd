@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="HackingProgramDefinition" nillable="true" type="HackingProgramDefinition" />
+  <xs:complexType name="HackingProgramDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="UnlockDatatableElement">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="DownloadableContentPrerequisite" type="DownloadableContentPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="SelfDescriptors" type="ArrayOfSimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TargetHackerDescriptors" type="ArrayOfSimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TargetDescriptors" type="ArrayOfSimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="OperationEffect" type="OperationEffect" />
+        </xs:sequence>
+        <xs:attribute default="0" name="ProcessingPowerAllocation" type="xs:float" />
+        <xs:attribute default="false" name="DoNotCheckAllocation" type="xs:boolean" />
+        <xs:attribute default="false" name="IsValidForMinorEmpire" type="xs:boolean" />
+        <xs:attribute default="false" name="IsValidForPirateLair" type="xs:boolean" />
+        <xs:attribute default="false" name="IsValidForAcademyEmpire" type="xs:boolean" />
+        <xs:attribute default="Always" name="TargetHackerDescriptorApplicationRule" type="TargetHackedDescriptorApplicationRule" />
+        <xs:attribute default="false" name="Hidden" type="xs:boolean" />
+        <xs:attribute default="false" name="Deprecated" type="xs:boolean" />
+        <xs:attribute default="false" name="InstantActivation" type="xs:boolean" />
+        <xs:attribute default="false" name="TriggerHackingEffectsOnlyWhenReached" type="xs:boolean" />
+        <xs:attribute default="false" name="OnlyOnePerTarget" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DownloadableContentPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DatePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="GameSettingPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathValidityPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TechnologyPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="PathValidityPrerequisite">
+        <xs:attribute default="false" name="UnlockHidden" type="xs:boolean" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="ArrayOfSimulationDescriptorReference">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OperationEffect">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+    </xs:sequence>
+    <xs:attribute default="Always" name="OperationType" type="OperationTypeFilter" />
+    <xs:attribute default="Always" name="OperationOwner" type="OperationOwnerFilter" />
+  </xs:complexType>
+  <xs:simpleType name="OperationTypeFilter">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Always" />
+      <xs:enumeration value="OnlyOperation" />
+      <xs:enumeration value="OnlyTrace" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="OperationOwnerFilter">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Always" />
+      <xs:enumeration value="OnlyMe" />
+      <xs:enumeration value="OnlyOthers" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="TargetHackedDescriptorApplicationRule">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Always" />
+      <xs:enumeration value="OnlyMe" />
+      <xs:enumeration value="OnlyOthers" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="UnlockDatatableElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:attribute name="KeyWords" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="OffenseHackingProgramDefinition" nillable="true" type="OffenseHackingProgramDefinition" />
+  <xs:complexType name="OffenseHackingProgramDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingProgramDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DefenseHackingProgramDefinition" nillable="true" type="DefenseHackingProgramDefinition" />
+  <xs:complexType name="DefenseHackingProgramDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingProgramDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="RerouteOffenseHackingProgramDefinition" nillable="true" type="RerouteOffenseHackingProgramDefinition" />
+  <xs:complexType name="RerouteOffenseHackingProgramDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="OffenseHackingProgramDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PlaceViewerDefenseHackingProgramDefinition" nillable="true" type="PlaceViewerDefenseHackingProgramDefinition" />
+  <xs:complexType name="PlaceViewerDefenseHackingProgramDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DefenseHackingProgramDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TraceDefenseHackingProgramDefinition" nillable="true" type="TraceDefenseHackingProgramDefinition" />
+  <xs:complexType name="TraceDefenseHackingProgramDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DefenseHackingProgramDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="BackdoorProtectionDefenseHackingProgramDefinition" nillable="true" type="BackdoorProtectionDefenseHackingProgramDefinition" />
+  <xs:complexType name="BackdoorProtectionDefenseHackingProgramDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DefenseHackingProgramDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TimedHackingProgramDefinition" nillable="true" type="TimedHackingProgramDefinition" />
+  <xs:complexType name="TimedHackingProgramDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingProgramDefinition">
+        <xs:attribute name="Duration" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="SimulationDescriptor" nillable="true" type="SimulationDescriptor" />
+  <xs:complexType name="SimulationDescriptor">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="ProportionalProperty" type="SimulationPropertyDescriptor_Proportional" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Property" type="SimulationPropertyDescriptor" />
+      </xs:choice>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="CountModifier" type="CountSimulationModifierDescriptor" />
+        <xs:element minOccurs="0" maxOccurs="1" name="BinaryModifier" type="BinarySimulationModifierDescriptor" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Modifier" type="SingleSimulationModifierDescriptor" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute default="true" name="IsSerializable" type="xs:boolean" />
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Type" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="SimulationPropertyDescriptor_Proportional">
+    <xs:complexContent mixed="false">
+      <xs:extension base="SimulationPropertyDescriptor">
+        <xs:attribute name="Maximum" type="xs:string" />
+        <xs:attribute name="Minimum" type="xs:string" />
+        <xs:attribute name="StartingRatio" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationPropertyDescriptor">
+    <xs:attribute default="0" name="BaseValue" type="xs:float" />
+    <xs:attribute default="None" name="Composition" type="SimulationPropertyComposition" />
+    <xs:attribute default="None" name="RoundingFunction" type="SimulationPropertyRoundingFunction" />
+    <xs:attribute default="false" name="IsSealed" type="xs:boolean" />
+    <xs:attribute default="false" name="IsSerializable" type="xs:boolean" />
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="MaxValue" type="xs:string" />
+    <xs:attribute name="MinValue" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="SimulationPropertyComposition">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Maximum" />
+      <xs:enumeration value="Minimum" />
+      <xs:enumeration value="Sum" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="SimulationPropertyRoundingFunction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Ceil" />
+      <xs:enumeration value="Floor" />
+      <xs:enumeration value="Round" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="CountSimulationModifierDescriptor">
+    <xs:complexContent mixed="false">
+      <xs:extension base="SimulationModifierDescriptor">
+        <xs:attribute default="1" name="Multiplier" type="xs:string" />
+        <xs:attribute name="CountPath" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationModifierDescriptor">
+    <xs:attribute default="false" name="SearchValueFromPath" type="xs:boolean" />
+    <xs:attribute name="Operation" type="ModifierOperation" use="required" />
+    <xs:attribute default="0" name="Priority" type="xs:float" />
+    <xs:attribute default="" name="TooltipOverride" type="xs:string" />
+    <xs:attribute default="false" name="TooltipHidden" type="xs:boolean" />
+    <xs:attribute default="false" name="TooltipHiddenIfPathInvalid" type="xs:boolean" />
+    <xs:attribute default="false" name="EnforceContext" type="xs:boolean" />
+    <xs:attribute default="false" name="ValueMustBePositive" type="xs:boolean" />
+    <xs:attribute default="false" name="UseIfInsteadOfWhere" type="xs:boolean" />
+    <xs:attribute default="false" name="ForceFrom" type="xs:boolean" />
+    <xs:attribute name="Path" type="xs:string" />
+    <xs:attribute name="TargetProperty" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="ModifierOperation">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Force" />
+      <xs:enumeration value="Addition" />
+      <xs:enumeration value="Subtraction" />
+      <xs:enumeration value="Multiplication" />
+      <xs:enumeration value="Division" />
+      <xs:enumeration value="Power" />
+      <xs:enumeration value="Percent" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="BinarySimulationModifierDescriptor">
+    <xs:complexContent mixed="false">
+      <xs:extension base="SimulationModifierDescriptor">
+        <xs:attribute name="BinaryOperation" type="ModifierOperation" use="required" />
+        <xs:attribute name="Left" type="xs:string" />
+        <xs:attribute name="Right" type="xs:string" />
+        <xs:attribute default="false" name="EnforceRightAsPer" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SingleSimulationModifierDescriptor">
+    <xs:complexContent mixed="false">
+      <xs:extension base="SimulationModifierDescriptor">
+        <xs:attribute name="Value" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

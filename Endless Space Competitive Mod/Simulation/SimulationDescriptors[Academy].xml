@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+  <SimulationDescriptor Name="AcademyRoleLibrarian" Type="AcademyRole">
+    <Modifier TargetProperty="TechnologyQuadrantEmpireDevelopmentVirtualStageNumber"        Operation="Addition"    Value="1"   Path="../ClassEmpire/ClassResearch"     TooltipHidden="true"/>
+    <Modifier TargetProperty="TechnologyQuadrantScienceAndExplorationVirtualStageNumber"    Operation="Addition"    Value="1"   Path="../ClassEmpire/ClassResearch"     TooltipHidden="true"/>
+    <Modifier TargetProperty="TechnologyQuadrantEconomyAndTradeVirtualStageNumber"          Operation="Addition"    Value="1"   Path="../ClassEmpire/ClassResearch"     TooltipHidden="true"/>
+    <Modifier TargetProperty="TechnologyQuadrantMilitaryVirtualStageNumber"                 Operation="Addition"    Value="1"   Path="../ClassEmpire/ClassResearch"     TooltipHidden="true"/>
+    <Modifier TargetProperty="HackingWarpSpeed"				Operation="Addition"						Value="1"			Path="../ClassEmpire" TooltipHidden="true" />
+    <Modifier TargetProperty="HackingNonWarpSpeed"		Operation="Addition"						Value="1"			Path="../ClassEmpire" TooltipHidden="true" />
+    <Modifier TargetProperty="HackingNodeSpeed"				Operation="Addition"						Value="1"			Path="../ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="AcademyRoleMasterOfDust" Type="AcademyRole">
+    <Modifier TargetProperty="TradeAgreementCost"          Operation="Addition"        Value="-2"     Path="../ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="TradeAgreementCost"          Operation="Addition"        Value="-2"     Path="../ClassEmpire/ClassDiplomacy/ClassDiplomaticEmpire" Priority="1" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="AcademyRoleVaultKeeper" Type="AcademyRole">
+    <Modifier TargetProperty="SystemInfluenceRadius" Operation="Percent"	 Value="0.1"		Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true" Priority="10"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="AcademyRoleGrandAdmiral" Type="AcademyRole">
+    <BinaryModifier TargetProperty="Damage" Operation="Percent"	 Left="0.05" BinaryOperation="Multiplication" Right="$(ModuleMilitaryStage)" Path="../ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon" TooltipHidden="true" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!-- Credit to Idrinth -->
+  <!-- Empire Types Definition -->
+  <SimulationDescriptor Name="EmpireTypeAcademy"  Type="EmpireType">
+    <Property Name="Stress"                     BaseValue="0"   IsSealed="true"/>
+    <Property Name="NetAcademyStress"           BaseValue="0"   MinValue="Negative"/>
+    <Property Name="HasPopulationDiversityEffect"   BaseValue="1"/>
+
+    <Property Name="NetAcademyEmpireMoney" BaseValue="0"/>
+
+    <Property Name="NetAcademyEmpireShipMoney"            BaseValue="0"/>
+    <Property Name="AcademyEmpireShipMoneyStock"          IsSealed="true"/>
+    <Property Name="MinimumAcademyEmpireShipMoneyStock"   BaseValue="0"/>
+
+    <Property Name="NetAcademyEmpireImprovementMoney"            BaseValue="0"/>
+    <Property Name="AcademyEmpireImprovementMoneyStock"          IsSealed="true"/>
+    <Property Name="MinimumAcademyEmpireImprovementMoneyStock"   BaseValue="0"/>
+
+    <Property Name="NetAcademyEmpireDiplomacyMoney"            BaseValue="0"/>
+    <Property Name="AcademyEmpireDiplomacyMoneyStock"          IsSealed="true"/>
+    <Property Name="MinimumAcademyEmpireDiplomacyMoneyStock"   BaseValue="0"/>
+
+    <Property Name="AcademyFleetUpkeep"/>
+    <Property Name="Multiplier"        BaseValue ="1"/>
+
+    <Property Name="AggressivenessMultiplier"             BaseValue ="1"/>
+
+    <Property Name="ShipMoneyDistributionFactor"          BaseValue="0"/>
+    <Property Name="ImprovementMoneyDistributionFactor"   BaseValue="0"/>
+    <Property Name="DiplomacyMoneyDistributionFactor"     BaseValue="0"/>
+
+    <Property Name="PlayerCountBoost" BaseValue="1" MinValue="1"/>
+    <Property Name="TurnBoost" BaseValue="0" MaxValue="100"/>
+    <Property Name="TurnReset" BaseValue="-1" MaxValue="0" MinValue="-1"/>
+
+    <Modifier TargetProperty="NetAcademyEmpireMoney"  Operation="Subtraction" Value="$(AcademyFleetUpkeep)" Priority="1"/>
+    <Modifier TargetProperty="NetAcademyEmpireMoney"  Operation="Addition" Value="$(CurrentTurn)"/>
+
+    <Modifier TargetProperty="MaxConcurrentFleetMultiplier" Operation="Multiplication" Value="$(PlayerCountBoost)"/>
+    <Modifier TargetProperty="NetAcademyStress" Operation="Division" Value="$(PlayerCountBoost)"/>
+    <BinaryModifier TargetProperty="TurnBoost" Operation="Force" Left="$(CurrentTurn)" Right="$(CurrentTurn)" BinaryOperation="Multiplication"/>
+    <BinaryModifier TargetProperty="TurnReset" Operation="Force" Left="-2" Right="$(CurrentTurn)" BinaryOperation="Addition"/>
+    <BinaryModifier TargetProperty="NetAcademyStress" Operation="Multiplication" Left="$(TurnBoost)" Right="0.01" BinaryOperation="Multiplication"/>
+    <BinaryModifier TargetProperty="NetAcademyStress" Operation="Addition" Left="$(TurnReset)" Right="$(Stress)" BinaryOperation="Multiplication" Priority="2"/>
+  </SimulationDescriptor>
+</Datatable>

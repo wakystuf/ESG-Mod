@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="AnimationCurve" nillable="true" type="AnimationCurve" />
+  <xs:complexType name="AnimationCurve">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Curve" type="AnimationCurve" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="AnimationCurve">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="keys" type="ArrayOfKeyframe" />
+      <xs:element minOccurs="1" maxOccurs="1" name="preWrapMode" type="WrapMode" />
+      <xs:element minOccurs="1" maxOccurs="1" name="postWrapMode" type="WrapMode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfKeyframe">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Keyframe" type="Keyframe" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="Keyframe">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="time" type="xs:float" />
+          <xs:element minOccurs="1" maxOccurs="1" name="value" type="xs:float" />
+          <xs:element minOccurs="1" maxOccurs="1" name="inTangent" type="xs:float" />
+          <xs:element minOccurs="1" maxOccurs="1" name="outTangent" type="xs:float" />
+          <xs:element minOccurs="1" maxOccurs="1" name="tangentMode" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:simpleType name="WrapMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Default" />
+      <xs:enumeration value="Clamp" />
+      <xs:enumeration value="Once" />
+      <xs:enumeration value="Loop" />
+      <xs:enumeration value="PingPong" />
+      <xs:enumeration value="ClampForever" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

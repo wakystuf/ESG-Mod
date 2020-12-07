@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="GroundBattleFormationDefinition" nillable="true" type="GroundBattleFormationDefinition" />
+  <xs:complexType name="GroundBattleFormationDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Zone" type="ZoneDefinition" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AttackPhases" type="ArrayOfAttackPhase" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ZoneDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Slot" type="SerializableVector3" />
+      <xs:element minOccurs="0" maxOccurs="1" name="AttackMovement" type="SerializableVector3" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute default="0" name="MinimumX" type="xs:float" />
+    <xs:attribute default="0" name="MaximumX" type="xs:float" />
+    <xs:attribute default="0" name="MinimumZ" type="xs:float" />
+    <xs:attribute default="0" name="MaximumZ" type="xs:float" />
+    <xs:attribute default="Infantry" name="TroopType" type="GroundBattleTroopType" />
+    <xs:attribute default="0" name="GridSpacingX" type="xs:float" />
+    <xs:attribute default="0" name="GridSpacingZ" type="xs:float" />
+    <xs:attribute default="0" name="Noise" type="xs:float" />
+    <xs:attribute default="Square" name="GridType" type="GridType" />
+  </xs:complexType>
+  <xs:complexType name="SerializableVector3">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="X" type="xs:float" use="required" />
+        <xs:attribute name="Y" type="xs:float" use="required" />
+        <xs:attribute name="Z" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="AttackPhase">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="TroopType" type="GroundBattleTroopType" use="required" />
+        <xs:attribute name="PhaseIndex" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="GroundBattleTroopType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Infantry" />
+      <xs:enumeration value="Tank" />
+      <xs:enumeration value="Plane" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="GridType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Square" />
+      <xs:enumeration value="Quincunx" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ArrayOfAttackPhase">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AttackPhase" type="AttackPhase" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

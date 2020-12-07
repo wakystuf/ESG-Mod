@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="Formation" nillable="true" type="Formation" />
+  <xs:complexType name="Formation">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SortingCriterion" type="DescriptorSortingCriterion" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Pattern" type="EncounterFormationPatternDefinition" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SlotSubstitution" type="EncounterFormationSlotSubstitutionDefinition" />
+        </xs:sequence>
+        <xs:attribute name="DefaultPatternName" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DescriptorSortingCriterion">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Descriptor" type="SimulationDescriptorReference" />
+    </xs:sequence>
+    <xs:attribute name="DescriptorType" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="EncounterFormationPatternDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Slot" type="EncounterFormationSlotDefinition" />
+      <xs:element minOccurs="0" maxOccurs="1" name="NextPattern" type="EncounterFormationPatternSpawnDefinition" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="EncounterFormationSlotDefinition">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="ShipSize" type="xs:string" />
+    <xs:attribute name="X" type="xs:float" use="required" />
+    <xs:attribute name="Y" type="xs:float" use="required" />
+    <xs:attribute name="Z" type="xs:float" use="required" />
+    <xs:attribute default="0" name="OrderOfAppearance" type="xs:int" />
+    <xs:attribute default="0" name="ModuleOrderOfAppearanceOffset" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="EncounterFormationPatternSpawnDefinition">
+    <xs:attribute name="PatternName" type="xs:string" />
+    <xs:attribute name="X" type="xs:float" use="required" />
+    <xs:attribute name="Y" type="xs:float" use="required" />
+    <xs:attribute name="Z" type="xs:float" use="required" />
+    <xs:attribute default="0" name="OrderOfAppearanceOffset" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="EncounterFormationSlotSubstitutionDefinition">
+    <xs:attribute name="SlotName" type="xs:string" />
+    <xs:attribute name="SubstitutionPatternName" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

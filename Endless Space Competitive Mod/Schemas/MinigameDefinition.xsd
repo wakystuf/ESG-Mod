@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="MinigameDefinition" nillable="true" type="MinigameDefinition" />
+  <xs:complexType name="MinigameDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Team" type="Team" />
+          <xs:element minOccurs="0" maxOccurs="1" name="FleetMissionName" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute name="Category" type="xs:string" />
+        <xs:attribute name="SubCategory" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Team">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="BalancingFleetCountFormula" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="BalancingFleet" type="DroppableFleet" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="DroppableFleet">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Droppable">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="HeroDefinition" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ShipDesign" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Droppable">
+    <xs:attribute default="true" name="CanHaveDuplicate" type="xs:boolean" />
+    <xs:attribute default="1" name="Weight" type="xs:int" />
+    <xs:attribute default="0" name="MaxTurn" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="KingOfTheHillMinigameDefinition" nillable="true" type="KingOfTheHillMinigameDefinition" />
+  <xs:complexType name="KingOfTheHillMinigameDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="MinigameDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="FleetScoreFormula" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="GuiNumberOfTurns" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ExplorationMinigameDefinition" nillable="true" type="ExplorationMinigameDefinition" />
+  <xs:complexType name="ExplorationMinigameDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="MinigameDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

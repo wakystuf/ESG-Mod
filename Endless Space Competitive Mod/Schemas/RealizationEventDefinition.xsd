@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="RealizationEventDefinition" nillable="true" type="RealizationEventDefinition" />
+  <xs:complexType name="RealizationEventDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="AvailableInitiatorType" type="EncounterEntityType" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="AvailableTargetType" type="EncounterEntityType" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="RealizationEventWeightChange" type="RealizationEventWeightChangeDefinition" />
+        </xs:sequence>
+        <xs:attribute default="0" name="DefaultWeight" type="xs:int" />
+        <xs:attribute default="false" name="IgnoredByDirector" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="EncounterEntityType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Arena" />
+      <xs:enumeration value="EffectArea" />
+      <xs:enumeration value="Group" />
+      <xs:enumeration value="Flotilla" />
+      <xs:enumeration value="Ship" />
+      <xs:enumeration value="ShipSection" />
+      <xs:enumeration value="Module" />
+      <xs:enumeration value="Salvo" />
+      <xs:enumeration value="Citadel" />
+      <xs:enumeration value="CitadelModule" />
+      <xs:enumeration value="CitadelSalvo" />
+      <xs:enumeration value="Undefined" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="RealizationEventWeightChangeDefinition">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="WeightChange" type="xs:int" use="required" />
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

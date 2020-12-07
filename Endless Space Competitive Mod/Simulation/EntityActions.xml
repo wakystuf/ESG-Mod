@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/EntityActionDefinition.xsd">
+  <EmpireDiplomacyGiveResourcesAction Name="EmpireDiplomaticEssenceAction" PopulationToDestroyCount="1">
+    <PathPrerequisite Flags="Prerequisite,Discard">ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
+    <InterpreterPrerequisite Flags="Disable">Property(Context,@ClassEmpire,EmpireLifeforceStock) lt Property(Context,@ClassEmpire,MaximumEmpireLifeforceStock)</InterpreterPrerequisite>
+
+    <MinorLuxuryCost Instant="true">15 * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction)</MinorLuxuryCost>
+
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+    <RelationPathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ClassMinorRelationWithMajor,RelationIdeologyMinorPacifist</RelationPathPrerequisite>
+
+    <MinorEmpireInterpreterPrerequisite Flags="Prerequisite,RequiredBestRelation">$(OwnershipType) ge 1 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
+    <MinorEmpireInterpreterPrerequisite Flags="NoPopulationOnSystem">Property(Context, @'ClassEmpire/ClassColonizedStarSystem,MinorHomeSystem',Population,true) gt 1</MinorEmpireInterpreterPrerequisite>
+
+    <PopulationEventOnSelf>PopulationPoliticalEventMinorEssence</PopulationEventOnSelf>
+
+    <ResourceReward ResourceName="EmpireLifeforce">300</ResourceReward>
+  </EmpireDiplomacyGiveResourcesAction>
+
+  <FireIonWaveFleetAction Name="FireIonWaveFleetAction" DamageRatio="1" Duration="3" Cooldown="15">
+
+    <EntityPrerequisites Location="Self">
+      <PathPrerequisite                 Flags="Discard">ClassGarrisonFleet/ShipRoleBattleship</PathPrerequisite>
+
+      <PathPrerequisite Inverted="true" Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="FleetIsBusy">FleetActionGroundBattle</PathPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="IsCollectingRelics">FleetActionCollectingRelics</PathPrerequisite>
+    </EntityPrerequisites>
+
+    <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyJuggernautBattleshipAbility</TechnologyPrerequisite>
+
+    <CustomCost Instant="true" ResourceName="Strategic3">Property(Context,@'ClassGarrison/ClassShip,ShipRoleBattleship',JuggernautShotCost)</CustomCost>
+    <CustomCost Instant="true" ResourceName="Strategic4">Property(Context,@'ClassGarrison/ClassShip,ShipRoleBattleship',JuggernautShotCost)</CustomCost>
+    <CustomCost Instant="true" ResourceName="Strategic5">Property(Context,@'ClassGarrison/ClassShip,ShipRoleBattleship',JuggernautShotCost)</CustomCost>
+    <CustomCost Instant="true" ResourceName="Strategic6">Property(Context,@'ClassGarrison/ClassShip,ShipRoleBattleship',JuggernautShotCost)</CustomCost>
+
+    <DownloadableContentPrerequisite Flags="Discard">DLCHisshos</DownloadableContentPrerequisite>
+
+    <BattleshipSimulationDescriptorReference Name="ShipWeaponsDeactivated"/>
+
+  </FireIonWaveFleetAction>
+</Datatable>

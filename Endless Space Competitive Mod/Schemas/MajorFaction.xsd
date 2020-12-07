@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="MajorFaction" nillable="true" type="MajorFaction" />
+  <xs:complexType name="MajorFaction">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Faction" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Faction">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Affinity" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Trait" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TraitStartingSenate" type="FactionTraitStartingSenate" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Bailiff" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="MajorPopulation" type="StartingPopulation" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="MinorPopulation" type="StartingPopulation" />
+          <xs:element minOccurs="0" maxOccurs="1" name="LocalizedDescription" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="LocalizedName" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute default="" name="Author" type="xs:string" />
+        <xs:attribute default="false" name="Hidden" type="xs:boolean" />
+        <xs:attribute name="Standard" type="xs:boolean" use="required" />
+        <xs:attribute name="Priority" type="xs:short" use="required" />
+        <xs:attribute name="Difficulty" type="xs:string" />
+        <xs:attribute name="DifficultyAgainst" type="xs:string" />
+        <xs:attribute name="LipsyncAffinityMappingOverride" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="FactionTraitStartingSenate">
+    <xs:complexContent mixed="false">
+      <xs:extension base="FactionTrait">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Government" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PoliticsWeight" type="PoliticsWeight" />
+        </xs:sequence>
+        <xs:attribute default="0" name="Priority" type="xs:int" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PoliticsWeight">
+    <xs:attribute name="Politics" type="xs:string" />
+    <xs:attribute name="Weight" type="xs:float" use="required" />
+  </xs:complexType>
+  <xs:complexType name="FactionTrait">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Command" type="Command" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="OutpostImprovementReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ColonyImprovementReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SubTrait" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="FakeSimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="FactionTraitTooltipOverride" type="FactionTraitTooltipOverride" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Prerequisites" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="StartingFleet" type="StartingFleetData" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ShipDesign" type="AbstractToShipDesignPair" />
+          <xs:element minOccurs="0" maxOccurs="1" name="UnlockedAbstractShipDesigns" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute default="0" name="Cost" type="xs:int" />
+        <xs:attribute name="Family" type="xs:string" />
+        <xs:attribute default="true" name="Hidden" type="xs:boolean" />
+        <xs:attribute default="false" name="Custom" type="xs:boolean" />
+        <xs:attribute default="false" name="HiddenOnFailPrerequisites" type="xs:boolean" />
+        <xs:attribute default="false" name="ValidWithAtLeastOnePrerequisite" type="xs:boolean" />
+        <xs:attribute default="0" name="Level" type="xs:float" />
+        <xs:attribute name="Root" type="xs:string" />
+        <xs:attribute default="false" name="IgnoreForTraitsCount" type="xs:boolean" />
+        <xs:attribute name="SubCategory" type="xs:string" />
+        <xs:attribute default="" name="TraitCategory" type="xs:string" />
+        <xs:attribute default="" name="TraitSubCategory" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Command">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Arguments" type="xs:string" />
+    <xs:attribute default="0" name="Priority" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="FactionTraitTooltipOverride">
+    <xs:attribute name="Type" type="OverrideType" use="required" />
+    <xs:attribute name="OverrideName" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="OverrideType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Constructible" />
+      <xs:enumeration value="Technology" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="StartingFleetData">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="0" name="Priority" type="xs:int" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="AbstractToShipDesignPair">
+    <xs:attribute name="Abstract" type="xs:string" />
+    <xs:attribute name="ShipDesign" type="xs:string" />
+    <xs:attribute default="0" name="Priority" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="StartingPopulation">
+    <xs:attribute name="Affinity" type="xs:string" />
+    <xs:attribute name="Count" type="xs:int" use="required" />
+  </xs:complexType>
+</xs:schema>

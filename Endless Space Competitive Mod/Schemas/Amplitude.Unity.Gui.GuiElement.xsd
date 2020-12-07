@@ -1,0 +1,933 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="GuiElement" nillable="true" type="GuiElement" />
+  <xs:complexType name="GuiElement">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Title" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Icons" type="GuiElementIconCollection" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="GuiElementIconCollection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Icon" type="IconDefinition" />
+    </xs:sequence>
+    <xs:attribute name="DefaultSize" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="IconDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Path" type="xs:string" />
+        <xs:attribute name="Size" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:element name="ExtendedGuiElement" nillable="true" type="ExtendedGuiElement" />
+  <xs:complexType name="ExtendedGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="SymbolString" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Sounds" type="GuiElementSoundCollection" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TooltipElement" type="GuiTooltipElement" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="TemporaryEffectTooltipElement" type="GuiTemporaryEffectTooltipElement" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Color" type="XmlColor" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AltTitle" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AltDescription" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Movies" type="GuiElementMovieCollection" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GuiElementSoundCollection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Sound" type="SoundDefinition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SoundDefinition">
+    <xs:attribute name="EventName" type="xs:string" />
+    <xs:attribute default="false" name="IsMusic" type="xs:boolean" />
+    <xs:attribute name="Type" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="GuiTooltipElement">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="EffectOverride" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute default="false" name="Percent" type="xs:boolean" />
+    <xs:attribute default="" name="PercentFormat" type="xs:string" />
+    <xs:attribute default="false" name="Ignore" type="xs:boolean" />
+    <xs:attribute default="-1" name="CustomTurnDuration" type="xs:int" />
+    <xs:attribute default="" name="TargetPropertyNameOverride" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="GuiTemporaryEffectTooltipElement">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="EffectOverride" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute default="" name="TemporaryEffectName" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="XmlColor">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Alpha" type="xs:unsignedByte" use="required" />
+        <xs:attribute name="Blue" type="xs:unsignedByte" use="required" />
+        <xs:attribute name="Green" type="xs:unsignedByte" use="required" />
+        <xs:attribute name="Red" type="xs:unsignedByte" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GuiElementMovieCollection">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Movie" type="MovieDefinition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="MovieDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Path" type="xs:string" />
+        <xs:attribute name="Type" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="AffinityGuiElement" nillable="true" type="AffinityGuiElement" />
+  <xs:complexType name="AffinityGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ModelPath" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="EliminatedModelPath" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute default="0" name="PreloadCount" type="xs:int" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ResourceGuiElement" nillable="true" type="ResourceGuiElement" />
+  <xs:complexType name="ResourceGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="TargetEffect" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HeroGuiElement" nillable="true" type="HeroGuiElement" />
+  <xs:complexType name="HeroGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ModelPath" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HeroClassGuiElement" nillable="true" type="HeroClassGuiElement" />
+  <xs:complexType name="HeroClassGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="AffectedBy" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PoliticsGuiElement" nillable="true" type="PoliticsGuiElement" />
+  <xs:complexType name="PoliticsGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ModelPath" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="PoliticsAffectingEvents" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="WindowGuiElement" nillable="true" type="WindowGuiElement" />
+  <xs:complexType name="WindowGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="LoadingWindowGuiElement" nillable="true" type="LoadingWindowGuiElement" />
+  <xs:complexType name="LoadingWindowGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="WindowGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="TexturePath" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MainMenuScreenGuiElement" nillable="true" type="MainMenuScreenGuiElement" />
+  <xs:complexType name="MainMenuScreenGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="WindowGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Entry" type="MainMenuEntry" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="MainMenuEntry">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SubEntry" type="MainMenuSubEntry" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Colored" type="xs:boolean" use="required" />
+    <xs:attribute name="Enabled" type="xs:boolean" use="required" />
+  </xs:complexType>
+  <xs:complexType name="MainMenuSubEntry">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Colored" type="xs:boolean" use="required" />
+    <xs:attribute name="Enabled" type="xs:boolean" use="required" />
+  </xs:complexType>
+  <xs:element name="NewGameScreenGuiElement" nillable="true" type="NewGameScreenGuiElement" />
+  <xs:complexType name="NewGameScreenGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="WindowGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Category" type="Category" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Category">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Entry" type="NewGameEntry" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AdvancedSettingsGroup" type="AdvancedSettingsGroup" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute default="40" name="Width" type="xs:int" />
+    <xs:attribute default="40" name="Height" type="xs:int" />
+    <xs:attribute default="Standard" name="SettingStyle" type="SettingPrefabStyle" />
+    <xs:attribute default="false" name="WithBanner" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="NewGameEntry">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ExtraValue" type="ExtraValue" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Type" type="ControlType" use="required" />
+    <xs:attribute default="Invisible" name="VisibleInGame" type="InGameVisibility" />
+    <xs:attribute name="Prefab" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="ExtraValue">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Value" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="ControlType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Checkbox" />
+      <xs:enumeration value="Droplist" />
+      <xs:enumeration value="Slider" />
+      <xs:enumeration value="Textfield" />
+      <xs:enumeration value="Custom" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="InGameVisibility">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Invisible" />
+      <xs:enumeration value="ReadOnly" />
+      <xs:enumeration value="Editable" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="AdvancedSettingsGroup">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Entry" type="NewGameEntry" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="SettingPrefabStyle">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Standard" />
+      <xs:enumeration value="Compact" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="ControlBannerGuiElement" nillable="true" type="ControlBannerGuiElement" />
+  <xs:complexType name="ControlBannerGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ControlBannerElement" type="ControlBannerElement" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ControlBannerElement">
+    <xs:attribute name="Type" type="xs:string" />
+    <xs:attribute name="WindowName" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="TechnologyScreenGuiElement" nillable="true" type="TechnologyScreenGuiElement" />
+  <xs:complexType name="TechnologyScreenGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="WindowGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="TechnologyQuadrantGuiElement" type="TechnologyQuadrantGuiElement" />
+        </xs:sequence>
+        <xs:attribute name="MaxTechnologyStages" type="xs:int" use="required" />
+        <xs:attribute name="MinQuadrantRadius" type="xs:float" use="required" />
+        <xs:attribute name="MaxQuadrantRadius" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TechnologyQuadrantGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:attribute name="CenterAngle" type="xs:float" use="required" />
+        <xs:attribute name="VictoryStageStartAngle" type="xs:float" use="required" />
+        <xs:attribute name="VictoryStageEndAngle" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TechnologyQuadrantGuiElement" nillable="true" type="TechnologyQuadrantGuiElement" />
+  <xs:element name="EconomyScreenGuiElement" nillable="true" type="EconomyScreenGuiElement" />
+  <xs:complexType name="EconomyScreenGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="WindowGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Section" type="Section" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Section">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Category" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="FleetsScreenGuiElement" nillable="true" type="FleetsScreenGuiElement" />
+  <xs:complexType name="FleetsScreenGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="WindowGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="FleetActionButton" type="FleetActionButtonItem" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="FleetActionButtonItem">
+    <xs:attribute name="ActionName" type="xs:string" />
+    <xs:attribute name="ButtonType" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="TechnologyGuiElement2" nillable="true" type="TechnologyGuiElement2" />
+  <xs:complexType name="TechnologyGuiElement2">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:attribute name="X" type="xs:float" use="required" />
+        <xs:attribute name="Y" type="xs:float" use="required" />
+        <xs:attribute default="false" name="IsJuggernautTechnology" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TableGuiElement" nillable="true" type="TableGuiElement" />
+  <xs:complexType name="TableGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Column" type="ColumnInfo" />
+        </xs:sequence>
+        <xs:attribute name="Height" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ColumnInfo">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Filter" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Description" type="xs:string" />
+    <xs:attribute name="Width" type="xs:int" use="required" />
+    <xs:attribute name="Prefab" type="xs:string" />
+    <xs:attribute default="0" name="DigitsNumber" type="xs:int" />
+    <xs:attribute default="false" name="Signed" type="xs:boolean" />
+    <xs:attribute default="false" name="AutoResizeHeight" type="xs:boolean" />
+    <xs:attribute default="0" name="FilterMenuWidth" type="xs:int" />
+    <xs:attribute default="" name="FilterPropertyName" type="xs:string" />
+    <xs:attribute default="false" name="DisableSorting" type="xs:boolean" />
+  </xs:complexType>
+  <xs:element name="LawGuiElement" nillable="true" type="LawGuiElement" />
+  <xs:complexType name="LawGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ShortTitle" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="QuestGuiElement" nillable="true" type="QuestGuiElement" />
+  <xs:complexType name="QuestGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Steps" type="ArrayOfStepGuiElement" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfStepGuiElement">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Step" type="StepGuiElement" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="StepGuiElement">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ObjectiveSet" type="ObjectiveSetGuiElement" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="ObjectiveSetGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="TooltipDescription" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="OutcomeCompleted" type="OutcomeGuiElement" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="OutcomeFailed" type="OutcomeGuiElement" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Objective" type="ObjectiveGuiElement" />
+        </xs:sequence>
+        <xs:attribute name="Politics" type="xs:string" />
+        <xs:attribute name="OnlyChoiceTooltipKey" type="xs:string" />
+        <xs:attribute name="Team" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="OutcomeGuiElement">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="" name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ObjectiveGuiElement">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Name" type="xs:string" />
+        <xs:attribute default="false" name="HideProgressionFeedback" type="xs:boolean" />
+        <xs:attribute default="Default" name="ProgressionFeedback" type="QuestProgressionFeedbackType" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="QuestProgressionFeedbackType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Default" />
+      <xs:enumeration value="TeamContribution" />
+      <xs:enumeration value="CompetitiveRank" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="TutorialGuiElement" nillable="true" type="TutorialGuiElement" />
+  <xs:complexType name="TutorialGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="QuestGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="PopupTitle" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PopupPage" type="TutorialPage" />
+        </xs:sequence>
+        <xs:attribute default="false" name="HidePortrait" type="xs:boolean" />
+        <xs:attribute default="BelowPinnedQuest" name="AnchorMode" type="TutorialPopupAnchorMode" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TutorialPage">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="TutorialLevelPrerequisite" type="TutorialLevelPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="QuestStatePrerequisite" type="QuestStatePrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="1" name="Title" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Description" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Highlight" type="Highlight" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Disabler" type="Disabler" />
+    </xs:sequence>
+    <xs:attribute default="false" name="HighlightLanes" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="TutorialLevelPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="GameSettingPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="QuestStatePrerequisite">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Prerequisite">
+        <xs:attribute name="QuestDefinitionName" type="xs:string" />
+        <xs:attribute name="QuestState" type="QuestState" use="required" />
+        <xs:attribute default="" name="QuestStepName" type="xs:string" />
+        <xs:attribute default="Completed" name="QuestStepState" type="QuestState" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="QuestState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NotStarted" />
+      <xs:enumeration value="InProgress" />
+      <xs:enumeration value="Completed" />
+      <xs:enumeration value="Failed" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="PathValidityPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TechnologyPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="PathValidityPrerequisite">
+        <xs:attribute default="false" name="UnlockHidden" type="xs:boolean" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Highlight">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Type" type="xs:string" />
+    <xs:attribute name="Persistent" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="Disabler">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Disable" type="xs:boolean" use="required" />
+  </xs:complexType>
+  <xs:simpleType name="TutorialPopupAnchorMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="BelowPinnedQuest" />
+      <xs:enumeration value="RightCentered" />
+      <xs:enumeration value="NextToEmpireBanner" />
+      <xs:enumeration value="AboveFleetsScreen" />
+      <xs:enumeration value="AboveEndTurn" />
+      <xs:enumeration value="TopRight" />
+      <xs:enumeration value="TopLeft" />
+      <xs:enumeration value="BottomLeft" />
+      <xs:enumeration value="BottomRight" />
+      <xs:enumeration value="LeftCentered" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="GovernmentGuiElement" nillable="true" type="GovernmentGuiElement" />
+  <xs:complexType name="GovernmentGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="LeaderFormat" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ElectionProcessDescription" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="LawManagementDescription" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute default="false" name="AllowChangement" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="RecipeSlotGuiElement" nillable="true" type="RecipeSlotGuiElement" />
+  <xs:complexType name="RecipeSlotGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:attribute name="Level" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="EmpireActionGuiElement" nillable="true" type="EmpireActionGuiElement" />
+  <xs:complexType name="EmpireActionGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="EntityActionGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ConfirmationMessage" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" default="None" name="PirateDialogueType" type="PirateDialogueType" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="PirateDialogueType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="BuyPirateMark" />
+      <xs:enumeration value="FirstTimeGreeting" />
+      <xs:enumeration value="Hello" />
+      <xs:enumeration value="HelloAgain" />
+      <xs:enumeration value="PirateLairAttacked" />
+      <xs:enumeration value="Sabotage" />
+      <xs:enumeration value="Support" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="EntityActionGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:attribute name="AssociatedPolitics" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="EmpireDiplomaticActionGuiElement" nillable="true" type="EmpireDiplomaticActionGuiElement" />
+  <xs:complexType name="EmpireDiplomaticActionGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="EmpireActionGuiElement">
+        <xs:attribute default="false" name="CloseWindowOnActionStart" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ScanViewWindowGuiElement" nillable="true" type="ScanViewWindowGuiElement" />
+  <xs:complexType name="ScanViewWindowGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ScanViewCaptionGroupGuiElement" type="ScanViewCaptionGroupGuiElement" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ScanViewCheckboxLineGuiElement" type="ScanViewCheckboxLineGuiElement" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ScanViewCaptionGroupGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="DownloadableContentPrerequisite" type="DownloadableContentPrerequisite" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ScanViewCaptionItemGuiElement" type="ScanViewCaptionItemGuiElement" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DownloadableContentPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ScanViewCaptionItemGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ScanViewCheckboxLineGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="DownloadableContentPrerequisite" type="DownloadableContentPrerequisite" />
+        </xs:sequence>
+        <xs:attribute default="" name="OnClickMethod" type="xs:string" />
+        <xs:attribute default="" name="RegistryPath" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ScanViewCaptionGroupGuiElement" nillable="true" type="ScanViewCaptionGroupGuiElement" />
+  <xs:element name="AllianceGuiElement" nillable="true" type="AllianceGuiElement" />
+  <xs:complexType name="AllianceGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="FidsiParametersGuiElement" nillable="true" type="FidsiParametersGuiElement" />
+  <xs:complexType name="FidsiParametersGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="WindowGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="FidsThresholds" type="ArrayOfFidsThreshold" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfFidsThreshold">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FidsThreshold" type="FidsThreshold" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FidsThreshold">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Caption" type="xs:string" />
+    <xs:attribute name="MinValue" type="xs:float" use="required" />
+    <xs:attribute name="MaxValue" type="xs:float" use="required" />
+  </xs:complexType>
+  <xs:element name="DiplomaticTermGuiElement" nillable="true" type="DiplomaticTermGuiElement" />
+  <xs:complexType name="DiplomaticTermGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" default="" name="QuoteFormat" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" default="" name="FallbackQuoteFormat" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute default="0" name="Priority" type="xs:int" />
+        <xs:attribute default="" name="GenericFormatName" type="xs:string" />
+        <xs:attribute default="false" name="ConcatenateEmpire" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CuriosityTypeGuiElement" nillable="true" type="CuriosityTypeGuiElement" />
+  <xs:complexType name="CuriosityTypeGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="RewardsDescription" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="StarSystemResourceImprovementGuiElement" nillable="true" type="StarSystemResourceImprovementGuiElement" />
+  <xs:complexType name="StarSystemResourceImprovementGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ResourcesDescription" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute default="false" name="HasVariablePopulationSymbol" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TradableSectionGuiElement" nillable="true" type="TradableSectionGuiElement" />
+  <xs:complexType name="TradableSectionGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="TableGuiElement" type="TableGuiElement" />
+        </xs:sequence>
+        <xs:attribute name="Order" type="xs:int" use="required" />
+        <xs:attribute default="" name="ResourceType" type="xs:string" />
+        <xs:attribute name="CanSellInMarketplaceScreen" type="xs:boolean" use="required" />
+        <xs:attribute name="CanBuyInMarketplaceScreen" type="xs:boolean" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MinorFactionDiplomacyModalWindowGuiElement" nillable="true" type="MinorFactionDiplomacyModalWindowGuiElement" />
+  <xs:complexType name="MinorFactionDiplomacyModalWindowGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="WindowGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="MinorAction" type="MinorActionItem" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="MinorActionItem">
+    <xs:attribute name="ActionName" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="VictoryScreenGuiElement" nillable="true" type="VictoryScreenGuiElement" />
+  <xs:complexType name="VictoryScreenGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="WindowGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="GameStatistics" type="ArrayOfGameStatisticReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfGameStatisticReference">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="GameStatisticReference" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="StarSystemOverviewScanViewGuiElement" nillable="true" type="StarSystemOverviewScanViewGuiElement" />
+  <xs:complexType name="StarSystemOverviewScanViewGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ScanViewWindowGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="EmpireRankingProperties" type="ArrayOfEmpireRankingProperty" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfEmpireRankingProperty">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Property" type="EmpireRankingProperty" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EmpireRankingProperty">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="PropertyName" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="DamageDataGuiElement" nillable="true" type="DamageDataGuiElement" />
+  <xs:complexType name="DamageDataGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="DamageModifiers" type="ArrayOfDamageModifier" />
+        </xs:sequence>
+        <xs:attribute default="false" name="InverseApplicationScope" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfDamageModifier">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DamageModifier" type="DamageModifier" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="DamageModifier">
+    <xs:attribute name="PropertyName" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="EntityActionGuiElement" nillable="true" type="EntityActionGuiElement" />
+  <xs:element name="PlanetScanViewWindowGuiElement" nillable="true" type="PlanetScanViewWindowGuiElement" />
+  <xs:complexType name="PlanetScanViewWindowGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ScanViewWindowGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="CategoriesOnTheLeft" type="ArrayOfPlanetStatsCategory" />
+          <xs:element minOccurs="0" maxOccurs="1" name="CategoriesOnTheRight" type="ArrayOfPlanetStatsCategory" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Category" type="PlanetStatsCategory" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfPlanetStatsCategory">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PlanetStatsCategory" nillable="true" type="PlanetStatsCategory" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PlanetStatsCategory">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Entry" type="PlanetStatsEntry" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Side" type="CategorySide" use="required" />
+  </xs:complexType>
+  <xs:complexType name="PlanetStatsEntry">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute default="" name="Unit" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="CategorySide">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Left" />
+      <xs:enumeration value="Right" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="VictoryConditionGuiElement" nillable="true" type="VictoryConditionGuiElement" />
+  <xs:complexType name="VictoryConditionGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ProgressString" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AllianceProgressString" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PlayDeckGuiElement" nillable="true" type="PlayDeckGuiElement" />
+  <xs:complexType name="PlayDeckGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="UnlockedPlay" type="XmlNamedReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="ContextualDiplomaticTermGuiElement" nillable="true" type="ContextualDiplomaticTermGuiElement" />
+  <xs:complexType name="ContextualDiplomaticTermGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="TermTitle" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TermDescription" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ContentGuiElement" nillable="true" type="ContentGuiElement" />
+  <xs:complexType name="ContentGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="LoreDescription" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ContentDescription" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ModelPath" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DownloadableContentGuiElement" nillable="true" type="DownloadableContentGuiElement" />
+  <xs:complexType name="DownloadableContentGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ContentGuiElement">
+        <xs:attribute default="false" name="Notify" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="SkinnedGuiElement" nillable="true" type="SkinnedGuiElement" />
+  <xs:complexType name="SkinnedGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:attribute name="SkinName" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="PlanetGameplayTypeGuiElement" nillable="true" type="PlanetGameplayTypeGuiElement" />
+  <xs:complexType name="PlanetGameplayTypeGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ExtendedGuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="TypeTitle" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GroundBattleOutcomeGuiElement" nillable="true" type="GroundBattleOutcomeGuiElement" />
+  <xs:complexType name="GroundBattleOutcomeGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="AttackerTitle" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AttackerDescription" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="DefenderTitle" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="DefenderDescription" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ContextualPromptGuiElement" nillable="true" type="ContextualPromptGuiElement" />
+  <xs:complexType name="ContextualPromptGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Component" type="PromptComponentElement" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Button" type="PromptButtonElement" />
+        </xs:sequence>
+        <xs:attribute default="false" name="ShowCloseButton" type="xs:boolean" />
+        <xs:attribute default="false" name="CloseOnExternalClick" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PromptComponentElement">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="PrefabPath" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="PromptButtonElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:attribute name="Callback" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="RandomGuiElement" nillable="true" type="RandomGuiElement" />
+  <xs:complexType name="RandomGuiElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GuiElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Titles" type="ArrayOfTitle" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfTitle">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Title" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

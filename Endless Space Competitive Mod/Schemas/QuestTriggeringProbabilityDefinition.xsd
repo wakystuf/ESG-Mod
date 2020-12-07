@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="QuestTriggeringProbabilityDefinition" nillable="true" type="QuestTriggeringProbabilityDefinition" />
+  <xs:complexType name="QuestTriggeringProbabilityDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="RefillPerTurn" type="Formula" />
+          <xs:element minOccurs="0" maxOccurs="1" name="BaseProbability" type="TechnologyCountEvaluator" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Formula">
+    <xs:simpleContent>
+      <xs:extension base="xs:string" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TechnologyCountEvaluator">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TechnologyThreshold" type="TechnologyThreshold" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="TechnologyThreshold">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Formula" type="Formula" />
+    </xs:sequence>
+    <xs:attribute name="MinimumTechnologyCount" type="xs:int" use="required" />
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

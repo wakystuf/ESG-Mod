@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="CuriosityDefinition" nillable="true" type="CuriosityDefinition" />
+  <xs:complexType name="CuriosityDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="VisibilityPrerequisites" type="ArrayOfChoice1" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="QuestPrerequisites" type="QuestPrerequisitesDefinition" />
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="ShipExperienceEffect" type="CuriosityEffectDefinition_ShipExperience" />
+            <xs:element minOccurs="0" maxOccurs="1" name="CuriositiesRevealEffect" type="CuriosityEffectDefinition_RevealCuriosities" />
+            <xs:element minOccurs="0" maxOccurs="1" name="NeighboursRevealEffect" type="CuriosityEffectDefinition_RevealNeighbours" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DroplistEffect" type="CuriosityEffectDefinition_Droplist" />
+            <xs:element minOccurs="0" maxOccurs="1" name="ResourceDepositEffect" type="CuriosityEffectDefinition_ResourceDeposit" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PlanetAnomalyEffect" type="CuriosityEffectDefinition_PlanetAnomaly" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PopulationEvent" type="XmlNamedReference" />
+        </xs:sequence>
+        <xs:attribute name="DisplayedType" type="xs:string" />
+        <xs:attribute name="SubCategory" type="xs:string" />
+        <xs:attribute name="Difficulty" type="xs:float" use="required" />
+        <xs:attribute default="false" name="DiscoverOnColonization" type="xs:boolean" />
+        <xs:attribute default="false" name="Indestructible" type="xs:boolean" />
+        <xs:attribute name="ScoreProvider" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfChoice1">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="DatePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="GameSettingPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathValidityPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TechnologyPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="PathValidityPrerequisite">
+        <xs:attribute default="false" name="UnlockHidden" type="xs:boolean" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="StatisticPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite">
+        <xs:attribute default="-3.40282347E+38" name="MinimumValue" type="xs:float" />
+        <xs:attribute default="3.40282347E+38" name="MaximumValue" type="xs:float" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DownloadableContentPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="QuestStatePrerequisite">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Prerequisite">
+        <xs:attribute name="QuestDefinitionName" type="xs:string" />
+        <xs:attribute name="QuestState" type="QuestState" use="required" />
+        <xs:attribute default="" name="QuestStepName" type="xs:string" />
+        <xs:attribute default="Completed" name="QuestStepState" type="QuestState" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="QuestState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="NotStarted" />
+      <xs:enumeration value="InProgress" />
+      <xs:enumeration value="Completed" />
+      <xs:enumeration value="Failed" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="QuestPrerequisitesDefinition">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="StatisticPrerequisite" type="StatisticPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="DownloadableContentPrerequisite" type="DownloadableContentPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="QuestStatePrerequisite" type="QuestStatePrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Target" type="xs:string" />
+    <xs:attribute default="false" name="AnyTarget" type="xs:boolean" />
+    <xs:attribute default="false" name="AnyPrerequisite" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="CuriosityEffectDefinition_ShipExperience">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CuriosityEffectDefinition">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="CuriositiesRevealEffectFallback" type="CuriosityEffectDefinition_RevealCuriosities" />
+            <xs:element minOccurs="0" maxOccurs="1" name="NeighboursRevealEffectFallback" type="CuriosityEffectDefinition_RevealNeighbours" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DroplistEffectFallback" type="CuriosityEffectDefinition_Droplist" />
+          </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Value" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CuriosityEffectDefinition_RevealCuriosities">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CuriosityEffectDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CuriosityEffectDefinition" />
+  <xs:complexType name="CuriosityEffectDefinition_RevealNeighbours">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CuriosityEffectDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CuriosityEffectDefinition_Droplist">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CuriosityEffectDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Droplist" type="XmlNamedReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="CuriosityEffectDefinition_ResourceDeposit">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CuriosityEffectDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ResourceDepositReference" type="XmlNamedReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CuriosityEffectDefinition_PlanetAnomaly">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CuriosityEffectDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Anomaly" type="XmlNamedReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

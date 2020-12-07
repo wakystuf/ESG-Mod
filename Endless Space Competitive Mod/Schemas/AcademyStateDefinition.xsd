@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="AcademyStateDefinition" nillable="true" type="AcademyStateDefinition" />
+  <xs:complexType name="AcademyStateDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="1" name="AcademyMasterFleetMission" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TradableMasterFleetMission" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RetakeHomeMission" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RecoverColonyMission" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AggressiveMission" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="DefensiveMission" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="FleetMissions" type="ArrayOfAcademyFleetMissionDefinition" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="FleetUpgrade" type="FleetUpgradeDefinition" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+        </xs:sequence>
+        <xs:attribute name="MinimumStress" type="xs:float" use="required" />
+        <xs:attribute name="MaxConcurrentFleets" type="xs:int" use="required" />
+        <xs:attribute name="Aggressiveness" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DatePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="GameSettingPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfAcademyFleetMissionDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FleetMission" type="AcademyFleetMissionDefinition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AcademyFleetMissionDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="FleetMissionReference" type="XmlNamedReference" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FleetComposition" type="FleetComposition" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute default="0" name="Weight" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="FleetComposition">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="1" name="NeededShips" type="ArrayOfXmlNamedReference" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfXmlNamedReference">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ShipDesign" type="XmlNamedReference" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="FleetUpgradeDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="FleetMissionReference" type="XmlNamedReference" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+      </xs:choice>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="FleetPathPrerequisite" type="PathPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="FleetInterpreterPrerequisite" type="InterpreterPrerequisite" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="1" name="UpgradeDescriptors" type="ArrayOfUpgradeDescriptorReference" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfUpgradeDescriptorReference">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DescriptorReference" type="UpgradeDescriptorReference" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="UpgradeDescriptorReference">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Flags" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

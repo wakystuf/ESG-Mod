@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="HackingOperationOutcomeDefinition" nillable="true" type="HackingOperationOutcomeDefinition" />
+  <xs:complexType name="HackingOperationOutcomeDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+          </xs:choice>
+        </xs:sequence>
+        <xs:attribute default="0" name="Priority" type="xs:int" />
+        <xs:attribute default="0" name="Level" type="xs:int" />
+        <xs:attribute default="false" name="Hidden" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DatePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="GameSettingPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathValidityPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TechnologyPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="PathValidityPrerequisite">
+        <xs:attribute default="false" name="UnlockHidden" type="xs:boolean" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeDiplomaticPressureEffectDefinition" nillable="true" type="HackingOperationOutcomeDiplomaticPressureEffectDefinition" />
+  <xs:complexType name="HackingOperationOutcomeDiplomaticPressureEffectDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticEffectReference" type="XmlNamedReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="HackingOperationOutcomeSystemDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeEmpireRebellionDefinition" nillable="true" type="HackingOperationOutcomeEmpireRebellionDefinition" />
+  <xs:complexType name="HackingOperationOutcomeEmpireRebellionDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeTemporaryEffectDefinition" nillable="true" type="HackingOperationOutcomeTemporaryEffectDefinition" />
+  <xs:complexType name="HackingOperationOutcomeTemporaryEffectDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="TemporaryEffectReference" type="XmlNamedReference" />
+        </xs:sequence>
+        <xs:attribute default="false" name="ApplyOnHacker" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeMinorRelationTemporaryEffectDefinition" nillable="true" type="HackingOperationOutcomeMinorRelationTemporaryEffectDefinition" />
+  <xs:complexType name="HackingOperationOutcomeMinorRelationTemporaryEffectDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeTemporaryEffectDefinition">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="BestRelationPrerequisite" type="EmpireDiplomaticBestRelationPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="StatePrerequisite" type="EmpireDiplomaticRelationStatePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PointsPrerequisite" type="EmpireDiplomaticRelationPointsPrerequisite" />
+          </xs:choice>
+        </xs:sequence>
+        <xs:attribute default="false" name="WarnIfMinorUnknown" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="EmpireDiplomaticBestRelationPrerequisite">
+    <xs:complexContent mixed="false">
+      <xs:extension base="EmpireDiplomaticRelationPrerequisite" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="EmpireDiplomaticRelationPrerequisite">
+    <xs:attribute name="Inverted" type="xs:boolean" use="required" />
+    <xs:attribute default="false" name="Hidden" type="xs:boolean" />
+    <xs:attribute name="Flags" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="EmpireDiplomaticRelationStatePrerequisite">
+    <xs:complexContent mixed="false">
+      <xs:extension base="EmpireDiplomaticRelationPrerequisite">
+        <xs:attribute name="State" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="EmpireDiplomaticRelationPointsPrerequisite">
+    <xs:complexContent mixed="false">
+      <xs:extension base="EmpireDiplomaticRelationPrerequisite">
+        <xs:attribute name="Value" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeMinorSuzerainRelationTemporaryEffectDefinition" nillable="true" type="HackingOperationOutcomeMinorSuzerainRelationTemporaryEffectDefinition" />
+  <xs:complexType name="HackingOperationOutcomeMinorSuzerainRelationTemporaryEffectDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeMinorRelationTemporaryEffectDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeSetPoliticsDefinition" nillable="true" type="HackingOperationOutcomeSetPoliticsDefinition" />
+  <xs:complexType name="HackingOperationOutcomeSetPoliticsDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition">
+        <xs:attribute name="Power" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeSpawnTraitorsDefinition" nillable="true" type="HackingOperationOutcomeSpawnTraitorsDefinition" />
+  <xs:complexType name="HackingOperationOutcomeSpawnTraitorsDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeWoundHeroDefinition" nillable="true" type="HackingOperationOutcomeWoundHeroDefinition" />
+  <xs:complexType name="HackingOperationOutcomeWoundHeroDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeStealTechnologyDefinition" nillable="true" type="HackingOperationOutcomeStealTechnologyDefinition" />
+  <xs:complexType name="HackingOperationOutcomeStealTechnologyDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeStealSystemDefinition" nillable="true" type="HackingOperationOutcomeStealSystemDefinition" />
+  <xs:complexType name="HackingOperationOutcomeStealSystemDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeSystemRebellionDefinition" nillable="true" type="HackingOperationOutcomeSystemRebellionDefinition" />
+  <xs:complexType name="HackingOperationOutcomeSystemRebellionDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeTransferResourcesDefinition" nillable="true" type="HackingOperationOutcomeTransferResourcesDefinition" />
+  <xs:complexType name="HackingOperationOutcomeTransferResourcesDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ResourceTransfer" type="CustomConstructionCost" />
+        </xs:sequence>
+        <xs:attribute default="ColonizedStarSystem" name="Target" type="TransferTarget" />
+        <xs:attribute default="false" name="DescriptionHidden" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CustomConstructionCost">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Instant" type="xs:boolean" />
+        <xs:attribute default="false" name="InstantOnCompletion" type="xs:boolean" />
+        <xs:attribute name="ResourceName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="TransferTarget">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ColonizedStarSystem" />
+      <xs:enumeration value="Empire" />
+      <xs:enumeration value="Relation" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="HackingOperationOutcomeChangePirateRelationDefinition" nillable="true" type="HackingOperationOutcomeChangePirateRelationDefinition" />
+  <xs:complexType name="HackingOperationOutcomeChangePirateRelationDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition">
+        <xs:attribute name="RelationPointsGain" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeSystemTemporaryEffectDefinition" nillable="true" type="HackingOperationOutcomeSystemTemporaryEffectDefinition" />
+  <xs:complexType name="HackingOperationOutcomeSystemTemporaryEffectDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeTemporaryEffectDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeAbortTracedOperationDefinition" nillable="true" type="HackingOperationOutcomeAbortTracedOperationDefinition" />
+  <xs:complexType name="HackingOperationOutcomeAbortTracedOperationDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeSpawnBackdoorDefinition" nillable="true" type="HackingOperationOutcomeSpawnBackdoorDefinition" />
+  <xs:complexType name="HackingOperationOutcomeSpawnBackdoorDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeDestroyBackdoorDefinition" nillable="true" type="HackingOperationOutcomeDestroyBackdoorDefinition" />
+  <xs:complexType name="HackingOperationOutcomeDestroyBackdoorDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeStealPirateResourcesDefinition" nillable="true" type="HackingOperationOutcomeStealPirateResourcesDefinition" />
+  <xs:complexType name="HackingOperationOutcomeStealPirateResourcesDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition">
+        <xs:attribute name="LootRatio" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeTurnTraitorsIntoSuperPopulationDefinition" nillable="true" type="HackingOperationOutcomeTurnTraitorsIntoSuperPopulationDefinition" />
+  <xs:complexType name="HackingOperationOutcomeTurnTraitorsIntoSuperPopulationDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeTurnTraitorsIntoSuperPopulationOnEmpireDefinition" nillable="true" type="HackingOperationOutcomeTurnTraitorsIntoSuperPopulationOnEmpireDefinition" />
+  <xs:complexType name="HackingOperationOutcomeTurnTraitorsIntoSuperPopulationOnEmpireDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeAcademyDecreaseReparationsDefinition" nillable="true" type="HackingOperationOutcomeAcademyDecreaseReparationsDefinition" />
+  <xs:complexType name="HackingOperationOutcomeAcademyDecreaseReparationsDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="StatePrerequisite" type="EmpireDiplomaticRelationStatePrerequisite" />
+        </xs:sequence>
+        <xs:attribute default="0.1" name="ReparationsDecreasePercent" type="xs:float" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeAcademyIncreaseContributionDefinition" nillable="true" type="HackingOperationOutcomeAcademyIncreaseContributionDefinition" />
+  <xs:complexType name="HackingOperationOutcomeAcademyIncreaseContributionDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition">
+        <xs:attribute default="5" name="ContributionIncreasePercent" type="xs:float" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeAcademyImmobilizeFleetsDefinition" nillable="true" type="HackingOperationOutcomeAcademyImmobilizeFleetsDefinition" />
+  <xs:complexType name="HackingOperationOutcomeAcademyImmobilizeFleetsDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeTemporaryEffectDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="StatePrerequisite" type="EmpireDiplomaticRelationStatePrerequisite" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeAcademyEarnHeroPointsDefinition" nillable="true" type="HackingOperationOutcomeAcademyEarnHeroPointsDefinition" />
+  <xs:complexType name="HackingOperationOutcomeAcademyEarnHeroPointsDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeSystemDefinition">
+        <xs:attribute default="5" name="EarnHeroPointsPercent" type="xs:float" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeCreateBeaconDefinition" nillable="true" type="HackingOperationOutcomeCreateBeaconDefinition" />
+  <xs:complexType name="HackingOperationOutcomeCreateBeaconDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeReclaimLostSystemDefinition" nillable="true" type="HackingOperationOutcomeReclaimLostSystemDefinition" />
+  <xs:complexType name="HackingOperationOutcomeReclaimLostSystemDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeSpawnGhostSystemDefinition" nillable="true" type="HackingOperationOutcomeSpawnGhostSystemDefinition" />
+  <xs:complexType name="HackingOperationOutcomeSpawnGhostSystemDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeDefinition">
+        <xs:attribute name="RequiredTraitorsOnExistingColony" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeDestroyGhostSystemDefinition" nillable="true" type="HackingOperationOutcomeDestroyGhostSystemDefinition" />
+  <xs:complexType name="HackingOperationOutcomeDestroyGhostSystemDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HackingOperationOutcomeSetDefinition" nillable="true" type="HackingOperationOutcomeSetDefinition" />
+  <xs:complexType name="HackingOperationOutcomeSetDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HackingOperationOutcomeDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="HackingOperationOutcomeDefinitionReference" type="XmlNamedReference" />
+        </xs:sequence>
+        <xs:attribute name="Composition" type="ValidityComposition" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="ValidityComposition">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Any" />
+      <xs:enumeration value="All" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="PopulationEventDefinition" nillable="true" type="PopulationEventDefinition" />
+  <xs:complexType name="PopulationEventDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="StoppingCondition_InfluenceStateChanged" type="PopulationEventModifierStoppingCondition_InfluenceStateChanged" />
+            <xs:element minOccurs="0" maxOccurs="1" name="StoppingCondition_HeroAssignationChanged" type="PopulationEventModifierStoppingCondition_HeroAssignationChanged" />
+            <xs:element minOccurs="0" maxOccurs="1" name="StoppingCondition_StarSystemImprovementCollectionChanged" type="PopulationEventModifierStoppingCondition_StarSystemImprovementCollectionChanged" />
+            <xs:element minOccurs="0" maxOccurs="1" name="StoppingCondition_SimulationDescriptorChange" type="PopulationEventModifierStoppingCondition_SimulationDescriptorChange" />
+            <xs:element minOccurs="0" maxOccurs="1" name="StoppingCondition_AcademyOwnerChanged" type="PopulationEventModifierStoppingCondition_AcademyOwnerChanged" />
+            <xs:element minOccurs="0" maxOccurs="1" name="StoppingCondition_DiplomaticAbilityChanged" type="PopulationEventModifierStoppingCondition_DiplomaticAbilityChanged" />
+            <xs:element minOccurs="0" maxOccurs="1" name="StoppingCondition_MothershipDetached" type="PopulationEventModifierStoppingCondition_MothershipDetached" />
+            <xs:element minOccurs="0" maxOccurs="1" name="StoppingCondition_HappinessChanged" type="PopulationEventModifierStoppingCondition_HappinessChanged" />
+          </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Category" type="xs:string" />
+        <xs:attribute name="SubCategory" type="xs:string" />
+        <xs:attribute name="Scale" type="PopulationEventScale" use="required" />
+        <xs:attribute name="Duration" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PopulationEventModifierStoppingCondition_InfluenceStateChanged">
+    <xs:complexContent mixed="false">
+      <xs:extension base="PopulationEventModifierStoppingCondition">
+        <xs:attribute name="State" type="ColonizedInfluenceState" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="ColonizedInfluenceState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Undefined" />
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Owner" />
+      <xs:enumeration value="OwnerFriend" />
+      <xs:enumeration value="OwnerFoe" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="PopulationEventModifierStoppingCondition">
+    <xs:attribute default="false" name="NoDecay" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="PopulationEventModifierStoppingCondition_HeroAssignationChanged">
+    <xs:complexContent mixed="false">
+      <xs:extension base="PopulationEventModifierStoppingCondition">
+        <xs:attribute name="Action" type="HeroAssignationAction" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="HeroAssignationAction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Assigned" />
+      <xs:enumeration value="Unassigned" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="PopulationEventModifierStoppingCondition_StarSystemImprovementCollectionChanged">
+    <xs:complexContent mixed="false">
+      <xs:extension base="PopulationEventModifierStoppingCondition">
+        <xs:attribute name="Action" type="CollectionChangeAction" use="required" />
+        <xs:attribute name="ImprovementName" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="CollectionChangeAction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Add" />
+      <xs:enumeration value="Remove" />
+      <xs:enumeration value="Refresh" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="PopulationEventModifierStoppingCondition_SimulationDescriptorChange">
+    <xs:complexContent mixed="false">
+      <xs:extension base="PopulationEventModifierStoppingCondition">
+        <xs:attribute name="Action" type="CollectionChangeAction" use="required" />
+        <xs:attribute name="DescriptorName" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PopulationEventModifierStoppingCondition_AcademyOwnerChanged">
+    <xs:complexContent mixed="false">
+      <xs:extension base="PopulationEventModifierStoppingCondition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PopulationEventModifierStoppingCondition_DiplomaticAbilityChanged">
+    <xs:complexContent mixed="false">
+      <xs:extension base="PopulationEventModifierStoppingCondition">
+        <xs:attribute name="Action" type="ChangeAction" use="required" />
+        <xs:attribute name="DiplomaticAbilityName" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="ChangeAction">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Add" />
+      <xs:enumeration value="Remove" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="PopulationEventModifierStoppingCondition_MothershipDetached">
+    <xs:complexContent mixed="false">
+      <xs:extension base="PopulationEventModifierStoppingCondition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="PopulationEventModifierStoppingCondition_HappinessChanged">
+    <xs:complexContent mixed="false">
+      <xs:extension base="PopulationEventModifierStoppingCondition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="PopulationEventScale">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="System" />
+      <xs:enumeration value="Empire" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="PopulationPoliticalEventDefinition" nillable="true" type="PopulationPoliticalEventDefinition" />
+  <xs:complexType name="PopulationPoliticalEventDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="PopulationEventDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Tags" type="Tags" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Politics" type="XmlNamedReference" />
+        </xs:sequence>
+        <xs:attribute name="Power" type="xs:float" use="required" />
+        <xs:attribute default="false" name="IsUnique" type="xs:boolean" />
+        <xs:attribute default="false" name="UseMainPoliticsDefinition" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Tags">
+    <xs:simpleContent>
+      <xs:extension base="xs:string" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

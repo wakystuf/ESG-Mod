@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="PopulationAspirationDefinition" nillable="true" type="PopulationAspirationDefinition" />
+  <xs:complexType name="PopulationAspirationDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ActivationConditions" type="ArrayOfPopulationAspirationConditionDefinition" />
+          <xs:element minOccurs="0" maxOccurs="1" name="FulfillmentConditions" type="ArrayOfPopulationAspirationConditionDefinition" />
+          <xs:element minOccurs="0" maxOccurs="1" name="FulfilledEffects" type="ArrayOfPopulationAspirationEffectDefinition" />
+          <xs:element minOccurs="0" maxOccurs="1" name="UnfulfilledEffects" type="ArrayOfPopulationAspirationEffectDefinition" />
+        </xs:sequence>
+        <xs:attribute default="false" name="CancelledByInvalidActivationConditions" type="xs:boolean" />
+        <xs:attribute name="Type" type="AspirationType" use="required" />
+        <xs:attribute name="Class" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfPopulationAspirationConditionDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Condition" type="PopulationAspirationConditionDefinition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PopulationAspirationConditionDefinition">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfPopulationAspirationEffectDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Effect" type="PopulationAspirationEffectDefinition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PopulationAspirationEffectDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:simpleType name="AspirationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Undefined" />
+      <xs:enumeration value="Will" />
+      <xs:enumeration value="Desire" />
+      <xs:enumeration value="Trait" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="PopulationAspirationDefinition_Desire" nillable="true" type="PopulationAspirationDefinition_Desire" />
+  <xs:complexType name="PopulationAspirationDefinition_Desire">
+    <xs:complexContent mixed="false">
+      <xs:extension base="PopulationAspirationDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="PoliticsReference" type="XmlNamedReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

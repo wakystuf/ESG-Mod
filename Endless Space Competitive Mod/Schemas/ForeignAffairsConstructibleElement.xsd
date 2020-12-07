@@ -1,0 +1,518 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="ForeignAffairsConstructibleElement" nillable="true" type="ForeignAffairsConstructibleElement" />
+  <xs:complexType name="ForeignAffairsConstructibleElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ConstructibleElement">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticMetaPrerequisite" type="DiplomaticMetaPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticPressurePrerequisite" type="DiplomaticPressurePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticContractContainsTermPrerequisite" type="DiplomaticContractContainsTermPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticAbilityPrerequisite" type="DiplomaticAbilityPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticRelationStatePrerequisite" type="DiplomaticRelationStatePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticRelationStateEmpirePrerequisite" type="DiplomaticRelationStateEmpirePrerequisite" />
+          </xs:choice>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DiplomaticMetaPrerequisite">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticMetaPrerequisite" type="DiplomaticMetaPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticContractContainsTermPrerequisite" type="DiplomaticContractContainsTermPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticAbilityPrerequisite" type="DiplomaticAbilityPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticRelationStatePrerequisite" type="DiplomaticRelationStatePrerequisite" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Operator" type="OperatorType" use="required" />
+    <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+    <xs:attribute name="Flags" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="DiplomaticContractContainsTermPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="DiplomaticPrerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DiplomaticPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DiplomaticAbilityPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="DiplomaticPrerequisite">
+        <xs:attribute name="TargetRelation" type="PrerequisiteTargetRelation" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="PrerequisiteTargetRelation">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ReceiverToProvider" />
+      <xs:enumeration value="ProviderToReceiver" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DiplomaticRelationStatePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="DiplomaticPrerequisite">
+        <xs:attribute default="EmpireWhichProvides" name="Responsible" type="DiplomaticCostResponsible" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="DiplomaticCostResponsible">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="EmpireWhichProposes" />
+      <xs:enumeration value="EmpireWhichProvides" />
+      <xs:enumeration value="EmpireWhichReceives" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DiplomaticPressurePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="DiplomaticPrerequisite">
+        <xs:attribute default="ProviderToReceiver" name="Relation" type="RelationType" />
+        <xs:attribute name="MinValue" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="RelationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ProviderToReceiver" />
+      <xs:enumeration value="ReceiverToProvider" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="OperatorType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="OR" />
+      <xs:enumeration value="XOR" />
+      <xs:enumeration value="NOR" />
+      <xs:enumeration value="AND" />
+      <xs:enumeration value="NAND" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DiplomaticRelationStateEmpirePrerequisite">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Flags" type="xs:string" />
+    <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+    <xs:attribute name="Responsible" type="PrerequisiteResponsible" use="required" />
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DatePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="GameSettingPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DownloadableContentPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="SupportPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite">
+        <xs:attribute name="Politics" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathValidityPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TechnologyPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="PathValidityPrerequisite">
+        <xs:attribute default="false" name="UnlockHidden" type="xs:boolean" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="PrerequisiteResponsible">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="EmpireWhichProposes" />
+      <xs:enumeration value="EmpireWhichProvides" />
+      <xs:enumeration value="EmpireWhichReceives" />
+      <xs:enumeration value="RelationOfEmpireWhichProvides" />
+      <xs:enumeration value="RelationOfEmpireWhichReceives" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="ConstructibleElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="UnlockDatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="AIGain" type="AIGain" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SupervisorGain" type="SupervisorGain" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Tags" type="Tags" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="InProgressSimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="QueuedSimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ConstructionQueueEntityActionReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="CostReductionReference" type="CostReductionReference" />
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="InfiniteCost" type="InfiniteCost" />
+            <xs:element minOccurs="0" maxOccurs="1" name="CustomCost" type="CustomConstructionCost" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Cost" type="ConstructionCost" />
+          </xs:choice>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DownloadableContentPrerequisite" type="DownloadableContentPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="SupportPrerequisite" type="SupportPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="MetaPrerequisite" type="MetaPrerequisite" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PopulationEvent" type="XmlNamedReference" />
+        </xs:sequence>
+        <xs:attribute default="0" name="BuyoutCostModifier" type="xs:float" />
+        <xs:attribute default="false" name="Stackable" type="xs:boolean" />
+        <xs:attribute name="Category" type="xs:string" />
+        <xs:attribute name="SubCategory" type="xs:string" />
+        <xs:attribute name="ScoreProvider" type="xs:string" />
+        <xs:attribute default="false" name="Hidden" type="xs:boolean" />
+        <xs:attribute default="false" name="NeedConfirm" type="xs:boolean" />
+        <xs:attribute default="false" name="ConsumeResourceSurplus" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AIGain">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Tag" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="RessourceName" type="xs:string" />
+    <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="SupervisorGain">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Tags" type="Tags" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute default="1" name="Weight" type="xs:float" />
+  </xs:complexType>
+  <xs:complexType name="Tags">
+    <xs:simpleContent>
+      <xs:extension base="xs:string" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="CostReductionReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="InfiniteCost">
+    <xs:attribute name="ResourceName" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="CustomConstructionCost">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Instant" type="xs:boolean" />
+        <xs:attribute default="false" name="InstantOnCompletion" type="xs:boolean" />
+        <xs:attribute name="ResourceName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ConstructionCost">
+    <xs:simpleContent>
+      <xs:extension base="xs:float">
+        <xs:attribute default="false" name="Instant" type="xs:boolean" />
+        <xs:attribute default="false" name="InstantOnCompletion" type="xs:boolean" />
+        <xs:attribute name="ResourceName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="MetaPrerequisite">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="SupportPrerequisite" type="SupportPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Operator" type="PrerequisiteOperator" use="required" />
+  </xs:complexType>
+  <xs:simpleType name="PrerequisiteOperator">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Or" />
+      <xs:enumeration value="And" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="UnlockDatatableElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:attribute name="KeyWords" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="DiplomaticTermDefinition" nillable="true" type="DiplomaticTermDefinition" />
+  <xs:complexType name="DiplomaticTermDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ForeignAffairsConstructibleElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="DiplomaticAbilityChange" type="DiplomaticAbilityChange" />
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticCustomCost" type="DiplomaticCustomCost" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticCost" type="DiplomaticCost" />
+          </xs:choice>
+        </xs:sequence>
+        <xs:attribute default="Neutral" name="Alignment" type="DiplomaticTermAlignment" />
+        <xs:attribute name="PropositionMethod" type="PropositionMethod" use="required" />
+        <xs:attribute name="ApplicationMethod" type="ApplicationMethod" use="required" />
+        <xs:attribute default="" name="AssociatedPolitics" type="xs:string" />
+        <xs:attribute default="" name="ScoreProviderOnProvider" type="xs:string" />
+        <xs:attribute default="" name="ScoreProviderOnReceiver" type="xs:string" />
+        <xs:attribute default="false" name="IsAcademyProvider" type="xs:boolean" />
+        <xs:attribute default="" name="UpkeepDescriptorReference" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DiplomaticAbilityChange">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute default="Add" name="Operation" type="AbilityOperation" />
+    <xs:attribute name="DiplomaticAbilityReference" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="AbilityOperation">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Add" />
+      <xs:enumeration value="Remove" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DiplomaticCustomCost">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Responsible" type="DiplomaticCostResponsible" use="required" />
+        <xs:attribute name="ResourceName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DiplomaticCost">
+    <xs:simpleContent>
+      <xs:extension base="xs:float">
+        <xs:attribute name="Responsible" type="DiplomaticCostResponsible" use="required" />
+        <xs:attribute name="ResourceName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="DiplomaticTermAlignment">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Good" />
+      <xs:enumeration value="Neutral" />
+      <xs:enumeration value="Bad" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="PropositionMethod">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Declaration" />
+      <xs:enumeration value="Negotiation" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ApplicationMethod">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ReceiverOnly" />
+      <xs:enumeration value="ProviderOnly" />
+      <xs:enumeration value="Symmetrical" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="DiplomaticTermDiplomaticRelationStateDefinition" nillable="true" type="DiplomaticTermDiplomaticRelationStateDefinition" />
+  <xs:complexType name="DiplomaticTermDiplomaticRelationStateDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticRelationStateReference" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermResourceExchangeDefinition" nillable="true" type="DiplomaticTermResourceExchangeDefinition" />
+  <xs:complexType name="DiplomaticTermResourceExchangeDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="TradableResourceList" type="TradableResourceList" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="TradableResourceList">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="TradableResourceReference" type="XmlNamedReference" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermTechnologyExchangeDefinition" nillable="true" type="DiplomaticTermTechnologyExchangeDefinition" />
+  <xs:complexType name="DiplomaticTermTechnologyExchangeDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermStarSystemColonyExchangeDefinition" nillable="true" type="DiplomaticTermStarSystemColonyExchangeDefinition" />
+  <xs:complexType name="DiplomaticTermStarSystemColonyExchangeDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermStarSystemExchangeDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DiplomaticTermStarSystemExchangeDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermStarSystemOutpostExchangeDefinition" nillable="true" type="DiplomaticTermStarSystemOutpostExchangeDefinition" />
+  <xs:complexType name="DiplomaticTermStarSystemOutpostExchangeDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermStarSystemExchangeDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermAllianceDefinition" nillable="true" type="DiplomaticTermAllianceDefinition" />
+  <xs:complexType name="DiplomaticTermAllianceDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticRelationStateReference" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermBreakAllianceDefinition" nillable="true" type="DiplomaticTermBreakAllianceDefinition" />
+  <xs:complexType name="DiplomaticTermBreakAllianceDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticRelationStateReference" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermProposalDefinition" nillable="true" type="DiplomaticTermProposalDefinition" />
+  <xs:complexType name="DiplomaticTermProposalDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="AllowedTreaties" type="ArrayOfXmlNamedReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfXmlNamedReference">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AllowedTreaty" type="XmlNamedReference" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermDeclareWarDefinition" nillable="true" type="DiplomaticTermDeclareWarDefinition" />
+  <xs:complexType name="DiplomaticTermDeclareWarDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticRelationStateReference" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PropertyToReset" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermPressureReductionDefinition" nillable="true" type="DiplomaticTermPressureReductionDefinition" />
+  <xs:complexType name="DiplomaticTermPressureReductionDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermResourceExchangeDemandDefinition" nillable="true" type="DiplomaticTermResourceExchangeDemandDefinition" />
+  <xs:complexType name="DiplomaticTermResourceExchangeDemandDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermResourceExchangeDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermTechnologyExchangeDemandDefinition" nillable="true" type="DiplomaticTermTechnologyExchangeDemandDefinition" />
+  <xs:complexType name="DiplomaticTermTechnologyExchangeDemandDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermTechnologyExchangeDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermMapSharingDefinition" nillable="true" type="DiplomaticTermMapSharingDefinition" />
+  <xs:complexType name="DiplomaticTermMapSharingDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermPressureEffectDefinition" nillable="true" type="DiplomaticTermPressureEffectDefinition" />
+  <xs:complexType name="DiplomaticTermPressureEffectDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticPressureEffectDefinitionReference" type="XmlNamedReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermPressureIncreaseDefinition" nillable="true" type="DiplomaticTermPressureIncreaseDefinition" />
+  <xs:complexType name="DiplomaticTermPressureIncreaseDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition">
+        <xs:attribute name="Value" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermFactionPactDefinition" nillable="true" type="DiplomaticTermFactionPactDefinition" />
+  <xs:complexType name="DiplomaticTermFactionPactDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DiplomaticTermRenounceAllianceDefinition" nillable="true" type="DiplomaticTermRenounceAllianceDefinition" />
+  <xs:complexType name="DiplomaticTermRenounceAllianceDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DiplomaticTermDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticRelationStateReference" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

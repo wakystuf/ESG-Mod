@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="BailiffDefinition" nillable="true" type="BailiffDefinition" />
+  <xs:complexType name="BailiffDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Pass" type="BailiffPass" />
+        </xs:sequence>
+        <xs:attribute name="Property" type="xs:string" />
+        <xs:attribute default="false" name="CheckIfAnythingToSell" type="xs:boolean" />
+        <xs:attribute name="Resource" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BailiffPass">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="Auction_HackingBeacon" type="BailiffAuction_HackingBeacon" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Auction_HackingProgram" type="BailiffAuction_HackingProgram" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Auction_FactionPact" type="BailiffAuction_FactionPact" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Auction_TimeBubble" type="BailiffAuction_TimeBubble" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Auction_Ship" type="BailiffAuction_Ship" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Auction_Resource" type="BailiffAuction_Resource" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Auction_Law" type="BailiffAuction_Law" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Auction_Improvement" type="BailiffAuction_Improvement" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Auction_Hero" type="BailiffAuction_Hero" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Loop" type="xs:boolean" use="required" />
+  </xs:complexType>
+  <xs:complexType name="BailiffAuction_HackingBeacon">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BailiffSimulationAuctionOfAuctionItem_GameEntity" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BailiffSimulationAuctionOfAuctionItem_GameEntity">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BailiffAuctionOfAuctionItem_GameEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ScoringFunction" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BailiffAuctionOfAuctionItem_GameEntity">
+    <xs:attribute default="2147483647" name="MaximumNumberOfSales" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="BailiffAuction_HackingProgram">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BailiffSimulationAuctionOfAuctionItem_GameEntity">
+        <xs:attribute name="Type" type="HackingProgramType" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="HackingProgramType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Defense" />
+      <xs:enumeration value="Offense" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="BailiffAuction_TimeBubble">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BailiffSimulationAuctionOfAuctionItem_GameEntity" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BailiffAuction_Ship">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BailiffSimulationAuctionOfAuctionItem_GameEntity" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BailiffAuction_Law">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BailiffSimulationAuctionOfAuctionItem_GameEntity" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BailiffAuction_Improvement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BailiffSimulationAuctionOfAuctionItem_GameEntity" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BailiffAuction_Hero">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BailiffSimulationAuctionOfAuctionItem_GameEntity" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BailiffAuction_FactionPact">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BailiffSimulationAuctionOfAuctionItem_FactionPact" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BailiffSimulationAuctionOfAuctionItem_FactionPact">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BailiffAuctionOfAuctionItem_FactionPact">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="ScoringFunction" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="BailiffAuctionOfAuctionItem_FactionPact">
+    <xs:attribute default="2147483647" name="MaximumNumberOfSales" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="BailiffAuction_Resource">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BailiffAuctionOfAuctionItem_Resource">
+        <xs:attribute name="Type" type="Type" use="required" />
+        <xs:attribute name="MaxPercentage" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="Type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Common" />
+      <xs:enumeration value="Strategic" />
+      <xs:enumeration value="Luxury" />
+      <xs:enumeration value="Alias" />
+      <xs:enumeration value="Gameplay" />
+      <xs:enumeration value="LateCollect" />
+      <xs:enumeration value="SystemStrategic" />
+      <xs:enumeration value="SystemLuxury" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="BailiffAuctionOfAuctionItem_Resource">
+    <xs:attribute default="2147483647" name="MaximumNumberOfSales" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

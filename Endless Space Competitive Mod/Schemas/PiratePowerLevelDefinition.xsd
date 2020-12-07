@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="PiratePowerLevelDefinition" nillable="true" type="PiratePowerLevelDefinition" />
+  <xs:complexType name="PiratePowerLevelDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="FleetSpawn" type="PirateFleetSpawn" />
+          <xs:element minOccurs="0" maxOccurs="1" name="FleetMissionDefinitionReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Droplist" type="PirateDroplist" />
+        </xs:sequence>
+        <xs:attribute name="PowerLevel" type="xs:int" use="required" />
+        <xs:attribute name="Difficulty" type="xs:string" />
+        <xs:attribute name="MinimumPowerPointsStock" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="PirateFleetSpawn">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ShipDesignReference" type="XmlNamedReference" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Reinforcement" type="PirateFleetReinforcement" />
+    </xs:sequence>
+    <xs:attribute default="1" name="Weight" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="PirateFleetReinforcement">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ShipDesignReference" type="XmlNamedReference" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+    </xs:sequence>
+    <xs:attribute name="Cost" type="xs:float" use="required" />
+  </xs:complexType>
+  <xs:complexType name="PirateDroplist">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="DroppableResource" type="DroppableResource" />
+    </xs:sequence>
+    <xs:attribute name="Picks" type="xs:int" use="required" />
+  </xs:complexType>
+  <xs:complexType name="DroppableResource">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Droppable">
+        <xs:attribute name="Quantity" type="xs:int" use="required" />
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Droppable">
+    <xs:attribute default="true" name="CanHaveDuplicate" type="xs:boolean" />
+    <xs:attribute default="1" name="Weight" type="xs:int" />
+    <xs:attribute default="0" name="MaxTurn" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="RemainsDefinition" nillable="true" type="RemainsDefinition" />
+  <xs:complexType name="RemainsDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Droplist" type="RemainsDroplist" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="RemainsDroplist">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Droppable" type="RemainsDroppable" />
+    </xs:sequence>
+    <xs:attribute name="Probability" type="xs:float" use="required" />
+    <xs:attribute default="0" name="MinimumParameterValue" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="RemainsDroppable">
+    <xs:complexContent mixed="false">
+      <xs:extension base="XmlNamedReference">
+        <xs:attribute default="1" name="Probability" type="xs:float" />
+        <xs:attribute name="DroppableType" type="Type" use="required" />
+        <xs:attribute default="0" name="MinimumParameterValue" type="xs:int" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="Type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Curiosity" />
+      <xs:enumeration value="Anomaly" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="PirateLairRemainsDefinition" nillable="true" type="PirateLairRemainsDefinition" />
+  <xs:complexType name="PirateLairRemainsDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RemainsDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ManpowerThreshold" type="xs:int" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PiratePowerThreshold" type="xs:int" />
+        </xs:sequence>
+        <xs:attribute name="GroundBattleOverrideThreshold" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="EncounterRemainsDefinition" nillable="true" type="EncounterRemainsDefinition" />
+  <xs:complexType name="EncounterRemainsDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RemainsDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="CommandPointsThreshold" type="xs:int" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ManpowerThreshold" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="MinorFactionRemainsDefinition" nillable="true" type="MinorFactionRemainsDefinition" />
+  <xs:complexType name="MinorFactionRemainsDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RemainsDefinition">
+        <xs:attribute name="GroundBattleOverrideThreshold" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="GroundBattleRemainsDefinition" nillable="true" type="GroundBattleRemainsDefinition" />
+  <xs:complexType name="GroundBattleRemainsDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="RemainsDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ManpowerThreshold" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

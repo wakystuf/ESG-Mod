@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="ContractStubDefinition" nillable="true" type="ContractStubDefinition" />
+  <xs:complexType name="ContractStubDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticPressurePrerequisite" type="DiplomaticPressurePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticRelationStatePrerequisite" type="DiplomaticRelationStatePrerequisite" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Option" type="Option" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DiplomaticPressurePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="DiplomaticPrerequisite">
+        <xs:attribute default="ProviderToReceiver" name="Relation" type="RelationType" />
+        <xs:attribute name="MinValue" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="RelationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="ProviderToReceiver" />
+      <xs:enumeration value="ReceiverToProvider" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DiplomaticPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DiplomaticRelationStatePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="DiplomaticPrerequisite">
+        <xs:attribute default="EmpireWhichProvides" name="Responsible" type="DiplomaticCostResponsible" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="DiplomaticCostResponsible">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="EmpireWhichProposes" />
+      <xs:enumeration value="EmpireWhichProvides" />
+      <xs:enumeration value="EmpireWhichReceives" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="Option">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Term" type="Term" />
+    </xs:sequence>
+    <xs:attribute name="Index" type="xs:int" use="required" />
+  </xs:complexType>
+  <xs:complexType name="Term">
+    <xs:attribute name="Provider" type="Provider" use="required" />
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="Provider">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Initiator" />
+      <xs:enumeration value="Receiver" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

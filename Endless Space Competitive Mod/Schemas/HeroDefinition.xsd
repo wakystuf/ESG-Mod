@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="HeroDefinition" nillable="true" type="HeroDefinition" />
+  <xs:complexType name="HeroDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="HeroSkillProviderDefinition">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="StatisticPrerequisite" type="StatisticPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DownloadableContentPrerequisite" type="DownloadableContentPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="1" name="Affinity" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Class" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Politics" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ShipDesign" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SkillTree" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="LevelUpRuleReference" type="XmlNamedReference" />
+        </xs:sequence>
+        <xs:attribute default="false" name="Hidden" type="xs:boolean" />
+        <xs:attribute default="false" name="IgnoreInstanceNumber" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="StatisticPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite">
+        <xs:attribute default="-3.40282347E+38" name="MinimumValue" type="xs:float" />
+        <xs:attribute default="3.40282347E+38" name="MaximumValue" type="xs:float" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DatePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DownloadableContentPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="GameSettingPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="HeroSkillProviderDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Skill" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

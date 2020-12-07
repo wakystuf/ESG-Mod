@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="EncounterEntity" nillable="true" type="EncounterEntity" />
+  <xs:complexType name="EncounterEntity">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+        </xs:sequence>
+        <xs:attribute default="false" name="IsUnique" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="EncounterEffectArea" nillable="true" type="EncounterEffectArea" />
+  <xs:complexType name="EncounterEffectArea">
+    <xs:complexContent mixed="false">
+      <xs:extension base="EncounterEntity">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="EntityFilter" type="EncounterEntityFilterDefinition" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="BattleActionReference" type="XmlNamedReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="EncounterEntityFilterDefinition">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute default="Undefined" name="EntityType" type="EncounterEntityType" />
+    <xs:attribute default="None" name="EntityTags" type="EncounterEntityTags" />
+  </xs:complexType>
+  <xs:simpleType name="EncounterEntityType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Arena" />
+      <xs:enumeration value="EffectArea" />
+      <xs:enumeration value="Group" />
+      <xs:enumeration value="Flotilla" />
+      <xs:enumeration value="Ship" />
+      <xs:enumeration value="ShipSection" />
+      <xs:enumeration value="Module" />
+      <xs:enumeration value="Salvo" />
+      <xs:enumeration value="Citadel" />
+      <xs:enumeration value="CitadelModule" />
+      <xs:enumeration value="CitadelSalvo" />
+      <xs:enumeration value="Undefined" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="EncounterEntityTags">
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="None" />
+          <xs:enumeration value="Me" />
+          <xs:enumeration value="Other" />
+          <xs:enumeration value="SameShip" />
+          <xs:enumeration value="OtherShip" />
+          <xs:enumeration value="SameFlotilla" />
+          <xs:enumeration value="OtherFlotilla" />
+          <xs:enumeration value="SameGroup" />
+          <xs:enumeration value="OtherGroup" />
+          <xs:enumeration value="EffectInitiator" />
+          <xs:enumeration value="EffectTarget" />
+          <xs:enumeration value="Alive" />
+          <xs:enumeration value="Deactivated" />
+          <xs:enumeration value="Destroyed" />
+          <xs:enumeration value="SameModule" />
+          <xs:enumeration value="OtherModule" />
+          <xs:enumeration value="Arena" />
+          <xs:enumeration value="Reinforcement" />
+          <xs:enumeration value="Inactive" />
+          <xs:enumeration value="MyMainTarget" />
+          <xs:enumeration value="SameCitadel" />
+          <xs:enumeration value="OtherCitadel" />
+          <xs:enumeration value="SameCitadelModule" />
+          <xs:enumeration value="OtherCitadelModule" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

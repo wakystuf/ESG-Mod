@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="XmlMapping" nillable="true" type="XmlMapping" />
+  <xs:complexType name="XmlMapping">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="Variation" type="Variation" />
+        <xs:element minOccurs="0" maxOccurs="1" name="GameObject" type="GameObject" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Fallback" type="Fallback" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Node" type="Node" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="Variation">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Node">
+        <xs:attribute name="Values" type="xs:string" />
+        <xs:attribute name="Weights" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Node">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="Variation" type="Variation" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Transform" type="Transform" />
+        <xs:element minOccurs="0" maxOccurs="1" name="GameObject" type="GameObject" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Fallback" type="Fallback" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Node" type="Node" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Condition" type="xs:string" />
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Type" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="Transform">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Node">
+        <xs:attribute name="UniformScale" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="GameObject">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Node">
+        <xs:attribute name="Prefab" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Fallback">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Node" />
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="PopulationDefinition" nillable="true" type="PopulationDefinition" />
+  <xs:complexType name="PopulationDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SupervisorGain" type="SupervisorGain" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DefaultPolitics" type="ArrayOfPopulationPoliticsDefinition" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Trait" type="XmlNamedReference" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Desires" type="ArrayOfXmlNamedReference" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Wills" type="ArrayOfXmlNamedReference" />
+      <xs:element minOccurs="0" maxOccurs="1" name="PlanetScoreFormulae" type="ArrayOfPopulationPlanetScoreFormula" />
+      <xs:element minOccurs="0" maxOccurs="1" name="AffinityMapping" type="XmlNamedReference" />
+      <xs:element minOccurs="0" maxOccurs="1" name="GrowthBoostLuxuryOptions" type="ArrayOfLuxury" />
+    </xs:sequence>
+    <xs:attribute name="AffinityName" type="xs:string" />
+    <xs:attribute name="LocalizedName" type="xs:string" />
+    <xs:attribute default="false" name="Standard" type="xs:boolean" />
+    <xs:attribute default="-1" name="UniquePopulationId" type="xs:int" />
+    <xs:attribute default="false" name="IsInvincible" type="xs:boolean" />
+    <xs:attribute default="false" name="IsUnmovable" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="SupervisorGain">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Tags" type="Tags" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute default="1" name="Weight" type="xs:float" />
+  </xs:complexType>
+  <xs:complexType name="Tags">
+    <xs:simpleContent>
+      <xs:extension base="xs:string" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfPopulationPoliticsDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Politics" type="PopulationPoliticsDefinition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PopulationPoliticsDefinition">
+    <xs:attribute name="BaseScore" type="xs:float" use="required" />
+    <xs:attribute name="BaseTrend" type="xs:float" use="required" />
+    <xs:attribute name="PoliticsReference" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="ArrayOfXmlNamedReference">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AspirationReference" type="XmlNamedReference" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfPopulationPlanetScoreFormula">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="PlanetScoreFormula" type="PopulationPlanetScoreFormula" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="PopulationPlanetScoreFormula">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="SupportPrerequisite" type="SupportPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="1" name="Formula" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SupportPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite">
+        <xs:attribute name="Politics" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathValidityPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TechnologyPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="PathValidityPrerequisite">
+        <xs:attribute default="false" name="UnlockHidden" type="xs:boolean" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfLuxury">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Luxury" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>

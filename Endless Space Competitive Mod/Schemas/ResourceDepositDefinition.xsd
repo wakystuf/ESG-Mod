@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="ResourceDepositDefinition" nillable="true" type="ResourceDepositDefinition" />
+  <xs:complexType name="ResourceDepositDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+        </xs:sequence>
+        <xs:attribute name="SubCategory" type="xs:string" />
+        <xs:attribute default="false" name="Indestructible" type="xs:boolean" />
+        <xs:attribute name="Rarity" type="ResourceRarity" use="required" />
+        <xs:attribute default="None" name="Family" type="ResourceFamily" />
+        <xs:attribute name="LinkedResource" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:simpleType name="ResourceRarity">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Common" />
+      <xs:enumeration value="Uncommon" />
+      <xs:enumeration value="Rare" />
+      <xs:enumeration value="Legendary" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ResourceFamily">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None" />
+      <xs:enumeration value="Happiness" />
+      <xs:enumeration value="Economy" />
+      <xs:enumeration value="Science" />
+      <xs:enumeration value="Growth" />
+      <xs:enumeration value="Production" />
+      <xs:enumeration value="Prestige" />
+      <xs:enumeration value="Defense" />
+      <xs:enumeration value="GroundBattle" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

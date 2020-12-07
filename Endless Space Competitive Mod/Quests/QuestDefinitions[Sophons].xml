@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+  <!-- ####################################### -->
+  <!--           Chapter 2.1 - Military          -->
+  <!-- ####################################### -->
+
+  <QuestDefinition Name="SophonsQuest-Chapter2.1-Military" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false">
+
+    <!--============ TAGS  ============-->
+    <Tags>Chapter2.1-Militarist</Tags>
+
+    <QuestContextSolo/>
+
+
+    <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                      NumberOfOccurrencesPerEmpire="1"
+                      NumberOfConcurrentInstances="0"/>
+
+    <!--============ VARIABLES ============-->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <InterpretedVar VarName="$MinimumAmount" Target="$(Empire)">
+        <Expression>Min(3,(Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics06') + 1))</Expression>
+      </InterpretedVar>
+      <Var VarName="$MilitaristPolitic" StringValue="Politics06"/>
+      <InterpretedVar VarName="$Duration" Target="$(Empire)">
+        <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*10</Expression>
+      </InterpretedVar>
+      <LocalizationVar LocalizationKey="$AmountLoc" Source="$MinimumAmount"/>
+      <LocalizationVar LocalizationKey="$DurationName" Source="$Duration"/>
+    </Vars>
+
+    <!--============ PREREQUISITES ============-->
+
+    <!--============ STEPS ============-->
+
+    <Steps>
+      <!--============ STEP 1 ============-->
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Step1_Objective1" StartValue="0" EndValue="$Duration">
+            <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+          <Sequence>
+            <Loop>
+              <Decorator_BeginTurn ProgressionIncrement="1">
+                <Condition_HasLaws>
+                  <Input_Empire VarName="$CurrentEmpire"/>
+                  <Input_Politics VarName="$MilitaristPolitic"/>
+                  <Input_MinimumAmount VarName="$MinimumAmount"/>
+                </Condition_HasLaws>
+              </Decorator_BeginTurn>
+              <Input_Count VarName="$Duration"/>
+            </Loop>
+            <Action_ChooseOutcome Name="Outcome1"/>
+          </Sequence>
+          <Outcome Name="Outcome1">
+            <Triggers Weight="1">
+              <QuestTrigger>
+                <Tags>Chapter2.2-Militarist</Tags>
+                <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+              </QuestTrigger>
+            </Triggers>
+          </Outcome>
+          </Objective>
+        </ObjectiveSet>
+        <Reward Droplist="DroplistMinorRewardsEra3" Picks="1"/>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+</Datatable>

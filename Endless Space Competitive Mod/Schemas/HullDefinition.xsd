@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="HullDefinition" nillable="true" type="HullDefinition" />
+  <xs:complexType name="HullDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="UnlockDatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" default="0" name="BuyoutCostModifier" type="xs:float" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Tags" type="Tags" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="CostReductionReference" type="CostReductionReference" />
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="InfiniteCost" type="InfiniteCost" />
+            <xs:element minOccurs="0" maxOccurs="1" name="CustomCost" type="CustomConstructionCost" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Cost" type="ConstructionCost" />
+          </xs:choice>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DownloadableContentPrerequisite" type="DownloadableContentPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="SupportPrerequisite" type="SupportPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ShipDesignLayout" type="ShipDesignLayoutDefinition" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="BattleActionReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="LevelUpRuleReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="QueuedSimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="InProgressSimulationDescriptorReference" type="SimulationDescriptorReference" />
+        </xs:sequence>
+        <xs:attribute name="Category" type="xs:string" />
+        <xs:attribute name="SubCategory" type="xs:string" />
+        <xs:attribute default="1" name="ModuleCostMultiplier" type="xs:int" />
+        <xs:attribute name="ModuleCostMultiplierProperty" type="xs:string" />
+        <xs:attribute name="RepresentativeMappingOverride" type="xs:string" />
+        <xs:attribute name="ScoreProvider" type="xs:string" />
+        <xs:attribute default="false" name="IsMothership" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Tags">
+    <xs:simpleContent>
+      <xs:extension base="xs:string" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="CostReductionReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="InfiniteCost">
+    <xs:attribute name="ResourceName" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="CustomConstructionCost">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Instant" type="xs:boolean" />
+        <xs:attribute default="false" name="InstantOnCompletion" type="xs:boolean" />
+        <xs:attribute name="ResourceName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ConstructionCost">
+    <xs:simpleContent>
+      <xs:extension base="xs:float">
+        <xs:attribute default="false" name="Instant" type="xs:boolean" />
+        <xs:attribute default="false" name="InstantOnCompletion" type="xs:boolean" />
+        <xs:attribute name="ResourceName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DatePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="GameSettingPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DownloadableContentPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="SupportPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite">
+        <xs:attribute name="Politics" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathValidityPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TechnologyPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="PathValidityPrerequisite">
+        <xs:attribute default="false" name="UnlockHidden" type="xs:boolean" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="ShipDesignLayoutDefinition">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="1" name="ShipRoleReference" type="XmlNamedReference" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="SectionPattern_Eight" type="SectionPatternDefinition_Eight" />
+        <xs:element minOccurs="0" maxOccurs="1" name="SectionPattern_Four" type="SectionPatternDefinition_Four" />
+        <xs:element minOccurs="0" maxOccurs="1" name="SectionPattern" type="SectionPatternDefinition" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Link" type="SlotLinkDefinition" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="SectionPatternDefinition_Eight">
+    <xs:complexContent mixed="false">
+      <xs:extension base="SectionPatternDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Section" type="SectionDefinition" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SectionDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="VisualSectionName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="LevelRestrictedSlot" type="LevelRestrictedSlotDefinition" />
+        <xs:element minOccurs="0" maxOccurs="1" name="WeaponSlot" type="WeaponSlotDefinition" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Slot" type="SlotDefinition" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="LevelRestrictedSlotDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="SlotDefinition">
+        <xs:attribute name="Level" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SlotDefinition">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="CustomCost" type="CustomConstructionCost" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Cost" type="ConstructionCost" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="CostReductionReference" type="CostReductionReference" />
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="RestrictedModuleCategory" type="ModuleCategory" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="RestrictedWeaponType" type="WeaponType" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="LineOfSight" type="LineOfSight" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Direction" type="SerializableDirection" />
+      <xs:element minOccurs="0" maxOccurs="1" default="90" name="Angle" type="xs:float" />
+      <xs:element minOccurs="0" maxOccurs="1" name="DefaultModuleReference" type="XmlNamedReference" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ListenerSlot" type="SlotEditingListener" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ModuleModifier" type="ModuleModifierDefinition" />
+      <xs:element minOccurs="0" maxOccurs="1" name="UISlotName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="VisualSlot" type="VisualSlot" />
+    </xs:sequence>
+    <xs:attribute default="1" name="ModuleCostMultiplier" type="xs:int" />
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute default="false" name="IsLargeSlot" type="xs:boolean" />
+    <xs:attribute default="true" name="IsEditable" type="xs:boolean" />
+    <xs:attribute default="1" name="EffectMultiplier" type="xs:float" />
+    <xs:attribute default="false" name="IsHidden" type="xs:boolean" />
+    <xs:attribute default="false" name="ShowPositionMarker" type="xs:boolean" />
+    <xs:attribute default="0" name="PositionMarkerAngle" type="xs:float" />
+  </xs:complexType>
+  <xs:simpleType name="ModuleCategory">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Weapon" />
+      <xs:enumeration value="Defense" />
+      <xs:enumeration value="Support" />
+      <xs:enumeration value="Bridge" />
+      <xs:enumeration value="Destruction" />
+      <xs:enumeration value="Squadron" />
+      <xs:enumeration value="COUNT" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="WeaponType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Undefined" />
+      <xs:enumeration value="Kinetic" />
+      <xs:enumeration value="Missile" />
+      <xs:enumeration value="Laser" />
+      <xs:enumeration value="Beam" />
+      <xs:enumeration value="Flack" />
+      <xs:enumeration value="Destruction" />
+      <xs:enumeration value="AOE" />
+      <xs:enumeration value="BoardingPod" />
+      <xs:enumeration value="KineticRailgun" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="LineOfSight">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Direction" type="SerializableDirection" />
+      <xs:element minOccurs="0" maxOccurs="1" default="90" name="Angle" type="xs:float" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="VisualSlot" type="VisualSlot" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SerializableDirection">
+    <xs:attribute name="X" type="xs:float" use="required" />
+    <xs:attribute name="Z" type="xs:float" use="required" />
+  </xs:complexType>
+  <xs:complexType name="VisualSlot">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="SlotEditingListener">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="ModuleModifierDefinition">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="WeaponSlotDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="SlotDefinition">
+        <xs:attribute default="Undefined" name="RestrictedWeaponType" type="WeaponType" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SectionPatternDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="CoreSection" type="SectionDefinition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SectionPatternDefinition_Four">
+    <xs:complexContent mixed="false">
+      <xs:extension base="SectionPatternDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Section" type="SectionDefinition" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SlotLinkDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SlotName" type="xs:string" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Effect" type="SlotLinkEffectDefinition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SlotLinkEffectDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ModuleConstraint" type="SlotLinkModuleConstraintDefinition" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="ModuleModifier" type="ModuleModifierDefinition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="SlotLinkModuleConstraintDefinition">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="UnlockDatatableElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:attribute name="KeyWords" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

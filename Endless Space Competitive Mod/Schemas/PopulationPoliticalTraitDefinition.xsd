@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="PopulationPoliticalTraitDefinition" nillable="true" type="PopulationPoliticalTraitDefinition" />
+  <xs:complexType name="PopulationPoliticalTraitDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="PopulationTrait">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SubFactionTrait" type="XmlNamedReference" />
+        </xs:sequence>
+        <xs:attribute name="Type" type="TraitType" use="required" />
+        <xs:attribute name="PoliticalType" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="TraitType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Minor" />
+      <xs:enumeration value="Major" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="PopulationTrait">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Tags" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Subtrait" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Command" type="Command" />
+        </xs:sequence>
+        <xs:attribute name="Category" type="xs:string" />
+        <xs:attribute name="SubCategory" type="xs:string" />
+        <xs:attribute default="0" name="Cost" type="xs:int" />
+        <xs:attribute default="true" name="ShowInCustom" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Command">
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Arguments" type="xs:string" />
+    <xs:attribute default="0" name="Priority" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="RecipeIngredientDefinition" nillable="true" type="RecipeIngredientDefinition" />
+  <xs:complexType name="RecipeIngredientDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="AIGain" type="AIGain" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SupervisorGain" type="SupervisorGain" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ResourceReference" type="XmlNamedReference" />
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="RecipeCustomCost" type="RecipeIngredientCost" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Cost" type="ConstructionCost" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+        </xs:sequence>
+        <xs:attribute name="Category" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AIGain">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Tag" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="RessourceName" type="xs:string" />
+    <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="SupervisorGain">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Tags" type="Tags" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute default="1" name="Weight" type="xs:float" />
+  </xs:complexType>
+  <xs:complexType name="Tags">
+    <xs:simpleContent>
+      <xs:extension base="xs:string" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="RecipeIngredientCost">
+    <xs:simpleContent>
+      <xs:extension base="CustomConstructionCost" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="CustomConstructionCost">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Instant" type="xs:boolean" />
+        <xs:attribute default="false" name="InstantOnCompletion" type="xs:boolean" />
+        <xs:attribute name="ResourceName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ConstructionCost">
+    <xs:simpleContent>
+      <xs:extension base="xs:float">
+        <xs:attribute default="false" name="Instant" type="xs:boolean" />
+        <xs:attribute default="false" name="InstantOnCompletion" type="xs:boolean" />
+        <xs:attribute name="ResourceName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

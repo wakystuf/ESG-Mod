@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="Setup" nillable="true" type="Setup" />
+  <xs:complexType name="Setup">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Chain" type="OrderPolicyChain" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="OrderPolicyChain">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="RegexRule" type="OrderPolicyRegexRule" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathRule" type="OrderPolicyPathRule" />
+        <xs:element minOccurs="0" maxOccurs="1" name="Rule" type="OrderPolicyRule" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Type" type="OrderPolicyChainType" use="required" />
+  </xs:complexType>
+  <xs:complexType name="OrderPolicyRegexRule">
+    <xs:simpleContent>
+      <xs:extension base="OrderPolicyRule" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="OrderPolicyRule">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Policy" type="OrderPolicy" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="OrderPolicy">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Unset" />
+      <xs:enumeration value="Accept" />
+      <xs:enumeration value="Reject" />
+      <xs:enumeration value="Drop" />
+      <xs:enumeration value="Queue" />
+      <xs:enumeration value="Log" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="OrderPolicyPathRule">
+    <xs:simpleContent>
+      <xs:extension base="OrderPolicyRule" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="OrderPolicyChainType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Input" />
+      <xs:enumeration value="Output" />
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

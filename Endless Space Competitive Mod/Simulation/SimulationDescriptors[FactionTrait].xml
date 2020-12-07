@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+  <SimulationDescriptor Name="AffinityGameplayVenetians"     Type="AffinityGameplay">
+    <!-- CanBuyoutAllOutposts = even if not colonizable -->
+    <Modifier TargetProperty="CanBuyoutOutposts" Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeForest" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeTerran" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeMonsoon" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeOcean" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeAtoll" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeBoreal" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeJungle" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="HullTypes" Operation="Subtraction" Value="1"  Path="ClassEmpire" TooltipHidden="true"/>
+    <!--HullType -1 since they only have 1 starting hull instead of 2-->
+
+    <Modifier TargetProperty="BuildingBuyoutReduction"                 Operation="Addition"  Value="0.3"    Path="ClassEmpire/ClassColonizedStarSystem"   />
+    <Modifier TargetProperty="ShipBuyoutReduction"                     Operation="Addition"  Value="0.3"    Path="ClassEmpire/ClassColonizedStarSystem"   />
+  </SimulationDescriptor>
+
+  <!-- Pilgrims Assimilation Trait -->
+  <SimulationDescriptor Name="FactionTraitMinorExplorers01" Type="FactionTraitMinor">
+    <Modifier TargetProperty="ProbeSpeed" Operation="Percent" Value="0.5" Path="ClassEmpire"/>
+    <Modifier TargetProperty="ProbeVisionRange" Operation="Percent" Value="1.0" Path="ClassEmpire"/>
+    <Modifier TargetProperty="MinorTraitsAssimilated"                 Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Remnant Assimilation Trait -->
+  <SimulationDescriptor Name="FactionTraitMinorWorldBuilders02" Type="FactionTraitMinor">
+    <Modifier TargetProperty="GroundBattleBombardmentImprovementDestructionProbability" Operation="Subtraction" Value="0.35" Path="ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%FactionTraitMinorWorldBuilders02TooltipEffects"/>
+    <Modifier TargetProperty="MinorTraitsAssimilated"                 Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Epistis Assimilation Trait -->
+  <SimulationDescriptor Name="FactionTraitMinorDiplomacy" Type="FactionTraitMinor">
+    <Modifier TargetProperty="PeacefulTreatyCostReduction" Operation="Addition" Value="-0.3"   Path="ClassEmpire"      Priority="-999"/>
+    <Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="FactionTraitMinorTrading" Type="FactionTraitMinor">
+    <Modifier TargetProperty="TradingRouteIncomeModifier" Operation="Percent" Value="0.25" Path="ClassEmpire/ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="MinorTraitsAssimilated"     Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Tikanan Assimilation Trait -->
+  <SimulationDescriptor Name="FactionTraitMinorSwarm01" Type="FactionTraitMinor">
+    <Modifier TargetProperty="InfantryManpowerCost"		Operation="Percent"		Value="-0.15"	Path="ClassEmpire"		TooltipHidden="true"/>
+    <Modifier TargetProperty="TankManpowerCost"		Operation="Percent"		Value="-0.15"	Path="ClassEmpire"		TooltipHidden="true"/>
+    <Modifier TargetProperty="PlaneManpowerCost"		Operation="Percent"		Value="-0.15"	Path="ClassEmpire"		TooltipHidden="true"/>
+    <Modifier TargetProperty="MinorTraitsAssimilated"   Operation="Addition"	Value="1"		Path="ClassEmpire"		TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Harmony Assimilation Trait -->
+  <SimulationDescriptor Name="FactionTraitMinorMindOverBody" Type="FactionTraitMinor">
+    <BinaryModifier TargetProperty="SystemResearch"   Operation="Addition"    Left="0.1"   BinaryOperation="Multiplication" Right="$(SystemGrowth)" SearchValueFromPath="true"  Path="ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%FactionTraitMinorMindOverBodyTooltipEffects"/>
+    <Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Gnashast Assimilation Trait -->
+  <SimulationDescriptor Name="FactionTraitMinorMonsters02" Type="FactionTraitMinor">
+    <Modifier		TargetProperty="InfantryMaxHealth"							Operation="Percent"		Value="0.1"	Path="ClassEmpire" TooltipOverride="%FactionTraitMinorGnashastTooltipEffects1"/>
+    <Modifier		TargetProperty="TankMaxHealth"							    Operation="Percent"		Value="0.1"	Path="ClassEmpire" TooltipHidden="true"/>
+    <Modifier		TargetProperty="PlaneMaxHealth"							    Operation="Percent"		Value="0.1"	Path="ClassEmpire" TooltipHidden="true"/>
+    <Modifier		TargetProperty="InfantryDamagesBonus"						Operation="Percent"		Value="0.1"	Path="ClassEmpire" TooltipOverride="%FactionTraitMinorGnashastTooltipEffects2"/>
+    <Modifier		TargetProperty="TankDamagesBonus"						    Operation="Percent"		Value="0.1"	Path="ClassEmpire" TooltipHidden="true"/>
+    <Modifier		TargetProperty="InfantryDamagesBonus"						Operation="Percent"		Value="0.1"	Path="ClassEmpire" TooltipHidden="true"/>
+    <Modifier		TargetProperty="PlaneDamagesBonus"						  Operation="Addition"	Value="1"		Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Z'vali Assimilation Trait -->
+  <SimulationDescriptor Name="FactionTraitMinorGamers02" Type="FactionTraitMinor">
+    <Modifier TargetProperty="SystemInfluenceRadius"     	            Operation="Percent"	 Value="0.1"		Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true" Priority="10"/>
+    <Modifier TargetProperty="MinorTraitsAssimilated"                 Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Bhagaba Assimilation Traits -->
+  <SimulationDescriptor Name="FactionTraitMinorDiplomats01" Type="FactionTraitMinor">
+    <BinaryModifier TargetProperty="SystemEmpirePoint"   Operation="Addition"    Left="0.05"   BinaryOperation="Multiplication" Right="$(SystemGrowth)" SearchValueFromPath="true"  Path="ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%FactionTraitMinorBhagabaTooltipEffects"/>
+    <Modifier TargetProperty="MinorTraitsAssimilated"                 Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="FactionTraitMinorDiplomats02" Type="FactionTraitMinor">
+    <BinaryModifier TargetProperty="PeacefulTreatyCostReduction" Operation="Division" Left="0.85" BinaryOperation="Multiplication" Right="$(PeaceCount)" Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="PeacefulTreatyCostReduction" Operation="Division" Left="0.8" BinaryOperation="Multiplication" Right="$(AllianceCount)" Path="ClassEmpire"/>
+    <Modifier TargetProperty="MinorTraitsAssimilated"                 Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Remnant -->
+  <SimulationDescriptor Name="FactionTraitMinorWorldBuilders01" Type="FactionTraitMinor">
+    <Modifier TargetProperty="WonderProductionCostReduction"			Operation="Subtraction" Value="0.2" Path="ClassEmpire/ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="MinorTraitsAssimilated"                 Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Xirmisala -->
+  <SimulationDescriptor Name="FactionTraitMinorBonusContributionToAcademy"    Type="FactionTraitMinor">
+    <Modifier TargetProperty="AcademyNextContributionMultiplier" Operation="Percent" Value="0.2" Path="ClassEmpire" TooltipOverride="%FactionTraitXirmisalaTrait2TooltipEffects"/>
+    <Modifier TargetProperty="MinorTraitsAssimilated"                 Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="FactionTraitMinorBonusDamageOnAcademy" Type="FactionTraitMinor">
+    <BinaryModifier TargetProperty="PlanetRawDust" Operation="Addition" Value="3" Path="ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeMeager" TooltipOverride="%FactionTraitXirmisalaTraitTooltipEffects"/>
+    <Modifier TargetProperty="MinorTraitsAssimilated"                 Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- -1 Movement Riftborn -->
+  <SimulationDescriptor Name="FactionTraitSlowTraveler1" Type="FactionTrait">
+    <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="-1"   Path="ClassEmpire/ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="-1"   Path="ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement"      Operation="Addition"  Value="1"    Path="ClassEmpire/ClassGarrisonFleet/ClassShip,AutomatedShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- -2 Movement -->
+  <SimulationDescriptor Name="FactionTraitSlowTraveler2" Type="FactionTrait">
+    <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="-2"    Path="ClassEmpire/ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="-2"    Path="ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="2"     Path="ClassEmpire/ClassGarrisonFleet/ClassShip,AutomatedShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Price of Perfection -->
+  <SimulationDescriptor Name="FactionTraitPriceOfPerfection1"    Type="FactionTrait">
+    <Modifier TargetProperty="ShipProductionCostReduction"	Operation="Addition" Value="0.05" Path="ClassEmpire/ClassColonizedStarSystem" Priority="-5"/>
+    <Modifier TargetProperty="ColonyShipProductionCostReduction" Operation="Addition" Value="0.10" Path="ClassEmpire/ClassColonizedStarSystem" Priority="-5" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="Damage" Operation="Percent" Value="0.05" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="FactionTraitPriceOfPerfection2"    Type="FactionTrait">
+    <Modifier TargetProperty="ShipProductionCostReduction"	Operation="Addition" Value="0.10" Path="ClassEmpire/ClassColonizedStarSystem" Priority="-5"/>
+    <Modifier TargetProperty="ColonyShipProductionCostReduction" Operation="Addition" Value="0.20" Path="ClassEmpire/ClassColonizedStarSystem" Priority="-5" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="Damage" Operation="Percent" Value="0.1" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
+  </SimulationDescriptor>
+
+  <!-- Nakalim -->
+  <SimulationDescriptor Name="FactionTraitHeroAssignmentTemplars" Type="FactionTrait">
+    <Modifier TargetProperty="AssignmentCooldownDecrementPerTurn"    Operation="Percent"  Value="0.5" Path="ClassEmpire/ClassGarrison/ClassHero"/>
+    <Modifier TargetProperty="AssignmentCooldownDecrementPerTurn"    Operation="Percent"  Value="0.5" Path="ClassEmpire/ClassColonizedStarSystem/ClassHero" TooltipHidden="true"/>
+    <Modifier TargetProperty="AssignmentCooldownDecrementPerTurn"    Operation="Percent"  Value="0.5" Path="ClassEmpire/ClassHero" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Academy -->
+  <SimulationDescriptor Name="FactionTraitAcademyBonuses" Type="FactionTrait">
+    <Modifier TargetProperty="PlanetRawDust" Operation="Addition" Value="5" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" />
+    <Modifier TargetProperty="PlanetRawFood" Operation="Addition" Value="5" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" />
+    <Modifier TargetProperty="PlanetRawFood" Operation="Multiplication" Value="2" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" />
+    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="$(Population)" BinaryOperation="Multiplication" Right="25" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
+    <BinaryModifier TargetProperty="GroundBattleBombardmentDefenderDamages" Operation="Addition" Left="$(Population)" BinaryOperation="Multiplication" Right="10" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
+    <Modifier TargetProperty="RawMaximumPopulation"        Operation="Force"  Value="14"   Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" />
+  </SimulationDescriptor>
+
+  <!-- Population Boost Cost -->
+  <SimulationDescriptor Name="FactionTraitIncreasedBoostCost1" Type="FactionTrait">
+    <Modifier TargetProperty="PopulationBoostCostMultiplier"             Operation="Percent"     Value="0.5"    Path="ClassEmpire"     TooltipHidden="false"/>
+  </SimulationDescriptor>
+  
+  <SimulationDescriptor Name="FactionTraitIncreasedBoostCost2" Type="FactionTrait">
+    <Modifier TargetProperty="PopulationBoostCostMultiplier"             Operation="Percent"     Value="1"    Path="ClassEmpire"     TooltipHidden="false"/>
+  </SimulationDescriptor>
+</Datatable>

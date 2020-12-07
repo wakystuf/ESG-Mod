@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="BattleEffect" nillable="true" type="BattleEffect" />
+  <xs:complexType name="BattleEffect">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="CancellationEventPrerequisite" type="EncounterEventPrerequisiteDefinition" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="RealizationEvent" type="RealizationEventByState" />
+        </xs:sequence>
+        <xs:attribute default="0" name="Duration" type="xs:string" />
+        <xs:attribute default="-1" name="Frequency" type="xs:float" />
+        <xs:attribute default="Ignore" name="StackingBehaviour" type="StackingBehaviourType" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="EncounterEventPrerequisiteDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="EventInitiatorFilter" type="EncounterEntityFilterDefinition" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EventTargetFilter" type="EncounterEntityFilterDefinition" />
+    </xs:sequence>
+    <xs:attribute name="EventType" type="EncounterEventType" use="required" />
+  </xs:complexType>
+  <xs:complexType name="EncounterEntityFilterDefinition">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute default="Undefined" name="EntityType" type="EncounterEntityType" />
+    <xs:attribute default="None" name="EntityTags" type="EncounterEntityTags" />
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="EncounterEntityType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Arena" />
+      <xs:enumeration value="EffectArea" />
+      <xs:enumeration value="Group" />
+      <xs:enumeration value="Flotilla" />
+      <xs:enumeration value="Ship" />
+      <xs:enumeration value="ShipSection" />
+      <xs:enumeration value="Module" />
+      <xs:enumeration value="Salvo" />
+      <xs:enumeration value="Citadel" />
+      <xs:enumeration value="CitadelModule" />
+      <xs:enumeration value="CitadelSalvo" />
+      <xs:enumeration value="Undefined" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="EncounterEntityTags">
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="None" />
+          <xs:enumeration value="Me" />
+          <xs:enumeration value="Other" />
+          <xs:enumeration value="SameShip" />
+          <xs:enumeration value="OtherShip" />
+          <xs:enumeration value="SameFlotilla" />
+          <xs:enumeration value="OtherFlotilla" />
+          <xs:enumeration value="SameGroup" />
+          <xs:enumeration value="OtherGroup" />
+          <xs:enumeration value="EffectInitiator" />
+          <xs:enumeration value="EffectTarget" />
+          <xs:enumeration value="Alive" />
+          <xs:enumeration value="Deactivated" />
+          <xs:enumeration value="Destroyed" />
+          <xs:enumeration value="SameModule" />
+          <xs:enumeration value="OtherModule" />
+          <xs:enumeration value="Arena" />
+          <xs:enumeration value="Reinforcement" />
+          <xs:enumeration value="Inactive" />
+          <xs:enumeration value="MyMainTarget" />
+          <xs:enumeration value="SameCitadel" />
+          <xs:enumeration value="OtherCitadel" />
+          <xs:enumeration value="SameCitadelModule" />
+          <xs:enumeration value="OtherCitadelModule" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+  <xs:simpleType name="EncounterEventType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="BattleStart" />
+      <xs:enumeration value="BattleStart_GroupInteraction" />
+      <xs:enumeration value="BattleEnd" />
+      <xs:enumeration value="PhaseStart" />
+      <xs:enumeration value="PhaseEnd" />
+      <xs:enumeration value="FirstPhaseStart" />
+      <xs:enumeration value="LastPhaseStart" />
+      <xs:enumeration value="PostPhaseStart" />
+      <xs:enumeration value="Spawned" />
+      <xs:enumeration value="Attack_Preparation" />
+      <xs:enumeration value="Attack_Start" />
+      <xs:enumeration value="Attack_PrepareSalvoLaunched" />
+      <xs:enumeration value="Attack_SalvoLaunched" />
+      <xs:enumeration value="Attack_PostSalvoLaunched" />
+      <xs:enumeration value="Attack_HitShield" />
+      <xs:enumeration value="Attack_PrepareHitTarget" />
+      <xs:enumeration value="Attack_HitTarget" />
+      <xs:enumeration value="Attack_PostHitTarget" />
+      <xs:enumeration value="Attack_Miss" />
+      <xs:enumeration value="Attack_TargetLost" />
+      <xs:enumeration value="Attack_End" />
+      <xs:enumeration value="EnterArea" />
+      <xs:enumeration value="ExitArea" />
+      <xs:enumeration value="MedalGained" />
+      <xs:enumeration value="ComputeEndBattleStatus" />
+      <xs:enumeration value="Healing_Prepare" />
+      <xs:enumeration value="Healing" />
+      <xs:enumeration value="BattleFinalization" />
+      <xs:enumeration value="Deactivation" />
+      <xs:enumeration value="Destruction" />
+      <xs:enumeration value="DestructionComplete" />
+      <xs:enumeration value="Squadron_MatchCreated_Duel" />
+      <xs:enumeration value="Squadron_MatchCreated_Chase" />
+      <xs:enumeration value="Squadron_MatchCreated_Assault" />
+      <xs:enumeration value="Squadron_MatchImminent_Duel" />
+      <xs:enumeration value="Squadron_MatchImminent_Chase" />
+      <xs:enumeration value="Squadron_MatchImminent_Assault" />
+      <xs:enumeration value="Squadron_MatchAction_PrepareAttack" />
+      <xs:enumeration value="Squadron_MatchAction_Attack" />
+      <xs:enumeration value="Squadron_MatchAction_Hit" />
+      <xs:enumeration value="Squadron_MatchAction_PostAttack" />
+      <xs:enumeration value="CitadelAttack_SalvoLaunched" />
+      <xs:enumeration value="CitadelAttack_HitShield" />
+      <xs:enumeration value="CitadelAttack_PrepareHitTarget" />
+      <xs:enumeration value="CitadelAttack_HitTarget" />
+      <xs:enumeration value="CitadelAttack_PostHitTarget" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="RealizationEventByState">
+    <xs:attribute name="State" type="BattleEffectState" use="required" />
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:simpleType name="BattleEffectState">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Undefined" />
+      <xs:enumeration value="Started" />
+      <xs:enumeration value="Running" />
+      <xs:enumeration value="Reset" />
+      <xs:enumeration value="Finished" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="StackingBehaviourType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Stack" />
+      <xs:enumeration value="Reset" />
+      <xs:enumeration value="Ignore" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="BattleEffect_ApplyDescriptor" nillable="true" type="BattleEffect_ApplyDescriptor" />
+  <xs:complexType name="BattleEffect_ApplyDescriptor">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BattleEffect">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:element name="BattleEffect_SetPropertyValue" nillable="true" type="BattleEffect_SetPropertyValue" />
+  <xs:complexType name="BattleEffect_SetPropertyValue">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BattleEffect">
+        <xs:attribute name="PropertyName" type="xs:string" />
+        <xs:attribute name="Operation" type="OperationType" use="required" />
+        <xs:attribute name="InterpreterFormula" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="OperationType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Set" />
+      <xs:enumeration value="Addition" />
+      <xs:enumeration value="Subtraction" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="BattleEffect_SetStatus" nillable="true" type="BattleEffect_SetStatus" />
+  <xs:complexType name="BattleEffect_SetStatus">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BattleEffect">
+        <xs:attribute name="Status" type="EncounterEntityStatus" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="EncounterEntityStatus">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Alive" />
+      <xs:enumeration value="Deactivated" />
+      <xs:enumeration value="Destroyed" />
+      <xs:enumeration value="Inactive" />
+      <xs:enumeration value="Resurrected" />
+      <xs:enumeration value="Eliminated" />
+      <xs:enumeration value="Unset" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:element name="BattleEffect_EmpireReward_Resource" nillable="true" type="BattleEffect_EmpireReward_Resource" />
+  <xs:complexType name="BattleEffect_EmpireReward_Resource">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BattleEffect">
+        <xs:attribute name="ResourceName" type="xs:string" />
+        <xs:attribute name="InterpreterFormula" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="BattleEffect_EmpireReward_SpawnShips" nillable="true" type="BattleEffect_EmpireReward_SpawnShips" />
+  <xs:complexType name="BattleEffect_EmpireReward_SpawnShips">
+    <xs:complexContent mixed="false">
+      <xs:extension base="BattleEffect">
+        <xs:attribute name="ShipDesignName" type="xs:string" />
+        <xs:attribute name="InterpreterFormula" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

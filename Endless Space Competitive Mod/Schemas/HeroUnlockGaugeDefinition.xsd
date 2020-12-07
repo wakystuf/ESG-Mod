@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="HeroUnlockGaugeDefinition" nillable="true" type="HeroUnlockGaugeDefinition" />
+  <xs:complexType name="HeroUnlockGaugeDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ClassGauge" type="HeroUnlockClassGaugeDefinition" />
+        </xs:sequence>
+        <xs:attribute name="GaugePointsPropertyName" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="HeroUnlockClassGaugeDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="FillingEvent" type="HeroUnlockClassGaugeFillingEventDefinition" />
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="ResourceName" type="xs:string" />
+    <xs:attribute name="UnlockedClass" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="HeroUnlockClassGaugeFillingEventDefinition">
+    <xs:attribute name="EventType" type="xs:string" />
+    <xs:attribute name="PointsFormula" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

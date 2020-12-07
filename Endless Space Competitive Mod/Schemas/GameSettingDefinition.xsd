@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="GameSettingDefinition" nillable="true" type="GameSettingDefinition" />
+  <xs:complexType name="GameSettingDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="EditableValue" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="IncrementCount" type="CounterIncrementer" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Visible" type="AccessibilitySetter" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Enable" type="AccessibilitySetter" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ItemDefinition" type="ItemDefinition" />
+        </xs:sequence>
+        <xs:attribute name="Type" type="xs:string" />
+        <xs:attribute name="Default" type="xs:string" />
+        <xs:attribute name="IsEditable" type="xs:string" />
+        <xs:attribute name="SessionSpecific" type="xs:string" />
+        <xs:attribute default="false" name="NotNullOrEmpty" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CounterIncrementer">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="If" type="GameSettingCondition" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute name="Operator" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="GameSettingCondition">
+    <xs:attribute name="GameSetting" type="xs:string" />
+    <xs:attribute name="Value" type="xs:string" />
+    <xs:attribute name="Count" type="xs:string" />
+    <xs:attribute name="LowerEqual" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="AccessibilitySetter">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="If" type="GameSettingCondition" />
+    </xs:sequence>
+    <xs:attribute name="Value" type="xs:string" />
+    <xs:attribute name="Operator" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="ItemDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyValuePair" type="KeyValuePair" />
+        </xs:sequence>
+        <xs:attribute default="false" name="IsRecommended" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="KeyValuePair">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="Key" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="WorldSettingDefinition" nillable="true" type="WorldSettingDefinition" />
+  <xs:complexType name="WorldSettingDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="GameSettingDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+</xs:schema>

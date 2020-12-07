@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="TechnologyStageDefinition" nillable="true" type="TechnologyStageDefinition" />
+  <xs:complexType name="TechnologyStageDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ScienceConstructibleElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="UnlockCount" type="UnlockCount" />
+        </xs:sequence>
+        <xs:attribute name="StageNumber" type="xs:int" use="required" />
+        <xs:attribute default="false" name="HideNotification" type="xs:boolean" />
+        <xs:attribute name="TechnologyQuadrant" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="UnlockCount">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AdditionalTechnologyUnlockCount" type="AdditionalTechnologyUnlockCount" />
+    </xs:sequence>
+    <xs:attribute name="CountPropertyName" type="xs:string" />
+    <xs:attribute default="0" name="UnlockCount" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="AdditionalTechnologyUnlockCount">
+    <xs:simpleContent>
+      <xs:extension base="DownloadableContentPrerequisite">
+        <xs:attribute name="Count" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DownloadableContentPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DatePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="GameSettingPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="SupportPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite">
+        <xs:attribute name="Politics" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathValidityPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="TechnologyPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="PathValidityPrerequisite">
+        <xs:attribute default="false" name="UnlockHidden" type="xs:boolean" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ScienceConstructibleElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ConstructibleElement">
+        <xs:attribute default="None" name="TechnologyFlags" type="TechnologyFlag" />
+        <xs:attribute default="false" name="AutoUnlock" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="TechnologyFlag">
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="None" />
+          <xs:enumeration value="Affinity" />
+          <xs:enumeration value="Quest" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+  <xs:complexType name="ConstructibleElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="UnlockDatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="AIGain" type="AIGain" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SupervisorGain" type="SupervisorGain" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Tags" type="Tags" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="InProgressSimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="QueuedSimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ConstructionQueueEntityActionReference" type="XmlNamedReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="CostReductionReference" type="CostReductionReference" />
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="InfiniteCost" type="InfiniteCost" />
+            <xs:element minOccurs="0" maxOccurs="1" name="CustomCost" type="CustomConstructionCost" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Cost" type="ConstructionCost" />
+          </xs:choice>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DownloadableContentPrerequisite" type="DownloadableContentPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="SupportPrerequisite" type="SupportPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="MetaPrerequisite" type="MetaPrerequisite" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="SimulationDescriptorReference" type="SimulationDescriptorReference" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PopulationEvent" type="XmlNamedReference" />
+        </xs:sequence>
+        <xs:attribute default="0" name="BuyoutCostModifier" type="xs:float" />
+        <xs:attribute default="false" name="Stackable" type="xs:boolean" />
+        <xs:attribute name="Category" type="xs:string" />
+        <xs:attribute name="SubCategory" type="xs:string" />
+        <xs:attribute name="ScoreProvider" type="xs:string" />
+        <xs:attribute default="false" name="Hidden" type="xs:boolean" />
+        <xs:attribute default="false" name="NeedConfirm" type="xs:boolean" />
+        <xs:attribute default="false" name="ConsumeResourceSurplus" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AIGain">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Tag" type="xs:string" />
+    </xs:sequence>
+    <xs:attribute name="RessourceName" type="xs:string" />
+    <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="SupervisorGain">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="Tags" type="Tags" />
+    </xs:sequence>
+    <xs:attribute name="Name" type="xs:string" />
+    <xs:attribute default="1" name="Weight" type="xs:float" />
+  </xs:complexType>
+  <xs:complexType name="Tags">
+    <xs:simpleContent>
+      <xs:extension base="xs:string" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="SimulationDescriptorReference">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="CostReductionReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="InfiniteCost">
+    <xs:attribute name="ResourceName" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="CustomConstructionCost">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Instant" type="xs:boolean" />
+        <xs:attribute default="false" name="InstantOnCompletion" type="xs:boolean" />
+        <xs:attribute name="ResourceName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="ConstructionCost">
+    <xs:simpleContent>
+      <xs:extension base="xs:float">
+        <xs:attribute default="false" name="Instant" type="xs:boolean" />
+        <xs:attribute default="false" name="InstantOnCompletion" type="xs:boolean" />
+        <xs:attribute name="ResourceName" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="MetaPrerequisite">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="SupportPrerequisite" type="SupportPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="TechnologyPrerequisite" type="TechnologyPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute name="Operator" type="PrerequisiteOperator" use="required" />
+  </xs:complexType>
+  <xs:simpleType name="PrerequisiteOperator">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Or" />
+      <xs:enumeration value="And" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="UnlockDatatableElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:attribute name="KeyWords" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

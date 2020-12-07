@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="Shot" nillable="true" type="Shot" />
+  <xs:complexType name="Shot">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="Key" type="CameraShotKeyDefinition" />
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="AlterationPlanetDestruction" type="CameraAlterationDefinition_PlanetDestruction" />
+            <xs:element minOccurs="0" maxOccurs="1" name="AlterationEvent" type="CameraAlterationDefinition_Event" />
+            <xs:element minOccurs="0" maxOccurs="1" name="AlterationAudio" type="CameraAlterationDefinition_Audio" />
+            <xs:element minOccurs="0" maxOccurs="1" name="AlterationFocus" type="CameraAlterationDefinition_Focus" />
+            <xs:element minOccurs="0" maxOccurs="1" name="AlterationDamping" type="CameraAlterationDefinition_Damping" />
+            <xs:element minOccurs="0" maxOccurs="1" name="AlterationShake" type="CameraAlterationDefinition_Shake" />
+          </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="Duration" type="xs:double" use="required" />
+        <xs:attribute default="0" name="LateStartTimeRatio" type="xs:float" />
+        <xs:attribute default="1" name="EarlyEndTimeRatio" type="xs:float" />
+        <xs:attribute default="1" name="LateEndTimeRatio" type="xs:float" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CameraShotKeyDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="MainTargetOffset" type="CameraTargetOffsetDefinition" />
+      <xs:element minOccurs="0" maxOccurs="1" name="MainTargetToFollowOffset" type="CameraTargetOffsetDefinition" />
+      <xs:element minOccurs="0" maxOccurs="1" name="AdditionalTargetOffsets" type="ArrayOfCameraTargetOffsetDefinition" />
+      <xs:element minOccurs="0" maxOccurs="1" name="AdditionalTargetToFollowOffsets" type="ArrayOfCameraTargetOffsetDefinition1" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TargetFilter" type="CameraTargetFilterDefinition" />
+      <xs:element minOccurs="0" maxOccurs="1" name="TargetToFollowFilter" type="CameraTargetFilterDefinition" />
+      <xs:element minOccurs="1" maxOccurs="1" name="TargetOffset" type="SerializableVector3" />
+      <xs:element minOccurs="1" maxOccurs="1" name="TargetToFollowOffset" type="SerializableVector3" />
+      <xs:element minOccurs="1" maxOccurs="1" name="CameraLocalOffset" type="SerializableVector3" />
+      <xs:element minOccurs="1" maxOccurs="1" name="CameraPosition" type="SerializableVector3" />
+      <xs:element minOccurs="1" maxOccurs="1" name="CameraRotation" type="SerializableQuaternion" />
+      <xs:element minOccurs="1" maxOccurs="1" name="CameraEuler" type="SerializableVector3" />
+      <xs:element minOccurs="1" maxOccurs="1" name="UpVector" type="SerializableVector3" />
+      <xs:element minOccurs="0" maxOccurs="1" name="Transition" type="CameraShotKeyTransitionDefinition" />
+    </xs:sequence>
+    <xs:attribute name="StartTimeRatio" type="xs:float" use="required" />
+    <xs:attribute name="FieldOfView" type="xs:float" use="required" />
+  </xs:complexType>
+  <xs:complexType name="CameraTargetOffsetDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="TargetFilter" type="CameraTargetFilterDefinition" />
+      <xs:element minOccurs="1" maxOccurs="1" name="TargetOffset" type="SerializableVector3" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CameraTargetFilterDefinition">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="SelectionMethod_EncounterEntity" type="CameraTargetSelectionMethodDefinition_EncounterEntity" />
+        <xs:element minOccurs="0" maxOccurs="1" name="SelectionMethod_Name" type="CameraTargetSelectionMethodDefinition_Name" />
+      </xs:choice>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      </xs:choice>
+      <xs:element minOccurs="0" maxOccurs="1" name="ParentEntityFilter" type="EncounterEntityFilterDefinition" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SubEntityFilter" type="SubEntityFilterDefinition" />
+    </xs:sequence>
+    <xs:attribute default="false" name="AttachedToTarget" type="xs:boolean" />
+    <xs:attribute default="false" name="LookAtTargetPositionAlteration" type="xs:boolean" />
+    <xs:attribute default="false" name="IgnoreTargetStatus" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="CameraTargetSelectionMethodDefinition_EncounterEntity">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CameraTargetSelectionMethodDefinition">
+        <xs:attribute name="EventEntityRole" type="EncounterEventEntityRole" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="EncounterEventEntityRole">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Initiator" />
+      <xs:enumeration value="Target" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="CameraTargetSelectionMethodDefinition" />
+  <xs:complexType name="CameraTargetSelectionMethodDefinition_Name">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CameraTargetSelectionMethodDefinition">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="EncounterEntityFilterDefinition">
+    <xs:sequence>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+        <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+      </xs:choice>
+    </xs:sequence>
+    <xs:attribute default="Undefined" name="EntityType" type="EncounterEntityType" />
+    <xs:attribute default="None" name="EntityTags" type="EncounterEntityTags" />
+  </xs:complexType>
+  <xs:simpleType name="EncounterEntityType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Arena" />
+      <xs:enumeration value="EffectArea" />
+      <xs:enumeration value="Group" />
+      <xs:enumeration value="Flotilla" />
+      <xs:enumeration value="Ship" />
+      <xs:enumeration value="ShipSection" />
+      <xs:enumeration value="Module" />
+      <xs:enumeration value="Salvo" />
+      <xs:enumeration value="Citadel" />
+      <xs:enumeration value="CitadelModule" />
+      <xs:enumeration value="CitadelSalvo" />
+      <xs:enumeration value="Undefined" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="EncounterEntityTags">
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="None" />
+          <xs:enumeration value="Me" />
+          <xs:enumeration value="Other" />
+          <xs:enumeration value="SameShip" />
+          <xs:enumeration value="OtherShip" />
+          <xs:enumeration value="SameFlotilla" />
+          <xs:enumeration value="OtherFlotilla" />
+          <xs:enumeration value="SameGroup" />
+          <xs:enumeration value="OtherGroup" />
+          <xs:enumeration value="EffectInitiator" />
+          <xs:enumeration value="EffectTarget" />
+          <xs:enumeration value="Alive" />
+          <xs:enumeration value="Deactivated" />
+          <xs:enumeration value="Destroyed" />
+          <xs:enumeration value="SameModule" />
+          <xs:enumeration value="OtherModule" />
+          <xs:enumeration value="Arena" />
+          <xs:enumeration value="Reinforcement" />
+          <xs:enumeration value="Inactive" />
+          <xs:enumeration value="MyMainTarget" />
+          <xs:enumeration value="SameCitadel" />
+          <xs:enumeration value="OtherCitadel" />
+          <xs:enumeration value="SameCitadelModule" />
+          <xs:enumeration value="OtherCitadelModule" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+  <xs:complexType name="SubEntityFilterDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="SubEntityFilter" type="EncounterEntityFilterDefinition" />
+    </xs:sequence>
+    <xs:attribute name="SubEntitySelectionMethod" type="SubEntitySelectionMethodEnum" use="required" />
+  </xs:complexType>
+  <xs:simpleType name="SubEntitySelectionMethodEnum">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="First" />
+      <xs:enumeration value="Random" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="SerializableVector3">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="X" type="xs:float" use="required" />
+        <xs:attribute name="Y" type="xs:float" use="required" />
+        <xs:attribute name="Z" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ValueType" />
+  <xs:complexType name="SerializableQuaternion">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:attribute name="X" type="xs:float" use="required" />
+        <xs:attribute name="Y" type="xs:float" use="required" />
+        <xs:attribute name="Z" type="xs:float" use="required" />
+        <xs:attribute name="W" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Keyframe">
+    <xs:complexContent mixed="false">
+      <xs:extension base="ValueType">
+        <xs:sequence>
+          <xs:element minOccurs="1" maxOccurs="1" name="time" type="xs:float" />
+          <xs:element minOccurs="1" maxOccurs="1" name="value" type="xs:float" />
+          <xs:element minOccurs="1" maxOccurs="1" name="inTangent" type="xs:float" />
+          <xs:element minOccurs="1" maxOccurs="1" name="outTangent" type="xs:float" />
+          <xs:element minOccurs="1" maxOccurs="1" name="tangentMode" type="xs:int" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfCameraTargetOffsetDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AdditionalTargetOffset" type="CameraTargetOffsetDefinition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfCameraTargetOffsetDefinition1">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="AdditionalTargetToFollowOffset" type="CameraTargetOffsetDefinition" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CameraShotKeyTransitionDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="LayerTransition" type="CameraShotKeyLayerTransitionDefinition_Curve" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="CameraShotKeyLayerTransitionDefinition_Curve">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CameraShotKeyLayerTransitionDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Curve" type="AnimationCurve" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="AnimationCurve">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="keys" type="ArrayOfKeyframe" />
+      <xs:element minOccurs="1" maxOccurs="1" name="preWrapMode" type="WrapMode" />
+      <xs:element minOccurs="1" maxOccurs="1" name="postWrapMode" type="WrapMode" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ArrayOfKeyframe">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="unbounded" name="Keyframe" type="Keyframe" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="WrapMode">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Default" />
+      <xs:enumeration value="Clamp" />
+      <xs:enumeration value="Once" />
+      <xs:enumeration value="Loop" />
+      <xs:enumeration value="PingPong" />
+      <xs:enumeration value="ClampForever" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="CameraShotKeyLayerTransitionDefinition">
+    <xs:attribute name="StartTimeRatio" type="xs:float" use="required" />
+    <xs:attribute name="LayerTags" type="CameraShotKeyTransitionLayerTags" use="required" />
+    <xs:attribute name="LayerOptions" type="CameraShotKeyTransitionLayerOptions" use="required" />
+  </xs:complexType>
+  <xs:simpleType name="CameraShotKeyTransitionLayerTags">
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="None" />
+          <xs:enumeration value="Position" />
+          <xs:enumeration value="Rotation" />
+          <xs:enumeration value="FieldOfView" />
+          <xs:enumeration value="All" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+  <xs:simpleType name="CameraShotKeyTransitionLayerOptions">
+    <xs:list>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="None" />
+          <xs:enumeration value="SphericalRotation" />
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:list>
+  </xs:simpleType>
+  <xs:complexType name="CameraAlterationDefinition_PlanetDestruction">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CameraAlterationDefinition">
+        <xs:attribute name="EventType" type="Type" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="Type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SpawnWeapon" />
+      <xs:enumeration value="LaunchShot" />
+      <xs:enumeration value="LaunchImpactOnSolidPlanet" />
+      <xs:enumeration value="LaunchImpactOnGasPlanet" />
+      <xs:enumeration value="MorphPlanet" />
+      <xs:enumeration value="SwitchPlanet" />
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="CameraAlterationDefinition">
+    <xs:attribute name="StartTimeRatio" type="xs:float" use="required" />
+    <xs:attribute name="EndTimeRatio" type="xs:float" use="required" />
+    <xs:attribute default="0" name="Priority" type="xs:int" />
+    <xs:attribute default="false" name="TimeRatiosBasedOnTheoreticalDuration" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="CameraAlterationDefinition_Event">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CameraAlterationDefinition">
+        <xs:attribute default="0" name="StartEventIndex" type="xs:int" />
+        <xs:attribute default="0" name="EndEventIndex" type="xs:int" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CameraAlterationDefinition_Audio">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CameraAlterationDefinition">
+        <xs:attribute name="StartEventName" type="xs:string" />
+        <xs:attribute name="EndEventName" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CameraAlterationDefinition_Focus">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CameraAlterationDefinition">
+        <xs:attribute default="0" name="Index" type="xs:int" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CameraAlterationDefinition_Damping">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CameraAlterationDefinition">
+        <xs:attribute name="DampingDuration" type="xs:float" use="required" />
+        <xs:attribute default="0" name="AmplificationEndTimeRatio" type="xs:float" />
+        <xs:attribute default="1" name="ReductionStartTimeRatio" type="xs:float" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CameraAlterationDefinition_Shake">
+    <xs:complexContent mixed="false">
+      <xs:extension base="CameraAlterationDefinition">
+        <xs:attribute default="0" name="AmplitudeMin" type="xs:float" />
+        <xs:attribute name="AmplitudeMax" type="xs:float" use="required" />
+        <xs:attribute name="Smoothness" type="xs:float" use="required" />
+        <xs:attribute name="FrequencyMin" type="xs:float" use="required" />
+        <xs:attribute name="FrequencyMax" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:element name="Shot_EncounterEvent" nillable="true" type="Shot_EncounterEvent" />
+  <xs:complexType name="Shot_EncounterEvent">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Shot">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="EventPrerequisite" type="EncounterRealizationEventPrerequisiteDefinition" />
+        </xs:sequence>
+        <xs:attribute name="EventStartTimeRatio" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="EncounterRealizationEventPrerequisiteDefinition">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="EventInitiatorFilter" type="EncounterEntityFilterDefinition" />
+      <xs:element minOccurs="0" maxOccurs="1" name="EventTargetFilter" type="EncounterEntityFilterDefinition" />
+    </xs:sequence>
+    <xs:attribute name="RealizationEvent" type="xs:string" />
+  </xs:complexType>
+</xs:schema>

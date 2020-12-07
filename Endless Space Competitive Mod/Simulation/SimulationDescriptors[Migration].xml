@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+    <SimulationDescriptor Name="ClassOutpostMigrationFlux" Type="ClassOutpostMigrationFlux">
+
+        <!-- Value taken directly from the system-->
+        <Property Name="SystemGrowth"/>
+        <Property Name="NetSystemOutpostMigrationGrowthMultiplier" BaseValue="1"/>
+
+        <!-- Resource, emptied when ship is sent -->
+        <Property Name="SystemOutpostMigrationGrowthStock"   IsSealed="true"/>
+        <Property Name="SystemOutpostMigrationGrowth"/>
+        <Property Name="NetSystemOutpostMigrationGrowth"/>
+
+        <!-- Counting down (3 - 2 - 1 - 0 & reset) -->
+        <Property Name="TurnsBeforeAutomatedShipRequest"     IsSealed="true" MinValue="-1"/>
+        <Property Name="NetTurnsBeforeAutomatedShipRequest"  BaseValue="1"/>
+
+        <Modifier TargetProperty="SystemOutpostMigrationGrowth" Operation="Addition" Value="$(SystemGrowth)"/>
+        <Modifier TargetProperty="SystemOutpostMigrationGrowth" Operation="Multiplication" Value="0.2"/>
+        <Modifier TargetProperty="SystemOutpostMigrationGrowth" Operation="Multiplication" Value="$(NetSystemOutpostMigrationGrowthMultiplier)"/>
+
+        <Modifier TargetProperty="NetSystemOutpostMigrationGrowth" Operation="Addition" Value="$(SystemOutpostMigrationGrowth)"/>
+
+        <BinaryModifier TargetProperty="NetSystemGrowth" Operation="Subtraction" Left="$(NetSystemOutpostMigrationGrowth)" BinaryOperation="Multiplication" Right="1" Path="./ClassColonizedStarSystem"/>
+        
+    </SimulationDescriptor>
+</Datatable>

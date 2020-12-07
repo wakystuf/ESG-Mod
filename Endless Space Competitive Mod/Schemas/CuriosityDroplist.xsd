@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="Datatable" />
+  <xs:element name="CuriosityDroplist" nillable="true" type="CuriosityDroplist" />
+  <xs:complexType name="CuriosityDroplist">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DatatableElement">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="ShipExperience" type="CuriosityDroppableShipExperience" />
+            <xs:element minOccurs="0" maxOccurs="1" name="CuriosityReveal" type="CuriosityDroppableCuriosityReveal" />
+            <xs:element minOccurs="0" maxOccurs="1" name="NeighboursReveal" type="CuriosityDroppableNeighboursReveal" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Play" type="DroppableReferencePlay" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Improvement" type="CuriosityDroppableImprovement" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Population" type="CuriosityDroppablePopulation" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Unlock" type="DroppableReferenceUnlock" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Hero" type="DroppableReferenceHero" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Law" type="DroppableReferenceLaw" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Module" type="DroppableModule" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PirateFleet" type="CuriosityDroppableEnemyFleet" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Fleet" type="DroppableFleet" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Resource" type="DroppableResource" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="1" name="Fallback" type="XmlNamedReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CuriosityDroppableShipExperience">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Droppable">
+        <xs:attribute name="Value" type="xs:float" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="Droppable">
+    <xs:attribute default="true" name="CanHaveDuplicate" type="xs:boolean" />
+    <xs:attribute default="1" name="Weight" type="xs:int" />
+    <xs:attribute default="0" name="MaxTurn" type="xs:int" />
+  </xs:complexType>
+  <xs:complexType name="CuriosityDroppableCuriosityReveal">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Droppable" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CuriosityDroppableNeighboursReveal">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Droppable" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DroppableReferenceOfEncounterPlayDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Droppable">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DroppableReferencePlay">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DroppableReferenceOfEncounterPlayDefinition" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DroppableReferenceOfIndustryConstructibleElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Droppable">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CuriosityDroppableImprovement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DroppableReferenceOfIndustryConstructibleElement" />
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CuriosityDroppablePopulation">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Droppable">
+        <xs:attribute name="Affinity" type="xs:string" />
+        <xs:attribute name="Amount" type="xs:int" use="required" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DroppableReferenceOfUnlockDatatableElement">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Droppable">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DroppableReferenceUnlock">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DroppableReferenceOfUnlockDatatableElement">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="StatisticPrerequisite" type="StatisticPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DatePrerequisite" type="DatePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DownloadableContentPrerequisite" type="DownloadableContentPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="GameSettingPrerequisite" type="GameSettingPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="InterpreterPrerequisite" type="InterpreterPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="PathPrerequisite" type="PathPrerequisite" />
+          </xs:choice>
+        </xs:sequence>
+        <xs:attribute name="SimulationDescriptorReference" type="xs:string" />
+        <xs:attribute name="SimulationTag" type="xs:string" />
+        <xs:attribute default="true" name="Constrained" type="xs:boolean" />
+        <xs:attribute default="false" name="ApplyOnEmpire" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="StatisticPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite">
+        <xs:attribute default="-3.40282347E+38" name="MinimumValue" type="xs:float" />
+        <xs:attribute default="3.40282347E+38" name="MaximumValue" type="xs:float" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="Prerequisite">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute default="false" name="Inverted" type="xs:boolean" />
+        <xs:attribute name="Flags" type="xs:string" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DatePrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DownloadableContentPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="GameSettingPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="InterpreterPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="PathPrerequisite">
+    <xs:simpleContent>
+      <xs:extension base="Prerequisite" />
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:complexType name="DroppableReferenceOfHeroDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Droppable">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DroppableReferenceHero">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DroppableReferenceOfHeroDefinition">
+        <xs:attribute default="false" name="Spawn" type="xs:boolean" />
+        <xs:attribute default="1" name="Level" type="xs:int" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DroppableReferenceOfTechnologyDefinition">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Droppable">
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DroppableReferenceLaw">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DroppableReferenceOfTechnologyDefinition">
+        <xs:attribute default="true" name="Constrained" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DroppableReferenceTechnology">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DroppableReferenceOfTechnologyDefinition">
+        <xs:attribute default="true" name="Constrained" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DroppableModule">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DroppableReferenceTechnology">
+        <xs:attribute name="ModuleName" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DroppableFleet">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Droppable">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="HeroDefinition" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="ShipDesign" type="xs:string" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="CuriosityDroppableEnemyFleet">
+    <xs:complexContent mixed="false">
+      <xs:extension base="DroppableFleet">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Mission" type="XmlNamedReference" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="XmlNamedReference">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+  <xs:complexType name="DroppableResource">
+    <xs:complexContent mixed="false">
+      <xs:extension base="Droppable">
+        <xs:attribute name="Quantity" type="xs:int" use="required" />
+        <xs:attribute name="Name" type="xs:string" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="DatatableElement">
+    <xs:attribute name="Name" type="xs:string" />
+  </xs:complexType>
+</xs:schema>
