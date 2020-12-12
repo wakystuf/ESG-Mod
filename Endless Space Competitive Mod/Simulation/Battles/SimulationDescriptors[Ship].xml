@@ -197,11 +197,12 @@
     <Property Name="ShieldAbsorptionEndMultiplier"      BaseValue="0"/>
 
     <Property Name="ShieldReloadPerPhase"               BaseValue="0"/>
-    <Property Name="ShieldReloadPerSecond"              BaseValue="0"/>
+    <Property Name="ShieldRegeneratePerSecond"          BaseValue="0"/>
 
     <Property Name="HullPlatingAbsorption"                  BaseValue="0" MinValue="Negative"/>
     <Property Name="HullPlatingAbsorptionPercent"           BaseValue="1"/>
-    <Property Name="HullPlatingAbsorptionEndMultiplier"    BaseValue="0"/>
+    <Property Name="HullPlatingAbsorptionEndMultiplier"     BaseValue="0"/>
+    <Property Name="HullPlatingAbsorptionDebuffDynamic"     BaseValue="0" MinValue="-1"/>
 
     <Property Name="ShipHealth"                         BaseValue="0"  MinValue="Negative"      Composition="Sum"/>
     <Property Name="HullWeakness"                       BaseValue="100" MinValue="Negative"/>
@@ -268,6 +269,7 @@
     <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(Damage)"                       Path="ClassShip/ClassSection/ClassModuleWeapon" Priority="1" />
     <Modifier TargetProperty="Damage"					Operation="Percent" Value="$(DamageKinetic)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponKinetic" Priority="1" />
     <Modifier TargetProperty="Damage"					Operation="Percent" Value="$(DamageKinetic)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponKineticRailgun" Priority="1" />
+    <Modifier TargetProperty="Damage"					Operation="Percent" Value="$(DamageKinetic)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponKineticCoilgun" Priority="1" />
     <Modifier TargetProperty="Damage"					Operation="Percent" Value="$(DamageMissile)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponMissile" Priority="1" />
     <Modifier TargetProperty="Damage"					Operation="Percent" Value="$(DamageMissile)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponMissileSwarm" Priority="1" />
     <Modifier TargetProperty="Damage"					Operation="Percent" Value="$(DamageLaser)"                  Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponLaser" Priority="1" />
@@ -288,14 +290,10 @@
     <Modifier TargetProperty="Accuracy"                 Operation="Addition" Value="$(Accuracy)"                    Path="ClassShip/ClassSection/ClassModuleWeapon" />
 
     <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(Damage)"                       Path="ClassShip/ClassSection/ClassModuleSquadron" />
-    <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(DamageKinetic)"                Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeFighter" />
-    <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(DamageKinetic)"                Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeBomber" />
-    <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(DamageMissile)"                Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeFighter" />
-    <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(DamageMissile)"                Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeBomber" />
-    <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(DamageLaser)"                  Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeFighterEnergy" />
-    <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(DamageLaser)"                  Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeBomberEnergy" />
-    <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(DamageBeam)"                   Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeFighterEnergy" />
-    <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(DamageBeam)"                   Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeBomberEnergy" />
+    <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(DamageProjectile)"                Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeFighter" />
+    <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(DamageProjectile)"                Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeBomber" />
+    <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(DamageEnergy)"                  Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeFighterEnergy" />
+    <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(DamageEnergy)"                  Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeBomberEnergy" />
     <Modifier TargetProperty="ShieldPenetrationFactor"			Operation="Addition" Value="$(ShieldPenetrationFactor)"				Path="ClassShip/ClassSection/ClassModuleSquadron" />
     <Modifier TargetProperty="HullPlatingPenetrationFactor"     Operation="Addition" Value="$(HullPlatingPenetrationFactor)"        Path="ClassShip/ClassSection/ClassModuleSquadron" />
 
@@ -305,13 +303,14 @@
     <BinaryModifier TargetProperty="ShieldAbsorptionEndMultiplier" Operation="Division" Left="$(ShieldAbsorption)" BinaryOperation="Addition" Right="$(HullWeakness)"/>
     <Modifier TargetProperty="ShieldAbsorptionEndMultiplier" Operation="Multiplication" Value="$(ShieldAbsorptionPercent)"/>
 
+    <Modifier TargetProperty="HullPlatingAbsorption" Operation="Percent" Value="$(HullPlatingAbsorptionDebuffDynamic)"/>
     <Modifier TargetProperty="HullPlatingAbsorptionEndMultiplier" Operation="Addition" Value="$(HullPlatingAbsorption)"/>
     <BinaryModifier TargetProperty="HullPlatingAbsorptionEndMultiplier" Operation="Division" Left="$(HullPlatingAbsorption)" BinaryOperation="Addition" Right="$(HullWeakness)"/>
     <Modifier TargetProperty="HullPlatingAbsorptionEndMultiplier" Operation="Multiplication" Value="$(HullPlatingAbsorptionPercent)"/>
-
+    
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(MaximumShield)"             BinaryOperation="Division" Right="60"/>
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(ShieldReloadPerPhase)"      BinaryOperation="Division" Right="60"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(ShieldReloadPerSecond)"     BinaryOperation="Division" Right="10"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(ShieldRegeneratePerSecond)"      BinaryOperation="Division" Right="10"/>
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(HullPlatingAbsorptionEndMultiplier)"        BinaryOperation="Multiplication" Right="100"/>
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(ShieldAbsorptionEndMultiplier)"             BinaryOperation="Multiplication" Right="50"/>
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(Evasion)"        BinaryOperation="Multiplication" Right="100"/>

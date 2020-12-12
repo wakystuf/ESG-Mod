@@ -13,4 +13,296 @@
     <Modifier TargetProperty="Cooldown"           Operation="Percent"   Value="$(CooldownReductionPercentFromOpponent)" Path="ClassShip//ClassModuleWeapon" TooltipHidden="true"/>
     <Modifier TargetProperty="CooldownVariation"  Operation="Percent"   Value="$(CooldownReductionPercentFromOpponent)" Path="ClassGroup//ClassModuleWeapon,ClassModuleWeaponMissileSwarm" TooltipHidden="true"/>
   </SimulationDescriptor>
+
+  <!-- Battle Effects -->
+  <SimulationDescriptor Name="ClassModuleWeaponEncounter" Type="ClassModuleWeapon">
+    <Property Name="AdditionalAccuracy" IsSealed="true" MinValue="Negative"/>
+
+    <Property Name="TotalLongShot" IsSealed="true" MinValue="Negative"/>
+    <Property Name="TotalLongHit" IsSealed="true" MinValue="Negative"/>
+
+    <Property Name="TotalMediumShot" IsSealed="true" MinValue="Negative"/>
+    <Property Name="TotalMediumHit" IsSealed="true" MinValue="Negative"/>
+
+    <Property Name="TotalShortShot" IsSealed="true" MinValue="Negative"/>
+    <Property Name="TotalShortHit" IsSealed="true" MinValue="Negative"/>
+
+    <Property Name="TotalShot"/>
+    <Property Name="TotalHit"/>
+
+    <Property Name="DamageApplied" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedAbsorbedByShield" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedAbsorbedByHullPlating" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="WeaponDeactivationDuration"          BaseValue="0" IsSealed="true"/>
+
+    <Property Name="DamageBonusIfOneShip" IsSealed="true" BaseValue="1"/>
+
+    <Modifier TargetProperty="Damage" Operation="Multiplication" Value="$(DamageBonusIfOneShip)" Path="ClassModuleWeapon"/>
+
+    <Modifier TargetProperty="Accuracy" Operation="Addition" Value="$(AdditionalAccuracy)" Path="ClassModuleWeapon"/>
+
+    <Modifier TargetProperty="TotalShot" Operation="Addition" Value="$(TotalLongShot)"/>
+    <Modifier TargetProperty="TotalShot" Operation="Addition" Value="$(TotalMediumShot)"/>
+    <Modifier TargetProperty="TotalShot" Operation="Addition" Value="$(TotalShortShot)"/>
+
+    <Modifier TargetProperty="TotalHit" Operation="Addition" Value="$(TotalLongHit)"/>
+    <Modifier TargetProperty="TotalHit" Operation="Addition" Value="$(TotalMediumHit)"/>
+    <Modifier TargetProperty="TotalHit" Operation="Addition" Value="$(TotalShortHit)"/>
+
+    <Modifier   TargetProperty="Accuracy"  Operation="Addition" Value="$(Accuracy)"      Path="ClassModuleWeaponEncounter/ClassSalvo" TooltipHidden="true"/>
+
+    <Modifier   TargetProperty="OpponentEnergyWeaponAccuracyPercent"  Operation="Addition" Value="$(OpponentEnergyWeaponAccuracyPercent)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+    <Modifier   TargetProperty="OpponentCooldownReductionPercent"  Operation="Addition" Value="$(OpponentCooldownReductionPercent)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+    <Modifier   TargetProperty="SplashFlotillaDamagePercent"  Operation="Addition" Value="$(SplashFlotillaDamagePercent)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+
+    <Modifier   TargetProperty="MaximumHealth"  Operation="Percent" Value="$(SalvoHealthPercent)"      Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+    <Modifier   TargetProperty="DamageAbsorbedByShieldMultiplier"  Operation="Percent" Value="$(DamageAbsorbedByShieldMultiplier)"      Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+
+    <!-- Coilgun -->
+    <Modifier   TargetProperty="ArmorDestructionDynamic"  Operation="Addition" Value="$(ArmorDestructionDynamic)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassShipEncounter" Type="ClassShip">
+    <Property Name="MedalScore" BaseValue="0" IsSealed="true"/>
+    <Property Name="InitialMilitaryPower" BaseValue="0" IsSealed="true"/>
+    <Property Name="InitialFightersCount" BaseValue="0" IsSealed="true"/>
+    <Property Name="DestroyedFightersCount" BaseValue="0" IsSealed="true"/>
+    <Property Name="InitialBombersCount" BaseValue="0" IsSealed="true"/>
+    <Property Name="DestroyedBombersCount" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="ActiveBoardingPodCount" BaseValue="0"/>
+
+    <Property Name="DestructionSequenceDuration" BaseValue="0"/>
+
+    <Property Name="DestructionSequenceRollSpeedMin" BaseValue="0"/>
+    <Property Name="DestructionSequenceRollSpeedMax" BaseValue="0"/>
+
+    <Property Name="DestructionSequenceHorizontalDriftMin" BaseValue="0"/>
+    <Property Name="DestructionSequenceHorizontalDriftMax" BaseValue="0"/>
+
+    <Property Name="DestructionSequenceVerticalDriftMin" BaseValue="0"/>
+    <Property Name="DestructionSequenceVerticalDriftMax" BaseValue="0"/>
+
+    <Property Name="DestructionSequenceFinalSpeed" BaseValue="0"/>
+    <Property Name="DestructionSequenceSpeedDampingDuration" BaseValue="0"/>
+    <Property Name="DestructionSequenceDriftDampingDuration" BaseValue="0"/>
+    <Property Name="DestructionSequenceFacingDampingDuration" BaseValue="0"/>
+
+    <Property Name="VisualWeight" BaseValue="1"/>
+
+    <Property Name="GuiBattleCardScaleFactor" BaseValue="1"/>
+    <Property Name="GuiBattleCardDistanceMin" BaseValue="5"/>
+    <Property Name="GuiBattleCardDistanceMax" BaseValue="100000"/>
+    <Property Name="GuiBattleCardDistanceSimplified" BaseValue="200"/>
+
+    <Property Name="DamageIncreasePercent" BaseValue="0"/>
+    <Property Name="TemporaryDamageIncreaseIfLostShip" BaseValue="0"/>
+    <Property Name="TemporaryDefenseIncreaseIfLostShip" BaseValue="0"/>
+
+    <Property Name="EncounterDamage"			        BaseValue="0" MinValue="-0.95"/>
+    <Property Name="EncounterDamageProjectile"			BaseValue="0" MinValue="-0.95"/>
+    <Property Name="EncounterDamageKinetic"             BaseValue="0" MinValue="-0.95"/>
+    <Property Name="EncounterDamageEnergy"				BaseValue="0" MinValue="-0.95"/>
+    <Property Name="EncounterDamageMissile"             BaseValue="0" MinValue="-0.95"/>
+    <Property Name="EncounterDamageLaser"               BaseValue="0" MinValue="-0.95"/>
+    <Property Name="EncounterDamageBeam"                BaseValue="0" MinValue="-0.95"/>
+
+    <Property Name="AdditionalShipManpowerKillPerHitProjectile"	    BaseValue="0" MinValue="-0.95"/>
+    <Property Name="AdditionalShipManpowerKillPerHitEnergy"         BaseValue="0" MinValue="-0.95"/>
+
+    <Property Name="ShipManpowerKillPerHitPercentEncounter" BaseValue="0"/>
+    <Property Name="ManpowerPercentKillPerPhase"            BaseValue="0"/>
+
+    <Property Name="DamageApplied" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedAbsorbedByShield" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedAbsorbedByHullPlating" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="DamageReceived" BaseValue="0" IsSealed="true"/>
+    <Property Name="SplashDamageReceivedTemp" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageReceivedAbsorbedByShield" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageReceivedAbsorbedByHullPlating" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="ProjectileManpowerAbsorption" BaseValue="0" />
+    <Property Name="EnergyManpowerAbsorption" BaseValue="0" />
+
+    <Property Name="TotalShotSent" BaseValue="0" IsSealed="true"/>
+    <Property Name="TotalHitSent" BaseValue="0" IsSealed="true"/>
+    <Property Name="TotalShotReceived" BaseValue="0" IsSealed="true"/>
+    <Property Name="TotalHitReceived" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="CoreHealthRepair" BaseValue="0" />
+    <!-- HP repaired on core at the end of the battle-->
+
+    <Property Name="Armor"                          BaseValue="0"  IsSealed="true"/>
+    <Property Name="AccuracyPenalty"                BaseValue="0"  IsSealed="true"/>
+    <Property Name="ArmorApplied"                   BaseValue="0"  IsSealed="true"/>
+    <Property Name="AccuracyPenaltyApplied"         BaseValue="0"  IsSealed="true"/>
+
+    <Property Name="DefenseGainPerCP"          BaseValue="0" MinValue="Negative"/>
+    <Property Name="DefenseAbsorptionBonusOnCivilians" BaseValue="0"/>
+
+    <Property Name="ProjectileHullPlatingPenetrationFactor"          BaseValue="0"/>
+
+    <Property Name="EffectiveHullPlatingAbsorption" BaseValue="0"  IsSealed="true"/>
+    <Property Name="EffectiveShieldAbsorption"      BaseValue="0"  IsSealed="true"/>
+
+    <!-- For PlayEffectWeakestTargetingOther -->
+    <Property Name="IsWeakestTargeting"                         BaseValue="0" MaxValue="1" />
+    <Property Name="OffensiveMilitaryPowerIfWeakestTargeting"   BaseValue="0" />
+
+    <Property Name="BattleMovementGain"             BaseValue="0" />
+    <Property Name="BattleActionGain"               BaseValue="0" />
+
+    <Property Name="EnergyWeaponAccuracyPercentFromOpponent"    IsSealed="true" MinValue="Negative"/>
+    <Property Name="CoilgunArmorDescructionPercentFromOpponent" IsSealed="true" MinValue="Negative"/>
+    <Property Name="CooldownReductionPercentFromOpponent"       IsSealed="true"/>
+
+    <Property Name="LastSquadronAttackCriticalDodge" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="SquadronAmount" BaseValue="0"/>
+    <Property Name="ShipRepairAfterBattle" BaseValue="0" IsSealed="true"/>
+    <Property Name="RepairAfterBattleIfSurvivingSquadron" BaseValue="0"/>
+    <Property Name="RemainingSquadronAmount" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="ShieldDeactivationDuration" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="WeaponsDeactivationDuration" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="ShipManpowerStockInitial" IsSealed="true"/>
+
+    <Property Name="ShipDestroyedManpowerForEssenceRecycling" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="CriticalDamageReductionResult" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="DefenseBonusIfOneShipEncounter" BaseValue="1" IsSealed="true"/>
+
+    <Property Name="PreferredRangeIndex" BaseValue="-1" IsSealed="true"/>
+
+    <Property Name="CannotBeTargeted" BaseValue="0" IsSealed="true"/>
+    <Property Name="IsInvisible" BaseValue="0" IsSealed="true"/>
+
+    <Modifier TargetProperty="CommandPoints" Operation="Addition" Value="$(CommandPoints)" Path="./ClassFlotilla"/>
+
+    <Modifier       TargetProperty="RelativeMilitaryPower"          Operation="Addition"    Value="$(MilitaryPower)" Priority="-1"/>
+    <Modifier       TargetProperty="Accuracy"                       Operation="Subtraction"  Value="$(AccuracyPenalty)"  Path="ClassShip/ClassSection/ClassModuleWeapon"/>
+    <BinaryModifier TargetProperty="RelativeMilitaryPower"          Operation="Multiplication" Left="$(Health)" BinaryOperation="Division" Right="$(MaximumHealth)" />
+
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassFlotilla" Type="Class">
+    <Property Name="InitialShipsCount" BaseValue="0"/>
+    <Property Name="InitialSmallShipsCount" BaseValue="0"/>
+    <Property Name="InitialMediumShipsCount" BaseValue="0"/>
+    <Property Name="InitialLargeShipsCount" BaseValue="0"/>
+    <Property Name="InitialMothershipsCount" BaseValue="0"/>
+
+    <Property Name="CommandPoints" BaseValue="0"/>
+
+    <Property Name="Shield"                         BaseValue="0" IsSealed="true" IsSerializable="true"/>
+    <Property Name="MaximumShield"                  BaseValue="0" MinValue="Negative"/>
+    <Property Name="ShieldAbsorption"               BaseValue="0"/>
+    <Property Name="ShieldAbsorptionPercent"        BaseValue="1"/>
+    <Property Name="HullWeakness"                   BaseValue="100" MinValue="Negative"/>
+
+    <Property Name="ShieldDamageModifier"           BaseValue="1"/>
+    <Property Name="ShieldRadiusFactor"             BaseValue="2.5"/>
+
+    <Property Name="MilitaryPower"              Composition="Sum"/>
+    <Property Name="RelativeMilitaryPower"      Composition="Sum"            BaseValue="0"/>
+
+    <!-- feedback ui -->
+    <Property Name="Health" Composition="Sum" BaseValue="0"/>
+    <Property Name="MaximumHealth" Composition="Sum" BaseValue="0"/>
+
+    <Property Name="OpponentRecyclingDustPerCP"         Composition="Sum" />
+    <Property Name="OpponentRecyclingSciencePerCP" 	    Composition="Sum" />
+    <Property Name="OpponentRecyclingEmpirePointPerCP"  Composition="Sum" />
+    <Property Name="OpponentRecyclingEssencePerCP"      Composition="Sum" />
+    <Property Name="OpponentRecyclingStrategic1PerCP" 	    BaseValue="0" Composition="Sum" />
+    <Property Name="OpponentRecyclingStrategic2PerCP" 	    BaseValue="0" Composition="Sum" />
+    <Property Name="AdditionalOpponentRecyclingDustPerCP"           Composition="Maximum" />
+    <Property Name="AdditionalOpponentRecyclingSciencePerCP" 	    Composition="Maximum" />
+    <Property Name="AdditionalOpponentRecyclingEmpirePointPerCP"    Composition="Maximum" />
+
+    <Property Name="OpponentRecyclingEssencePerManpower"        Composition="Sum" />
+
+    <Property Name="DamageApplied" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="DamageAppliedCurrentPhase" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="DamageAppliedPhase1" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedPhase2" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedPhase3" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="DamageAppliedByKinetic" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedByRailgun" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedByMissile" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedByLaser" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedByBeam" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedByFighter" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedByBomber" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedByAOE" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedByCoilgun" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="DamageAppliedByKineticCritical" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedByMissileCritical" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedByLaserCritical" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedByBeamCritical" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedByFighterCritical" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedByBomberCritical" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="DamageAppliedAbsorbedByShield" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedAbsorbedByHullPlating" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="DamageReceived" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageReceivedAbsorbedByShield" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageReceivedAbsorbedByHullPlating" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="TotalShotSent" BaseValue="0" IsSealed="true"/>
+    <Property Name="TotalHitSent" BaseValue="0" IsSealed="true"/>
+    <Property Name="TotalShotReceived" BaseValue="0" IsSealed="true"/>
+    <Property Name="TotalHitReceived" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="GuiBattleCardScaleFactor" BaseValue="1"/>
+    <Property Name="GuiBattleCardDistanceMin" BaseValue="600"/>
+    <Property Name="GuiBattleCardDistanceMax" BaseValue="100000"/>
+    <Property Name="GuiBattleCardDistanceSimplified" BaseValue="900"/>
+
+    <Property Name="ShipManpowerStock"  Composition="Sum"/>
+    <Property Name="FakeDamageReceivededForAOEStats" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="CurrentRangeIndex" BaseValue="-1" MinValue="Negative"/>
+    <Property Name="OptimalRangeIndex" BaseValue="-1" MinValue="Negative"/>
+
+    <Property Name="AttackingFlotillaInvisibilityStatusPhase1" BaseValue="0" MinValue="0" MaxValue="1" IsSealed="true"/>
+    <Property Name="AttackingFlotillaInvisibilityStatusPhase2" BaseValue="0" MinValue="0" MaxValue="1" IsSealed="true"/>
+    <Property Name="AttackingFlotillaInvisibilityStatusPhase3" BaseValue="0" MinValue="0" MaxValue="1" IsSealed="true"/>
+
+    <!--<Modifier TargetProperty="InitialMainMilitaryPower"             Operation="Addition" Value="$(RelativeMilitaryPower)" Path="FlotillaTypeMain/./ClassGroup"/>
+        <Modifier TargetProperty="InitialReinforcementMilitaryPower"    Operation="Addition" Value="$(RelativeMilitaryPower)" Path="FlotillaTypeReinforcement/./ClassGroup"/>-->
+
+    <Modifier TargetProperty="MainRelativeMilitaryPower" Operation="Addition" Value="$(RelativeMilitaryPower)" Path="FlotillaTypeMain/./ClassGroup"/>
+    <Modifier TargetProperty="ReinforcementRelativeMilitaryPower" Operation="Addition" Value="$(RelativeMilitaryPower)" Path="FlotillaTypeReinforcement/./ClassGroup"/>
+
+    <CountModifier TargetProperty="InitialShipsCount"       Operation="Addition" CountPath="ClassFlotilla/ClassShip"/>
+    <CountModifier TargetProperty="InitialSmallShipsCount"  Operation="Addition" CountPath="ClassFlotilla/ShipSizeSmall"/>
+    <CountModifier TargetProperty="InitialMediumShipsCount" Operation="Addition" CountPath="ClassFlotilla/ShipSizeMedium"/>
+    <CountModifier TargetProperty="InitialLargeShipsCount"  Operation="Addition" CountPath="ClassFlotilla/ShipSizeLarge"/>
+    <CountModifier TargetProperty="InitialMothershipsCount" Operation="Addition" CountPath="ClassFlotilla/ShipSizeMothership"/>
+
+    <Modifier TargetProperty="InitialShipsCount" Operation="Addition" Value="$(InitialShipsCount)" Path="./ClassGroup"/>
+    <Modifier TargetProperty="InitialSmallShipsCount" Operation="Addition" Value="$(InitialSmallShipsCount)" Path="./ClassGroup"/>
+    <Modifier TargetProperty="InitialMediumShipsCount" Operation="Addition" Value="$(InitialMediumShipsCount)" Path="./ClassGroup"/>
+    <Modifier TargetProperty="InitialLargeShipsCount" Operation="Addition" Value="$(InitialLargeShipsCount)" Path="./ClassGroup"/>
+    <Modifier TargetProperty="InitialMothershipsCount" Operation="Addition" Value="$(InitialMothershipsCount)" Path="./ClassGroup"/>
+
+    <Modifier TargetProperty="CommandPoints" Operation="Addition" Value="$(CommandPoints)" Path="./ClassGroup"/>
+  </SimulationDescriptor>
+
+
+  <!-- Coilgun Armor Destruction -->
+  <SimulationDescriptor Name="EncounterShipTemporaryArmorDestructionAccuracyPercent" Type="EncounterShipTemporaryArmorDestructionAccuracyPercent">
+    <Modifier TargetProperty="HullPlatingAbsorptionDebuffDynamic"      Operation="Addition"   Value="$(CoilgunArmorDescructionPercentFromOpponent)" Path="ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
 </Datatable>

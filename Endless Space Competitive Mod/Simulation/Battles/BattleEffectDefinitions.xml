@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/BattleEffectDefinition.xsd">
+  <BattleEffect_SetPropertyValue Name="Ship_ReloadRegeneratePerSecond" PropertyName="Shield" Operation="Set" InterpreterFormula="Min(Property(Target, @ClassShip, Shield) + Property(Target, @ClassShip, ShieldRegeneratePerSecond), Property(Target, @ClassShip, MaximumShield))" Duration="-1" Frequency="1"/>
+
+  <!-- Coilgun -->
+  <BattleEffect_SetPropertyValue Name="Ship_SetArmorDestructionFromOpponentCoilgun"             PropertyName="CoilgunArmorDescructionPercentFromOpponent"        Operation="Set" InterpreterFormula="Property(Initiator, @ClassSalvo, ArmorDestructionDynamic)" />
+
+  <BattleEffect_ApplyDescriptor Name="Ship_AddBattleArmorDestructionPercent" Duration="120">
+    <SimulationDescriptorReference Name="EncounterShipTemporaryArmorDestructionAccuracyPercent"/>
+  </BattleEffect_ApplyDescriptor>
+
+  <BattleEffect_SetPropertyValue Name="AttackingFlotilla_UpdateDamageAppliedByCoilgunFromSalvo"  PropertyName="DamageAppliedByCoilgun"     Operation="Addition"    InterpreterFormula="Property(Initiator, @ClassSalvo, EffectiveDamage)" />
+</Datatable>
