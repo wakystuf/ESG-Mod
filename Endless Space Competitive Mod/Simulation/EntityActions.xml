@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/EntityActionDefinition.xsd">
+  <!-- Succ -->
   <EmpireDiplomacyGiveResourcesAction Name="EmpireDiplomaticEssenceAction" PopulationToDestroyCount="1">
     <PathPrerequisite Flags="Prerequisite,Discard">ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
     <InterpreterPrerequisite Flags="Disable">Property(Context,@ClassEmpire,EmpireLifeforceStock) lt Property(Context,@ClassEmpire,MaximumEmpireLifeforceStock)</InterpreterPrerequisite>
@@ -17,6 +18,7 @@
     <ResourceReward ResourceName="EmpireLifeforce">300</ResourceReward>
   </EmpireDiplomacyGiveResourcesAction>
 
+  <!-- Juggernaut Ion Wave -->
   <FireIonWaveFleetAction Name="FireIonWaveFleetAction" DamageRatio="1" Duration="3" Cooldown="15">
 
     <EntityPrerequisites Location="Self">
@@ -29,6 +31,7 @@
 
     <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyJuggernautBattleshipAbility</TechnologyPrerequisite>
 
+    <!-- stfu visual studio, custom cost is valid -->
     <CustomCost Instant="true" ResourceName="Strategic3">Property(Context,@'ClassGarrison/ClassShip,ShipRoleBattleship',JuggernautShotCost)</CustomCost>
     <CustomCost Instant="true" ResourceName="Strategic4">Property(Context,@'ClassGarrison/ClassShip,ShipRoleBattleship',JuggernautShotCost)</CustomCost>
     <CustomCost Instant="true" ResourceName="Strategic5">Property(Context,@'ClassGarrison/ClassShip,ShipRoleBattleship',JuggernautShotCost)</CustomCost>
@@ -39,4 +42,25 @@
     <BattleshipSimulationDescriptorReference Name="ShipWeaponsDeactivated"/>
 
   </FireIonWaveFleetAction>
+
+  <InvisibilityFleetAction Name="InvisibilityFleetAction">
+    <EntityPrerequisites Location="Self">
+      <InterpreterPrerequisite Flags="Prerequisite,Discard,CheckedOnFleetSpawn,CheckedOnFleetModification">Property(Context,AntiVisionStrengthForModule) ge 1</InterpreterPrerequisite>
+      <PathPrerequisite Inverted="true"  Flags="MotherShipAttached">FleetActionMothershipAttached</PathPrerequisite>
+      <PathPrerequisite Inverted="true"  Flags="Prerequisite,ActionInProgress,CheckedOnFleetSpawn">InvisibilityFleetAction</PathPrerequisite>
+      <PathPrerequisite Inverted="true"  Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
+      <PathPrerequisite Inverted="true"  Flags="FleetIsBusy">FleetActionLogistics</PathPrerequisite>
+      <PathPrerequisite Inverted="true"  Flags="FleetIsBusy">FleetActionRooting</PathPrerequisite>
+      <PathPrerequisite Inverted="true"  Flags="IsCollectingRelics">FleetActionCollectingRelics</PathPrerequisite>
+      <PathPrerequisite Inverted="true"  Flags="Prerequisite">ClassGarrisonFleet/ClassShip/ClassSection/ClassModuleDestruction</PathPrerequisite>
+    </EntityPrerequisites>
+
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="InvisibilityFleetAction"/>
+    </EntityModifiers>
+
+    <!-- Suspendable descriptors are removed on attack, and restored afterwards -->
+    <SuspendableDescriptor Name="InvisibilityFleetActionAddAntivision"/>
+
+  </InvisibilityFleetAction>
 </Datatable>
