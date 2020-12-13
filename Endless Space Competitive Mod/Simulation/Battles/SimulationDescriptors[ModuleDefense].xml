@@ -1,5 +1,65 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+  <!-- Defense Module Class -->
+  <SimulationDescriptor Name="ClassModuleDefense" Type="ClassModule">
+    <Property Name="ShipHealthBonus"                   BaseValue="0"    MinValue="Negative"/>
+    <Property Name="ShieldBonus"                       BaseValue="0"    MinValue="Negative"/>
+    <Property Name="SectionHealthBonus"                BaseValue="0"    MinValue="Negative"/>
+    <Property Name="SectionHealthMultiplier"           BaseValue="0"    MinValue="Negative"/>
+    <Property Name="HullPlatingAbsorption"             BaseValue="0"    MinValue="Negative"/>
+    <Property Name="ShieldAbsorption"                  BaseValue="0"    MinValue="Negative"/>
+
+    <Property Name="DefenseTypePhysical"               BaseValue="0"    MinValue="0" MaxValue="1"/>
+    <Property Name="DefenseTypeEnergy"                 BaseValue="0"    MinValue="0" MaxValue="1"/>
+
+    <!-- Strat effect -->
+    <Property Name="FleetXPPerDamageAbsorbedByHullPlating"      BaseValue="0"/>
+    <Property Name="OpponentCriticalHitDamagePercent"           BaseValue="0" MinValue="Negative"/>
+    <Property Name="ShipManpowerKillAbsorption"                 BaseValue="0"/>
+    <Property Name="Evasion"                                    BaseValue="0"/>
+    <Property Name="RepairFlatPerDamageAbsorbedByHullPlating"   BaseValue="0"/>
+    <Property Name="ShieldReloadPerPhase"                       BaseValue="0"/>
+    <Property Name="ShieldRegeneratePerSecond"                  BaseValue="0"/>
+
+
+    <Modifier TargetProperty="GarrisonMoneyUpkeep"    Operation="Addition" Value="$(UpkeepFromModules)"      Path="../ClassShip"/>
+
+    <!-- We use intermediaries so that the additions and multiplications don't get accumulated and computed at the ship level -->
+    <!-- Section health -->
+    <Modifier TargetProperty="SectionHealthBonus"   Operation="Multiplication"      Value="$(Multiplier)"                        Path="ClassModuleDefense"/>
+
+    <Modifier TargetProperty="MaximumHealth"                            Operation="Addition"            Value="$(SectionHealthBonus)"   Path="./ClassSection"/>
+    <Modifier TargetProperty="MaximumHealthFromModule"                  Operation="Addition"            Value="$(SectionHealthBonus)"   Path="./ClassSectionCore"/>
+
+    <Modifier TargetProperty="MaximumHealth"             Operation="Percent"            Value="$(SectionHealthMultiplier)"     Path="../ClassShip/ClassSection,ClassSectionCore"/>
+
+    <!-- Core health -->
+    <Modifier TargetProperty="ShipHealthBonus"      Operation="Multiplication"      Value="$(Multiplier)"           Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="ShipHealth"           Operation="Addition"            Value="$(ShipHealthBonus)"      Path="../ClassShip"/>
+    <!-- Shield -->
+    <Modifier TargetProperty="ShieldBonus"          Operation="Multiplication"      Value="$(Multiplier)"           Path="ClassModuleDefense" />
+    <Modifier TargetProperty="MaximumShield"        Operation="Addition"            Value="$(ShieldBonus)"          Path="../ClassShip"/>
+
+    <Modifier TargetProperty="HullPlatingAbsorption"   Operation="Multiplication"      Value="$(Multiplier)"        Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="ShieldAbsorption"     Operation="Multiplication"      Value="$(Multiplier)"           Path="ClassModuleDefense"/>
+
+    <Modifier TargetProperty="DefenseTypePhysical"   Operation="Addition"      Value="$(HullPlatingAbsorption)"     Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="DefenseTypeEnergy"     Operation="Addition"      Value="$(ShieldAbsorption)"          Path="ClassModuleDefense"/>
+
+    <Modifier TargetProperty="OpponentCriticalHitDamagePercent"         Operation="Addition"        Value="$(OpponentCriticalHitDamagePercent)"         Path="../ClassShip"/>
+    <Modifier TargetProperty="ShipManpowerKillAbsorption"               Operation="Addition"        Value="$(ShipManpowerKillAbsorption)"               Path="../ClassShip"/>
+    <Modifier TargetProperty="Evasion"                                  Operation="Addition"        Value="$(Evasion)"                                  Path="../ClassShip"/>
+    <Modifier TargetProperty="FleetXPPerDamageAbsorbedByHullPlating"    Operation="Addition"        Value="$(FleetXPPerDamageAbsorbedByHullPlating)"    Path="../ClassShip"/>
+    <Modifier TargetProperty="RepairFlatPerDamageAbsorbedByHullPlating" Operation="Addition"        Value="$(RepairFlatPerDamageAbsorbedByHullPlating)" Path="../ClassShip"/>
+    <Modifier TargetProperty="ShieldReloadPerPhase"                     Operation="Addition"        Value="$(ShieldReloadPerPhase)"                     Path="../ClassShip"/>
+    <Modifier TargetProperty="ShieldRegeneratePerSecond"                Operation="Addition"   Value="$(ShieldRegeneratePerSecond)"                     Path="../ClassShip"/>
+
+    <!--Damage Reduction using defense type-->
+    <Modifier TargetProperty="HullPlatingAbsorption" Operation="Addition" Value="$(HullPlatingAbsorption)" Path="../ClassShip"/>
+    <Modifier TargetProperty="ShieldAbsorption"   Operation="Addition" Value="$(ShieldAbsorption)"   Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- Removed XP per Hit -->
   <SimulationDescriptor Name="ModuleDefenseHullPlating2Strategic1"  Type="ModuleDefense">
     <Modifier TargetProperty="SectionHealthBonus"               Operation="Addition" Value="468"  Path="ClassModuleDefense"/>
     <Modifier TargetProperty="HullPlatingAbsorption"            Operation="Addition" Value="80"   Path="ClassModuleDefense"/>
@@ -8,5 +68,20 @@
   <SimulationDescriptor Name="ModuleDefenseHullPlating3Strategic1"  Type="ModuleDefense">
     <Modifier TargetProperty="SectionHealthBonus"               Operation="Addition" Value="750"  Path="ClassModuleDefense"/>
     <Modifier TargetProperty="HullPlatingAbsorption"            Operation="Addition" Value="120"   Path="ClassModuleDefense"/>
+  </SimulationDescriptor>
+  
+  <!-- Changed Shield / Phase to Shield / Second -->
+  <SimulationDescriptor Name="ModuleDefenseShield4Strategic6"  Type="ModuleDefense">
+    <Modifier TargetProperty="SectionHealthBonus"               Operation="Addition" Value="75"   Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="ShieldAbsorption"                 Operation="Addition" Value="600"  Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="ShieldBonus"                      Operation="Addition" Value="1500" Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="ShieldRegeneratePerSecond"             Operation="Addition" Value="3"  Path="ClassModuleDefense"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleDefenseShield5Strategic6"  Type="ModuleDefense">
+    <Modifier TargetProperty="SectionHealthBonus"               Operation="Addition" Value="90"   Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="ShieldAbsorption"                 Operation="Addition" Value="800"  Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="ShieldBonus"                      Operation="Addition" Value="1700" Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="ShieldRegeneratePerSecond"             Operation="Addition" Value="5"  Path="ClassModuleDefense"/>
   </SimulationDescriptor>
 </Datatable>
