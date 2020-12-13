@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/BattleEffectDefinition.xsd">
-  <BattleEffect_SetPropertyValue Name="Ship_ReloadRegeneratePerSecond" PropertyName="Shield" Operation="Set" InterpreterFormula="Min(Property(Target, @ClassShip, Shield) + Property(Target, @ClassShip, ShieldRegeneratePerSecond), Property(Target, @ClassShip, MaximumShield))" Duration="-1" Frequency="1"/>
+  <BattleEffect_SetPropertyValue Name="Ship_ReloadRegeneratePerSecond" PropertyName="Shield" Operation="Set" InterpreterFormula="Min(Property(Target, @ClassShip, Shield) + Property(Target, @ClassShip, ShieldRegeneratePerSecond), Property(Target, @ClassShip, MaximumShield))" Duration="-1" Frequency="1">
+    <CancellationEventPrerequisite EventType="LastPhaseStart"/>
+  </BattleEffect_SetPropertyValue>
+
+  <BattleEffect_SetPropertyValue Name="Ship_ReloadRegeneratePerSecondDynamic" PropertyName="Shield" Operation="Set" InterpreterFormula="Min(Property(Target, @ClassShip, Shield) + Max(Property(Target, @ClassShip, ShieldRegeneratePerSecondDynamic) * Property(Target, @ClassShip, MaximumShield), 0), Property(Target, @ClassShip, MaximumShield))" Duration="-1" Frequency="1">
+    <CancellationEventPrerequisite EventType="LastPhaseStart"/>
+  </BattleEffect_SetPropertyValue>
 
   <!-- Coilgun -->
   <BattleEffect_SetPropertyValue Name="Ship_SetArmorDestructionFromOpponentCoilgun"             PropertyName="CoilgunArmorDescructionPercentFromOpponent"        Operation="Set" InterpreterFormula="Property(Initiator, @ClassSalvo, ArmorDestructionDynamic)" />
@@ -9,5 +15,7 @@
     <SimulationDescriptorReference Name="EncounterShipTemporaryArmorDestructionAccuracyPercent"/>
   </BattleEffect_ApplyDescriptor>
 
-  <BattleEffect_SetPropertyValue Name="AttackingFlotilla_UpdateDamageAppliedByCoilgunFromSalvo"  PropertyName="DamageAppliedByCoilgun"     Operation="Addition"    InterpreterFormula="Property(Initiator, @ClassSalvo, EffectiveDamage)" />
+  <BattleEffect_SetPropertyValue Name="AttackingFlotilla_UpdateDamageAppliedByCoilgunFromSalvo"  PropertyName="DamageAppliedByCoilgun"     Operation="Addition"    InterpreterFormula="Property(Initiator, @ClassSalvo, EffectiveDamage)">
+    <CancellationEventPrerequisite EventType="LastPhaseStart"/>
+  </BattleEffect_SetPropertyValue>
 </Datatable>
