@@ -493,6 +493,145 @@
       <Var VarName="$CurrentEmpire">
         <From Source="$Empire"/>
       </Var>
+      <!--Use the SubCategoryInQuests-->
+      <Var VarName="$TechnoSubCategory" StringValue="TechnoMilitary"/>
+      <!--POLITICAL EFFECT -->
+      <Var VarName="$PoliticalEffectMilitary" StringValue="PopulationEventSophons02.2Military"/>
+      <Var VarName="$Amount01" IntValue="5"/>
+      <LocalizationVar Source="$Amount01" LocalizationKey="$Amount01Name"/>
+    </Vars>
+
+    <!--============ PREREQUISITES ============-->
+
+    <!--============ STEPS ============-->
+    <Steps>
+      <!--============ STEP 1 ============-->
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire"/>
+              <Input_Target VarName="$CurrentEmpire"/>
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitary"/>
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+          <Objective Name="Step1_Objective1" StartValue="0" EndValue="5">
+            <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="20" AutoResolutionProbability="1" />
+            <Sequence>
+              <!--TO RE DO : 5 MILITARIST TECHNO-->
+              <Loop Count="5">
+                <Decorator_TechnologyUnlocked Initiator="Empire" ProgressionIncrement="1">
+                  <Input_TechnologySubCategory VarName="$TechnoSubCategory"/>
+                </Decorator_TechnologyUnlocked>
+              </Loop>
+              <Action_ChooseOutcome Name="Outcome1"/>
+            </Sequence>
+            <Outcome Name="Outcome1">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>Chapter2.2-Militarist</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+        </ObjectiveSet>
+        <Reward Droplist="DroplistStrategicsEra2" Picks="1"/>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
+  <!-- ####################################### -->
+  <!--           Chapter 2.2 - Military          -->
+  <!-- ####################################### -->
+
+  <QuestDefinition Name="SophonsQuest-Chapter2.2-Military" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false">
+
+    <!--============ TAGS ============-->
+    <Tags>Chapter2.2-Militarist</Tags>
+
+
+    <QuestContextSolo/>
+
+
+    <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                      NumberOfOccurrencesPerEmpire="1"
+                      NumberOfConcurrentInstances="0"/>
+
+    <!--============ VARIABLES ============-->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <!--If you want to use a ship battle in the quest, you can use the tag Ship For Battle-->
+      <!--All the Military Ship should have this tag on their hull-->
+      <Var VarName="$RequiredTag" StringValue="ShipForBattle"></Var>
+      <Var VarName="$PoliticalEffectMilitary" StringValue="PopulationEventSophons02.3Military"/>
+      <Var VarName="$Amount01" IntValue="4"/>
+      <LocalizationVar Source="$Amount01" LocalizationKey="$Amount01Name"/>
+    </Vars>
+
+    <!--============ PREREQUISITES ============-->
+
+    <!--============ STEPS ============-->
+    <Steps>
+      <!--============ STEP 1 ============-->
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire"/>
+              <Input_Target VarName="$CurrentEmpire"/>
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitary"/>
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+          <Objective Name="Step1_Objective1" StartValue="0" EndValue="4">
+            <!-- Build 4 ships -->
+            <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="20" AutoResolutionProbability="1" />
+            <Sequence>
+              <Loop Count="4">
+                <Decorator_ShipConstructed ProgressionIncrement="1">
+                  <Input_RequiredTag VarName="$RequiredTag"/>
+                </Decorator_ShipConstructed>
+              </Loop>
+              <Action_ChooseOutcome Name="Outcome1"/>
+            </Sequence>
+            <Outcome Name="Outcome1">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>Chapter2.3-Militarist</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+        </ObjectiveSet>
+        <Reward Droplist="DroplistMinorRewardsEra3" Picks="1"/>
+      </Step>
+    </Steps>
+
+  </QuestDefinition>
+
+  <!-- ####################################### -->
+  <!--           Chapter 2.3 - Military          -->
+  <!-- ####################################### -->
+
+  <QuestDefinition Name="SophonsQuest-Chapter2.3-Military" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false">
+
+    <!--============ TAGS ============-->
+    <Tags>Chapter2.3-Militarist</Tags>
+
+    <QuestContextSolo/>
+
+    <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                      NumberOfOccurrencesPerEmpire="1"
+                      NumberOfConcurrentInstances="0"/>
+
+    <!--============ VARIABLES ============-->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
       <InterpretedVar VarName="$MinimumAmount" Target="$(Empire)">
         <Expression>Min(3,(Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics06') + 1))</Expression>
       </InterpretedVar>
@@ -507,38 +646,38 @@
     <!--============ PREREQUISITES ============-->
 
     <!--============ STEPS ============-->
-
     <Steps>
       <!--============ STEP 1 ============-->
       <Step Name="Step1">
         <ObjectiveSet>
           <Objective Name="Step1_Objective1" StartValue="0" EndValue="$Duration">
             <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
-          <Sequence>
-            <Loop>
-              <Decorator_BeginTurn ProgressionIncrement="1">
-                <Condition_HasLaws>
-                  <Input_Empire VarName="$CurrentEmpire"/>
-                  <Input_Politics VarName="$MilitaristPolitic"/>
-                  <Input_MinimumAmount VarName="$MinimumAmount"/>
-                </Condition_HasLaws>
-              </Decorator_BeginTurn>
-              <Input_Count VarName="$Duration"/>
-            </Loop>
-            <Action_ChooseOutcome Name="Outcome1"/>
-          </Sequence>
-          <Outcome Name="Outcome1">
-            <Triggers Weight="1">
-              <QuestTrigger>
-                <Tags>Chapter2.2-Militarist</Tags>
-                <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
-              </QuestTrigger>
-            </Triggers>
-          </Outcome>
+            <Sequence>
+              <Loop>
+                <Decorator_BeginTurn ProgressionIncrement="1">
+                  <Condition_HasLaws>
+                    <Input_Empire VarName="$CurrentEmpire"/>
+                    <Input_Politics VarName="$MilitaristPolitic"/>
+                    <Input_MinimumAmount VarName="$MinimumAmount"/>
+                  </Condition_HasLaws>
+                </Decorator_BeginTurn>
+                <Input_Count VarName="$Duration"/>
+              </Loop>
+              <Action_ChooseOutcome Name="Outcome1"/>
+            </Sequence>
+            <Outcome Name="Outcome1">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>Chapter3-Military</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
           </Objective>
         </ObjectiveSet>
-        <Reward Droplist="DroplistMinorRewardsEra3" Picks="1"/>
+        <Reward Droplist="DroplistMilitarySophonsQuest01" Picks="1"/>
       </Step>
     </Steps>
+
   </QuestDefinition>
 </Datatable>
