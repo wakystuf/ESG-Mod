@@ -529,6 +529,255 @@
     </Steps>
   </QuestDefinition>
 
+
+   <!-- ####################################### -->
+    <!--    UNITED EMPIRE QUEST Chapter2.1       -->
+    <!-- ####################################### -->  
+
+    <QuestDefinition Name="UE_Quest-Chapter2.1" Category="MajorQuest" SubCategory="UE" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>UE_Quest-Chapter2.1</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$BattleRequieredAmount" IntValue="5"/>
+            
+            <Var VarName="$MinSystemAmount" IntValue="3"/>
+            <Var VarName="$MinLevelAmount" IntValue="2"/>
+            
+            <Var VarName="$HotPlanet" StringValue="PlanetGameplayTypeHot" />
+            <Var VarName="$TemperatePlanet" StringValue="PlanetGameplayTypeTemperate" />
+            <Var VarName="$ColdPlanet" StringValue="PlanetGameplayTypeCold" />
+            <Var VarName="$PlanetAmount" IntValue="1"/>
+
+            <Var VarName="$PoliticalEffectMilitary" StringValue="PopulationEventUE02.1Military"/>
+            <Var VarName="$PoliticalEffectIndustry" StringValue="PopulationEventUE02.1Industry"/>
+            <Var VarName="$PoliticalEffectScience"  StringValue="PopulationEventUE02.1Science"/>
+            <Var IsGlobal="true" VarName="$ChosenHero"/>
+
+            <LocalizationVar Source="$ChosenHero"            LocalizationKey="$HeroName"/>
+            <LocalizationVar Source="$BattleRequieredAmount" LocalizationKey="$BattleRequieredAmountName"/>
+            <LocalizationVar Source="$MinLevelAmount"        LocalizationKey="$MinLevelAmountName"/>
+            <LocalizationVar Source="$MinSystemAmount"       LocalizationKey="$MinSystemAmountName"/>
+
+            <Var VarName="$MinSystemAmountAlt" IntValue="1"/>
+            <LocalizationVar Source="$MinSystemAmountAlt"       LocalizationKey="$MinSystemAmountAltName"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="2">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">../ClassEmpire,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="3"/>
+                </Choice>
+
+                <!--============ STEP 1 - MILITARY ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitary"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Step2_1_Objective1" StartValue="0" EndValue="5">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Loop>
+                                <Decorator_BattleEnded Initiator="Empire" ProgressionIncrement="1" Status="Won">
+                                    <Input_Empire VarName="$CurrentEmpire"/>
+                                </Decorator_BattleEnded>
+                                <Input_Count VarName="$BattleRequieredAmount"/>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>UE_Quest-Chapter2.2-Military</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    
+                    <Reward Droplist="DroplistUnitedEmpire03" Picks="1"/>
+                    
+                </ObjectiveSet>
+
+                <!--============ STEP 2 - INDUSTRY ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustry"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Step2_2_Objective1">   
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Parallel CompletionPolicy="First">
+                                <Sequence>
+                                    <Decorator_SystemLevelChanged Initiator="Empire">
+                                        <Condition_HasSystems>
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                            <Input_MinimumAmount VarName="$MinSystemAmount"/>
+                                            <Input_MinimumLevel VarName="$MinLevelAmount"/>
+                                        </Condition_HasSystems>
+                                    </Decorator_SystemLevelChanged>
+                                </Sequence>
+                                <Sequence>
+                                    <Decorator_BeginTurn>
+                                        <Condition_HasSystems>
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                            <Input_MinimumAmount VarName="$MinSystemAmount"/>
+                                            <Input_MinimumLevel VarName="$MinLevelAmount"/>
+                                        </Condition_HasSystems>
+                                    </Decorator_BeginTurn>
+                                </Sequence>
+                                </Parallel>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>UE_Quest-Chapter2.2-Industry</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    
+                    <Reward Droplist="DroplistRewardQuestUnitedEmpire04" Picks="1"/>
+                    
+                </ObjectiveSet>
+
+                <!--============ STEP 2 - INDUSTRY (UC only) ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustry"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Step2_2_Objective1Alt">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Parallel CompletionPolicy="First">
+                                <Sequence>
+                                    <Decorator_SystemLevelChanged Initiator="Empire">
+                                        <Condition_HasSystems>
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                            <Input_MinimumAmount VarName="$MinSystemAmountAlt"/>
+                                            <Input_MinimumLevel VarName="$MinLevelAmount"/>
+                                        </Condition_HasSystems>
+                                    </Decorator_SystemLevelChanged>
+                                </Sequence>
+                                <Sequence>
+                                    <Decorator_BeginTurn>
+                                        <Condition_HasSystems>
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                            <Input_MinimumAmount VarName="$MinSystemAmountAlt"/>
+                                            <Input_MinimumLevel VarName="$MinLevelAmount"/>
+                                        </Condition_HasSystems>
+                                    </Decorator_BeginTurn>
+                                </Sequence>
+                            </Parallel>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>UE_Quest-Chapter2.2-Industry</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestUnitedEmpire04" Picks="1"/>
+
+                </ObjectiveSet>
+
+                <!--============ STEP 1 - SCIENCE ============-->
+                <ObjectiveSet ObjectiveComposition="All">
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScience"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Step2_3_Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>                                
+                                <Condition_HasPlanets>
+                                    <Input_EmpireOrSystem VarName="$CurrentEmpire"/>
+                                    <Input_MinimumAmount VarName="$PlanetAmount" />
+                                    <Input_PlanetGameplayType VarName="$TemperatePlanet"/>
+                                </Condition_HasPlanets>
+                                <Condition_HasPlanets>
+                                    <Input_EmpireOrSystem VarName="$CurrentEmpire"/>
+                                    <Input_MinimumAmount VarName="$PlanetAmount" />
+                                    <Input_PlanetGameplayType VarName="$ColdPlanet"/>
+                                </Condition_HasPlanets>
+                                <Condition_HasPlanets>
+                                    <Input_EmpireOrSystem VarName="$CurrentEmpire"/>
+                                    <Input_MinimumAmount VarName="$PlanetAmount" />
+                                    <Input_PlanetGameplayType VarName="$HotPlanet"/>
+                                </Condition_HasPlanets>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>UE_Quest-Chapter2.2-Science</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    
+                    <Reward Droplist="DroplistUnitedEmpire05" Picks="1"/>
+                    
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
   <!-- ####################################### -->
   <!--      UNITED EMPIRE QUEST Chapter3       -->
   <!-- ####################################### -->
