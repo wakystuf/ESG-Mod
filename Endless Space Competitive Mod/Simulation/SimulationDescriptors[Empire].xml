@@ -162,6 +162,7 @@
     <Property Name="EmpireLifeforceFromHuntingGrounds"      BaseValue="0" MinValue="0" />
     <Property Name="EmpireMoneyFromHuntingGrounds"          BaseValue="0" MinValue="0" />
     <Property Name="EmpireMoneyFromConsume"                 BaseValue="0" MinValue="0" />
+    <Property Name="EmpirePointFromConsume"                 BaseValue="0" MinValue="0" />
     <Property Name="EmpireLifeforceFromJuggernauts"         BaseValue="0" MinValue="0" />
     <Property Name="EmpireResearchFromJuggernautsDepletion" BaseValue="0" MinValue="0" />
 
@@ -818,6 +819,12 @@
     <BinaryModifier TargetProperty="SystemsAboveOverColonizationCount"      Operation="Addition"            Left="$(OwnedSystems)"  BinaryOperation="Subtraction" Right="$(OverColonizationThreshold)"          Priority="-1" Path="ClassEmpire"/>
     <BinaryModifier TargetProperty="IsOverColonizationThreshold"            Operation="Addition"            Left="$(OverColonizationThreshold)"  BinaryOperation="Division" Right="$(OwnedSystems)"          Priority="0" Path="ClassEmpire"/>
 
+    <!--Craver Empire Point-->
+
+    <Modifier TargetProperty="EmpireEmpirePoint"          Operation="Addition"    Value="$(EmpirePointFromConsume)"                   Path="ClassEmpire"/>
+
+
+
     <!--Depleted Planet counts-->
     <Modifier TargetProperty="PopulationEmpireDepletedPlanetCount" Operation="Addition" Value="$(DepletedPlanetCount)" Path="ClassEmpire/ClassPopulationEmpire,PopulationCollectionBonusCravers3" TooltipHidden="true"/>
 
@@ -1209,4 +1216,12 @@
     <Modifier TargetProperty="ModuleMilitaryStage" Operation="Force" Value="$(EmpireMilitaryStage)" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
     <Modifier TargetProperty="SystemResearchRelics" Operation="Addition" Value="$(ResearchRelics)" Path="ClassEmpire/ClassColonizedStarSystem" />
   </SimulationDescriptor>
+
+
+  <!--Used for Craver Influence and Science ESG-->
+  <SimulationDescriptor Name="EmpireHasHuntingGround" Type="EmpireHasHuntingGround" IsSerializable="false">
+        <Modifier TargetProperty="EmpireLifeforceFromHuntingGrounds" Operation="Addition" Value="100" Path="AffinityGameplayVampirilis"/>
+        <BinaryModifier TargetProperty="EmpireMoneyFromConsume" Operation="Addition" Left="200" BinaryOperation="Multiplication" Right="$(DustInflation)" Path="AffinityGameplayCravers"/>
+        <BinaryModifier TargetProperty="EmpirePointFromConsume" Operation="Addition" Left="25" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" Path="AffinityGameplayCravers"/>
+    </SimulationDescriptor>
 </Datatable>
