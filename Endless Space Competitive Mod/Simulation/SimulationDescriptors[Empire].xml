@@ -4,8 +4,10 @@
 
   <SimulationDescriptor Name="ClassEmpire" Type="Class">
     <!-- ESCM -->
-    <Property Name="TradeAgreementCost"           MinValue="0" BaseValue="1" MaxValue="1"/>
-
+    <Property Name="TradeAgreementCost"                BaseValue="1" MinValue="0" MaxValue="1"/>
+    <Property Name="PercentageOfPlayersInYourAlliance" BaseValue="0" MinValue="0"/>
+    <Property Name="AllianceSize" BaseValue="0" MinValue="0"/>
+    
     <!-- Tech Stages -->
     <Property Name="EmpireEmpireDevelopmentStage" BaseValue="1"/>
     <Property Name="EmpireScienceStage" BaseValue="1"/>
@@ -1202,6 +1204,10 @@
     <Modifier TargetProperty="NetLuxury24"     Operation="Addition"    Value="$(AcademyNetLuxury24)"  Path="ClassEmpire"/>
 
     <!-- ESG Changes -->
+    <!-- PercentageOfPlayersInYourAlliance = Alliance Size / Empire Count -->
+    <BinaryModifier TargetProperty="PercentageOfPlayersInYourAlliance" Operation="Force" Left="$(AllianceCount)" BinaryOperation="Division" Right="$(NumberOfMajorEmpires)"/>
+    <Modifier TargetProperty="PercentageOfPlayersInYourAlliance" Operation="Force" Value="$(PercentageOfPlayersInYourAlliance)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+    
     <Modifier TargetProperty="TradeAgreementCost" Operation="Addition" Value="1"/>
     <Modifier TargetProperty="ModuleEmpireDevelopmentStage" Operation="Force" Value="$(EmpireEmpireDevelopmentStage)" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
     <Modifier TargetProperty="ModuleScienceStage" Operation="Force" Value="$(EmpireScienceStage)" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
