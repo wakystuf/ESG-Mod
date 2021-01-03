@@ -1,5 +1,72 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/GroundBattleOutcomeDefinition.xsd">
+
+  <!-- Pillages -->
+  <GroundBattleOutcomeLootDefinition Name="GroundBattleOutcomeLoot" Priority="2" RequiresFleet="true" OwnershipLoss="0.2">
+    <Prerequisites>
+      <PathPrerequisite Flags="Discard" Inverted="true">AffinityGameplayVampirilis</PathPrerequisite>
+      <PathPrerequisite Flags="Discard" Inverted="true">AffinityGameplayMajorHisshos</PathPrerequisite>
+      <PathPrerequisite Flags="Discard" Inverted="true">AffinityGameplayHoratio</PathPrerequisite>
+      <PathPrerequisite Flags="Discard" Inverted="true">AffinityGameplayUmbralChoir</PathPrerequisite>
+      <PathPrerequisite Flags="Discard" Inverted="true">AffinityGameplayCravers</PathPrerequisite>
+      <InterpreterPrerequisite Flags="CannotPillageGhosts" Inverted="true">Path(DefenderColonizedStarSystem,@'ColonizedStarSystemStateGhost')</InterpreterPrerequisite>
+    </Prerequisites>
+
+    <FleetPrerequisites>
+      <InterpreterPrerequisite Inverted="false" Flags="RequireMilitaryPower">SumProperty(Context, @'ClassGarrisonFleet/ClassShip',OffensiveMilitaryPower) gt 0</InterpreterPrerequisite>
+    </FleetPrerequisites>
+
+    <MinimumImprovementsLossFormula>0</MinimumImprovementsLossFormula>
+    <MaximumImprovementsLossFormula>Min(3, $(DestructibleImprovementsCount) / 5)</MaximumImprovementsLossFormula>
+
+    <MinimumPopulationsLossFormula>0</MinimumPopulationsLossFormula>
+    <MaximumPopulationsLossFormula>Min(4, $(PopulationCount) / 5)</MaximumPopulationsLossFormula>
+
+    <WarPointsRewardReference Name="GroundBattleOutcomeLootSystem"/>
+    <TemporaryEffectReference Name="SystemPillageHappinessMalus"/>
+
+    <!-- ResourceLoot formula must return positive float and variables: same as loss formulae, but with: -->
+    <!-- DefenderResourceStock, DefenderResourceNet: float -->
+    <ResourceLoot Name="EmpireMoney">$(DefenderResourceStock) * 0.5 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="Strategic1">$(DefenderResourceStock) * 0.5 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="Strategic2">$(DefenderResourceStock) * 0.5 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="Strategic3">$(DefenderResourceStock) * 0.5 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="Strategic4">$(DefenderResourceStock) * 0.5 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="Strategic5">$(DefenderResourceStock) * 0.5 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="Strategic6">$(DefenderResourceStock) * 0.5 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="AcademyEmpireImprovementMoney">$(DefenderResourceStock) * 0.5 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+
+  </GroundBattleOutcomeLootDefinition>
+
+  <GroundBattleOutcomeLootDefinition Name="GroundBattleOutcomeLootCravers" Priority="2" RequiresFleet="true" OwnershipLoss="0.2">
+    <Prerequisites>
+      <PathPrerequisite Flags="Discard">AffinityGameplayCravers</PathPrerequisite>
+      <InterpreterPrerequisite Flags="CannotPillageGhosts" Inverted="true">Path(DefenderColonizedStarSystem,@'ColonizedStarSystemStateGhost')</InterpreterPrerequisite>
+    </Prerequisites>
+
+    <FleetPrerequisites>
+      <InterpreterPrerequisite Inverted="false" Flags="RequireMilitaryPower">SumProperty(Context, @'ClassGarrisonFleet/ClassShip',OffensiveMilitaryPower) gt 0</InterpreterPrerequisite>
+    </FleetPrerequisites>
+
+    <MinimumImprovementsLossFormula>0</MinimumImprovementsLossFormula>
+    <MaximumImprovementsLossFormula>Min(3, $(DestructibleImprovementsCount) / 5)</MaximumImprovementsLossFormula>
+
+    <WarPointsRewardReference Name="GroundBattleOutcomeLootSystem"/>
+    <TemporaryEffectReference Name="SystemPillageHappinessMalus"/>
+
+    <ResourceLoot Name="EmpireMoney">$(DefenderResourceStock) * 0.35 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="Strategic1">$(DefenderResourceStock) * 0.35 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="Strategic2">$(DefenderResourceStock) * 0.35 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="Strategic3">$(DefenderResourceStock) * 0.35 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="Strategic4">$(DefenderResourceStock) * 0.35 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="Strategic5">$(DefenderResourceStock) * 0.35 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="Strategic6">$(DefenderResourceStock) * 0.35 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+    <ResourceLoot Name="AcademyEmpireImprovementMoney">$(DefenderResourceStock) * 0.5 * Property(DefenderColonizedStarSystem,ResourceRatioStolenOnPillage)</ResourceLoot>
+
+    <PopulationLoot>Min(5, $(MovablePopulationCount) / 5)</PopulationLoot>
+
+  </GroundBattleOutcomeLootDefinition>
+  
   <!-- Razes -->
   <GroundBattleOutcomeRazeDefinition Name="GroundBattleOutcomeRaze" Priority="1" OwnershipLoss="0.5">
     <Prerequisites>
@@ -60,6 +127,7 @@
 
     <!-- This descriptor increases the rate at which the system decays. See descriptor EmpireHasHuntingGround for bonuses from owned hunting grounds/'disorganized wasteland'. -->
     <LostSystemSimulationDescriptorReference Name="LostSystemEffectDecayRateIncrease"/>
+    <LostSystemSimulationDescriptorReference Name="LostSystemEffectDepletionPerTurn"/>
 
   </GroundBattleOutcomeRazeDefinition>
 </Datatable>
