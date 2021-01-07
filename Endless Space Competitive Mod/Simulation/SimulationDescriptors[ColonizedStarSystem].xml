@@ -7,8 +7,13 @@
     <Property Name="PercentageOfPlayersInYourAlliance"  BaseValue="0"/>
     <Property Name="LuxuryReworkEnabled"                BaseValue="0"/>
     <Property Name="LuxuryReworkDisabled"               BaseValue="0" />
+    <Property Name="LuxuryReworkEnabledNonNakalim"      BaseValue="0"/>
+    <Property Name="LuxuryReworkDisabledNonNakalim"     BaseValue="0" />
+    <Property Name="LuxuryReworkDisabledNakalim"        BaseValue="0" />
+    <Property Name="LuxuryReworkEnabledNakalim"         BaseValue="0" />
     <Property Name="LuxuryReworkEnabledPerSystemLevel"  BaseValue="0" />
     <Property Name="LuxuryReworkDisabledPerSystemLevel" BaseValue="0" />
+    <Property Name="SciencePerRelicRecipeEffect"        BaseValue="0" />
     
     <!-- Doesn't do anything, used for tooltips -->
     <Property Name="UselessForTooltip"  BaseValue="0" MaxValue="1"/>
@@ -489,7 +494,6 @@
     <Property Name="RecipeIngredientEffectTier2Luxury11" BaseValue="0"/>
     <Property Name="RecipeIngredientEffectTier2Luxury12" BaseValue="0"/>
     <Property Name="RecipeIngredientEffectTier2Luxury12Bis" BaseValue="0"/>
-    <Property Name="RecipeIngredientEffectTier2Luxury12BisFlat" BaseValue="0"/>
     <Property Name="RecipeIngredientEffectTier2Luxury13" BaseValue="0"/>
     <Property Name="RecipeIngredientEffectTier2Luxury14" BaseValue="0" MinValue="Negative"/>
     <Property Name="RecipeIngredientEffectTier2Luxury14FIDSHisshos" BaseValue="0" MinValue="Negative"/>
@@ -617,8 +621,13 @@
     <Modifier TargetProperty="PopulationSystemLevel"       Operation="Force" Value="$(SystemLevel)" Path="../ClassEmpire/ClassColonizedStarSystem/ClassPlanet/ClassPopulation"/>
     <Modifier TargetProperty="LuxuryReworkEnabled"         Operation="Force" Value="$(LuxuryReworkEnabled)" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
     <Modifier TargetProperty="LuxuryReworkDisabled"        Operation="Force" Value="$(LuxuryReworkDisabled)" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <BinaryModifier TargetProperty="LuxuryReworkDisabledNakalim" Operation="Force" Left="$(LuxuryReworkDisabled)" BinaryOperation="Multiplication" Right="$(CannotUseRawPlanetScience)"/>
+    <BinaryModifier TargetProperty="LuxuryReworkEnabledNakalim"  Operation="Force" Left="$(LuxuryReworkEnabled)" BinaryOperation="Multiplication" Right="$(CannotUseRawPlanetScience)"/>
+    <BinaryModifier TargetProperty="LuxuryReworkDisabledNonNakalim" Operation="Force" Left="$(LuxuryReworkDisabled)" BinaryOperation="Multiplication" Right="$(CanUseRawPlanetScience)"/>
+    <BinaryModifier TargetProperty="LuxuryReworkEnabledNonNakalim"  Operation="Force" Left="$(LuxuryReworkEnabled)" BinaryOperation="Multiplication" Right="$(CanUseRawPlanetScience)"/>
     <BinaryModifier TargetProperty="LuxuryReworkEnabledPerSystemLevel"  Operation="Force" Left="$(LuxuryReworkEnabled)" BinaryOperation="Multiplication" Right="$(SystemLevel)"/>
     <BinaryModifier TargetProperty="LuxuryReworkDisabledPerSystemLevel" Operation="Force" Left="$(LuxuryReworkDisabled)" BinaryOperation="Multiplication" Right="$(SystemLevel)"/>
+    <BinaryModifier TargetProperty="SciencePerRelicRecipeEffect" Operation="Force" Left="$(LuxuryReworkEnabled)" BinaryOperation="Multiplication" Right="2"/>
     <!-- ########################################################## -->
     <!-- ######################## DEBUG ######################## -->
     <!-- ########################################################## -->
@@ -1105,8 +1114,8 @@
     <Modifier TargetProperty="PlanetRawIndustry"                                        Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury10)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
     <Modifier TargetProperty="PlanetRawDust"                                            Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury11)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
     <BinaryModifier TargetProperty="PlanetRawScience" Operation="Addition" Left="$(RecipeIngredientEffectTier2Luxury12)" BinaryOperation="Multiplication" Right="$(CanUseRawPlanetScience)" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
-    <BinaryModifier TargetProperty="NetSystemResearch" Operation="Percent" Left="$(RecipeIngredientEffectTier2Luxury12Bis)" BinaryOperation="Multiplication" Right="$(CannotUseRawPlanetScience)"/>
-    <BinaryModifier TargetProperty="NetSystemResearch" Operation="Addition" Left="$(RecipeIngredientEffectTier2Luxury12BisFlat)" BinaryOperation="Multiplication" Right="$(CannotUseRawPlanetScience)"/>
+    <BinaryModifier TargetProperty="NetSystemResearch" Operation="Percent" Left="$(RecipeIngredientEffectTier2Luxury12Bis)" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabledNakalim)"/>
+    <BinaryModifier TargetProperty="NetSystemResearch" Operation="Addition" Left="$(RecipeIngredientEffectTier2Luxury12Bis)" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledNakalim)"/>
     <Modifier TargetProperty="SystemFIDSFlat"                                           Operation="Addition"    Value="$(RecipeIngredientEffectTier1Luxury6FIDSHisshos)"        Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="PlanetRawPrestige"                                        Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury13)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
     <Modifier TargetProperty="Happiness"                                                Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury14)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
