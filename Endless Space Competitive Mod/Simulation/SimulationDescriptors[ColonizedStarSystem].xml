@@ -5,7 +5,19 @@
     <Property Name="PlanetsWithoutTemples"              BaseValue="0" MinValue="0" MaxValue="5"/>
     <Property Name="TradingRouteIncomeLuxuryModifier"   BaseValue="1"/>
     <Property Name="PercentageOfPlayersInYourAlliance"  BaseValue="0"/>
-
+    <Property Name="LuxuryReworkEnabled"                BaseValue="0"/>
+    <Property Name="LuxuryReworkDisabled"               BaseValue="0" />
+    <Property Name="LuxuryReworkEnabledNonNakalim"      BaseValue="0"/>
+    <Property Name="LuxuryReworkDisabledNonNakalim"     BaseValue="0" />
+    <Property Name="LuxuryReworkDisabledNakalim"        BaseValue="0" />
+    <Property Name="LuxuryReworkEnabledNakalim"         BaseValue="0" />
+    <Property Name="LuxuryReworkEnabledPerSystemLevel"  BaseValue="0" />
+    <Property Name="LuxuryReworkDisabledPerSystemLevel" BaseValue="0" />
+    <Property Name="SciencePerRelicRecipeEffect"        BaseValue="0" />
+    
+    <!-- Doesn't do anything, used for tooltips -->
+    <Property Name="UselessForTooltip"  BaseValue="0" MaxValue="1"/>
+    
     <!-- Population Control
          Assimilate -->
     <Property Name="OnGoingZvali" BaseValue="0"/>
@@ -486,17 +498,21 @@
     <Property Name="RecipeIngredientEffectTier2Luxury14" BaseValue="0" MinValue="Negative"/>
     <Property Name="RecipeIngredientEffectTier2Luxury14FIDSHisshos" BaseValue="0" MinValue="Negative"/>
     <Property Name="RecipeIngredientEffectTier2Luxury15" BaseValue="0"/>
-    <Property Name="RecipeIngredientEffectTier2Luxury16" BaseValue="0"/>
+    <Property Name="RecipeIngredientEffectATier2Luxury16" BaseValue="0"/>
+    <Property Name="RecipeIngredientEffectBTier2Luxury16" BaseValue="0"/>
     <Property Name="RecipeIngredientEffectTier3Luxury17" BaseValue="0"/>
     <Property Name="RecipeIngredientEffectTier3Luxury18" BaseValue="0"/>
     <Property Name="RecipeIngredientEffectTier3Luxury19" BaseValue="0"/>
     <Property Name="RecipeIngredientEffectTier3Luxury20" BaseValue="0"/>
     <Property Name="RecipeIngredientEffectTier3Luxury21" BaseValue="0"/>
-    <Property Name="RecipeIngredientEffectTier3Luxury22" BaseValue="0" MinValue="Negative"/>
+    <Property Name="RecipeIngredientEffectATier3Luxury22" BaseValue="0" MinValue="Negative"/>
+    <Property Name="RecipeIngredientEffectBTier3Luxury22" BaseValue="0" MinValue="Negative"/>
     <Property Name="RecipeIngredientEffectTier3Luxury22FIDSHisshos" BaseValue="0" MinValue="0"/>
     <Property Name="RecipeIngredientEffectATier3Luxury23" BaseValue="0"/>
     <Property Name="RecipeIngredientEffectBTier3Luxury23" BaseValue="0"/>
-    <Property Name="RecipeIngredientEffectTier3Luxury24" BaseValue="0"/>
+    <Property Name="RecipeIngredientEffectATier3Luxury24" BaseValue="0"/>
+    <Property Name="RecipeIngredientEffectBTier3Luxury24" BaseValue="0"/>
+    <Property Name="RecipeIngredientEffectCTier3Luxury24" BaseValue="0"/>
     <Property Name="RecipeIngredientEffectATier1Strategic1" BaseValue="0"/>
     <Property Name="RecipeIngredientEffectBTier1Strategic1" BaseValue="0"/>
     <Property Name="RecipeIngredientEffectATier1Strategic2" BaseValue="0"/>
@@ -602,8 +618,16 @@
     <Property Name="CannotUseRawPlanetScience" BaseValue="0"/>
 
     <!-- ESG -->
-    <Modifier TargetProperty="PopulationSystemLevel" Operation="Force" Value="$(SystemLevel)" Path="../ClassEmpire/ClassColonizedStarSystem/ClassPlanet/ClassPopulation"/>
-
+    <Modifier TargetProperty="PopulationSystemLevel"       Operation="Force" Value="$(SystemLevel)" Path="../ClassEmpire/ClassColonizedStarSystem/ClassPlanet/ClassPopulation"/>
+    <Modifier TargetProperty="LuxuryReworkEnabled"         Operation="Force" Value="$(LuxuryReworkEnabled)" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <Modifier TargetProperty="LuxuryReworkDisabled"        Operation="Force" Value="$(LuxuryReworkDisabled)" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <BinaryModifier TargetProperty="LuxuryReworkDisabledNakalim" Operation="Force" Left="$(LuxuryReworkDisabled)" BinaryOperation="Multiplication" Right="$(CannotUseRawPlanetScience)"/>
+    <BinaryModifier TargetProperty="LuxuryReworkEnabledNakalim"  Operation="Force" Left="$(LuxuryReworkEnabled)" BinaryOperation="Multiplication" Right="$(CannotUseRawPlanetScience)"/>
+    <BinaryModifier TargetProperty="LuxuryReworkDisabledNonNakalim" Operation="Force" Left="$(LuxuryReworkDisabled)" BinaryOperation="Multiplication" Right="$(CanUseRawPlanetScience)"/>
+    <BinaryModifier TargetProperty="LuxuryReworkEnabledNonNakalim"  Operation="Force" Left="$(LuxuryReworkEnabled)" BinaryOperation="Multiplication" Right="$(CanUseRawPlanetScience)"/>
+    <BinaryModifier TargetProperty="LuxuryReworkEnabledPerSystemLevel"  Operation="Force" Left="$(LuxuryReworkEnabled)" BinaryOperation="Multiplication" Right="$(SystemLevel)"/>
+    <BinaryModifier TargetProperty="LuxuryReworkDisabledPerSystemLevel" Operation="Force" Left="$(LuxuryReworkDisabled)" BinaryOperation="Multiplication" Right="$(SystemLevel)"/>
+    <BinaryModifier TargetProperty="SciencePerRelicRecipeEffect" Operation="Force" Left="$(LuxuryReworkEnabledNakalim)" BinaryOperation="Multiplication" Right="2"/>
     <!-- ########################################################## -->
     <!-- ######################## DEBUG ######################## -->
     <!-- ########################################################## -->
@@ -1089,24 +1113,29 @@
     <Modifier TargetProperty="PlanetRawFood"                                            Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury9)"                   Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
     <Modifier TargetProperty="PlanetRawIndustry"                                        Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury10)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
     <Modifier TargetProperty="PlanetRawDust"                                            Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury11)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
-    <BinaryModifier TargetProperty="PlanetRawScience" Operation="Addition" Left="$(RecipeIngredientEffectTier2Luxury12)" BinaryOperation="Multiplication" Right="$(CanUseRawPlanetScience)"/>
-    <BinaryModifier TargetProperty="NetSystemResearch" Operation="Percent" Left="$(RecipeIngredientEffectTier2Luxury12Bis)" BinaryOperation="Multiplication" Right="$(CannotUseRawPlanetScience)"/>
+    <BinaryModifier TargetProperty="PlanetRawScience" Operation="Addition" Left="$(RecipeIngredientEffectTier2Luxury12)" BinaryOperation="Multiplication" Right="$(CanUseRawPlanetScience)" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <BinaryModifier TargetProperty="NetSystemResearch" Operation="Percent" Left="$(RecipeIngredientEffectTier2Luxury12Bis)" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabledNakalim)"/>
+    <BinaryModifier TargetProperty="NetSystemResearch" Operation="Addition" Left="$(RecipeIngredientEffectTier2Luxury12Bis)" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledNakalim)"/>
     <Modifier TargetProperty="SystemFIDSFlat"                                           Operation="Addition"    Value="$(RecipeIngredientEffectTier1Luxury6FIDSHisshos)"        Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="PlanetRawPrestige"                                        Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury13)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
-    <Modifier TargetProperty="Happiness"                                                Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury14)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <Modifier TargetProperty="HappinessRaw"                                                Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury14)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
     <Modifier TargetProperty="SystemFIDSFlat"                                           Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury14FIDSHisshos)"       Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="GroundBattleDefenderTroopsDamageMultiplier"               Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury15)"                  Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <Modifier TargetProperty="SystemEmpirePoint"                                        Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury16)"                  Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
+    <Modifier TargetProperty="SystemEmpirePoint"                                        Operation="Addition"    Value="$(RecipeIngredientEffectATier2Luxury16)"                  Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
+    <Modifier TargetProperty="TradingRouteIncomeModifier"                               Operation="Percent"    Value="$(RecipeIngredientEffectBTier2Luxury16)"                  Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
     <Modifier TargetProperty="SystemGrowth"                                             Operation="Percent"     Value="$(RecipeIngredientEffectTier3Luxury17)"                  Path="ClassColonizedStarSystem" />
     <Modifier TargetProperty="SystemProduction"                                         Operation="Percent"     Value="$(RecipeIngredientEffectTier3Luxury18)"                  Path="ClassColonizedStarSystem" />
     <Modifier TargetProperty="SystemMoney"                                              Operation="Percent"     Value="$(RecipeIngredientEffectTier3Luxury19)"                  Path="ClassColonizedStarSystem" />
     <Modifier TargetProperty="SystemResearch"                                           Operation="Percent"     Value="$(RecipeIngredientEffectTier3Luxury20)"                  Path="ClassColonizedStarSystem" />
     <Modifier TargetProperty="SystemEmpirePoint"                                        Operation="Percent"     Value="$(RecipeIngredientEffectTier3Luxury21)"                  Path="ClassColonizedStarSystem" />
-    <Modifier TargetProperty="OverColonizationPenalties"                                Operation="Percent"     Value="$(RecipeIngredientEffectTier3Luxury22)"                  Path="ClassColonizedStarSystem" />
+    <Modifier TargetProperty="OverColonizationPenalties"                                Operation="Percent"     Value="$(RecipeIngredientEffectATier3Luxury22)"                  Path="ClassColonizedStarSystem" />
+    <Modifier TargetProperty="Happiness"                                                Operation="Addition"     Value="$(RecipeIngredientEffectBTier3Luxury22)"                  Path="ClassColonizedStarSystem" />
     <Modifier TargetProperty="SystemFIDSPercent"                                        Operation="Addition"    Value="$(RecipeIngredientEffectTier3Luxury22FIDSHisshos)"       Path="ClassColonizedStarSystem" />
     <Modifier TargetProperty="MaximumSystemManpower"                                    Operation="Percent"     Value="$(RecipeIngredientEffectATier3Luxury23)"                 Path="ClassColonizedStarSystem" />
     <Modifier TargetProperty="GrowthForManpower"                                        Operation="Percent"     Value="$(RecipeIngredientEffectBTier3Luxury23)"                 Path="ClassColonizedStarSystem" />
-    <Modifier TargetProperty="TradingRouteIncomeModifier"                               Operation="Percent"     Value="$(RecipeIngredientEffectTier3Luxury24)"                  Path="ClassColonizedStarSystem" />
+    <Modifier TargetProperty="TradingRouteIncomeModifier"                               Operation="Percent"       Value="$(RecipeIngredientEffectATier3Luxury24)"                 Path="ClassColonizedStarSystem" />
+    <Modifier TargetProperty="BuildingBuyoutReduction"                                  Operation="Addition"      Value="$(RecipeIngredientEffectBTier3Luxury24)"                 Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <Modifier TargetProperty="ShipBuyoutReduction"                                      Operation="Addition"      Value="$(RecipeIngredientEffectCTier3Luxury24)"                 Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
     <Modifier TargetProperty="SystemGrowth"                                             Operation="Addition"    Value="$(RecipeIngredientEffectATier1Strategic1)"               Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="SystemProduction"                                         Operation="Addition"    Value="$(RecipeIngredientEffectBTier1Strategic1)"               Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="SystemMoney"                                              Operation="Addition"    Value="$(RecipeIngredientEffectATier1Strategic2)"               Path="ClassColonizedStarSystem"/>
