@@ -4,14 +4,17 @@
 
   <SimulationDescriptor Name="ClassEmpire" Type="Class">
     <!-- ESCM -->
-    <Property Name="TradeAgreementCost"           MinValue="0" BaseValue="1" MaxValue="1"/>
-    <Property Name="ResearchRelics" BaseValue="0"/>
-
+    <Property Name="TradeAgreementCost"                 BaseValue="1" MinValue="0" MaxValue="1"/>
+    <Property Name="PercentageOfPlayersInYourAlliance"  BaseValue="0" MinValue="0"/>
+    <Property Name="AllianceSize"                       BaseValue="0" MinValue="0"/>
+    <Property Name="LuxuryReworkEnabled"                BaseValue="0"/>
+    <Property Name="LuxuryReworkDisabled"               BaseValue="0"/>
+    
     <!-- Tech Stages -->
-    <Property Name="EmpireEmpireDevelopmentStage" BaseValue="1"/>
-    <Property Name="EmpireScienceStage" BaseValue="1"/>
-    <Property Name="EmpireEconomyStage" BaseValue="1"/>
-    <Property Name="EmpireMilitaryStage" BaseValue="1"/>
+    <Property Name="EmpireEmpireDevelopmentStage"       BaseValue="1"/>
+    <Property Name="EmpireScienceStage"                 BaseValue="1"/>
+    <Property Name="EmpireEconomyStage"                 BaseValue="1"/>
+    <Property Name="EmpireMilitaryStage"                BaseValue="1"/>
 
     <!-- ########################################################## -->
     <!-- ######################## PROPERTY ######################## -->
@@ -163,6 +166,8 @@
     <Property Name="EmpireLifeforceFromHuntingGrounds"      BaseValue="0" MinValue="0" />
     <Property Name="EmpireMoneyFromHuntingGrounds"          BaseValue="0" MinValue="0" />
     <Property Name="EmpireMoneyFromConsume"                 BaseValue="0" MinValue="0" />
+    <Property Name="EmpirePointFromConsume"                 BaseValue="0" MinValue="0" />
+    <Property Name="ScienceFromConsume"                 BaseValue="0" MinValue="0" />
     <Property Name="EmpireLifeforceFromJuggernauts"         BaseValue="0" MinValue="0" />
     <Property Name="EmpireResearchFromJuggernautsDepletion" BaseValue="0" MinValue="0" />
 
@@ -819,6 +824,12 @@
     <BinaryModifier TargetProperty="SystemsAboveOverColonizationCount"      Operation="Addition"            Left="$(OwnedSystems)"  BinaryOperation="Subtraction" Right="$(OverColonizationThreshold)"          Priority="-1" Path="ClassEmpire"/>
     <BinaryModifier TargetProperty="IsOverColonizationThreshold"            Operation="Addition"            Left="$(OverColonizationThreshold)"  BinaryOperation="Division" Right="$(OwnedSystems)"          Priority="0" Path="ClassEmpire"/>
 
+    <!--Craver Empire Point and Science from raze-->
+
+    <Modifier TargetProperty="EmpireEmpirePoint"          Operation="Addition"    Value="$(EmpirePointFromConsume)"                   Path="ClassEmpire"/>
+    <Modifier TargetProperty="EmpireResearch"             Operation="Addition"    Value="$(ScienceFromConsume)"                       Path="ClassEmpire"/>
+
+
     <!--Depleted Planet counts-->
     <Modifier TargetProperty="PopulationEmpireDepletedPlanetCount" Operation="Addition" Value="$(DepletedPlanetCount)" Path="ClassEmpire/ClassPopulationEmpire,PopulationCollectionBonusCravers3" TooltipHidden="true"/>
 
@@ -1203,12 +1214,26 @@
     <Modifier TargetProperty="NetLuxury24"     Operation="Addition"    Value="$(AcademyNetLuxury24)"  Path="ClassEmpire"/>
 
     <!-- ESG Changes -->
+    <!-- PercentageOfPlayersInYourAlliance = Alliance Size / Empire Count -->
+    <BinaryModifier TargetProperty="PercentageOfPlayersInYourAlliance" Operation="Force" Left="$(AllianceCount)" BinaryOperation="Division" Right="$(NumberOfMajorEmpires)"/>
+    <Modifier TargetProperty="PercentageOfPlayersInYourAlliance" Operation="Force" Value="$(PercentageOfPlayersInYourAlliance)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+    
     <Modifier TargetProperty="TradeAgreementCost" Operation="Addition" Value="1"/>
     <Modifier TargetProperty="ModuleEmpireDevelopmentStage" Operation="Force" Value="$(EmpireEmpireDevelopmentStage)" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
     <Modifier TargetProperty="ModuleScienceStage" Operation="Force" Value="$(EmpireScienceStage)" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
     <Modifier TargetProperty="ModuleEconomyStage" Operation="Force" Value="$(EmpireEconomyStage)" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
     <Modifier TargetProperty="ModuleMilitaryStage" Operation="Force" Value="$(EmpireMilitaryStage)" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
-    
     <Modifier TargetProperty="SystemResearchRelics" Operation="Addition" Value="$(ResearchRelics)" Path="ClassEmpire/ClassColonizedStarSystem" />
+    <Modifier TargetProperty="LuxuryReworkEnabled" Operation="Force" Value="$(LuxuryReworkEnabled)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="LuxuryReworkDisabled" Operation="Force" Value="$(LuxuryReworkDisabled)" Path="ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
+
+
+  <!--Used for Craver Influence and Science ESG-->
+  <SimulationDescriptor Name="EmpireHasHuntingGround" Type="EmpireHasHuntingGround" IsSerializable="false">
+        <Modifier TargetProperty="EmpireLifeforceFromHuntingGrounds" Operation="Addition" Value="100" Path="AffinityGameplayVampirilis"/>
+        <BinaryModifier TargetProperty="EmpireMoneyFromConsume" Operation="Addition" Left="200" BinaryOperation="Multiplication" Right="$(DustInflation)" Path="AffinityGameplayCravers"/>
+        <BinaryModifier TargetProperty="EmpirePointFromConsume" Operation="Addition" Left="25" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" Path="AffinityGameplayCravers"/>
+        <BinaryModifier TargetProperty="ScienceFromConsume" Operation="Addition" Left="25" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" Path="AffinityGameplayCravers"/>
+    </SimulationDescriptor>
 </Datatable>

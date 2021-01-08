@@ -1,12 +1,301 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
-    <SimulationDescriptor Name="RecipeIngredientEffect14" Type="RecipeIngredient">
-        <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury14"             Operation="Addition"    Value="2" Path="./ClassColonizedStarSystem"                            SearchValueFromPath="true" Priority="-1"/>
-        <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury14FIDSHisshos"  Operation="Addition"    Value="2" Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem3" SearchValueFromPath="true" Priority="-1"/>
-        <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury14FIDSHisshos"  Operation="Addition"    Value="3" Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem4" SearchValueFromPath="true" Priority="-1"/>
-    </SimulationDescriptor>  
+  <!-- System Development Levels -->
+  <SimulationDescriptor Name="StarSystemImprovementLevel2" Type="StarSystemImprovementLevel" IsSerializable="false">
+    <BinaryModifier TargetProperty="SystemFIDSIFlat"                    Operation="Addition"    Left="10"   BinaryOperation="Multiplication"    Right="$(LuxuryReworkEnabled)"   Path="ClassColonizedStarSystem" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="VisionRange"                        Operation="Addition"    Left="3"    BinaryOperation="Multiplication"    Right="$(LuxuryReworkEnabled)"   Path="ClassColonizedStarSystem" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="MaximumEmpireProcessingPowerStock"  Operation="Addition"    Left="3"    BinaryOperation="Multiplication"    Right="$(LuxuryReworkEnabled)"   Path="../ClassEmpire" TooltipHidden="true" SearchValueFromPath="true"/>
+    <Modifier TargetProperty="Quality"                                  Operation="Addition"    Value="1"   Path="ClassColonizedStarSystem"  TooltipHidden="true" />
+    <Modifier TargetProperty="SpaceportCapacity"                        Operation="Addition"    Value="3"   Path="ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="AntiVisionStrength"                 Operation="Addition" Left="$(IsHiddenSystem)" BinaryOperation="Multiplication" Right="2"   Path="ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
 
-<SimulationDescriptor Name="RecipeIngredientEffect24" Type="RecipeIngredient">
-    <Modifier TargetProperty="RecipeIngredientEffectTier3Luxury24" Operation="Addition" Value="0.5" Path="./ClassColonizedStarSystem" Priority="-1"/>
+  <SimulationDescriptor Name="StarSystemImprovementLevel3" Type="StarSystemImprovementLevel" IsSerializable="false">
+    <BinaryModifier TargetProperty="SystemFIDSIFlat"                    Operation="Addition"    Left="10"   BinaryOperation="Multiplication"    Right="$(LuxuryReworkEnabled)"   Path="ClassColonizedStarSystem" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="PlanetRawFIDSI"                     Operation="Addition"    Left="1"    BinaryOperation="Multiplication"    Right="$(LuxuryReworkEnabled)"    Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="VisionRange"                        Operation="Addition"    Left="6"    BinaryOperation="Multiplication"    Right="$(LuxuryReworkEnabled)"    Path="ClassColonizedStarSystem" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="MaximumEmpireProcessingPowerStock"  Operation="Addition"    Left="6"   BinaryOperation="Multiplication"     Right="$(LuxuryReworkEnabled)"   Path="../ClassEmpire" TooltipHidden="true" SearchValueFromPath="true"/>
+    <Modifier TargetProperty="Quality"                                  Operation="Addition"    Value="2"   Path="ClassColonizedStarSystem"  TooltipHidden="true" />
+    <Modifier TargetProperty="SpaceportCapacity"                        Operation="Addition"    Value="4"   Path="ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="AntiVisionStrength"                 Operation="Addition" Left="$(IsHiddenSystem)" BinaryOperation="Multiplication" Right="3"   Path="ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="StarSystemImprovementLevel4" Type="StarSystemImprovementLevel" IsSerializable="false">
+    <BinaryModifier TargetProperty="SystemFIDSIFlat"                    Operation="Addition"    Left="10"   BinaryOperation="Multiplication"    Right="$(LuxuryReworkEnabled)"   Path="ClassColonizedStarSystem" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="PlanetRawFIDSI"                     Operation="Addition"    Left="1"    BinaryOperation="Multiplication"    Right="$(LuxuryReworkEnabled)"   Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="SystemFIDSIPercent"                 Operation="Addition"    Left="0.1"  BinaryOperation="Multiplication"    Right="$(LuxuryReworkEnabled)"   Path="ClassColonizedStarSystem" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="VisionRange"                        Operation="Addition"    Left="10"   BinaryOperation="Multiplication"    Right="$(LuxuryReworkEnabled)"   Path="ClassColonizedStarSystem" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="MaximumEmpireProcessingPowerStock"  Operation="Addition"    Left="10"   BinaryOperation="Multiplication"    Right="$(LuxuryReworkEnabled)"   Path="../ClassEmpire" TooltipHidden="true" SearchValueFromPath="true"/>
+    <Modifier TargetProperty="Quality"                                  Operation="Addition"    Value="3"   Path="ClassColonizedStarSystem"  TooltipHidden="true" />
+    <Modifier TargetProperty="SpaceportCapacity"                        Operation="Addition"    Value="5"   Path="ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="AntiVisionStrength"                 Operation="Addition"    Left="$(IsHiddenSystem)" BinaryOperation="Multiplication" Right="3"   Path="ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+
+  <!-- Luxury Effects -->
+  <!-- Tier 1 -->
+  <!-- Redsang -->
+  <SimulationDescriptor Name="RecipeIngredientEffect01" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury1" Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)" Path="./ClassColonizedStarSystem" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient1Vanilla"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury1" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)" Path="./ClassColonizedStarSystem" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient1Rework"/>
+  </SimulationDescriptor>
+
+  <!-- Jadonyx -->
+  <SimulationDescriptor Name="RecipeIngredientEffect02" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury2" Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)" Path="./ClassColonizedStarSystem" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient2Vanilla"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury2" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)" Path="./ClassColonizedStarSystem" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient2Rework"/>
+  </SimulationDescriptor>
+
+  <!-- Dustciduous Trees -->
+  <SimulationDescriptor Name="RecipeIngredientEffect03" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury3" Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)" Path="./ClassColonizedStarSystem" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient3Vanilla"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury3" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)" Path="./ClassColonizedStarSystem" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient3Rework"/>
+  </SimulationDescriptor>
+
+  <!-- Bluecap Mold -->
+  <SimulationDescriptor Name="RecipeIngredientEffect04" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury4" Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)" Path="./ClassColonizedStarSystem" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient4Vanilla"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury4" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)" Path="./ClassColonizedStarSystem" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient4Rework"/>
+  </SimulationDescriptor>
+
+  <!-- Eden Incense -->
+  <SimulationDescriptor Name="RecipeIngredientEffect05" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury5" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)" Path="./ClassColonizedStarSystem" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient5Vanilla"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury5" Operation="Addition" Left="15" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)" Path="./ClassColonizedStarSystem" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient5Rework"/>
+  </SimulationDescriptor>
+
+  <!-- Transvine -->
+  <SimulationDescriptor Name="RecipeIngredientEffect06" Type="RecipeIngredient">
+    <!-- No Change -->
+    <Modifier TargetProperty="RecipeIngredientEffectTier1Luxury6" Operation="Addition" Value="15" Path="./ClassColonizedStarSystem" Priority="-1" TooltipOverride="%RecipeIngredient6"/>
+
+    <!-- Vanilla -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury6FIDSHisshos"     Operation="Addition" Left="15" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)" Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem3" TooltipOverride="%RecipeIngredient6VanillaHissho" Priority="-1" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury6FIDSHisshos"     Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)" Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem4" TooltipHidden="true" Priority="-1" SearchValueFromPath="true"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury6FIDSHisshos"     Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)" Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem3"  TooltipOverride="%RecipeIngredient6ReworkHissho" Priority="-1" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier1Luxury6FIDSHisshos"     Operation="Addition" Left="15" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)" Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem4" TooltipHidden="true" Priority="-1" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!-- Dark Glitter -->
+  <SimulationDescriptor Name="RecipeIngredientEffect07" Type="RecipeIngredient">
+    <!-- No Change -->
+    <Modifier TargetProperty="RecipeIngredientEffectATier1Luxury7" Operation="Addition" Value="200" Path="./ClassColonizedStarSystem" Priority="-1" TooltipOverride="%RecipeIngredient7-1"/>
+    <Modifier TargetProperty="RecipeIngredientEffectBTier1Luxury7" Operation="Addition" Value="10"  Path="./ClassColonizedStarSystem" Priority="-1" TooltipOverride="%RecipeIngredient7-2"/>
+    <Modifier TargetProperty="RecipeIngredientEffectCTier1Luxury7" Operation="Addition" Value="75"  Path="./ClassColonizedStarSystem" Priority="-1" TooltipOverride="%RecipeIngredient7-3"/>
+    <Modifier TargetProperty="RecipeIngredientEffectDTier1Luxury7" Operation="Addition" Value="75"  Path="./ClassColonizedStarSystem" Priority="-1" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Superspuds -->
+  <SimulationDescriptor Name="RecipeIngredientEffect08" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectATier1Luxury8" Operation="Addition" Left="0.15" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient8Vanilla" Priority="-1" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectBTier1Luxury8" Operation="Addition" Left="0.15" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)"  Path="./ClassColonizedStarSystem" TooltipHidden="true" Priority="-1" SearchValueFromPath="true"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectATier1Luxury8" Operation="Addition" Left="0.2" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)"  Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient8Rework" Priority="-1" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectBTier1Luxury8" Operation="Addition" Left="0.2" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)"  Path="./ClassColonizedStarSystem" TooltipHidden="true" Priority="-1" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+
+  <!-- Tier 2 -->
+  <!-- Hydromiel -->
+  <SimulationDescriptor Name="RecipeIngredientEffect09" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury9" Operation="Addition" Left="4" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)"  Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient9Vanilla" Priority="-1" SearchValueFromPath="true"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury9" Operation="Addition" Left="3" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)"  Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient9Rework" Priority="-1" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!-- Void Stone -->
+  <SimulationDescriptor Name="RecipeIngredientEffect10" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury10" Operation="Addition" Left="4" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)"  Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient10Vanilla" Priority="-1" SearchValueFromPath="true"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury10" Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)"  Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient10Rework" Priority="-1" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!-- Proto-Orchid -->
+  <SimulationDescriptor Name="RecipeIngredientEffect11" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury11" Operation="Addition" Left="4" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)"  Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient11Vanilla" Priority="-1" SearchValueFromPath="true"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury11" Operation="Addition" Left="3" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)"  Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient11Rework" Priority="-1" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!-- Ionic Crystal -->
+  <SimulationDescriptor Name="RecipeIngredientEffect12" Type="RecipeIngredient">
+    <!-- Vanilla -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury12" Operation="Addition" Left="4" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabledNonNakalim)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient12Vanilla" Priority="-1" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury12Bis" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabledNakalim)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient12Templars" Priority="-1" SearchValueFromPath="true"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury12" Operation="Addition" Left="3" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledNonNakalim)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient12Rework" Priority="-1" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury12Bis" Operation="Addition" Left="$(SciencePerRelicRecipeEffect)" BinaryOperation="Multiplication" Right="$(SystemResearchRelics)" Path="./ClassColonizedStarSystem" Priority="-1" SearchValueFromPath="true" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Giga Lattice -->
+  <SimulationDescriptor Name="RecipeIngredientEffect13" Type="RecipeIngredient">
+    <!-- No Change -->
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury13" Operation="Addition" Value="2" Path="./ClassColonizedStarSystem" Priority="-1" TooltipOverride="%RecipeIngredient13"/>
+  </SimulationDescriptor>
+
+  <!-- Lost Cities -->
+  <SimulationDescriptor Name="RecipeIngredientEffect14" Type="RecipeIngredient">
+    <!-- No Change -->
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury14"             Operation="Addition"    Value="2" Path="./ClassColonizedStarSystem"                            SearchValueFromPath="true" Priority="-1" TooltipOverride="%RecipeIngredient14"/>
+
+    <!-- Vanilla Effects -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury14FIDSHisshos"  Operation="Addition"    Left="2" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)" Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem3" TooltipOverride="%RecipeIngredient14VanillaHissho" Priority="-1" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury14FIDSHisshos"  Operation="Addition"    Left="3" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)"  Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem4" TooltipHidden="true" Priority="-1" SearchValueFromPath="true"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury14FIDSHisshos"     Operation="Addition" Left="1.5" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)"  Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem3" TooltipOverride="%RecipeIngredient14ReworkHissho" Priority="-1" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier2Luxury14FIDSHisshos"     Operation="Addition" Left="2.5" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)"  Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem4" TooltipHidden="true" Priority="-1" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!-- Amianthoid -->
+  <SimulationDescriptor Name="RecipeIngredientEffect15" Type="RecipeIngredient">
+    <!-- No Change -->
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury15" Operation="Addition" Value="0.5"     Path="./ClassColonizedStarSystem" Priority="-2" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury15" Operation="Multiplication" Value="2" Path="./ClassColonizedStarSystem" Priority="-1" TooltipOverride="%RecipeIngredient15"/>
+  </SimulationDescriptor>
+
+  <!-- Gossamer -->
+  <SimulationDescriptor Name="RecipeIngredientEffect16" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectATier2Luxury16" Operation="Addition" Left="$(TradingRouteSystemBaseIncome)" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabled)"  Path="./ClassColonizedStarSystem" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient16Vanilla"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectBTier2Luxury16" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabled)"  Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient16Rework" Priority="-1"/>
+  </SimulationDescriptor>
+
+
+  <!-- Tier 3 -->
+  <!-- Mercurite -->
+  <SimulationDescriptor Name="RecipeIngredientEffect17" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury17" Operation="Addition" Left="0.15" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabledPerSystemLevel)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient17Vanilla" Priority="-1" SearchValueFromPath="true"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury17" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledPerSystemLevel)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient17Rework" Priority="-1" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!-- Endless Foundries -->
+  <SimulationDescriptor Name="RecipeIngredientEffect18" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury18" Operation="Addition" Left="0.15" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabledPerSystemLevel)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient18Vanilla" Priority="-1" SearchValueFromPath="true"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury18" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledPerSystemLevel)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient18Rework" Priority="-1" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!-- DustWater -->
+  <SimulationDescriptor Name="RecipeIngredientEffect19" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury19" Operation="Addition" Left="0.15" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabledPerSystemLevel)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient19Vanilla" Priority="-1" SearchValueFromPath="true"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury19" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledPerSystemLevel)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient19Rework" Priority="-1" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!-- Proto-spores -->
+  <SimulationDescriptor Name="RecipeIngredientEffect20" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury20" Operation="Addition" Left="0.15" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabledPerSystemLevel)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient20Vanilla" Priority="-1" SearchValueFromPath="true"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury20" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledPerSystemLevel)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient20Rework" Priority="-1" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!-- Meta-Entactogen -->
+  <SimulationDescriptor Name="RecipeIngredientEffect21" Type="RecipeIngredient">
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury21" Operation="Addition" Left="0.15" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabledPerSystemLevel)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient21Vanilla" Priority="-1" SearchValueFromPath="true"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury21" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledPerSystemLevel)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient21Rework" Priority="-1" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!-- Benthic Gems -->
+  <SimulationDescriptor Name="RecipeIngredientEffect22" Type="RecipeIngredient">
+    <Modifier TargetProperty="RecipeIngredientEffectATier3Luxury22" Operation="Addition" Value="-0.5" Path="./ClassColonizedStarSystem" Priority="-1" TooltipOverride="%RecipeIngredient22Vanilla"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury22FIDSHisshos" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabledPerSystemLevel)" Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem3" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient22VanillaHissho"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury22FIDSHisshos" Operation="Addition" Left="0.15" BinaryOperation="Multiplication" Right="$(LuxuryReworkDisabledPerSystemLevel)" Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem4" Priority="-1" SearchValueFromPath="true" TooltipHidden="true"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectBTier3Luxury22" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledPerSystemLevel)" Path="./ClassColonizedStarSystem,!HasObedience" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient22Rework"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury22FIDSHisshos" Operation="Addition" Left="0.05" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledPerSystemLevel)" Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem3" Priority="-1" SearchValueFromPath="true" TooltipOverride="%RecipeIngredient22ReworkHissho"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectTier3Luxury22FIDSHisshos" Operation="Addition" Left="0.075" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledPerSystemLevel)" Path="./ClassColonizedStarSystem,ObedienceStatusStarSystem4" Priority="-1" SearchValueFromPath="true" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Virtual Artifacts -->
+  <SimulationDescriptor Name="RecipeIngredientEffect23" Type="RecipeIngredient">
+    <!-- No Change -->
+    <Modifier TargetProperty="RecipeIngredientEffectATier3Luxury23" Operation="Addition" Value="1" Path="./ClassColonizedStarSystem" Priority="-1" TooltipOverride="%RecipeIngredient23"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectBTier3Luxury23" Operation="Addition" Left="0.05" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true" Priority="-1" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Drift Buds -->
+  <SimulationDescriptor Name="RecipeIngredientEffect24" Type="RecipeIngredient">
+    <Modifier TargetProperty="RecipeIngredientEffectATier3Luxury24" Operation="Addition" Value="0.5" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient24Vanilla" Priority="-1"/>
+
+    <!-- Luxury Rework -->
+    <BinaryModifier TargetProperty="RecipeIngredientEffectATier3Luxury24" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledPerSystemLevel)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient24Rework-1" Priority="-1" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectBTier3Luxury24" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledPerSystemLevel)" Path="./ClassColonizedStarSystem" TooltipOverride="%RecipeIngredient24Rework-2" Priority="-1" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="RecipeIngredientEffectCTier3Luxury24" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledPerSystemLevel)" Path="./ClassColonizedStarSystem" TooltipHidden="true" Priority="-1" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!-- Material Expertise -->
+  <SimulationDescriptor Name="RecipeIngredientEffectStrategic06" Type="RecipeIngredient" >
+    <Modifier TargetProperty="RecipeIngredientEffectGUITier3Strategic6"  Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier1Luxury1"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier1Luxury2"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier1Luxury3"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier1Luxury4"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier1Luxury5"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier1Luxury6"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier1Luxury6FIDSHisshos"        Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectATier1Luxury7"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectBTier1Luxury7"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectATier1Luxury8"   Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectBTier1Luxury8"   Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury9"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury10"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury11"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury12"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury12Bis"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury13"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury14"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury14FIDSHisshos"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury15"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier2Luxury16"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier3Luxury17"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier3Luxury18"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier3Luxury19"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier3Luxury20"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier3Luxury21"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectATier3Luxury22"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectBTier3Luxury22"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectTier3Luxury22FIDSHisshos"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectATier3Luxury23"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectBTier3Luxury23"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectATier3Luxury24"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectBTier3Luxury24"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectCTier3Luxury24"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="RecipeIngredientEffectATier1Strategic1"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectBTier1Strategic1"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectATier1Strategic2"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectBTier1Strategic2"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectATier2Strategic3"     Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectATier2Strategic4"     Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectATier3Strategic5"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectBTier3Strategic5"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectCTier3Strategic5"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="RecipeIngredientEffectDTier3Strategic5"    Operation="Multiplication" Value="1.5"   Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
   </SimulationDescriptor>
 </Datatable>
