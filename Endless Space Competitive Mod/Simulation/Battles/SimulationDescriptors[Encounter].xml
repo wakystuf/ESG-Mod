@@ -95,6 +95,20 @@
     <Property Name="VisionStrength" BaseValue="0" IsSealed="true"/>
     <Property Name="OpponentVisionStrength" BaseValue="0" IsSealed="true"/>
 
+    <!--ESG Properties-->
+    <Property Name="FlakDamageModifier"          BaseValue="0"     Composition="Sum"/>
+    <Property Name="FlakLongRangePenalty"          BaseValue="0"   Composition="Sum"/>
+    <Property Name="FlakMediumRangePenalty"          BaseValue="0" Composition="Sum"/>
+    <Property Name="FlakShortRangePenalty"          BaseValue="0"  Composition="Sum"/>
+
+    <!--ESG Modifiers-->
+    <Modifier TargetProperty="FlakDamage" Operation="Percent" Value="$(FlakDamageModifier)" Path="ClassGroup//ClassShip//ClassModuleWeapon,ClassModuleWeaponKinetic"/>
+    <Modifier TargetProperty="Damage" Operation="Percent" Value="$(FlakDamageModifier)" Path="ClassGroup//ClassShip//ClassModuleWeapon,ClassModuleWeaponFlack"/>
+    <Modifier TargetProperty="LongRangePenalty" Operation="Addition" Value="$(FlakLongRangePenalty)" Path="ClassGroup//ClassShip//ClassModuleWeaponFlack"/>
+    <Modifier TargetProperty="MediumRangePenalty" Operation="Addition" Value="$(FlakMediumRangePenalty)" Path="ClassGroup//ClassShip//ClassModuleWeaponFlack"/>
+    <Modifier TargetProperty="ShortRangePenalty" Operation="Addition" Value="$(FlakShortRangePenalty)" Path="ClassGroup//ClassShip//ClassModuleWeaponFlack"/>
+    
+    <!--Vanilla Modifiers-->
     <Modifier TargetProperty="OpponentRecyclingDustPerCP" Operation="Addition"          Value="$(AdditionalOpponentRecyclingDustPerCP)"         Path="ClassGroup"/>
     <Modifier TargetProperty="OpponentRecyclingSciencePerCP" Operation="Addition"       Value="$(AdditionalOpponentRecyclingSciencePerCP)"      Path="ClassGroup"/>
     <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP" Operation="Addition"   Value="$(AdditionalOpponentRecyclingEmpirePointPerCP)"  Path="ClassGroup"/>
