@@ -94,7 +94,8 @@
 
     <Property Name="VisionStrength" BaseValue="0" IsSealed="true"/>
     <Property Name="OpponentVisionStrength" BaseValue="0" IsSealed="true"/>
-
+    
+    <!--Vanilla Modifiers-->
     <Modifier TargetProperty="OpponentRecyclingDustPerCP" Operation="Addition"          Value="$(AdditionalOpponentRecyclingDustPerCP)"         Path="ClassGroup"/>
     <Modifier TargetProperty="OpponentRecyclingSciencePerCP" Operation="Addition"       Value="$(AdditionalOpponentRecyclingSciencePerCP)"      Path="ClassGroup"/>
     <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP" Operation="Addition"   Value="$(AdditionalOpponentRecyclingEmpirePointPerCP)"  Path="ClassGroup"/>
@@ -558,6 +559,21 @@
     <Property Name="AttackingFlotillaInvisibilityStatusPhase1" BaseValue="0" MinValue="0" MaxValue="1" IsSealed="true"/>
     <Property Name="AttackingFlotillaInvisibilityStatusPhase2" BaseValue="0" MinValue="0" MaxValue="1" IsSealed="true"/>
     <Property Name="AttackingFlotillaInvisibilityStatusPhase3" BaseValue="0" MinValue="0" MaxValue="1" IsSealed="true"/>
+
+    <!--ESG Properties-->
+    <Property Name="FlotillaFlakDamageModifier"          BaseValue="0"  MinValue="Negative"   Composition="Sum"/>
+    <Property Name="FlotillaFlakLongRangePenalty"          BaseValue="0"  MinValue="Negative"  Composition="Sum"/>
+    <Property Name="FlotillaFlakMediumRangePenalty"          BaseValue="0" MinValue="Negative" Composition="Sum"/>
+    <Property Name="FlotillaFlakShortRangePenalty"          BaseValue="0"  MinValue="Negative" Composition="Sum"/>
+
+    <!--ESG Modifiers-->
+    <Modifier TargetProperty="FlakDamage" Operation="Percent" Value="$(FlotillaFlakDamageModifier)" Path="ClassFlotilla/ClassShip//ClassModuleWeapon,ClassModuleWeaponKinetic"/>
+    <Modifier TargetProperty="Damage" Operation="Percent" Value="$(FlotillaFlakDamageModifier)" Path="ClassFlotilla/ClassShip//ClassModuleWeapon,ClassModuleWeaponFlack"/>
+    <Modifier TargetProperty="LongRangePenalty" Operation="Addition" Value="$(FlotillaFlakLongRangePenalty)" Path="ClassFlotilla/ClassShip/ClassModuleWeapon,ClassModuleWeaponFlack"/>
+    <Modifier TargetProperty="MediumRangePenalty" Operation="Addition" Value="$(FlotillaFlakMediumRangePenalty)" Path="ClassFlotilla/ClassShip/ClassModuleWeapon,ClassModuleWeaponFlack"/>
+    <Modifier TargetProperty="ShortRangePenalty" Operation="Addition" Value="$(FlotillaFlakShortRangePenalty)" Path="ClassFlotilla/ClassShip/ClassModuleWeapon,ClassModuleWeaponFlack"/>
+    
+    <!-- Vanilla -->
 
     <!--<Modifier TargetProperty="InitialMainMilitaryPower"             Operation="Addition" Value="$(RelativeMilitaryPower)" Path="FlotillaTypeMain/./ClassGroup"/>
         <Modifier TargetProperty="InitialReinforcementMilitaryPower"    Operation="Addition" Value="$(RelativeMilitaryPower)" Path="FlotillaTypeReinforcement/./ClassGroup"/>-->
