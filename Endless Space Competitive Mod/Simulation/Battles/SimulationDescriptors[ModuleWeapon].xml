@@ -753,4 +753,35 @@
 
     <Modifier TargetProperty="BoardingPodHealth"        Operation="Addition" Value="300"            Path="ClassModule"      TooltipHidden="true"/>
   </SimulationDescriptor>
+
+  <!--################################-->
+  <!--###             EMP          ###-->
+  <!--################################-->
+  
+  <SimulationDescriptor Name="ModuleWeaponEMP" Type="ModuleWeapon">
+    <!-- Feedback -->
+    <Property Name="EMPTargetShields"                       BaseValue="0"/>
+    <Property Name="EMPTargetWeapons"                       BaseValue="0"/>
+    <Property Name="EMPFiringCooldown"                      BaseValue="0"/>
+
+    <!-- Gameplay-->
+    <Property Name="EMPDurationForWeapons"                  BaseValue="0"/>
+    <Property Name="EMPDurationForShields"                  BaseValue="0"/>
+
+    <BinaryModifier TargetProperty="OffensiveMilitaryPower" Operation="Addition" Left="$(EMPDurationForShields)" BinaryOperation="Multiplication" Right="5" Path="../ClassShip" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower" Operation="Addition" Left="$(EMPDurationForWeapons)" BinaryOperation="Multiplication" Right="5" Path="../ClassShip" TooltipHidden="true"/>
+
+    <!-- Feedback -->
+    <Modifier TargetProperty="EMPFiringCooldown" Operation="Addition" Value="$(Cooldown)" Path="ClassModule" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- EMP Weapon MISSILE -->
+  <SimulationDescriptor Name="ModuleWeaponMissileEMP1" Type="ModuleWeapon">
+    <Modifier TargetProperty="EMPDurationForWeapons"    Operation="Addition"    Value="7"         Path="ClassModule"       TooltipHidden="true"/>
+    <Modifier TargetProperty="Damage"                   Operation="Addition"    Value="250"        Path="ClassModule"       TooltipHidden="true"/>
+    <!--<Modifier TargetProperty="Cooldown"                 Operation="Percent"     Value="0.5"         Path="ClassModule"       TooltipHidden="true"/>-->
+
+    <!-- Feedback -->
+    <Modifier TargetProperty="EMPTargetWeapons"         Operation="Addition"    Value="1"           Path="ClassModule"      TooltipHidden="true"/>
+  </SimulationDescriptor>
 </Datatable>
