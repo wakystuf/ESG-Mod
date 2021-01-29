@@ -2061,5 +2061,62 @@
       <ScoreModifier Name="TargetingWeightBonus">1</ScoreModifier>
     </TargetSortingCriterion_PropertyMultiplier>
   </WeaponModule>
-  
+
+  <!--################################-->
+  <!--###             AOE          ###-->
+  <!--################################-->
+  <WeaponModule Name="ModuleWeaponAOENuke1" Type="AOE" Family="AOENukeBase" Level="4">
+    <Cost ResourceName="SystemProduction">200</Cost>
+    <!-- ** START AI DATA ** -->
+    <!-- Specific weapons -->
+    <AIBattleSituations Situation="Kinetic" Mode="Against" Value="-0.25"/>
+    <!-- Specific situations -->
+    <AIBattleSituations Situation="LargeShip" Mode="Against" Value="0.5"/>
+    <AIBattleSituations Situation="SmallShip" Mode="Against" Value="1"/>
+    <!-- Armor types -->
+    <AIBattleSituations Situation="EnergyDefense" Mode="Against" Value="1.0"/>
+    <AIBattleSituations Situation="ProjectileDefense" Mode="Against" Value="1.0"/>
+    <!-- Ranges -->
+    <AIBattleSituations Situation="Short" Mode="Use" Value="1"/>
+    <AIBattleSituations Situation="Medium" Mode="Use" Value="1"/>
+    <AIBattleSituations Situation="Long" Mode="Use" Value="1"/>
+    <AIBattleSituations Situation="Short" Mode="Against" Value="1"/>
+    <AIBattleSituations Situation="Medium" Mode="Against" Value="0.75"/>
+    <AIBattleSituations Situation="Long" Mode="Against" Value="0.5"/>
+    <!-- ** END AI DATA ** -->
+    <DownloadableContentPrerequisite Flags="Prerequisite,Edition,UnlockAvailability">DLCVaulters</DownloadableContentPrerequisite>
+    <TechnologyPrerequisite Flags="Edition">TechnologyPlayDeck7</TechnologyPrerequisite>
+    <PathPrerequisite Flags="Edition" Inverted="true">ClassShip,CannotHaveWeapon</PathPrerequisite>
+    <PathPrerequisite Flags="ShipHasDestructionModule,Edition,Disable" Inverted="true">ClassShip/ClassSection/ClassModuleDestruction</PathPrerequisite>
+    <InterpreterPrerequisite Flags="Edition" Inverted="true">
+      Path(Context, @'ClassShip,ShipRoleColonizer') or Path(Context, @'ClassShip,ShipRoleExploration')
+      or Path(Context, @'ClassShip,ShipRoleSmallAttacker') or Path(Context, @'ClassShip,ShipRoleSmallSupport') or Path(Context, @'ClassShip,ShipRoleHero')
+    </InterpreterPrerequisite>
+    <SimulationDescriptorReference Name="ClassModuleWeapon"/>
+    <SimulationDescriptorReference Name="ClassModuleWeaponAOE"/>
+    <SimulationDescriptorReference Name="ModuleWeaponAOENuke1"/>
+    <SimulationDescriptorReference Name="ClassModuleCanOnlyBeFittedOnLargeSlots"/>
+    <SimulationDescriptorReference Name="ClassModuleShootsOncePerPhase"/>
+    <SimulationDescriptorReference Name="ClassModuleIgnoresDefenses"/>
+    <SimulationDescriptorReference Name="ClassModuleAOETargetsFlotilla"/>
+    <SimulationDescriptorReference Name="ClassModuleHasNoType"/>
+    <BattleActionReference Name="Weapon_Initialize"/>
+    <BattleActionReference Name="AOE_SalvoLaunched"/>
+    <BattleActionReference Name="AOE_SalvoHitTarget"/>
+    <BattleActionReference Name="AOE_SalvoPostHitTarget"/>
+    <BattleActionReference Name="AOE_SalvoPostHitTarget_StatisticsRecording"/>
+    <BattleActionReference Name="WeaponAOE_SalvoPostHitTarget_StatisticsRecording"/>
+    <AttackPathPrerequisite Inverted="true">EncounterEntityStatusDisabled</AttackPathPrerequisite>
+    <SalvoReference Name="SalvoAOE1"/>
+    <AvailableRange RangeName="Long" PenaltyPropertyName="LongRangePenalty"/>
+    <AvailableRange RangeName="Medium" PenaltyPropertyName="MediumRangePenalty"/>
+    <AvailableRange RangeName="Short" PenaltyPropertyName="ShortRangePenalty"/>
+    <TargetSortingCriterion Name="Type">
+      <ScoreModifier Name="Flotilla">1</ScoreModifier>
+    </TargetSortingCriterion>
+    <TargetSortingCriterion_PropertyMultiplier Name="PropertyMultiplier">
+      <ScoreModifier Name="TargetersCount">-2</ScoreModifier>
+    </TargetSortingCriterion_PropertyMultiplier>
+  </WeaponModule>
+
 </Datatable>
