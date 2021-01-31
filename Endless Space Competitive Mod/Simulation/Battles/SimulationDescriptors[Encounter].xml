@@ -136,7 +136,7 @@
   <!-- Lifepods Away! -->
   <SimulationDescriptor Name="PlayEffectEmpireManpowerSaving"   Type="PlayEffect">
     <Modifier TargetProperty="ManpowerLostTransferPercent" Operation="Addition" Value="0.75" Path="ClassGroup"/>
-    <Modifier TargetProperty="Damage"                   Operation="Percent"   Value="-0.25" Path="ClassGroup//ClassModuleWeapon"/>
+    <Modifier TargetProperty="Evasion"                   Operation="Percent"   Value="-0.25" Path="ClassGroup//ClassShip"/>
 
     <Modifier TargetProperty="FightersWithOffensiveStanceRatio" Operation="Addition" Value="0.5" Path="ClassGroup" TooltipHidden="true"/>
     <Modifier TargetProperty="FightersWithDefensiveStanceRatio" Operation="Addition" Value="0.5" Path="ClassGroup" TooltipHidden="true"/>
@@ -186,7 +186,7 @@
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="PlayEffectShieldPenetrationIncrease"   Type="PlayEffect">
-    <Modifier TargetProperty="ShieldPenetrationFactor"                Operation="Addition"   Value="0.25" Path="ClassGroup//ClassShip"/>
+    <Modifier TargetProperty="ShieldPenetrationFactor"                Operation="Addition"   Value="0.1" Path="ClassGroup//ClassShip"/>
   </SimulationDescriptor>
 
   <!-- Gravity Distortion -->
@@ -198,7 +198,7 @@
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="PlayEffectHullPlatingPenetrationIncrease"   Type="PlayEffect">
-    <Modifier TargetProperty="HullPlatingPenetrationFactor"                Operation="Addition"   Value="0.25" Path="ClassGroup//ClassShip"/>
+    <Modifier TargetProperty="HullPlatingPenetrationFactor"                Operation="Addition"   Value="0.1" Path="ClassGroup//ClassShip"/>
   </SimulationDescriptor>
 
   <!-- Power to Shields -->
@@ -221,8 +221,8 @@
 
   <!-- Evasive Manuevers -->
   <SimulationDescriptor Name="PlayEffectAccuracyReductionOther"   Type="PlayEffect">
-    <Modifier TargetProperty="Accuracy"      Operation="Percent"   Value="-0.7" Path="ClassGroup//ClassSalvo,LongRange"/>
-    <Modifier TargetProperty="Accuracy"      Operation="Percent"   Value="-0.5" Path="ClassGroup//ClassSalvo,MediumRange"/>
+    <Modifier TargetProperty="Accuracy"      Operation="Percent"   Value="-0.4" Path="ClassGroup//ClassSalvo,LongRange"/>
+    <Modifier TargetProperty="Accuracy"      Operation="Percent"   Value="-0.2" Path="ClassGroup//ClassSalvo,MediumRange"/>
 
     <Modifier TargetProperty="FightersWithOffensiveStanceRatio" Operation="Addition" Value="0.3" Path="ClassGroup" TooltipHidden="true"/>
     <Modifier TargetProperty="FightersWithDefensiveStanceRatio" Operation="Addition" Value="0.7" Path="ClassGroup" TooltipHidden="true"/>
@@ -231,9 +231,9 @@
   <!-- Emergency Battery-->
   <SimulationDescriptor Name="PlayEffectShieldReload"   Type="PlayEffect">
     <Modifier TargetProperty="ShieldRegeneratePerSecondDynamic"      Operation="Addition"   Value="0.05"  Path="ClassGroup//ClassShip"/>
-    <Modifier TargetProperty="Accuracy"      Operation="Percent"   Value="-0.1" Path="ClassGroup//ClassShip" TooltipHidden="true"/>
-    <Modifier TargetProperty="Damage"                   Operation="Percent"   Value="-0.1" Path="ClassGroup//ClassModuleWeapon" TooltipHidden="true"/>
-    <Modifier TargetProperty="Evasion"                   Operation="Percent"   Value="-0.1" Path="ClassGroup//ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="Accuracy"      Operation="Percent"   Value="-0.15" Path="ClassGroup//ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="Damage"                   Operation="Percent"   Value="-0.15" Path="ClassGroup//ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="Evasion"                   Operation="Percent"   Value="-0.15" Path="ClassGroup//ClassShip" TooltipHidden="true"/>
 
     <Modifier TargetProperty="FightersWithOffensiveStanceRatio" Operation="Addition" Value="0.3" Path="ClassGroup" TooltipHidden="true"/>
     <Modifier TargetProperty="FightersWithDefensiveStanceRatio" Operation="Addition" Value="0.7" Path="ClassGroup" TooltipHidden="true"/>
@@ -250,7 +250,7 @@
 
   <!-- Crew Defense Protocol -->
   <SimulationDescriptor Name="PlayEffectManpowerAbsorptionIncrease"   Type="PlayEffect">
-    <Modifier TargetProperty="Damage"                   Operation="Percent"   Value="-0.25" Path="ClassGroup//ClassModuleWeapon"/>
+    <Modifier TargetProperty="Damage"                   Operation="Percent"   Value="-0.25" Path="ClassGroup//ClassModuleWeapon" TooltipHidden="true"/>
     <Modifier TargetProperty="ShipManpowerKillAbsorption"            Operation="Addition"   Value="0.5"  Path="ClassGroup//ClassShip"/>
     <Modifier TargetProperty="ManpowerDamageOverTimeDefense"            Operation="Addition"   Value="0.5"  Path="ClassGroup//ClassShip" TooltipHidden="true"/>
     <Modifier TargetProperty="DefenseBonusAtShortRange"            Operation="Addition"   Value="-0.25"  Path="ClassGroup//ClassShip" TooltipHidden="true"/>
@@ -276,7 +276,17 @@
     <Modifier TargetProperty="FightersWithOffensiveStanceRatio" Operation="Addition" Value="0.3" Path="ClassGroup" TooltipHidden="true"/>
     <Modifier TargetProperty="FightersWithDefensiveStanceRatio" Operation="Addition" Value="0.7" Path="ClassGroup" TooltipHidden="true"/>
   </SimulationDescriptor>
-  
+
+  <!--Collateral Damage-->
+  <SimulationDescriptor Name="PlayEffectSplashDamage"   Type="PlayEffect">
+    <Modifier TargetProperty="SplashFlotillaDamagePercent"      Operation="Addition"   Value="0.15"  Path="ClassGroup//ClassSalvo"/>
+    <Modifier TargetProperty="Damage"                   Operation="Percent"   Value="-0.25" Path="ClassGroup//ClassModuleWeapon"/>
+
+    <!--CARRIER AIR SUPPORT - CAS %-->
+    <Modifier TargetProperty="FightersWithOffensiveStanceRatio" Operation="Addition" Value="0.7" Path="ClassGroup" TooltipHidden="true"/>
+    <Modifier TargetProperty="FightersWithDefensiveStanceRatio" Operation="Addition" Value="0.3" Path="ClassGroup" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
   <!-- Needs of the Many -->
   <SimulationDescriptor Name="PlayEffectManpowerAgainstDamage"   Type="PlayEffect">
     <Modifier TargetProperty="ManpowerPercentKillPerPhase"  Operation="Addition"   Value="0.15"  Path="ClassGroup//ClassShip"/>
@@ -565,6 +575,10 @@
     <Property Name="FlotillaFlakLongRangePenalty"          BaseValue="0"  MinValue="Negative"  Composition="Sum"/>
     <Property Name="FlotillaFlakMediumRangePenalty"          BaseValue="0" MinValue="Negative" Composition="Sum"/>
     <Property Name="FlotillaFlakShortRangePenalty"          BaseValue="0"  MinValue="Negative" Composition="Sum"/>
+    <Property Name="FlotillaManpowerDamageOverTimeIncrease"          BaseValue="0"  MinValue="0" Composition="Sum"/>
+    <Property Name="EMPFlotillaDefense"          BaseValue="0"  MinValue="0" Composition="Sum"/>
+    <Property Name="MaximumShieldCapForFlotilla"          BaseValue="0"  MinValue="0" Composition="Sum"/>
+    <Property Name="ShieldAbsorptionForFlotilla"          BaseValue="0"  MinValue="0" Composition="Sum"/>
 
     <!--ESG Modifiers-->
     <Modifier TargetProperty="FlakDamage" Operation="Percent" Value="$(FlotillaFlakDamageModifier)" Path="ClassFlotilla/ClassShip//ClassModuleWeapon,ClassModuleWeaponKinetic"/>
@@ -572,6 +586,11 @@
     <Modifier TargetProperty="LongRangePenalty" Operation="Addition" Value="$(FlotillaFlakLongRangePenalty)" Path="ClassFlotilla/ClassShip/ClassModuleWeapon,ClassModuleWeaponFlack"/>
     <Modifier TargetProperty="MediumRangePenalty" Operation="Addition" Value="$(FlotillaFlakMediumRangePenalty)" Path="ClassFlotilla/ClassShip/ClassModuleWeapon,ClassModuleWeaponFlack"/>
     <Modifier TargetProperty="ShortRangePenalty" Operation="Addition" Value="$(FlotillaFlakShortRangePenalty)" Path="ClassFlotilla/ClassShip/ClassModuleWeapon,ClassModuleWeaponFlack"/>
+    <Modifier TargetProperty="ManpowerDamageOverTime" Operation="Percent" Value="$(FlotillaManpowerDamageOverTimeIncrease)" Path="ClassFlotilla/ClassShip"/>
+    <Modifier TargetProperty="EMPWeaponDefense" Operation="Addition" Value="$(EMPFlotillaDefense)" Path="ClassFlotilla/ClassShip"/>
+    <Modifier TargetProperty="EMPShieldDefense" Operation="Addition" Value="$(EMPFlotillaDefense)" Path="ClassFlotilla/ClassShip"/>
+    <Modifier TargetProperty="MaximumShield" Operation="Addition" Value="$(MaximumShieldCapForFlotilla)" Path="ClassFlotilla/ClassShip"/>
+    <Modifier TargetProperty="ShieldAbsorption" Operation="Addition" Value="$(ShieldAbsorptionForFlotilla)" Path="ClassFlotilla/ClassShip"/>
     
     <!-- Vanilla -->
 
