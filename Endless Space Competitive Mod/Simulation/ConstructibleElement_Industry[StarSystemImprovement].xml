@@ -168,4 +168,19 @@
         <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyCloneMajorPopulation</TechnologyPrerequisite>
         <SimulationDescriptorReference Name="StarSystemImprovementCloneMajorPopulation"/>
     </StarSystemPopulationTransformImprovementDefinition>
+
+  <!--Cutting Guardian as non-UF-->
+  <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementSacrificeGuardian2" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt"
+                                                    PopulationSource="AffinityGuardians" IgnoreInvinciblePopulation="true">
+    <Tags>NoBuyout</Tags>
+    <QueuedSimulationDescriptorReference Name="StarSystemImprovementSacrificeGuardianQueued"/>
+    <Cost ResourceName="SystemTurnBased">3</Cost>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire,!FactionTraitGuardians</PathPrerequisite>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire,!AffinityGameplayMajorHisshos</PathPrerequisite>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">ClassColonizedStarSystem/ClassPopulationStarSystemAffinityGuardians</PathPrerequisite>
+    <InterpreterPrerequisite Inverted="false" Flags="NotEnoughPopulation,Enqueue">Property(Context,@'ClassColonizedStarSystem/ClassPopulationStarSystemAffinityGuardians', PopulationCount) - Property(Context, @ClassColonizedStarSystem, OnGoingSacrifice) gt 0</InterpreterPrerequisite>
+    <InterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context,@'ClassColonizedStarSystem/ClassPopulationStarSystemAffinityGuardians', PopulationCount) ge 1</InterpreterPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementSacrificeGuardian"/>
+    <TemporaryEffect>SacrificeGuardianHappiness</TemporaryEffect>
+  </StarSystemPopulationTransformImprovementDefinition>
 </Datatable>
