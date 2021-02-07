@@ -111,6 +111,44 @@
     <Modifier TargetProperty="MinorTraitsAssimilated"                 Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
 
+  <!--Pulsos-->
+  <SimulationDescriptor Name="FactionTraitMinorCuriousThinkers01" Type="FactionTraitMinor">
+        <BinaryModifier TargetProperty="SystemProduction"                 Operation="Addition" Left="0.5" BinaryOperation="Multiplication" Right="$(CuriositiesDiscovered)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="MinorTraitsAssimilated"                 Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+    </SimulationDescriptor>
+
+    <!--Sefaloros-->
+    <SimulationDescriptor Name="FactionTraitMinorWorkspaceOddity" Type="FactionTraitMinor">
+        <BinaryModifier TargetProperty="SystemProduction"   Operation="Addition"    Left="20"   BinaryOperation="Multiplication" Right="$(OwnedAnomalies)" SearchValueFromPath="true"  Path="ClassEmpire/ClassColonizedStarSystem" />
+        <Modifier TargetProperty="MinorTraitsAssimilated"   Operation="Addition"    Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+    </SimulationDescriptor>
+
+    <!--Galvrans-->
+    <SimulationDescriptor Name="FactionTraitMinorMinesOverMatter" Type="FactionTraitMinor">
+        <BinaryModifier TargetProperty="SystemResearch"   Operation="Addition"    Left="30"   BinaryOperation="Multiplication" Right="$(OwnedStrategicDeposits)" SearchValueFromPath="true"  Path="ClassEmpire/ClassColonizedStarSystem" />
+        <Modifier TargetProperty="MinorTraitsAssimilated"                 Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+    </SimulationDescriptor>
+
+    <!--Sowers-->
+    <SimulationDescriptor Name="FactionTraitMinorSoilHealers" Type="FactionTraitMinor">
+        <BinaryModifier		TargetProperty="SystemGrowth"   Operation="Addition"    Left="15"   BinaryOperation="Multiplication" Right="$(OwnedMeagerPlanets)"  SearchValueFromPath="true"  Path="ClassEmpire/ClassColonizedStarSystem"/>
+        <BinaryModifier TargetProperty="PlanetRawFIDSI"     Operation="Addition"    Left="1"    BinaryOperation="Multiplication" Right="$(ReducedAnomalyCount)" SearchValueFromPath="true"  Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" />
+        <Modifier TargetProperty="PlanetRawFIDSI" Operation="Addition"    Value="1" Path="ClassPlanet,PlanetWithReducedAnomaly"/>
+        <Modifier TargetProperty="MinorTraitsAssimilated"   Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+    <!--Greenman-->
+  <SimulationDescriptor Name="FactionTraitMinorProfitableExploitations" Type="FactionTraitMinor">
+        <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(OwnedStrategicDeposits)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
+        <Modifier TargetProperty="MinorTraitsAssimilated"                 Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+    </SimulationDescriptor>
+
+    <!--Yussho-->
+    <SimulationDescriptor Name="FactionTraitMinorDamage" Type="FactionTraitMinor">
+		<Modifier TargetProperty="Damage"  Operation="Percent" Value="0.15" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
+		<Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+    </SimulationDescriptor>
+
   <!-- -1 Movement Riftborn -->
   <SimulationDescriptor Name="FactionTraitSlowTraveler1" Type="FactionTrait">
     <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="-1"   Path="ClassEmpire/ClassGarrison/ClassShip"/>
@@ -170,5 +208,39 @@
   <SimulationDescriptor Name="FactionTraitEmpirePointPerCPDestroyed" Type="FactionTrait">
     <Modifier TargetProperty="AdditionalOpponentRecyclingEmpirePointPerCP"          Operation="Addition"     Value="10"  Path="ClassEmpire" TooltipHidden="true"/>
     <Modifier TargetProperty="AdditionalOpponentRecyclingEmpirePointPerCP"          Operation="Addition"     Value="10"  Path="../ClassEmpire/ClassGarrisonFleet/ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!--RB-->
+  <SimulationDescriptor Name="FactionTraitInimical" Type="FactionTrait"> <!--Biophobic-->
+        <BinaryModifier     TargetProperty="Happiness"          Operation="Addition" Left="8" BinaryOperation="Multiplication" Right="$(Population)"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeMeager" SearchValueFromPath="true"  />
+        <BinaryModifier     TargetProperty="Happiness"          Operation="Addition" Left="-3" BinaryOperation="Multiplication" Right="$(Population)"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeTeeming" SearchValueFromPath="true"  />
+        <Modifier TargetProperty="MaximumPopulation"        Operation="Addition"  Value="1"   Path="ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeMeager"/>
+        <Modifier TargetProperty="MaximumPopulation"        Operation="Addition"  Value="-1"   Path="ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeTeeming"/>
+    </SimulationDescriptor>
+
+  <!-- Increase movement speed-->
+  <SimulationDescriptor Name="FactionTraitFastTraveler1" Type="FactionTrait">
+    <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="1"   Path="ClassEmpire/ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="FreeMovementSpeed"			Operation="Multiplication"	Value="1.15"		Path="ClassEmpire/ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="1"   Path="ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="FactionTraitFastTraveler2" Type="FactionTrait">
+    <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="2"   Path="ClassEmpire/ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="FreeMovementSpeed"			Operation="Multiplication"	Value="1.3"		Path="ClassEmpire/ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="2"   Path="ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Decrease movement speed-->
+  <SimulationDescriptor Name="FactionTraitSlowTraveler1" Type="FactionTrait">
+    <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="-1"   Path="ClassEmpire/ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="FreeMovementSpeed"			Operation="Multiplication"	Value="0.85"		Path="ClassEmpire/ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="-1"   Path="ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="FactionTraitSlowTraveler2" Type="FactionTrait">
+    <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="-2"   Path="ClassEmpire/ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="FreeMovementSpeed"			Operation="Multiplication"	Value="0.7"		Path="ClassEmpire/ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="MaximumMovement"        Operation="Addition"  Value="-2"   Path="ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
 </Datatable>
