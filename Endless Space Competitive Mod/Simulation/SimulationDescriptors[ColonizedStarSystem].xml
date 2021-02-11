@@ -1118,7 +1118,8 @@
     <BinaryModifier TargetProperty="NetSystemResearch" Operation="Addition" Left="$(RecipeIngredientEffectTier2Luxury12Bis)" BinaryOperation="Multiplication" Right="$(LuxuryReworkEnabledNakalim)"/>
     <Modifier TargetProperty="SystemFIDSFlat"                                           Operation="Addition"    Value="$(RecipeIngredientEffectTier1Luxury6FIDSHisshos)"        Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="PlanetRawPrestige"                                        Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury13)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
-    <Modifier TargetProperty="HappinessRaw"                                                Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury14)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <Modifier TargetProperty="HappinessRaw"                                             Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury14)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <BinaryModifier TargetProperty="Happiness"                                          Operation="Addition"    Left="$(RecipeIngredientEffectTier2Luxury14)" BinaryOperation="Multiplication" Right="$(Population)"                 Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
     <Modifier TargetProperty="SystemFIDSFlat"                                           Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury14FIDSHisshos)"       Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="GroundBattleDefenderTroopsDamageMultiplier"               Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury15)"                  Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
     <Modifier TargetProperty="SystemEmpirePoint"                                        Operation="Addition"    Value="$(RecipeIngredientEffectATier2Luxury16)"                  Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
@@ -1223,8 +1224,10 @@
 
     <!-- System's refined resources -->
     <Property Name="SystemFIDSIPercent"                               MinValue="Negative"/>
+    <Property Name="SystemFIDSIPercentDevelopment"                    MinValue="Negative"/>
     <Property Name="SystemHeroFIDSIPercent"                           MinValue="Negative"/>
     <Property Name="SystemFIDSIFlat"                                  MinValue="Negative"/>
+    <Property Name="SystemFIDSIFlatDevelopment"                       MinValue="Negative"/>
     <Property Name="SystemFIDSIPercentFromTimeBubble"                 MinValue="Negative"/>
     <Property Name="SystemFIDSIPercentFromImprovementUniqueTemplars"  MinValue="Negative"/>
 
@@ -1420,11 +1423,13 @@
     <BinaryModifier TargetProperty="PlanetPrestigeConverted"            Operation="Addition"     Left="$(PlanetDustToSystemPrestigeConversionFactor)"             BinaryOperation="Multiplication"  Right="$(PlanetDustReceiver)"       Priority="-1"  Path="ClassStarSystem"/>
 
     <!-- Planet refined to system refined -->
+    <Modifier       TargetProperty="SystemGrowth"       Operation="Addition"        Value="$(SystemFIDSIFlatDevelopment)"                      Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemGrowth"       Operation="Addition"        Value="$(SystemFIDSIFlat)"                      Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemGrowth"       Operation="Addition"        Value="$(SystemFIDSFlat)"                       Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemGrowth"       Operation="Addition"        Value="$(PlanetFoodReceiver)"                   Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemGrowth"       Operation="Addition"        Value="$(PlanetFoodConverted)"                  Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemGrowth"       Operation="Percent"         Value="$(SystemFIDSIPercent)"                   Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemGrowth"       Operation="Percent"         Value="$(SystemFIDSIPercentDevelopment)"                   Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemGrowth"       Operation="Percent"         Value="$(SystemHeroFIDSIPercent)"               Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemGrowth"       Operation="Percent"         Value="$(SystemFIDSPercent)"                    Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemGrowth"       Operation="Percent"         Value="$(SystemFIDSIPercentFromTimeBubble)"     Path="ClassStarSystem"/>
@@ -1432,6 +1437,7 @@
 
 
     <Modifier       TargetProperty="SystemProduction"       Operation="Addition"            Value="$(SystemFIDSIFlat)"                          Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemProduction"       Operation="Addition"            Value="$(SystemFIDSIFlatDevelopment)"                          Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemProduction"       Operation="Addition"            Value="$(SystemFIDSFlat)"                           Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemProduction"       Operation="Addition"            Value="$(PlanetIndustryReceiver)"				    Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemProduction"       Operation="Addition"            Value="$(PlanetIndustryConverted)"				    Path="ClassStarSystem"/>
@@ -1443,32 +1449,38 @@
     <Modifier       TargetProperty="SystemProduction"       Operation="Percent"             Value="$(SystemFIDSIPercentFromImprovementUniqueTemplars)"     Path="ClassStarSystem"/>
 
     <Modifier       TargetProperty="SystemMoney"            Operation="Addition"            Value="$(SystemFIDSIFlat)"                          Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemMoney"            Operation="Addition"            Value="$(SystemFIDSIFlatDevelopment)"                          Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemMoney"            Operation="Addition"            Value="$(SystemFIDSFlat)"                           Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemMoney"            Operation="Addition"            Value="$(PlanetDustReceiver)"						Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemMoney"            Operation="Addition"            Value="$(PlanetDustConverted)"						Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemMoney"            Operation="Percent"             Value="$(SystemFIDSIPercent)"						Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemMoney"            Operation="Percent"             Value="$(SystemFIDSIPercentDevelopment)"						Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemMoney"            Operation="Percent"             Value="$(SystemHeroFIDSIPercent)"					Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemMoney"            Operation="Percent"             Value="$(SystemFIDSPercent)"						Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemMoney"            Operation="Percent"             Value="$(SystemFIDSIPercentFromTimeBubble)"         Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemMoney"            Operation="Percent"             Value="$(SystemFIDSIPercentFromImprovementUniqueTemplars)"     Path="ClassStarSystem"/>
 
 
-    <Modifier       TargetProperty="SystemResearch"         Operation="Addition"            Value="$(SystemFIDSIFlat)"              Priority="-1"   Path="ClassStarSystem"/>
-    <Modifier       TargetProperty="SystemResearch"         Operation="Addition"            Value="$(SystemFIDSFlat)"               Priority="-1"   Path="ClassStarSystem"/>
-    <Modifier       TargetProperty="SystemResearch"         Operation="Addition"            Value="$(PlanetScienceReceiver)"        Priority="-1"   Path="ClassStarSystem"/>
-    <Modifier       TargetProperty="SystemResearch"         Operation="Addition"            Value="$(PlanetScienceConverted)"       Priority="-1"   Path="ClassStarSystem"/>
-    <Modifier       TargetProperty="SystemResearch"         Operation="Percent"             Value="$(SystemFIDSIPercent)"							Path="ClassStarSystem"/>
-    <Modifier       TargetProperty="SystemResearch"         Operation="Percent"             Value="$(SystemHeroFIDSIPercent)"						Path="ClassStarSystem"/>
-    <Modifier       TargetProperty="SystemResearch"         Operation="Percent"             Value="$(SystemFIDSPercent)"							Path="ClassStarSystem"/>
-    <Modifier       TargetProperty="SystemResearch"         Operation="Percent"             Value="$(SystemFIDSIPercentFromTimeBubble)"				Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemResearch"         Operation="Addition"            Value="$(SystemFIDSIFlat)"               Priority="-1"   Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemResearch"         Operation="Addition"            Value="$(SystemFIDSIFlatDevelopment)"    Priority="-1"   Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemResearch"         Operation="Addition"            Value="$(SystemFIDSFlat)"                Priority="-1"   Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemResearch"         Operation="Addition"            Value="$(PlanetScienceReceiver)"         Priority="-1"   Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemResearch"         Operation="Addition"            Value="$(PlanetScienceConverted)"        Priority="-1"   Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemResearch"         Operation="Percent"             Value="$(SystemFIDSIPercent)"						 Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemResearch"         Operation="Percent"             Value="$(SystemFIDSIPercentDevelopment)" Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemResearch"         Operation="Percent"             Value="$(SystemHeroFIDSIPercent)"				 Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemResearch"         Operation="Percent"             Value="$(SystemFIDSPercent)"						 Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemResearch"         Operation="Percent"             Value="$(SystemFIDSIPercentFromTimeBubble)"	Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemResearch"         Operation="Percent"             Value="$(SystemFIDSIPercentFromImprovementUniqueTemplars)"     Path="ClassStarSystem"/>
 
 
     <Modifier       TargetProperty="SystemEmpirePoint"      Operation="Addition"            Value="$(SystemFIDSIFlat)"                   Priority="-1"   Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemEmpirePoint"      Operation="Addition"            Value="$(SystemFIDSIFlatDevelopment)"                   Priority="-1"   Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemEmpirePoint"      Operation="Addition"            Value="$(PlanetPrestigeReceiver)"            Priority="-1"   Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemEmpirePoint"      Operation="Addition"            Value="$(PlanetPrestigeConverted)"           Priority="-1"   Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemEmpirePoint"      Operation="Addition"            Value="$(SystemEmpirePointFromHisshoBonus)"  Priority="-1"   Path="ClassStarSystem,HasObedience" TooltipHidden="true" />
     <Modifier       TargetProperty="SystemEmpirePoint"      Operation="Percent"             Value="$(SystemFIDSIPercent)"							Path="ClassStarSystem"/>
+    <Modifier       TargetProperty="SystemEmpirePoint"      Operation="Percent"             Value="$(SystemFIDSIPercentDevelopment)"							Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemEmpirePoint"      Operation="Percent"             Value="$(SystemHeroFIDSIPercent)"						Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemEmpirePoint"      Operation="Percent"             Value="$(SystemFIDSIPercentFromTimeBubble)"				Path="ClassStarSystem"/>
     <Modifier       TargetProperty="SystemEmpirePoint"      Operation="Percent"             Value="$(SystemFIDSIPercentFromImprovementUniqueTemplars)"     Path="ClassStarSystem"/>
