@@ -155,4 +155,69 @@
     <NextUpgradeName>StarSystemImprovementQuestTimeLords05</NextUpgradeName>
     <NextUpgradeName>StarSystemImprovementQuestTimeLords07</NextUpgradeName>
   </StarSystemPopulationTransformImprovementDefinition>
+
+  <!-- THE VAULT OF GOVERNANCE -->
+  <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueCuriosity2"    Category="CategoryStarSystemImprovement" SubCategory="SubCategoryHero"
+									 ScoreProvider="StarSystemImprovementBuilt">
+    <QueuedSimulationDescriptorReference Name="StarSystemImprovementUniqueCuriosity2"/>
+    <Cost ResourceName="SystemProduction">1120</Cost>
+    <PathPrerequisite Flags="Prerequisite,Discard">../ClassEmpire,EmpireImprovementStarSystemImprovementUniqueCuriosity2</PathPrerequisite>
+    <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementUniqueCuriosity2,!FastForwardedImprovement</PathPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementUniqueCuriosity2" />
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage2High" />
+    <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionUniqueInfluence1"/>
+    <UniqueTags>StarSystemImprovementUniqueCuriosity2</UniqueTags>
+  </StarSystemImprovementDefinition>
+
+  <!-- THE REJUVENATION MAZE -->
+  <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueCuriosity3"    Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryShip"
+									 ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="Military"/>
+    <QueuedSimulationDescriptorReference Name="StarSystemImprovementUniqueCuriosity3"/>
+    <Cost ResourceName="SystemProduction">1120</Cost>
+    <Cost ResourceName="Strategic1" Instant="true">10</Cost>
+    <Cost ResourceName="Strategic2" Instant="true">10</Cost>
+    <PathPrerequisite Flags="Prerequisite,Discard">../ClassEmpire,EmpireImprovementStarSystemImprovementUniqueCuriosity3</PathPrerequisite>
+    <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementUniqueCuriosity3,!FastForwardedImprovement</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">../ClassEmpire/Uniques,StarSystemImprovementUniqueCuriosity3</PathPrerequisite>
+    <InterpreterPrerequisite Inverted="true"    Flags="Prerequisite,Discard">
+      Path(Context,@'../ClassEmpire/ClassStarSystem,StarSystemImprovementUniqueCuriosity3')
+      and not(Path(Context,@'ClassStarSystem,StarSystemImprovementUniqueCuriosity3'))
+    </InterpreterPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementUniqueCuriosity3" />
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage3High" />
+    <SimulationDescriptorReference Name="StarSystemImprovementOncePerEmpire" />
+    <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionUniqueDefense1"/>
+    <UniqueTags>StarSystemImprovementUniqueCuriosity3</UniqueTags>
+  </StarSystemImprovementDefinition>
+
+  <!--Horatio pop transform-->
+  <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementCloneMajorPopulation" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt"
+														PopulationSource="Minor" PopulationSourceHeuristic="LowestCount" PopulationDestination="Major" PopulationDestinationHeuristic="LowestCount"  PopulationToTransformCount="1" >
+      <AIGain RessourceName="PopulationGain" Inverted="false"></AIGain>  
+      <QueuedSimulationDescriptorReference Name="StarSystemImprovementCloneMajorPopulationQueued"/>
+        <CustomCost ResourceName="SystemProduction">200</CustomCost>
+        <InterpreterPrerequisite Inverted="false" Flags="NotEnoughPopulation,Enqueue">(Property(Context, @ClassColonizedStarSystem, Population) -  Property(Context, @ClassColonizedStarSystem, MajorPopulationCount) - Property(Context, @ClassColonizedStarSystem, OnGoingClone) ) gt 0</InterpreterPrerequisite>
+        <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayHoratio</PathPrerequisite>
+        <PathPrerequisite Inverted="false"  Flags="Prerequisite,Disable">ColonizedStarSystemStateColony/ClassColonizedPlanet/PopulationNonMajor, !ClassPopulationPlanetAffinityGuardians</PathPrerequisite>
+        <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyCloneMajorPopulation</TechnologyPrerequisite>
+        <SimulationDescriptorReference Name="StarSystemImprovementCloneMajorPopulation"/>
+    </StarSystemPopulationTransformImprovementDefinition>
+
+  <!--Cutting Guardian as non-UF-->
+  <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementSacrificeGuardian2" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt"
+                                                    PopulationSource="AffinityGuardians" IgnoreInvinciblePopulation="true">
+    <Tags>NoBuyout</Tags>
+    <QueuedSimulationDescriptorReference Name="StarSystemImprovementSacrificeGuardianQueued"/>
+    <Cost ResourceName="SystemTurnBased">3</Cost>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire,!FactionTraitGuardians</PathPrerequisite>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire,!AffinityGameplayMajorHisshos</PathPrerequisite>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">ClassColonizedStarSystem/ClassPopulationStarSystemAffinityGuardians</PathPrerequisite>
+    <InterpreterPrerequisite Inverted="false" Flags="NotEnoughPopulation,Enqueue">Property(Context,@'ClassColonizedStarSystem/ClassPopulationStarSystemAffinityGuardians', PopulationCount) - Property(Context, @ClassColonizedStarSystem, OnGoingSacrifice) gt 0</InterpreterPrerequisite>
+    <InterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context,@'ClassColonizedStarSystem/ClassPopulationStarSystemAffinityGuardians', PopulationCount) ge 1</InterpreterPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementSacrificeGuardian"/>
+    <TemporaryEffect>SacrificeGuardianHappiness</TemporaryEffect>
+  </StarSystemPopulationTransformImprovementDefinition>
 </Datatable>

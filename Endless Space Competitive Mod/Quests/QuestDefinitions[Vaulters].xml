@@ -1,0 +1,2159 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+
+
+    <!-- ####################################### -->
+    <!--      VAULTERS QUEST Chapter0      -->
+    <!-- ####################################### -->
+
+
+    <QuestDefinition Name="VaultersQuest-Chapter0" Category="MajorQuest" SubCategory="Vaulters">
+
+        <!--============ TAGS ============-->
+
+        <Tags>BeginTurn,Hidden</Tags>
+
+        <!--============ CONTEXT ============-->
+
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$HomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>
+                        <PathPrerequisite Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+            <Var VarName="$VaulterQuestSystem" IsGlobal="true" AutoLockTargets="true">
+                <First>
+                    <From Source="$AllStarSystems">
+                        <OrderBy>
+                            <SortSystemByDistance OriginVarName="$HomeSystem" SortBy="Nearest" MinimumDistance="1" MinimumCandidateCount="1" ConsiderFreeMovement="true"/>
+                        </OrderBy>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$DefinitionName" StringValue="QuestNodeVaulters"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empire)">         
+            <InterpreterPrerequisite Flags="Prerequisite">Path(Context,@'EmpireTypeMajor/ClassGarrisonFleet/ClassShip,ShipRoleSuperColonizer') or Path(Context,@'EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityVaulters,PopulationMajor')</InterpreterPrerequisite>
+            <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCVaulters</DownloadableContentPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Objective_Fake">
+                        <Sequence>
+                            <Action_ApplyStarSystemDefinition>
+                                <Input_DefinitionName VarName="$DefinitionName"/>
+                                <Input_StarSystemNode VarName="$VaulterQuestSystem"/>
+                            </Action_ApplyStarSystemDefinition>
+                            <Decorator_BeginTurn/>
+                        </Sequence>                        
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+    
+    <!-- ####################################### -->
+    <!--      VAULTERS QUEST Chapter1      -->
+    <!-- ####################################### -->
+    
+    
+    <QuestDefinition Name="VaultersQuest-Chapter1-Part1" Category="MajorQuest" SubCategory="Vaulters" MinimumTurn="5">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            
+            <Var VarName="$DefenseBuildings"  StringValue="SubCategoryDefense"/>
+            <Var VarName="$MilitaryBuildings" StringValue="SubCategoryShip"/>
+            <Var VarName="$ScienceBuildings"  StringValue="SubCategoryScience"/>
+            
+         
+
+            <Var VarName="$PoliticalEffectMilitarist"      StringValue="PopulationEventVaulters01-Militarist"/>
+            <Var VarName="$PoliticalEffectScientist"       StringValue="PopulationEventVaulters01-Scientist"/>
+            
+            <Var VarName="$Amount01" IntValue="3"/>
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityVaulters,PopulationMajor</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassStarSystem,HomeSystem</PathPrerequisite>
+            <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCVaulters</DownloadableContentPrerequisite>
+        </Prerequisites>
+
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ Choice Index 0: Science ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Militarist" StartValue="0" EndValue="$Amount01">                     
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Parallel CompletionPolicy="Any">
+                            
+                        <Sequence>
+                            <Loop>
+                                <Decorator_ConstructionCompleted Initiator="Empire" ProgressionIncrement="1">                                
+                                    <Input_ConstructionSubCategory VarName="$DefenseBuildings"/>
+                                    <Input_ValidType>Building</Input_ValidType>
+                                </Decorator_ConstructionCompleted>
+                                <Input_Count VarName="$Amount01"/>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                            
+                        <Sequence>
+                            <Loop>
+                                <Decorator_ConstructionCompleted Initiator="Empire" ProgressionIncrement="1">
+                                    <Input_ConstructionSubCategory VarName="$MilitaryBuildings"/>
+                                    <Input_ValidType>Building</Input_ValidType>
+                                </Decorator_ConstructionCompleted>
+                                <Input_Count VarName="$Amount01"/>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+
+
+                        <Sequence>
+                            <Parallel CompletionPolicy="All">
+                                <Loop Count="2">
+                                    <Decorator_ConstructionCompleted Initiator="Empire">
+                                        <Input_ConstructionSubCategory VarName="$MilitaryBuildings"/>
+                                        <Input_ValidType>Building</Input_ValidType>
+                                    </Decorator_ConstructionCompleted>
+                                </Loop>
+                                <Loop Count="2">
+                                    <Decorator_ConstructionCompleted Initiator="Empire">
+                                        <Input_ConstructionSubCategory VarName="$DefenseBuildings"/>
+                                        <Input_ValidType>Building</Input_ValidType>
+                                    </Decorator_ConstructionCompleted>
+                                </Loop>
+                            </Parallel>
+
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+
+
+                        <Sequence>
+                            <Parallel CompletionPolicy="All">
+                                <Loop Count="3">
+                                    <Decorator_ConstructionCompleted Initiator="Empire">
+                                        <Input_ConstructionSubCategory VarName="$MilitaryBuildings"/>
+                                        <Input_ValidType>Building</Input_ValidType>
+                                    </Decorator_ConstructionCompleted>                               
+                                </Loop>
+                                <Decorator_ConstructionCompleted Initiator="Empire">
+                                    <Input_ConstructionSubCategory VarName="$DefenseBuildings"/>
+                                    <Input_ValidType>Building</Input_ValidType>
+                                </Decorator_ConstructionCompleted>
+                                
+                            </Parallel>
+                            
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+
+                        <Sequence>
+                            <Parallel CompletionPolicy="All">
+                                <Loop Count="3">
+                                    <Decorator_ConstructionCompleted Initiator="Empire">
+                                        <Input_ConstructionSubCategory VarName="$DefenseBuildings"/>
+                                        <Input_ValidType>Building</Input_ValidType>
+                                    </Decorator_ConstructionCompleted>
+                                </Loop>
+                            <Decorator_ConstructionCompleted Initiator="Empire">
+                                <Input_ConstructionSubCategory VarName="$MilitaryBuildings"/>
+                                <Input_ValidType>Building</Input_ValidType>
+                            </Decorator_ConstructionCompleted>
+                                
+                            </Parallel>
+                            
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        
+                        </Parallel>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter1-Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters01" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: Ecologist ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Scientist" StartValue="0" EndValue="$Amount01">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Loop>
+                                <Decorator_ConstructionCompleted Initiator="Empire" ProgressionIncrement="1">                                   
+                                    <Input_ConstructionSubCategory VarName="$ScienceBuildings"/>
+                                    <Input_ValidType>Building</Input_ValidType>
+                                </Decorator_ConstructionCompleted>
+                                <Input_Count VarName="$Amount01"/>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter1-Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters02" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+    
+       
+      <!-- ####################################### -->
+    <!--      VAULTERS QUEST Chapter1 Part 2      -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="VaultersQuest-Chapter1-Part2B" Category="MajorQuest" SubCategory="Vaulters" MinimumTurn="1" AlternateVersion="VaultersQuest-Chapter1-Part2A">
+
+        <!--============ TAGS ============-->
+        <Tags>VaultersQuest-Chapter1-Part2</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$HomeSystem">
+                <From Source="$CurrentEmpire.$HomeStarSystem"/>
+            </Var>
+            <Var VarName="$Pirates">
+                <From Source="$PirateEmpire"/>
+            </Var>
+            <Var VarName="$PirateLairsLocation">
+                <From Source="$Pirates.$ColonizedStarSystems.$StarSystem"/>
+            </Var>
+         
+            <Var VarName="$ClosePirateLair">
+                <Any>
+                    <From Source="$PirateLairsLocation">
+                        <Where>
+                            <FilterSystemByDistance OriginVarName="$HomeSystem" MinDistance="1" MaxDistance="60"/>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Amount05" IntValue="1"/>
+            <InterpretedVar VarName="$Duration" Target="$(Empire)">
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*12</Expression>
+            </InterpretedVar>
+
+            <Var VarName="$AtPeaceStatus" StringValue="DiplomaticRelationStatePiratePeace"/>
+            <Var VarName="$BeFriendsStatus" StringValue="DiplomaticRelationStatePirateBestFriend"/>
+            
+            <Var VarName="$PoliticalEffectMilitarist"      StringValue="PopulationEventVaulters02-Militarist"/>
+            <Var VarName="$PoliticalEffectScientist"       StringValue="PopulationEventVaulters02-Scientist"/>
+
+            <LocalizationVar Source="$ClosePirateLair" LocalizationKey="$ClosePirateLairName"/>
+            <LocalizationVar Source="$Duration"        LocalizationKey="$DurationName"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->  
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ Choice Index 0: Science ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$ClosePirateLair"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+
+                    <Objective Name="Objective_Militarist">
+                           <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="40" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_InvadeSystem>
+                                <Input_System VarName="$ClosePirateLair"/>                              
+                                <Input_VictimEmpire VarName="$Pirates"/>                            
+                            </Decorator_InvadeSystem>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters03" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: Ecologist ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Scientist" StartValue="0" EndValue="$Duration">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="40" AutoResolutionProbability="1" />
+                        
+                        <Sequence>      
+                            <Loop>
+                                <Decorator_Wait>
+                                    <Input_WaitDuration VarName="$Amount05"/>
+                                </Decorator_Wait>
+                                    <Parallel CompletionPolicy="First">
+                                        <Sequence>
+                                            <Decorator_BeginTurn ProgressionIncrement="1">
+                                                <Condition_CheckDiplomaticRelation>                                           
+                                                    <Input_Empire VarName="$CurrentEmpire"/>
+                                                    <Input_OtherEmpire VarName="$Pirates"/>
+                                                    <Input_DiplomaticRelationState VarName="$AtPeaceStatus"/>   
+                                                </Condition_CheckDiplomaticRelation>
+                                            </Decorator_BeginTurn>
+                                        </Sequence>
+                                        <Sequence>
+                                            <Decorator_BeginTurn ProgressionIncrement="1">
+                                                <Condition_CheckDiplomaticRelation>
+                                                    <Input_Empire VarName="$CurrentEmpire"/>
+                                                    <Input_OtherEmpire VarName="$Pirates"/>
+                                                    <Input_DiplomaticRelationState VarName="$BeFriendsStatus"/>
+                                                </Condition_CheckDiplomaticRelation>
+                                            </Decorator_BeginTurn>
+                                        </Sequence>
+                                    </Parallel>
+                            <Input_Count VarName="$Duration"/>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                          
+                  
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters04" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ####################################### -->
+    <!--      VAULTERS QUEST Chapter1 Part 2      -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="VaultersQuest-Chapter1-Part2A" Category="MajorQuest" SubCategory="Vaulters" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>VaultersQuest-Chapter1-Part2</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$MilitaryBuildings" StringValue="SubCategoryDefense"/>
+            <Var VarName="$ScienceBuildings"  StringValue="SubCategoryScience"/>
+
+            <Var VarName="$PoliticalEffectMilitarist"      StringValue="PopulationEventVaulters02-Militarist"/>
+            <Var VarName="$PoliticalEffectScientist"       StringValue="PopulationEventVaulters02-Scientist"/>
+
+            <InterpretedVar VarName="$Amount03" Target="$(Empire)">
+                <Expression>(SumProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet', AnomalyCount))</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>(SumProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet', AnomalyCount) + 2)</Expression>
+            </InterpretedVar>
+
+            <Var VarName="$Amount01" IntValue="3"/>
+
+            <Var VarName="$Expression01" StringValue="SumProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet', AnomalyCount)"/>
+            
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->  
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ Choice Index 0: Science ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Militarist" StartValue="0" EndValue="$Amount01">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Loop>
+
+                                <Decorator_BattleEnded Status="Won" Initiator="Empire" ProgressionIncrement="1">
+                                </Decorator_BattleEnded>                             
+                                
+                                <Input_Count VarName="$Amount01"/>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters03" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: Ecologist ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Scientist" StartValue="$Amount03" EndValue="$Amount02">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters04" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+ 
+
+
+    <!-- ####################################### -->
+    <!--      VAULTERS QUEST Chapter2 AURIGA     -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="VaultersQuest-Chapter2A" Category="MajorQuest" SubCategory="Vaulters" MinimumTurn="1" AlternateVersion="VaultersQuest-Chapter2B">
+
+        <!--============ TAGS ============-->
+        <Tags>VaultersQuest-Chapter2</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems"/>
+            </Var>
+            <Var VarName="$AurigaStarSystem">
+                <Any>
+                    <From Source="$AllStarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassStarSystem/ClassPlanet,UniquePlanetAuriga</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+
+            <Var VarName="$AurigaPlanet">
+                <Any>
+                    <From Source="$AurigaStarSystem.$Planets">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">UniquePlanetAuriga</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Marker02"/>
+            <Var VarName="$Curiosity01GUID"/>
+            <Var VarName="$Curiosity02GUID"/>
+
+            <Var VarName="$Amount01" IntValue="2"/>
+            <Var VarName="$Amount02" IntValue="5"/>
+            <Var VarName="$Curiosity01" StringValue="Curiosity_Quest_Vaulters01"/>
+            <Var VarName="$Curiosity02" StringValue="Curiosity_Quest_Vaulters02"/>
+
+            <Var VarName="$Amount03" IntValue="20"/>
+            <Var VarName="$Amount04" IntValue="-20"/>
+            <Var VarName="$ResourceName01" StringValue="Strategic2"/>
+
+            <Var VarName="$PoliticalEffectMilitarist"      StringValue="PopulationEventVaulters03-Militarist"/>
+            <Var VarName="$PoliticalEffectScientist"       StringValue="PopulationEventVaulters03-Scientist"/>           
+
+            <LocalizationVar LocalizationKey="$Amount01Name"       Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Amount02Name"       Source="$Amount02"/>
+            <LocalizationVar LocalizationKey="$ResourceName01Name" Source="$ResourceName01"/>
+            <LocalizationVar LocalizationKey="$AurigaPlanetName"   Source="$AurigaPlanet"/>
+            <LocalizationVar LocalizationKey="$Amount03Name"       Source="$Amount03"/>
+
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ Choice Index 0: Science ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$AurigaPlanet"/>
+                            <Input_CuriosityDefinition VarName="$Curiosity01"/>
+                            <Output_CuriosityGUIDs VarName="$Curiosity01GUID"/>
+                        </Action_SpawnCuriosity>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$AurigaPlanet"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>                            
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+
+                    <Objective Name="Objective_Militarist">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_CuriosityDiscovered Initiator="Empire">
+                                <Input_CuriosityGUIDs VarName="$Curiosity01GUID"/>
+                            </Decorator_CuriosityDiscovered>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                          </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter3-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters05" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: Ecologist ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$AurigaPlanet"/>
+                            <Input_CuriosityDefinition VarName="$Curiosity02"/>
+                            <Output_CuriosityGUIDs VarName="$Curiosity02GUID"/>                            
+                        </Action_SpawnCuriosity>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$AurigaPlanet"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker02"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+
+                    <Objective Name="Objective_Scientist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+
+                        <Sequence>
+                            <Decorator_CuriosityDiscovered Initiator="Empire">
+                                <Input_CuriosityGUIDs VarName="$Curiosity02GUID"/>                                
+                            </Decorator_CuriosityDiscovered>
+                            <Action_TransferResource>
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$ResourceName01"/>
+                                <Input_Amount VarName="$Amount04"/>
+                            </Action_TransferResource>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker02"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter3-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters06" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--      VAULTERS QUEST Chapter2 AURIGA     -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="VaultersQuest-Chapter2B" Category="MajorQuest" SubCategory="Vaulters" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>VaultersQuest-Chapter2</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems"/>
+            </Var>
+         
+            <Var VarName="$Amount01" IntValue="13"/>
+            <Var VarName="$Amount02" IntValue="35"/>
+            <Var VarName="$FleetGUID"/>          
+          
+            <Var VarName="$PoliticalEffectMilitarist"      StringValue="PopulationEventVaulters04-Militarist"/>
+            <Var VarName="$PoliticalEffectScientist"       StringValue="PopulationEventVaulters04-Scientist"/>
+
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+        
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ Choice Index 0: Science ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Militarist" StartValue="0" EndValue="$Amount01">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Loop>
+                            <Decorator_CuriosityDiscovered Initiator="Empire" ProgressionIncrement="1" StopAtFirstFailedCondition="true">
+                                <Condition_IsVariableNotEmpty>
+                                    <Input_Variable VarName="$FleetGUID"/>                                    
+                                </Condition_IsVariableNotEmpty>
+                                <Output_FleetGUID VarName="$FleetGUID"/>
+                            </Decorator_CuriosityDiscovered>
+                                <Input_Count VarName="$Amount01"/>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter3-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters05" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: Ecologist ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Scientist">
+                        <!-- TODO -->
+                        <AIHint Category="MaximizeExploration" Motivation="0.5"/>                          
+                    
+                        <Sequence>
+                            <Parallel CompletionPolicy="First">
+                                <Sequence>
+                                    <Decorator_BeginTurn>
+                                        <Condition_ExplorationProgress MinimumState="Revealed">
+                                            <Input_Empire VarName="$CurrentEmpire"/>
+                                            <Input_Percentage VarName="$Amount02"/>
+                                        </Condition_ExplorationProgress>
+                                    </Decorator_BeginTurn>
+                                </Sequence>
+                                <Sequence>
+                                    <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
+                                        <Input_MinimumPercentage VarName="$Amount02"/>
+                                    </Decorator_ExploredNode>
+                                </Sequence>
+                            </Parallel>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter3-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters06" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ####################################### -->
+    <!--      VAULTERS QUEST Chapter 3 Part1     -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="VaultersQuest-Chapter3-Part1" Category="MajorQuest" SubCategory="Vaulters" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>VaultersQuest-Chapter3-Part1</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+       
+
+            <Var VarName="$PoliticalEffectMilitarist"      StringValue="PopulationEventVaulters05-Militarist"/>
+            <Var VarName="$PoliticalEffectScientist"       StringValue="PopulationEventVaulters05-Scientist"/>
+
+            <Var VarName="$Amount01" IntValue="5"/>
+
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>Min(1110, (MaxProperty(Context, @'../ClassEmpire/ClassGarrisonFleet/ClassShip', DefensiveMilitaryPower)+150))</Expression>
+            </InterpretedVar>       
+
+            <InterpretedVar VarName="$Amount03" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeTemperate,ClassColonizedPlanet')</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount04" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeTemperate,ClassColonizedPlanet')+2</Expression>
+            </InterpretedVar>
+            <Var VarName="$Expression01" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeTemperate')"/>
+
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+            <LocalizationVar LocalizationKey="$Amount04Name" Source="$Amount04"/>
+
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ Choice Index 0: Science ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Militarist">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_ShipStats>
+                                    <Input_Empire VarName="$CurrentEmpire"/>
+                                    <Input_MinimumAmount VarName="$Amount01"/>
+                                    <Input_MinimumDefensiveMilitaryPower VarName="$Amount02"/>                                                                
+                                </Condition_ShipStats>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter3-Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters07" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: Ecologist ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Scientist" StartValue="$Amount03" EndValue="$Amount04">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter3-Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters08" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <QuestDefinition Name="VaultersQuest-Chapter3-Part2" Category="MajorQuest" SubCategory="Vaulters" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>VaultersQuest-Chapter3-Part2</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$AcademySystem">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>
+                        <PathPrerequisite Flags="Prerequisite">WorldAcademy</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+
+            <Var VarName="$System01">
+                <Any>
+                    <From Source="$Constellations.$StarSystems">
+                        <Where>
+                            <FilterSystemByDistance MinDistance="10" MaxDistance="80"  OriginVarName="$AcademySystem"/>                              
+                        </Where>
+                    </From>
+                </Any>                
+            </Var>
+
+            <Var VarName="$Planet01">
+                <Any>
+                    <From Source="$System01.$Planets"/>
+                </Any>
+            </Var>
+                 
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Property(Context, @'../ClassEmpire', MaximumEmpireManpowerStock)</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>Property(Context, @'../ClassEmpire', MaximumEmpireManpowerStock)+600 </Expression>
+            </InterpretedVar>
+
+            <InterpretedVar VarName="$Amount04" Target="$(Empire)">
+                <Expression>Property(Context, @'../ClassEmpire', NetEmpireResearch)</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount05" Target="$(Empire)">
+                <Expression>Property(Context, @'../ClassEmpire', NetEmpireResearch)+200 </Expression>
+            </InterpretedVar>
+            
+            <Var VarName="$Expression1" StringValue="Property(Context, @'../ClassEmpire', MaximumEmpireManpowerStock)"/>
+            <Var VarName="$Expression2" StringValue="Property(Context, @'../ClassEmpire', NetEmpireResearch)"/>
+            <Var VarName="$Curiosity01" StringValue="Curiosity_Quest_Vaulters03"/>
+            <Var VarName="$Curiosity01GUID"/>
+            
+            <Var VarName="$Amount03" IntValue="7"/>
+            <Var VarName="$Marker01"/>
+            
+            <Var VarName="$PoliticalEffectMilitarist"      StringValue="PopulationEventVaulters06-Militarist"/>
+            <Var VarName="$PoliticalEffectScientist"       StringValue="PopulationEventVaulters06-Scientist"/>
+            
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+            <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03"/>
+            <LocalizationVar LocalizationKey="$Amount04Name" Source="$Amount04"/>
+            <LocalizationVar LocalizationKey="$Amount05Name" Source="$Amount05"/>
+            <LocalizationVar LocalizationKey="$Planet01Name" Source="$Planet01"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ Choice Index 0: Military ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Militarist" StartValue="$Amount01" EndValue="$Amount02">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression1"/>
+                                </Condition_IsProgressionComplete>                               
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter4-Militarist-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters09" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: Science ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>                       
+                    </StartActions>
+
+                    <Objective Name="Objective_Scientist" StartValue="$Amount04" EndValue="$Amount05">
+                        <!-- TODO -->
+                        <AIHint Category="MaximizeResource" Motivation="0.5">
+                            <Resource>Science</Resource>
+                        </AIHint>
+
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression2"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VaultersQuest-Chapter4-Science-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters10" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <QuestDefinition Name="VaultersQuest-Chapter4-Militarist-Part1" Category="MajorQuest" SubCategory="Vaulters" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>VaultersQuest-Chapter4-Militarist-Part1,FactionFinalQuest,FactionQuestVaulters</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$IAEmpire">
+                <From Source="$LesserEmpire"/>
+            </Var>
+            
+            <Var VarName="$MyHomeSystem">
+                <From Source="$CurrentEmpire.$HomeStarSystem"/>
+            </Var>
+
+            <Var VarName="$System01">
+                <Any>
+                    <From Source="$Constellations.$StarSystems">
+                        <Where>
+                            <FilterSystemByDistance MinDistance="1" MaxDistance="60" OriginVarName="$MyHomeSystem"/>
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassStarSystem, QuestNode</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+       
+            <DroplistVar VarName="$FleetToDrop" Droplist="DroplistFleetVaulters01"/>
+            <Var VarName="$FleetToDropGUID"/>
+            
+            <Var VarName="$PoliticalEffectMilitarist"      StringValue="PopulationEventVaulters07-Militarist"/>
+            <Var VarName="$PoliticalEffectScientist"       StringValue="PopulationEventVaulters07-Scientist"/>
+            
+            <Var VarName="$Marker01"/>
+            
+            <Var VarName="$FleetBehavior" StringValue="GotoAndBlockade"/>
+            <Var VarName="$FleetBehaviorGUID"/>
+            
+            <Var VarName="$HeroHissho" StringValue="HeroHisshos01"/>
+            <Var VarName="$HeroGUID"/>
+            
+            <Var VarName="$SystemControllerName" StringValue="%VaultersQuest-Chapter4-Militarist-Part1Name"/>
+            
+            <Var VarName="$MyBuilding" StringValue="StarSystemImprovementQuestVaulters09"/>
+            <LocalizationVar Source="$MyBuilding" LocalizationKey="$MyBuildingName"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ Choice Index 0: Science ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                     
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnFleets>
+                            <Input_Empire VarName="$IAEmpire"/>
+                            <Input_Locations VarName="$System01"/>
+                            <Input_DroppableFleet VarName="$FleetToDrop"/>
+                            <Output_FleetGUIDs VarName="$FleetToDropGUID"/>
+                        </Action_SpawnFleets>
+                        <Action_RegisterLesserName>
+                            <Input_GUIDs VarName="$FleetToDropGUID"/>
+                            <Input_Name VarName="$SystemControllerName"/>
+                        </Action_RegisterLesserName>
+                        <Action_AddQuestMarkers>
+                            <Input_TargetGUIDs VarName="$FleetToDropGUID"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                        <Action_SpawnHero>
+                            <Input_Empire VarName="$IAEmpire"/>
+                            <Input_HeroDefinition VarName="$HeroHissho"/>
+                            <Output_HeroGUID VarName="$HeroGUID"/>
+                        </Action_SpawnHero>
+                        <Action_AssignHero>
+                            <Input_Empire VarName="$IAEmpire"/>
+                            <Input_HeroGUID VarName="$HeroGUID"/>
+                            <Input_LocationGUID VarName="$FleetToDropGUID"/>
+                        </Action_AssignHero>
+                        <Action_CreateFleetMissions>
+                            <Input_MissionDefinitionName VarName="$FleetBehavior"/>
+                            <Input_FleetGUIDs VarName="$FleetToDropGUID"/>
+                            <Input_TargetEmpires VarName="$CurrentEmpire"/>
+                            <Input_Targets VarName="$MyHomeSystem"/>
+                            <Output_MissionGUIDs VarName="$FleetBehaviorGUID"/>
+                        </Action_CreateFleetMissions>
+                    
+                    </StartActions> 
+                    
+                    <Objective Name="Objective_Militarist">
+                        <AIHint Category="DestroyFleet" Motivation="0.5">
+                            <Input_Var VarName="$FleetToDropGUID"/>
+                        </AIHint>
+                        <Sequence>
+                            <Parallel CompletionPolicy="First">
+                                <Sequence>
+                                    <Decorator_BattleEnded Status="Won">
+                                        <Condition_BattleEnded_FleetDestroyed>
+                                            <Input_FleetGUIDs VarName="$FleetToDropGUID"/>
+                                        </Condition_BattleEnded_FleetDestroyed>
+                                    </Decorator_BattleEnded>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                    <Action_ChooseOutcome Name="Outcome1"/>
+                                </Sequence>
+                                <Sequence>
+                                    <Decorator_ConstructionCompleted Initiator="Empire">
+                                        <Input_ConstructionName VarName="$MyBuilding"/>
+                                    </Decorator_ConstructionCompleted>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                    <Action_ChooseOutcome Name="Outcome2"/>
+                                </Sequence>
+                            </Parallel>
+                        </Sequence>
+                        <Outcome Name="Outcome1">                           
+                        </Outcome>
+                        <Outcome Name="Outcome2">                           
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters11" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: Ecologist ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>                       
+                    </StartActions>
+
+                    <Objective Name="Objective_Scientist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+
+                        <Sequence>
+                            <Decorator_ConstructionCompleted Initiator="Empire">
+                                <Input_ConstructionName VarName="$MyBuilding"/>
+                            </Decorator_ConstructionCompleted>
+                        </Sequence>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestVaulters12" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <QuestDefinition Name="VaultersQuest-Chapter4-Science-Part1" Category="MajorQuest" SubCategory="Vaulters" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>VaultersQuest-Chapter4-Science-Part1,FactionFinalQuest,FactionQuestVaulters</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$IAEmpire">
+                <From Source="$LesserEmpire"/>
+            </Var>
+            <Var VarName="$AllEmpires">
+                <From Source="$MajorEmpires"/>
+            </Var>
+            
+            <Var VarName="$VaulterQuestSystem" IsGlobal="true"/>
+              <Var VarName="$VaulterQuestPlanet">
+                <Any>
+                    <From Source="$VaulterQuestSystem.$Planets">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassPlanet, PlanetTypeTerran</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+                      
+            
+            <Var VarName="$VaulterQuestSystemGUID"/>
+            <Var VarName="$VaulterQuestSystemEntity"/>
+            <Var VarName="$AnotherVaulterQuestSystemGUID"/>
+            <Var VarName="$VaulterQuestPlanetGUID"/>
+            <Var VarName="$ColonizedVaulterQuestSystem"/>
+            <Var VarName="$VaulterQuestPlanetEntity"/>
+            <Var VarName="$VaulterQuestSystemColonized"/>
+            
+            <Var VarName="$SystemControllerNameMilitary" StringValue="%VaultersQuest-Chapter4-Science-Part1-MilitaryLesserName"/>
+            <Var VarName="$SystemControllerNameScience" StringValue="%VaultersQuest-Chapter4-Science-Part1-ScienceLesserName"/>
+            <Var VarName="$NewSystemName" StringValue="%VaultersQuest-Chapter4-Science-Part1-SystemName"/>
+
+           
+            <Var VarName="$PopAffinity01" StringValue="AffinityVaultersMilitary"/>
+            <Var VarName="$PopAffinity02" StringValue="AffinityVaultersScience"/>
+
+            <Var VarName="$BuildingFood1" StringValue="StarSystemImprovementFood1"/>
+            <Var VarName="$BuildingFood2" StringValue="StarSystemImprovementFood2"/>
+            <Var VarName="$BuildingFood3" StringValue="StarSystemImprovementFood3"/>
+            <Var VarName="$BuildingFood4" StringValue="StarSystemImprovementFood4"/>
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Min(10000, (MaxProperty(Context, @'../ClassEmpire/ClassGarrisonFleet', OffensiveMilitaryPower)+1000))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Amount02" IntValue="5"/>
+            <Var VarName="$Amount03" IntValue="10"/>
+            <Var VarName="$Amount04" IntValue="1"/>
+            <Var VarName="$Amount05" IntValue="500"/>
+            <Var VarName="$Amount06" IntValue="1"/>
+          
+            <Var VarName="$FleetDocked"/>
+            <Var VarName="$OrbitingFleet"/>
+
+            <Var VarName="$ResourceName01" StringValue="SystemGrowth"/>          
+            
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassGarrisonFleet', OffensiveMilitaryPower) ge $(Amount01)"/>
+            <Var VarName="$Expression02" StringValue="Property(Context, @'ClassGarrisonFleet/ClassHero,HeroSkill_HeroOpbot', Level) ge 10"/>
+
+            <Var VarName="$Descriptor01" StringValue="CannotBeDestroyed"/>
+            <Var VarName="$Descriptor02" StringValue="CannotBeInvaded"/>
+            <Var VarName="$Descriptor03" StringValue="LargeFoodAmount"/>
+            <Var VarName="$Descriptor04" StringValue="CannotBeConverted"/>
+            
+            <Var VarName="$HeroDefinition" StringValue="HeroOpbot01"/>            
+
+            <Var VarName="$PoliticalEffectMilitarist"      StringValue="PopulationEventVaulters08-Militarist"/>
+            <Var VarName="$PoliticalEffectScientist"       StringValue="PopulationEventVaulters08-Scientist"/>
+            
+            <LocalizationVar Source="$Amount01"           LocalizationKey="$Amount01Name"/>
+            <LocalizationVar Source="$Amount03"           LocalizationKey="$Amount03Name"/>
+            <LocalizationVar Source="$VaulterQuestSystem" LocalizationKey="$VaulterQuestSystemName"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">ClassEmpire, !AffinityGameplayVampirilis</PathPrerequisite>
+                           <PathPrerequisite Flags="Prerequisite">ClassEmpire, !AffinityGameplayUmbralChoir</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                       <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">ClassEmpire, !AffinityGameplayVampirilis</PathPrerequisite>
+                           <PathPrerequisite Flags="Prerequisite">ClassEmpire, !AffinityGameplayUmbralChoir</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="2">
+                        <Prerequisites Target="$(Empire)">
+                            <InterpreterPrerequisite Flags="Prerequisite">
+                                Path(Context,@'ClassEmpire,EmpireTypeMajor,AffinityGameplayVampirilis') or
+                                Path(Context,@'ClassEmpire,EmpireTypeMajor,AffinityGameplayUmbralChoir')
+                            </InterpreterPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                   <ChoiceItem ObjectiveSetIndex="3">
+                        <Prerequisites Target="$(Empire)">
+                            <InterpreterPrerequisite Flags="Prerequisite">
+                                Path(Context,@'ClassEmpire,EmpireTypeMajor,AffinityGameplayVampirilis') or
+                                Path(Context,@'ClassEmpire,EmpireTypeMajor,AffinityGameplayUmbralChoir')
+                            </InterpreterPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+
+                <!--============ Choice Index 0: Science ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
+                        </Action_TriggerPopulationEvent>                       
+                    </StartActions>
+
+                    <Objective Name="Objective_Militarist">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                        <!--Colonize two Planets-->
+                            
+                            <Action_Colonize>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_Planet VarName="$VaulterQuestPlanet"/>
+                                <Output_ColonizedStarSystemGUID VarName="$VaulterQuestSystemGUID"/>
+                                <Output_ColonizedPlanetGUID VarName="$VaulterQuestPlanetGUID"/>
+                            </Action_Colonize>
+                           
+                            <Decorator_EntityCreated>
+                                    <Input_GUID VarName="$VaulterQuestSystemGUID"/>
+                                    <Output_Entity VarName="$VaulterQuestSystemEntity"/>
+                            </Decorator_EntityCreated>
+                            <Action_SpawnImprovement>
+                                <Input_ColonizedStarSystem VarName="$VaulterQuestSystemEntity"/>
+                                <Input_StarSystemImprovementDefinition VarName="$BuildingFood1"/>
+                            </Action_SpawnImprovement>
+                            <Action_SpawnImprovement>
+                                <Input_ColonizedStarSystem VarName="$VaulterQuestSystemEntity"/>
+                                <Input_StarSystemImprovementDefinition VarName="$BuildingFood2"/>
+                            </Action_SpawnImprovement>
+                            <Action_SpawnImprovement>
+                                <Input_ColonizedStarSystem VarName="$VaulterQuestSystemEntity"/>
+                                <Input_StarSystemImprovementDefinition VarName="$BuildingFood3"/>
+                            </Action_SpawnImprovement>
+                                                                            
+                            <!--Spawn pop on it-->
+
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_System VarName="$VaulterQuestSystem"/>
+                                <Input_Amount VarName="$Amount02"/>
+                                <Input_PopulationAffinity VarName="$PopAffinity01"/>
+                            </Action_SpawnPopulation>
+                            
+                       <!--Chance its names and make it Visible-->
+                            
+                            <Action_RegisterLesserName>
+                                <Input_GUIDs VarName="$VaulterQuestSystemGUID"/>
+                                <Input_Name VarName="$SystemControllerNameMilitary"/>
+                            </Action_RegisterLesserName>
+                            <Action_RenameSystem>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_System VarName="$VaulterQuestSystem"/>
+                                <Input_Name VarName="$NewSystemName"/>
+                            </Action_RenameSystem>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_TargetEntities VarName="$VaulterQuestSystem"/>
+                            </Action_SetInvisibility>
+                            
+                         <!--Cannot be invade or destroyed-->
+                      
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor01"/>
+                                <Input_Targets VarName="$VaulterQuestPlanet"/>
+                            </Action_ApplyDescriptor>
+                        
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor02"/>
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor04"/>
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+
+                         <!--Apply a Quest Marker-->
+                            
+                            <Action_AddQuestMarkers RevealsLocation="true">
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Output_Markers VarName="$Marker01"/>
+                            </Action_AddQuestMarkers>
+
+                         <!--DECORATOR DECORATOR DECORATOR-->
+                            <Parallel CompletionPolicy="First">
+
+                                <Sequence>
+                                    <Decorator_FleetDocked Initiator="Empire">
+                                        <Condition_IsVariableNotEmpty>
+                                            <Input_Variable VarName="$FleetDocked"/>
+                                        </Condition_IsVariableNotEmpty>
+                                        <Condition_CheckInterpreter>
+                                            <Input_Context VarName="$FleetDocked"/>
+                                            <Input_Expression VarName="$Expression01"/>
+                                        </Condition_CheckInterpreter>
+                                        <Input_System VarName="$VaulterQuestSystem"/>
+                                        <Output_Fleet VarName="$FleetDocked"/>
+                                    </Decorator_FleetDocked>
+                                </Sequence>
+
+                                <Decorator_BeginTurn StopAtFirstFailedCondition="true">
+                                    <Condition_FleetStatsOnNode>
+                                        <Input_Nodes VarName="$VaulterQuestSystem"/>
+                                        <Input_Empire VarName="$CurrentEmpire"/>
+                                        <Input_MinimumOffensiveMilitaryPower VarName="$Amount01"/>
+                                        <Input_MinimumAmount VarName="$Amount04"/>
+                                        <Output_Fleets VarName="$OrbitingFleet"/>
+                                    </Condition_FleetStatsOnNode>
+                                </Decorator_BeginTurn>  
+                            </Parallel>
+                            <!--Make it visible for all and make it invadable and destroyable-->
+
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$AllEmpires"/>
+                                <Input_TargetEntities VarName="$VaulterQuestSystem"/>
+                            </Action_SetInvisibility>
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor01"/>
+                                <Input_Targets VarName="$VaulterQuestPlanet"/>
+                            </Action_ApplyDescriptor>
+                           
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor02"/>
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor04"/>
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>                          
+
+                         <!--Colonize this System by the player-->
+
+                            <Action_Colonize>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_Planet VarName="$VaulterQuestPlanet"/>
+                                <Output_ColonizedStarSystemGUID VarName="$VaulterQuestSystemGUID"/>
+                                <Output_ColonizedPlanetGUID VarName="$VaulterQuestPlanetGUID"/>
+                            </Action_Colonize>                        
+                            <Decorator_EntityCreated>
+                                <Input_GUID VarName="$VaulterQuestSystemGUID"/>
+                                <Output_Entity VarName="$ColonizedVaulterQuestSystem"/>
+                            </Decorator_EntityCreated>
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor03"/>
+                                <Input_Targets VarName="$ColonizedVaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+                            <Action_SetOwnership>
+                                <Input_ColonizedStarSystemGUIDs VarName="$VaulterQuestSystemGUID"/>
+                                <Input_OwnershipValue VarName="$Amount06"/>
+                            </Action_SetOwnership>
+                        </Sequence>                    
+                    </Objective>
+
+                    <Reward LocalizationKey="%VaultersQuest-Chapter4-Science-Part1-MilitaristReward"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: Ecologist ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Scientist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+
+                        <Sequence>
+
+                            <Action_Colonize>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_Planet VarName="$VaulterQuestPlanet"/>
+                                <Output_ColonizedStarSystemGUID VarName="$VaulterQuestSystemGUID"/>
+                                <Output_ColonizedPlanetGUID VarName="$VaulterQuestPlanetGUID"/>
+                            </Action_Colonize>
+
+                            <Decorator_EntityCreated>
+                                <Input_GUID VarName="$VaulterQuestSystemGUID"/>
+                                <Output_Entity VarName="$VaulterQuestSystemEntity"/>
+                            </Decorator_EntityCreated>
+
+                            <Action_SpawnImprovement>
+                                <Input_ColonizedStarSystem VarName="$VaulterQuestSystemEntity"/>
+                                <Input_StarSystemImprovementDefinition VarName="$BuildingFood1"/>
+                            </Action_SpawnImprovement>
+                            <Action_SpawnImprovement>
+                                <Input_ColonizedStarSystem VarName="$VaulterQuestSystemEntity"/>
+                                <Input_StarSystemImprovementDefinition VarName="$BuildingFood2"/>
+                            </Action_SpawnImprovement>
+                            <Action_SpawnImprovement>
+                                <Input_ColonizedStarSystem VarName="$VaulterQuestSystemEntity"/>
+                                <Input_StarSystemImprovementDefinition VarName="$BuildingFood3"/>
+                            </Action_SpawnImprovement>                         
+
+                            <!--Spawn pop on it-->
+
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_System VarName="$VaulterQuestSystem"/>
+                                <Input_Amount VarName="$Amount02"/>
+                                <Input_PopulationAffinity VarName="$PopAffinity02"/>
+                            </Action_SpawnPopulation>
+
+                            <!--Chance its names and make it Visible-->
+
+                            <Action_RegisterLesserName>
+                                <Input_GUIDs VarName="$VaulterQuestSystemGUID"/>
+                                <Input_Name VarName="$SystemControllerNameScience"/>
+                            </Action_RegisterLesserName>
+                            <Action_RenameSystem>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_System VarName="$VaulterQuestSystem"/>
+                                <Input_Name VarName="$NewSystemName"/>
+                            </Action_RenameSystem>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_TargetEntities VarName="$VaulterQuestSystem"/>
+                            </Action_SetInvisibility>
+
+                            <!--Cannot be invade or destroyed-->
+
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor01"/>
+                                <Input_Targets VarName="$VaulterQuestPlanet"/>
+                            </Action_ApplyDescriptor>
+
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor02"/>
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor04"/>
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+                            <!--Apply a Quest Marker-->
+
+                            <Action_AddQuestMarkers RevealsLocation="true">
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Output_Markers VarName="$Marker01"/>
+                            </Action_AddQuestMarkers>
+
+                            <!--DECORATOR DECORATOR DECORATOR-->
+                            <Parallel CompletionPolicy="First">
+
+                                <Decorator_FleetDocked Initiator="Empire" StopAtFirstFailedCondition="true">                                
+                                    <Condition_IsVariableNotEmpty>
+                                        <Input_Variable VarName="$FleetDocked"/>
+                                    </Condition_IsVariableNotEmpty>
+                                    <Condition_FleetHasHero>
+                                        <Input_Fleets VarName="$FleetDocked"/>
+                                        <Input_HeroDefinitionName VarName="$HeroDefinition"/>
+                                    </Condition_FleetHasHero>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$FleetDocked"/>
+                                        <Input_Expression VarName="$Expression02"/>
+                                    </Condition_CheckInterpreter>
+                                    <Input_System VarName="$VaulterQuestSystem"/>
+                                    <Output_Fleet VarName="$FleetDocked"/>
+                                </Decorator_FleetDocked>
+                            
+                                 <Decorator_BeginTurn StopAtFirstFailedCondition="true">
+                                    <Condition_FleetStatsOnNode>
+                                        <Input_Nodes VarName="$VaulterQuestSystem"/>
+                                        <Input_Empire VarName="$CurrentEmpire"/>                                       
+                                        <Input_MinimumAmount VarName="$Amount04"/>
+                                        <Output_Fleets VarName="$OrbitingFleet"/>
+                                    </Condition_FleetStatsOnNode>
+                                     <Condition_IsVariableNotEmpty>
+                                         <Input_Variable VarName="$OrbitingFleet"/>
+                                     </Condition_IsVariableNotEmpty>
+                                     <Condition_FleetHasHero>
+                                         <Input_Fleets VarName="$OrbitingFleet"/>
+                                         <Input_HeroDefinitionName VarName="$HeroDefinition"/>
+                                     </Condition_FleetHasHero>
+                                     <Condition_CheckInterpreter>
+                                         <Input_Context VarName="$OrbitingFleet"/>
+                                         <Input_Expression VarName="$Expression02"/>
+                                     </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                
+                            </Parallel>
+                            <!--Make it visible for all and make it invadable and destroyable-->
+
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$AllEmpires"/>
+                                <Input_TargetEntities VarName="$VaulterQuestSystem"/>
+                            </Action_SetInvisibility>
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor01"/>
+                                <Input_Targets VarName="$VaulterQuestPlanet"/>
+                            </Action_ApplyDescriptor>
+
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor02"/>
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor04"/>
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+
+                            <!--Colonize this System by the player-->
+
+                            <Action_Colonize>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_Planet VarName="$VaulterQuestPlanet"/>
+                                <Output_ColonizedStarSystemGUID VarName="$VaulterQuestSystemGUID"/>
+                                <Output_ColonizedPlanetGUID VarName="$VaulterQuestPlanetGUID"/>
+                            </Action_Colonize>
+                            <Decorator_EntityCreated>
+                                <Input_GUID VarName="$VaulterQuestSystemGUID"/>
+                                <Output_Entity VarName="$ColonizedVaulterQuestSystem"/>
+                            </Decorator_EntityCreated>
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor03"/>
+                                <Input_Targets VarName="$ColonizedVaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+                            <Action_SetOwnership>
+                                <Input_ColonizedStarSystemGUIDs VarName="$VaulterQuestSystemGUID"/>
+                                <Input_OwnershipValue VarName="$Amount06"/>
+                            </Action_SetOwnership>
+                        </Sequence>
+                    </Objective>
+
+                    <Reward LocalizationKey="%VaultersQuest-Chapter4-Science-Part1-ScienceReward"/>
+
+                </ObjectiveSet>
+
+                <!--============ Choice Index 0: Science ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Vodyani">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <!--Colonize two Planets-->
+
+                            <Action_Colonize>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_Planet VarName="$VaulterQuestPlanet"/>
+                                <Output_ColonizedStarSystemGUID VarName="$VaulterQuestSystemGUID"/>
+                                <Output_ColonizedPlanetGUID VarName="$VaulterQuestPlanetGUID"/>
+                            </Action_Colonize>
+
+                            <Decorator_EntityCreated>
+                                <Input_GUID VarName="$VaulterQuestSystemGUID"/>
+                                <Output_Entity VarName="$VaulterQuestSystemEntity"/>
+                            </Decorator_EntityCreated>
+                            <Action_SpawnImprovement>
+                                <Input_ColonizedStarSystem VarName="$VaulterQuestSystemEntity"/>
+                                <Input_StarSystemImprovementDefinition VarName="$BuildingFood1"/>
+                            </Action_SpawnImprovement>
+                            <Action_SpawnImprovement>
+                                <Input_ColonizedStarSystem VarName="$VaulterQuestSystemEntity"/>
+                                <Input_StarSystemImprovementDefinition VarName="$BuildingFood2"/>
+                            </Action_SpawnImprovement>
+                            <Action_SpawnImprovement>
+                                <Input_ColonizedStarSystem VarName="$VaulterQuestSystemEntity"/>
+                                <Input_StarSystemImprovementDefinition VarName="$BuildingFood3"/>
+                            </Action_SpawnImprovement>
+
+                            <!--Spawn pop on it-->
+
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_System VarName="$VaulterQuestSystem"/>
+                                <Input_Amount VarName="$Amount02"/>
+                                <Input_PopulationAffinity VarName="$PopAffinity01"/>
+                            </Action_SpawnPopulation>
+
+                            <!--Chance its names and make it Visible-->
+
+                            <Action_RegisterLesserName>
+                                <Input_GUIDs VarName="$VaulterQuestSystemGUID"/>
+                                <Input_Name VarName="$SystemControllerNameMilitary"/>
+                            </Action_RegisterLesserName>
+                            <Action_RenameSystem>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_System VarName="$VaulterQuestSystem"/>
+                                <Input_Name VarName="$NewSystemName"/>
+                            </Action_RenameSystem>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_TargetEntities VarName="$VaulterQuestSystem"/>
+                            </Action_SetInvisibility>
+
+                            <!--Cannot be invade or destroyed-->
+
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor01"/>
+                                <Input_Targets VarName="$VaulterQuestPlanet"/>
+                            </Action_ApplyDescriptor>
+
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor02"/>
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+
+                           <!--Apply a Quest Marker-->
+
+                            <Action_AddQuestMarkers RevealsLocation="true">
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Output_Markers VarName="$Marker01"/>
+                            </Action_AddQuestMarkers>
+
+                            <!--DECORATOR DECORATOR DECORATOR-->
+                            <Parallel CompletionPolicy="First">
+
+                                <Sequence>
+                                    <Decorator_FleetDocked Initiator="Empire">
+                                        <Condition_IsVariableNotEmpty>
+                                            <Input_Variable VarName="$FleetDocked"/>
+                                        </Condition_IsVariableNotEmpty>
+                                        <Condition_CheckInterpreter>
+                                            <Input_Context VarName="$FleetDocked"/>
+                                            <Input_Expression VarName="$Expression01"/>
+                                        </Condition_CheckInterpreter>
+                                        <Input_System VarName="$VaulterQuestSystem"/>
+                                        <Output_Fleet VarName="$FleetDocked"/>
+                                    </Decorator_FleetDocked>
+                                </Sequence>
+
+                                <Decorator_BeginTurn StopAtFirstFailedCondition="true">
+                                    <Condition_FleetStatsOnNode>
+                                        <Input_Nodes VarName="$VaulterQuestSystem"/>
+                                        <Input_Empire VarName="$CurrentEmpire"/>
+                                        <Input_MinimumOffensiveMilitaryPower VarName="$Amount01"/>
+                                        <Input_MinimumAmount VarName="$Amount04"/>
+                                        <Output_Fleets VarName="$OrbitingFleet"/>
+                                    </Condition_FleetStatsOnNode>
+                                </Decorator_BeginTurn>
+                            </Parallel>
+                           <!--Make it visible for all and make it invadable and destroyable-->
+
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$AllEmpires"/>
+                                <Input_TargetEntities VarName="$VaulterQuestSystem"/>
+                            </Action_SetInvisibility>
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor01"/>
+                                <Input_Targets VarName="$VaulterQuestPlanet"/>
+                            </Action_ApplyDescriptor>
+
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor02"/>
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>  
+                            
+                        </Sequence>
+                    </Objective>
+
+                    <Reward Droplist="DroplistTechnology" EvaluationMethod="Dynamic" Picks="1" PreviewLocalizationKey="%RandomTechnologyTitle"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: Ecologist ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_VodyaniBis">
+                       <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+
+                        <Sequence>
+
+                            <Action_Colonize>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_Planet VarName="$VaulterQuestPlanet"/>
+                                <Output_ColonizedStarSystemGUID VarName="$VaulterQuestSystemGUID"/>
+                                <Output_ColonizedPlanetGUID VarName="$VaulterQuestPlanetGUID"/>
+                            </Action_Colonize>
+
+                            <Decorator_EntityCreated>
+                                <Input_GUID VarName="$VaulterQuestSystemGUID"/>
+                                <Output_Entity VarName="$VaulterQuestSystemEntity"/>
+                            </Decorator_EntityCreated>
+
+                            <Action_SpawnImprovement>
+                                <Input_ColonizedStarSystem VarName="$VaulterQuestSystemEntity"/>
+                                <Input_StarSystemImprovementDefinition VarName="$BuildingFood1"/>
+                            </Action_SpawnImprovement>
+                            <Action_SpawnImprovement>
+                                <Input_ColonizedStarSystem VarName="$VaulterQuestSystemEntity"/>
+                                <Input_StarSystemImprovementDefinition VarName="$BuildingFood2"/>
+                            </Action_SpawnImprovement>
+                            <Action_SpawnImprovement>
+                                <Input_ColonizedStarSystem VarName="$VaulterQuestSystemEntity"/>
+                                <Input_StarSystemImprovementDefinition VarName="$BuildingFood3"/>
+                            </Action_SpawnImprovement>
+
+                           <!--Spawn pop on it-->
+
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_System VarName="$VaulterQuestSystem"/>
+                                <Input_Amount VarName="$Amount02"/>
+                                <Input_PopulationAffinity VarName="$PopAffinity02"/>
+                            </Action_SpawnPopulation>
+
+                            <!--Chance its names and make it Visible-->
+
+                            <Action_RegisterLesserName>
+                                <Input_GUIDs VarName="$VaulterQuestSystemGUID"/>
+                                <Input_Name VarName="$SystemControllerNameScience"/>
+                            </Action_RegisterLesserName>
+                            <Action_RenameSystem>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_System VarName="$VaulterQuestSystem"/>
+                                <Input_Name VarName="$NewSystemName"/>
+                            </Action_RenameSystem>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_TargetEntities VarName="$VaulterQuestSystem"/>
+                            </Action_SetInvisibility>
+
+                            <!--Cannot be invade or destroyed-->
+
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor01"/>
+                                <Input_Targets VarName="$VaulterQuestPlanet"/>
+                            </Action_ApplyDescriptor>
+
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor02"/>
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+
+                            <!--Apply a Quest Marker-->
+
+                            <Action_AddQuestMarkers RevealsLocation="true">
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Output_Markers VarName="$Marker01"/>
+                            </Action_AddQuestMarkers>
+
+                            <!--DECORATOR DECORATOR DECORATOR-->
+                            <Parallel CompletionPolicy="First">
+
+                                <Decorator_FleetDocked Initiator="Empire" StopAtFirstFailedCondition="true">
+                                    <Condition_IsVariableNotEmpty>
+                                        <Input_Variable VarName="$FleetDocked"/>
+                                    </Condition_IsVariableNotEmpty>
+                                    <Condition_FleetHasHero>
+                                        <Input_Fleets VarName="$FleetDocked"/>
+                                        <Input_HeroDefinitionName VarName="$HeroDefinition"/>
+                                    </Condition_FleetHasHero>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$FleetDocked"/>
+                                        <Input_Expression VarName="$Expression02"/>
+                                    </Condition_CheckInterpreter>
+                                    <Input_System VarName="$VaulterQuestSystem"/>
+                                    <Output_Fleet VarName="$FleetDocked"/>
+                                </Decorator_FleetDocked>
+
+                                <Decorator_BeginTurn StopAtFirstFailedCondition="true">
+                                    <Condition_FleetStatsOnNode>
+                                        <Input_Nodes VarName="$VaulterQuestSystem"/>
+                                        <Input_Empire VarName="$CurrentEmpire"/>
+                                        <Input_MinimumAmount VarName="$Amount04"/>
+                                        <Output_Fleets VarName="$OrbitingFleet"/>
+                                    </Condition_FleetStatsOnNode>
+                                    <Condition_IsVariableNotEmpty>
+                                        <Input_Variable VarName="$OrbitingFleet"/>
+                                    </Condition_IsVariableNotEmpty>
+                                    <Condition_FleetHasHero>
+                                        <Input_Fleets VarName="$OrbitingFleet"/>
+                                        <Input_HeroDefinitionName VarName="$HeroDefinition"/>
+                                    </Condition_FleetHasHero>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$OrbitingFleet"/>
+                                        <Input_Expression VarName="$Expression02"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+
+                            </Parallel>
+                            <!--Make it visible for all and make it invadable and destroyable-->
+
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$AllEmpires"/>
+                                <Input_TargetEntities VarName="$VaulterQuestSystem"/>
+                            </Action_SetInvisibility>
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor01"/>
+                                <Input_Targets VarName="$VaulterQuestPlanet"/>
+                            </Action_ApplyDescriptor>
+
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor02"/>
+                                <Input_Targets VarName="$VaulterQuestSystem"/>
+                            </Action_ApplyDescriptor>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            
+                        </Sequence>
+                    </Objective>
+
+                    <Reward Droplist="DroplistTechnology" EvaluationMethod="Dynamic" Picks="1" PreviewLocalizationKey="%RandomTechnologyTitle"/>  
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+</Datatable>
