@@ -252,9 +252,15 @@
     <Property Name="EMPFlotillaDefense"                     BaseValue="0"/>
     <Property Name="MaximumShieldCapForFlotilla"                     BaseValue="0"/>
     <Property Name="ShieldAbsorptionForFlotilla"                     BaseValue="0"/>
+    <Property Name="SpeedCharge" MinValue="0" MaxValue="0.5"/>
     
     <!-- *** MODIFIERS ***-->
-    <!-- Experience Reward (XP granted after space battles if ship is killed) -->
+    <!-- Warp Speed Charge = Orbit node for one turn, get +0.5 movement distance. Next turn, +0 movement distance -->
+    <Modifier TargetProperty="SpeedCharge"    Operation="Addition"        Value="-0.5"/>
+    <Modifier TargetProperty="WarpSpeed"          Operation="Multiplication"  Value="$(SpeedCharge)"/>
+    <Modifier TargetProperty="WormholeSpeed"      Operation="Multiplication"  Value="$(SpeedCharge)"/>
+    <Modifier TargetProperty="FreeMovementSpeed"  Operation="Multiplication"  Value="$(SpeedCharge)"/>
+    
     <BinaryModifier TargetProperty="ExperienceRewardFromLevel"   Operation="Addition"           Left="$(Level)"                         BinaryOperation="Multiplication"    Right="0.2"/>
     <BinaryModifier TargetProperty="ExperienceReward"            Operation="Multiplication"     Left="$(ExperienceRewardFromLevel)"     BinaryOperation="Multiplication"    Right="$(CommandPoints)"/>
     <!-- Compute passive xp value for the ship for admirals : shipCP * (1 + nbStratModules/10)-->
