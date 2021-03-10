@@ -10,6 +10,7 @@
     <Property Name="DustGlobalProductionLastTurn"   BaseValue="0"       MinValue="Negative"   IsSealed="true"/>
 
     <Property Name="DustInflation"                  BaseValue="1"       MinValue="0.25"/>
+    <Property Name="DustInflationMath"              BaseValue="1"/>
     <Property Name="DustInflationLastTurn"			    BaseValue="1"			  MinValue="0.25"/>
     <Property Name="DustInflationFactor"            BaseValue="12.5"    MinValue="0"/>
     <Property Name="DustInflationBaseModifier"      BaseValue="10000"/>
@@ -107,10 +108,12 @@
     <Modifier TargetProperty="GameSpeedMultiplier"	Operation="Force" Value="$(GameSpeedMultiplier)" Path="ClassMarketplace/ClassTradableCategory/ClassTradableSubCategory/ClassTradable" Priority="-10"/>
 
     <!--Dust Inflation-->
-    <BinaryModifier TargetProperty="DustInflation"  Operation="Addition"    Left="$(DustGlobalProduction)"   BinaryOperation="Multiplication"    Right="$(DustInflationFactor)" Priority="-10"/>
-    <Modifier TargetProperty="DustInflation"  Operation="Addition"    Value="$(DustInflationBaseModifier)" Priority="-10"/>
-    <Modifier TargetProperty="DustInflation"  Operation="Power"    Value="$(DustInflationExponent)" Priority="-10"/>
-    <Modifier TargetProperty="DustInflation"  Operation="Division"    Value="$(DustInflationDivisor)" Priority="-10"/>
+    <BinaryModifier TargetProperty="DustInflationMath"  Operation="Addition"    Left="$(DustGlobalProduction)"   BinaryOperation="Multiplication"    Right="$(DustInflationFactor)" Priority="-10"/>
+    <Modifier TargetProperty="DustInflationMath"  Operation="Addition"    Value="$(DustInflationBaseModifier)" Priority="-10"/>
+    <Modifier TargetProperty="DustInflationMath"  Operation="Power"    Value="$(DustInflationExponent)" Priority="-10"/>
+    <Modifier TargetProperty="DustInflationMath"  Operation="Division"    Value="$(DustInflationDivisor)" Priority="-10"/>
+    <Modifier TargetProperty="DustInflation" Operation="Addition" Value="$(DustInflationMath)" Priority="-10"/>
+
     <Modifier TargetProperty="Inflation" Operation="Force" Value="$(DustInflation)" Path="ClassMarketplace/ClassTradableCategory/ClassTradableSubCategory/ClassTradable" Priority="-10"/>
 
     <BinaryModifier TargetProperty="DustInflationLastTurn"  Operation="Addition"    Left="$(DustGlobalProductionLastTurn)"   BinaryOperation="Multiplication"    Right="$(DustInflationFactor)" Priority="-10"/>
