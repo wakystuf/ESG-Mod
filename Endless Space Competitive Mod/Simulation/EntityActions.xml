@@ -60,4 +60,23 @@
     <SuspendableDescriptor Name="InvisibilityFleetActionAddAntivision"/>
 
   </InvisibilityFleetAction>
+
+  <!-- Nakalim Collect Relics -->
+  <CollectRelicsFleetAction Name="CollectRelicsFleetAction" Flags="CancelOnMovement" Duration="3">
+    <EntityPrerequisites Location="Self">
+      <PathPrerequisite Flags="Discard,MustBeTemplar" Inverted="false">../ClassEmpire,AffinityTemplars</PathPrerequisite>
+    </EntityPrerequisites>
+
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="FleetActionBusy"/>
+      <SimulationAlteration DescriptorReference="FleetActionCollectingRelics"/>
+    </EntityModifiers>
+
+    <EntityModifiers Filter="SameEmpire" Location="OrbitEntities">
+      <SimulationAlteration DescriptorReference="OwnFleetCollectingRelics"/>
+    </EntityModifiers>
+
+    <CancelActions Flags="CancelOnAnything" SameContext="false" SameInitiator="true"/>
+
+  </CollectRelicsFleetAction>
 </Datatable>
