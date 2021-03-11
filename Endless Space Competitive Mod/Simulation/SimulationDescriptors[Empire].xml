@@ -9,7 +9,8 @@
     <Property Name="AllianceSize"                       BaseValue="0" MinValue="0"/>
     <Property Name="LuxuryReworkEnabled"                BaseValue="0"/>
     <Property Name="LuxuryReworkDisabled"               BaseValue="0"/>
-    
+    <Property Name="IsntImmuneToSpecialNodes"           BaseValue="1"/>
+
     <!-- Tech Stages -->
     <Property Name="EmpireEmpireDevelopmentStage"       BaseValue="1"/>
     <Property Name="EmpireScienceStage"                 BaseValue="1"/>
@@ -31,9 +32,6 @@
     <!--ESG-->
     <Property Name="MajorPopulationCount"	BaseValue="0"  Composition="Sum" />
     <Property Name="EmpireMajorPopulationCount" BaseValue="0"/>
-    <Modifier TargetProperty="EmpireMajorPopulationCount" Operation="Addition" Value="$(MajorPopulationCount)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="EmpireMajorPopulationCount" Operation="Force" Value="$(EmpireMajorPopulationCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
-
 
     <Property Name="PopulationsAssimilated" BaseValue="0"/>
     <Property Name="AcademyOwned"/>
@@ -791,6 +789,8 @@
     <!-- ########################################################## -->
     <!-- ######################## MODIFIER ######################## -->
     <!-- ########################################################## -->
+    <Modifier TargetProperty="EmpireMajorPopulationCount" Operation="Addition" Value="$(MajorPopulationCount)" Path="ClassEmpire"/>
+    <Modifier TargetProperty="EmpireMajorPopulationCount" Operation="Force" Value="$(EmpireMajorPopulationCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
     <Modifier     TargetProperty="ObliteratorShotCost"                      Operation="Multiplication" Value="$(ObliteratorShotCostMultiplier)"  Path="ClassEmpire/ClassGarrisonFleet/ClassShip,ShipRoleObliterator"/>
 
@@ -1226,28 +1226,26 @@
     <!-- PercentageOfPlayersInYourAlliance = Alliance Size / Empire Count -->
     <BinaryModifier TargetProperty="PercentageOfPlayersInYourAlliance" Operation="Force" Left="$(AllianceCount)" BinaryOperation="Division" Right="$(NumberOfMajorEmpires)"/>
     <Modifier TargetProperty="PercentageOfPlayersInYourAlliance" Operation="Force" Value="$(PercentageOfPlayersInYourAlliance)" Path="ClassEmpire/ClassColonizedStarSystem"/>
-    
+
     <Modifier TargetProperty="TradeAgreementCost" Operation="Addition" Value="1"/>
-    <Modifier TargetProperty="ModuleEmpireDevelopmentStage" Operation="Force" Value="$(EmpireEmpireDevelopmentStage)" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
-    <Modifier TargetProperty="ModuleScienceStage" Operation="Force" Value="$(EmpireScienceStage)" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
-    <Modifier TargetProperty="ModuleEconomyStage" Operation="Force" Value="$(EmpireEconomyStage)" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
-    <Modifier TargetProperty="ModuleMilitaryStage" Operation="Force" Value="$(EmpireMilitaryStage)" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
+    <Modifier TargetProperty="ModuleEmpireDevelopmentStage" Operation="Force" Value="$(EmpireEmpireDevelopmentStage)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
+    <Modifier TargetProperty="ModuleScienceStage" Operation="Force" Value="$(EmpireScienceStage)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
+    <Modifier TargetProperty="ModuleEconomyStage" Operation="Force" Value="$(EmpireEconomyStage)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
+    <Modifier TargetProperty="ModuleMilitaryStage" Operation="Force" Value="$(EmpireMilitaryStage)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
     <Modifier TargetProperty="SystemResearchRelics" Operation="Addition" Value="$(ResearchRelics)" Path="ClassEmpire/ClassColonizedStarSystem" />
     <Modifier TargetProperty="LuxuryReworkEnabled" Operation="Force" Value="$(LuxuryReworkEnabled)" Path="ClassEmpire/ClassColonizedStarSystem"/>
     <Modifier TargetProperty="LuxuryReworkDisabled" Operation="Force" Value="$(LuxuryReworkDisabled)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+
+    <Modifier TargetProperty="IsntImmuneToSpecialNodes" Operation="Addition" Value="$(IsntImmuneToSpecialNodes)" Path="ClassEmpire//ClassShip"/>
+    <Modifier TargetProperty="IsntImmuneToSpecialNodes" Operation="Addition" Value="$(IsntImmuneToSpecialNodes)" Path="ClassEmpire//ClassGarrison"/>
   </SimulationDescriptor>
 
 
   <!--Used for Craver Influence and Science ESG-->
   <SimulationDescriptor Name="EmpireHasHuntingGround" Type="EmpireHasHuntingGround" IsSerializable="false">
-        <Modifier TargetProperty="EmpireLifeforceFromHuntingGrounds" Operation="Addition" Value="100" Path="AffinityGameplayVampirilis"/>
-        <BinaryModifier TargetProperty="EmpireMoneyFromConsume" Operation="Addition" Left="200" BinaryOperation="Multiplication" Right="$(DustInflation)" Path="AffinityGameplayCravers"/>
-        <BinaryModifier TargetProperty="EmpirePointFromConsume" Operation="Addition" Left="25" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" Path="AffinityGameplayCravers"/>
-        <BinaryModifier TargetProperty="ScienceFromConsume" Operation="Addition" Left="25" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" Path="AffinityGameplayCravers"/>
-    </SimulationDescriptor>
-
-
-    
-
-    
+    <Modifier TargetProperty="EmpireLifeforceFromHuntingGrounds" Operation="Addition" Value="100" Path="AffinityGameplayVampirilis"/>
+    <BinaryModifier TargetProperty="EmpireMoneyFromConsume" Operation="Addition" Left="200" BinaryOperation="Multiplication" Right="$(DustInflation)" Path="AffinityGameplayCravers"/>
+    <BinaryModifier TargetProperty="EmpirePointFromConsume" Operation="Addition" Left="25" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" Path="AffinityGameplayCravers"/>
+    <BinaryModifier TargetProperty="ScienceFromConsume" Operation="Addition" Left="25" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" Path="AffinityGameplayCravers"/>
+  </SimulationDescriptor>
 </Datatable>

@@ -2,13 +2,13 @@
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
   <!-- Black Hole -->
   <SimulationDescriptor Name="ArenaEffectSpecialNodeBlackHole"    Type="ArenaEffect">
-    <Modifier TargetProperty="Accuracy"                         Operation="Force"    Value="0.5"  Path="ClassGroup//ClassSalvo" TooltipOverride="%SpecialNodeBlackHoleBattleEffect"/>
+    <BinaryModifier TargetProperty="Accuracy"                   Operation="Force"    Left="0.5" BinaryOperation="Multiplication" Right="$(IsntImmuneToSpecialNodes)"  Path="ClassGroup//ClassSalvo" TooltipOverride="%SpecialNodeBlackHoleBattleEffect" SearchValueFromPath="true"/>
     <Modifier TargetProperty="OpponentRecyclingSciencePerCP"    Operation="Addition" Value="20"  Path="ClassGroup"/>
   </SimulationDescriptor>
 
   <!-- Asteroid Field -->
   <SimulationDescriptor Name="ArenaEffectSpecialNodeAsteroidField" Type="ArenaEffect">
-    <Modifier TargetProperty="Accuracy"                         Operation="Percent"   Value="-0.75"  Path="ClassGroup//ClassSalvo,ShortRange"/>
+    <BinaryModifier TargetProperty="Accuracy"                   Operation="Percent"  Left="-0.75" BinaryOperation="Multiplication" Right="$(IsntImmuneToSpecialNodes)" Path="ClassGroup//ClassSalvo,ShortRange"/>
     
     <Modifier TargetProperty="OpponentRecyclingStrategic1PerCP" Operation="Addition" Value="2" Path="ClassGroup"/>
     <Modifier TargetProperty="OpponentRecyclingStrategic2PerCP" Operation="Addition" Value="2" Path="ClassGroup"/>
@@ -25,19 +25,20 @@
 
   <!-- Neutron Stars -->
   <SimulationDescriptor Name="ArenaEffectSpecialNeutronStar"   Type="ArenaEffect">
-    <Modifier TargetProperty="MaximumShield"				        Operation="Force"		Value="0"	Priority="1" Path="ClassGroup//ClassShip"/>
+    <Modifier TargetProperty="MaximumShield"				        Operation="Force"		Value="0"	Priority="1" Path="ClassGroup//ClassShip,!ShipFactionUmbralChoir" TooltipOverride="%SpecialNodeEffectNeutronStarOrbitalBattleEffect"/>
   </SimulationDescriptor>
 
   <!-- Nebula Clouds -->
   <SimulationDescriptor Name="ArenaEffectSpecialNodeSpaceClouds"   Type="ArenaEffect">
-    <Modifier TargetProperty="Accuracy"                     Operation="Percent"   Value="-0.5"  Path="ClassGroup//ClassSalvo,LongRange"/>
-    <Modifier TargetProperty="Accuracy"                     Operation="Percent"   Value="-0.25" Path="ClassGroup//ClassSalvo,MediumRange"/>
+    <BinaryModifier TargetProperty="Accuracy"               Operation="Percent"   Left="-0.5"  BinaryOperation="Multiplication" Right="$(IsntImmuneToSpecialNodes)"  Path="ClassGroup//ClassSalvo,LongRange"/>
+    <BinaryModifier TargetProperty="Accuracy"               Operation="Percent"   Left="-0.25" BinaryOperation="Multiplication" Right="$(IsntImmuneToSpecialNodes)" Path="ClassGroup//ClassSalvo,MediumRange"/>
     <Modifier TargetProperty="Evasion"                      Operation="Addition"  Value="0.2"   Path="ClassGroup//ClassShip"/>
   </SimulationDescriptor>
 
   <!-- Collapsing Star -->
   <SimulationDescriptor Name="ArenaEffectSpecialNodeEffectCollapsingStar"   Type="ArenaEffect">
-    <Modifier TargetProperty="ManpowerPercentKillPerPhase"  Operation="Addition"  Value="0.1"  Path="ClassGroup//ClassShip"/>
+    <Modifier TargetProperty="ManpowerPercentKillPerPhase"  Operation="Addition"  Value="0.1"  Path="ClassGroup//ClassShip,!ShipFactionUmbralChoir" TooltipOverride="%SpecialNodeEffectCollapsingStarOrbitalBattleEffect1"/>
+    <Modifier TargetProperty="HullPlatingAbsorption"        Operation="Force"     Value="0"    Path="ClassGroup//ClassShip,!ShipFactionUmbralChoir" TooltipOverride="%SpecialNodeEffectCollapsingStarOrbitalBattleEffect2"/>
   </SimulationDescriptor>
 
   <!-- Rejuvenation Field -->
