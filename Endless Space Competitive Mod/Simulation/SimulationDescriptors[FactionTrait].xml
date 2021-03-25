@@ -30,6 +30,42 @@
     <Modifier TargetProperty="EmpireEmpirePoint" Operation="Percent" Value="1" Path="ClassEmpire"/>
   </SimulationDescriptor>
 
+  <SimulationDescriptor Name="AffinityGameplayUmbralChoir" Type="AffinityGameplay">
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"     Operation="Force"       Value="0"   Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeForest"    TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"     Operation="Force"       Value="0"   Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeTerran"    TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"     Operation="Force"       Value="0"   Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeMonsoon"   TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"     Operation="Force"       Value="0"   Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeOcean"     TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"     Operation="Force"       Value="0"   Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeAtoll"     TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"     Operation="Force"       Value="0"   Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeBoreal"    TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"     Operation="Force"       Value="0"   Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeJungle"    TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"     Operation="Force"       Value="0"   Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeFake"      TooltipHidden="true"/>
+
+    <!-- System status modifiers. -->
+    <Modifier TargetProperty="HasGhostSystems"              Operation="Force"       Value="1"   Path="ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="HasHiddenHomeSystem"          Operation="Force"       Value="1"   Path="ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="IsHiddenSystem"               Operation="Addition"    Value="1"   Path="ClassEmpire/ClassColonizedStarSystem,HomeSystem,!ColonizedStarSystemStateGhost" TooltipHidden="true"/>
+    <Modifier TargetProperty="FleetsSpawnInvisible"         Operation="Force"       Value="1"   Path="ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumPopulation"            Operation="Addition"    Value="3"   Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeDestroyed" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumPopulation"            Operation="Addition"    Value="2"   Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeDestroyedGas" TooltipHidden="true"/>
+    <Modifier TargetProperty="HasObliteratorDefense"        Operation="Force"       Value="0"   Path="ClassEmpire/ClassColonizedStarSystem" Priority="10" TooltipHidden="true"/>
+    <Modifier TargetProperty="CanBeTargetedByInfluenceEffects"      Operation="Force"       Value="0"   Path="ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateColony" TooltipHidden="true"/>
+
+    <!-- No influence at all. -->
+    <Modifier TargetProperty="SystemInfluenceRadius"     	        Operation="Force"		Value="0"		Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true" Priority="10"/>
+    <Modifier TargetProperty="SystemNextInfluenceRadiusEstimation"  Operation="Force"		Value="0"		Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true" Priority="10"/>
+    <Modifier TargetProperty="CanBeConverted"                       Operation="Force"		Value="0"		Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
+
+    <!-- Only 1 HQ (on the colony), and one subsidiary per Haunt (built automatically). -->
+    <Modifier TargetProperty="MaximumNumberOfTradingCompanyHeadquarters" Operation="Force" Value="1" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumNumberOfTradingCompanySubsidiaries" Operation="Force" Value="$(ColonizedStarSystemStateGhostCount)" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="KillForeignPopulationOnInvade" Operation="Force" Value="1" TooltipHidden="true"/>
+    
+    <!-- ESG -->
+    <Modifier TargetProperty="IsntImmuneToSpecialNodes"      Operation="Force" Value="0" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+
   <!-- Pilgrims Assimilation Trait -->
   <SimulationDescriptor Name="FactionTraitMinorExplorers01" Type="FactionTraitMinor">
     <Modifier TargetProperty="ProbeSpeed" Operation="Percent" Value="0.5" Path="ClassEmpire"/>
@@ -113,7 +149,7 @@
 
   <!--Pulsos-->
   <SimulationDescriptor Name="FactionTraitMinorCuriousThinkers01" Type="FactionTraitMinor">
-        <BinaryModifier TargetProperty="SystemProduction"                 Operation="Addition" Left="0.5" BinaryOperation="Multiplication" Right="$(CuriositiesDiscovered)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+        <BinaryModifier TargetProperty="SystemProduction"                 Operation="Addition" Left="0.5" BinaryOperation="Multiplication" Right="$(CuriositiesDiscovered)" Path="ClassEmpire/ClassColonizedStarSystem,!ColonizedStarSystemStateColony"/>
         <Modifier TargetProperty="MinorTraitsAssimilated"                 Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
     </SimulationDescriptor>
 
@@ -182,13 +218,6 @@
     <Modifier TargetProperty="Damage" Operation="Percent" Value="0.1" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
   </SimulationDescriptor>
 
-  <!-- Nakalim -->
-  <SimulationDescriptor Name="FactionTraitHeroAssignmentTemplars" Type="FactionTrait">
-    <Modifier TargetProperty="AssignmentCooldownDecrementPerTurn"    Operation="Percent"  Value="0.5" Path="ClassEmpire/ClassGarrison/ClassHero"/>
-    <Modifier TargetProperty="AssignmentCooldownDecrementPerTurn"    Operation="Percent"  Value="0.5" Path="ClassEmpire/ClassColonizedStarSystem/ClassHero" TooltipHidden="true"/>
-    <Modifier TargetProperty="AssignmentCooldownDecrementPerTurn"    Operation="Percent"  Value="0.5" Path="ClassEmpire/ClassHero" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
   <!-- Academy -->
   <SimulationDescriptor Name="FactionTraitAcademyBonuses" Type="FactionTrait">
     <Modifier TargetProperty="PlanetRawDust" Operation="Addition" Value="5" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" />
@@ -206,12 +235,6 @@
   
   <SimulationDescriptor Name="FactionTraitIncreasedBoostCost2" Type="FactionTrait">
     <Modifier TargetProperty="PopulationBoostCostMultiplier"             Operation="Percent"     Value="1"    Path="ClassEmpire"     TooltipHidden="false"/>
-  </SimulationDescriptor>
-
-  <!-- Empire Points per CP Destroyed -->
-  <SimulationDescriptor Name="FactionTraitEmpirePointPerCPDestroyed" Type="FactionTrait">
-    <Modifier TargetProperty="AdditionalOpponentRecyclingEmpirePointPerCP"          Operation="Addition"     Value="10"  Path="ClassEmpire" TooltipHidden="true"/>
-    <Modifier TargetProperty="AdditionalOpponentRecyclingEmpirePointPerCP"          Operation="Addition"     Value="10"  Path="../ClassEmpire/ClassGarrisonFleet/ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <!--RB-->

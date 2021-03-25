@@ -112,9 +112,8 @@
     <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionDefense1"/>
   </StarSystemImprovementDefinition>
   
-  <!-- Build Population -->
-  <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementCreateMajorPopulation" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt"
-                                                  PopulationDestination="Major"  PopulationToTransformCount="1" CreateIfNotAvailable="true">
+  <!-- Riftborn Build Population -->
+  <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementCreateMajorPopulation" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt" PopulationDestination="Major"  PopulationToTransformCount="1" CreateIfNotAvailable="true">
     <AIGain RessourceName="PopulationGain" Inverted="false"></AIGain>
     <SupervisorGain Name="Industry" Weight="0.15"/>
     <SupervisorGain Name="Food"     Weight="0.15"/>
@@ -154,6 +153,32 @@
     <SimulationDescriptorReference Name="StarSystemImprovementCreateMajorPopulation"/>
     <NextUpgradeName>StarSystemImprovementQuestTimeLords05</NextUpgradeName>
     <NextUpgradeName>StarSystemImprovementQuestTimeLords07</NextUpgradeName>
+  </StarSystemPopulationTransformImprovementDefinition>
+
+  <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementQuestTimeLords05" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt" PopulationDestination="Major" PopulationToTransformCount="1" CreateIfNotAvailable="true">
+    <AIGain RessourceName="PopulationGain" Inverted="false"></AIGain>
+    <Tags>NoBuyout</Tags>
+    <QueuedSimulationDescriptorReference Name="QueuedDescriptorIncreaseVirtualPopulation"/>
+    <CustomCost ResourceName="SystemProduction">((50 + Property(StockLocation,@ClassColonizedStarSystem,MajorPopulationCount) * 50) * Property(StockLocation, @../ClassEmpire, GameSpeedMultiplier, true))*0.5</CustomCost>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">ClassColonizedStarSystem</PathPrerequisite>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire/PopulationMajor,ClassPopulationEmpireAffinityTimeLords</PathPrerequisite>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire,EmpireImprovementQuestTimeLords05</PathPrerequisite>
+    <InterpreterPrerequisite Flags="MaximumPopulationSystem,Enqueue">(Property(Context,@ClassColonizedStarSystem, MaximumPopulation) ge (1 + Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))</InterpreterPrerequisite>
+    <InterpreterPrerequisite Flags="Prerequisite">(Property(Context,@ClassColonizedStarSystem, MaximumPopulation) ge (Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))</InterpreterPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementCreateMajorPopulation"/>
+  </StarSystemPopulationTransformImprovementDefinition>
+  
+  <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementQuestTimeLords07" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt" PopulationDestination="Major" PopulationToTransformCount="1" CreateIfNotAvailable="true">
+    <AIGain RessourceName="PopulationGain" Inverted="false"></AIGain>
+    <Tags>NoBuyout</Tags>
+    <QueuedSimulationDescriptorReference Name="QueuedDescriptorIncreaseVirtualPopulation"/>
+    <CustomCost ResourceName="SystemProduction">(50 + Property(StockLocation,@ClassColonizedStarSystem,MajorPopulationCount) * 50) * Property(StockLocation, @../ClassEmpire, GameSpeedMultiplier, true)*0.75</CustomCost>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">ClassColonizedStarSystem</PathPrerequisite>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire/PopulationMajor,ClassPopulationEmpireAffinityTimeLords</PathPrerequisite>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire,EmpireImprovementQuestTimeLords07</PathPrerequisite>
+    <InterpreterPrerequisite Flags="MaximumPopulationSystem,Enqueue">(Property(Context,@ClassColonizedStarSystem, MaximumPopulation) ge (1 + Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))</InterpreterPrerequisite>
+    <InterpreterPrerequisite Flags="Prerequisite">(Property(Context,@ClassColonizedStarSystem, MaximumPopulation) ge (Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))</InterpreterPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementCreateMajorPopulation"/>
   </StarSystemPopulationTransformImprovementDefinition>
 
   <!-- THE VAULT OF GOVERNANCE -->
