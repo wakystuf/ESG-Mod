@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
   <SimulationDescriptor Name="ClassPopulationPlanet" Type="ClassPopulation">
-    <!-- Changes from ESCM -->
+    <!-- ESG -->
     <Property Name="PopulationSystemLevel" BaseValue="1"/>
 
     <Property Name="PlanetIsTiny"              BaseValue="0" MaxValue="1"/>
@@ -9,7 +9,7 @@
     <Property Name="PlanetIsLarge"             BaseValue="0" MaxValue="1"/>
     <Property Name="PlanetIsHuge"              BaseValue="0" MaxValue="1"/>
 
-    <!-- End of Changes -->
+    <!-- Vanilla -->
     <Property Name="RawPopulationFood"          MinValue="Negative"/>
     <Property Name="RawPopulationIndustry"      MinValue="Negative"/>
     <Property Name="RawPopulationDust"          MinValue="Negative"/>
@@ -333,5 +333,19 @@
     <BinaryModifier TargetProperty="GroundBattleBombardmentAttackerDamages" Operation="Addition"    Left="$(GroundBattleBombardmentAttackerDamagesBonusFromCollection)" BinaryOperation="Multiplication" Right="$(PopulationCountSuperiorToZero)" Path="./ClassColonizedStarSystem"/>
     <BinaryModifier TargetProperty="DepositValue"							Operation="Percent"     Left="$(LuxuryBonusFromCollection)"                                 BinaryOperation="Multiplication" Right="$(PopulationCountSuperiorToZero)" Path="./ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeLuxury" />
     <BinaryModifier TargetProperty="VisionRange"							Operation="Addition"    Left="$(VisionRangeBonusFromCollection)"                            BinaryOperation="Multiplication" Right="$(PopulationCountSuperiorToZero)" Path="./ClassColonizedStarSystem" />
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassPopulationEmpire" Type="ClassPopulation">
+    <Property Name="PopulationGrowthScoreModifier" BaseValue="1"/>
+    <Property Name="CanBeBoosted" BaseValue="1"/>
+    <Property Name="PopulationEmpireDepletedPlanetCount"  BaseValue="0" MinValue="0"/>
+
+    <Property Name="EmpireProcessingPowerAllocated" />
+
+    <Modifier TargetProperty="Population" Operation="Addition" Value="$(PopulationCount)" Path="./ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="VampirilisPopulation"     Operation="Addition" Value="$(PopulationCount)" Path="ClassPopulationEmpireAffinityVampirilis/./ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="NonVampirilisPopulation"  Operation="Addition" Value="$(PopulationCount)" Path="!ClassPopulationEmpireAffinityVampirilis/./ClassEmpire" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="PopulationTypeCount"          Operation="Addition"       Value="1"     Path="./ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
 </Datatable>
