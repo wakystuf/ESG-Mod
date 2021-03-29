@@ -191,4 +191,54 @@
       <BattleEffectReference Name="Ship_AddBattleArmorDestructionPercent"/>
     </BattleEffectApplicationContext>
   </BattleAction>
+
+	<BattleAction Name="Group_ComputeShipExperience">
+		<EventPrerequisite EventType="BattleFinalization">
+		</EventPrerequisite>
+		<BattleEffectApplicationContext>
+			<TargetFilter>
+				<EntityFilter EntityRole="Owner" EntityType="Group"/>
+				<SubEntityFilter SelectionMethod="All">
+					<EntityFilter EntityType="Ship" EntityTags="SameGroup"/>
+				</SubEntityFilter>
+			</TargetFilter>
+			<BattleEffectReference Name="Ship_IncreaseDestroyedManpowerForEssenceRecycling"/>
+		</BattleEffectApplicationContext>
+		<BattleEffectApplicationContext>
+			<TargetFilter>
+				<EntityFilter EntityRole="Owner" EntityType="Group"/>
+			</TargetFilter>
+			<BattleEffectReference Name="Group_ApplyShipExperienceBonus"/>
+			<BattleEffectReference Name="Group_PlayerDustPerAliveCP"/>
+			<BattleEffectReference Name="Group_OpponentRecyclingDustGainReward"/>
+			<BattleEffectReference Name="Group_OpponentRecyclingManpowerGainReward"/>
+			<BattleEffectReference Name="Group_OpponentRecyclingScienceGainReward"/>
+			<BattleEffectReference Name="Group_OpponentRecyclingEmpirePointGainReward"/>
+			<BattleEffectReference Name="Group_OpponentRecyclingEssencePerCPGainReward"/>
+			<BattleEffectReference Name="Group_OpponentRecyclingStrategic1GainReward"/>
+			<BattleEffectReference Name="Group_OpponentRecyclingStrategic2GainReward"/>
+			<BattleEffectReference Name="Group_OpponentRecyclingEssenceGainReward"/>
+			<BattleEffectReference Name="Group_ManpowerLostTransfer"/>
+		</BattleEffectApplicationContext>
+		<BattleEffectApplicationContext>
+			<TargetFilter>
+				<EntityFilter EntityRole="Owner" EntityType="Group">
+					<PathPrerequisite Flags="Prerequisite, Discard">ClassGroup//ClassShip,ShipRoleHero</PathPrerequisite>
+				</EntityFilter>
+			</TargetFilter>
+			<BattleEffectReference Name="Group_SetEarnedExperienceForHero"/>
+		</BattleEffectApplicationContext>
+		<BattleEffectApplicationContext>
+			<TargetFilter>
+				<EntityFilter EntityRole="Owner" EntityType="Group"/>
+				<SubEntityFilter SelectionMethod="All">
+					<EntityFilter EntityType="Ship" EntityTags="SameGroup"/>
+				</SubEntityFilter>
+			</TargetFilter>
+			<BattleEffectReference Name="Ship_SetShipExperienceDefault"/>
+			<BattleEffectReference Name="Ship_KillManpowerAfterPhase"/>
+			<BattleEffectReference Name="Ship_AddBattleMovementGain"/>
+			<BattleEffectReference Name="Ship_AddBattleActionGain"/>
+		</BattleEffectApplicationContext>
+	</BattleAction>
 </Datatable>
