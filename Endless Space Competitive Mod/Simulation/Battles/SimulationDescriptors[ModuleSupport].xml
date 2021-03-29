@@ -503,12 +503,12 @@
   <!-- ********************* -->
 
   <SimulationDescriptor Name="ModuleSupportRecycling1"                Type="ModuleSupportRecycling">
-    <Modifier TargetProperty="OpponentRecyclingDustPerCP" Operation="Addition" Value="20" Path="ModuleSupportRecycling"/>
+    <Modifier TargetProperty="OpponentRecyclingDustPerCP" Operation="Addition" Value="30" Path="ModuleSupportRecycling"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleSupportRecycling2Strategic3"      Type="ModuleSupportRecycling">
-    <Modifier TargetProperty="OpponentRecyclingDustPerCP" Operation="Addition" Value="40" Path="ModuleSupportRecycling"/>
-  </SimulationDescriptor>
+    <Modifier TargetProperty="OpponentRecyclingDustPerCP" Operation="Addition" Value="60" Path="ModuleSupportRecycling"/>
+  </SimulationDescriptor> 
 
   <!-- ********************************** -->
   <!-- *****      REPAIR MODULES     **** -->
@@ -594,6 +594,17 @@
     <Modifier TargetProperty="EMPFlotillaDefense" Operation="Addition" Value="0.25" Path="ClassModule" TooltipHidden="true"/>
   </SimulationDescriptor>
 
+  <!--EMP Ship only-->
+  <SimulationDescriptor Name="ModuleSupportEMPShieldDefense1Strategic3" Type="ModuleSupport">
+    <Modifier TargetProperty="EMPShieldDefense" Operation="Addition" Value="0.5" Path="ClassModule" TooltipHidden="true"/>
+    <Modifier TargetProperty="ShieldAbsorption"                 Operation="Addition" Value="100"    Path="ModuleSupportEMPShieldDefense"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportEMPWeaponDefense1Strategic4" Type="ModuleSupport">
+    <Modifier TargetProperty="EMPWeaponDefense" Operation="Addition" Value="0.5" Path="ClassModule" TooltipHidden="true"/>
+    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.1" Path="ModuleSupportEMPWeaponDefense"/>
+  </SimulationDescriptor>
+
   <!--################################-->
   <!--###  Boarding Pod Defense    ###-->
   <!--################################-->
@@ -651,4 +662,22 @@
 
 		<Modifier TargetProperty="MoraleBonus"            Operation="Percent"   Value="$(FlotillaMoraleBonusPercent)"  Path="../ClassGroup"     />
 	</SimulationDescriptor>
+
+  <!-- ********************* -->
+  <!-- ** JOURNALIST MODULES ** -->
+  <!-- ********************* -->
+  <SimulationDescriptor Name="ModuleSupportJournalist"                   Type="ModuleSupportJournalist">
+    <Property Name="OpponentRecyclingEmpirePointPerCP"                BaseValue="0"/>
+
+    <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP"      Operation="Multiplication" Value="$(Multiplier)" />
+    <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP"      Operation="Addition" Value="$(OpponentRecyclingEmpirePointPerCP)"       Path="../ClassShip"     Priority="1"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportJournalist1"                  Type="ModuleSupportJournalist">
+    <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP" Operation="Addition" Value="20" Path="ModuleSupportJournalist"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportJournalist2Strategic5"        Type="ModuleSupportJournalist">
+    <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP" Operation="Addition" Value="40" Path="ModuleSupportJournalist"/>
+  </SimulationDescriptor>
 </Datatable>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/ResourceConverterDefinition.xsd">
+  <ResourceConverterDefinition ResourceName="SystemProduction">
+    <ToConverter To="Buyout">
+      <!-- (x -> money) ^ 1.2 -->
+      <InterpreterModifier>$(Input)</InterpreterModifier>
+    </ToConverter>
+    <ToConverter To="Retrofit">
+      <InterpreterModifier>($(Input)) * Property(StockLocation,@../ClassEmpire, GameSpeedMultiplier) * Property(StockLocation, @../ClassEmpire, DustInflation)</InterpreterModifier>
+    </ToConverter>
+    <ToConverter To="ScrapShip">
+      <!-- ((x -> money) ^ 1.2) * modifier * health ratio -->
+      <!--Sale is another formula-->
+      <InterpreterModifier>($(Input)) * 0.15 * Property(StockLocation, @../ClassEmpire, DustInflation)</InterpreterModifier>
+    </ToConverter>
+    <ToConverter To="ScrapImprovement">
+      <!-- ((x -> money) ^ 1.2) * modifier -->
+      <InterpreterModifier>Property(ScrappedElement, @../ClassEmpire, CanSellImprovements) * (0.20 * $(Input) * Property(ScrappedElement, @../ClassEmpire, GameSpeedMultiplier)) * Property(ScrappedElement, @../ClassEmpire,ImprovementScrapValueModifier) * Property(StockLocation, @../ClassEmpire, DustInflation)</InterpreterModifier>
+    </ToConverter>
+    <ToConverter To="MoneyGainOnConstructionComplete">
+      <InterpreterModifier>$(Input) * Property(StockLocation, @../ClassEmpire, RatioOfProductionSpentGainedAsMoney)</InterpreterModifier>
+    </ToConverter>
+    <ToConverter To="EmpirePointGainOnConstructionComplete">
+      <InterpreterModifier>$(Input) * Property(StockLocation, @../ClassEmpire, RatioOfProductionSpentGainedAsEmpirePoint)</InterpreterModifier>
+    </ToConverter>
+    <ToConverter To="Refund">
+      <InterpreterModifier>$(Input)</InterpreterModifier>
+    </ToConverter>
+  </ResourceConverterDefinition>
+  
+  <ResourceConverterDefinition ResourceName="Buyout">
+    <ToConverter To="EmpireMoney">
+      <InterpreterModifier>
+        (($(Input)) ^ 1.2125 + 50) * Property(StockLocation, @../ClassEmpire,BuyoutActivated) * Property(StockLocation, @../ClassEmpire, DustInflation)
+      </InterpreterModifier>
+    </ToConverter>
+    <ToConverter To="EmpireEmpirePoint">
+      <InterpreterModifier>
+        <!-- PRODUCTION --> ((($(Input)) ^ 1.1 + 25) * Count(StockLocation, @'ClassColonizedStarSystem')) +
+        <!-- ONE OF THE TWO FORMULAS WILL AUTO CANCEL -->
+        <!-- RESEARCH   --> ((($(Input)) ^ 1.01 + 25) * Count(StockLocation, @'ClassEmpire'))
+      </InterpreterModifier>
+    </ToConverter>
+    <ToConverter To="MinorEmpireShipMoney">
+      <InterpreterModifier>$(Input) * 1.4</InterpreterModifier>
+    </ToConverter>
+    <ToConverter To="MinorEmpireImprovementMoney">
+      <InterpreterModifier>$(Input)</InterpreterModifier>
+    </ToConverter>
+    <ToConverter To="AcademyEmpireShipMoney">
+      <InterpreterModifier>$(Input) * 1.4</InterpreterModifier>
+    </ToConverter>
+    <ToConverter To="AcademyEmpireImprovementMoney">
+      <InterpreterModifier>$(Input)</InterpreterModifier>
+    </ToConverter>
+    <ToConverter To="MarketplaceEmpireMoney">
+      <InterpreterModifier>$(Input)</InterpreterModifier>
+    </ToConverter>
+    <ToConverter To="MarketplaceEmpireEmpirePoint">
+      <InterpreterModifier>$(Input)</InterpreterModifier>
+    </ToConverter>
+  </ResourceConverterDefinition>
+</Datatable>
