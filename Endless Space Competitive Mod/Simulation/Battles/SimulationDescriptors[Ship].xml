@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
   <SimulationDescriptor Name="ClassShip" Type="Class">
+		<!-- ESG -->
+		<Property Name="OpponentRecyclingManpowerPerCP" 	  BaseValue="0"/>
+		
+		<!-- Vanilla -->
     <!-- Base values -->
     <Property Name="CommandPoints"                  BaseValue="0"/>
     <Property Name="GarrisonMoneyUpkeep"            BaseValue="0"/>
@@ -243,8 +247,18 @@
     <Property Name="VisionStrength"              BaseValue="0"/>
     <Property Name="AntiVisionStrengthForModule" BaseValue="0"/>
 
-    <!-- *** MODIFIERS ***-->
-    <!-- Experience Reward (XP granted after space battles if ship is killed) -->
+    <!--ESG Properties-->
+    <Property Name="FlotillaFlakDamageModifier"               BaseValue="0" MinValue="Negative"/>
+    <Property Name="FlotillaFlakLongRangePenalty"             BaseValue="0" MinValue="Negative"/>
+    <Property Name="FlotillaFlakMediumRangePenalty"           BaseValue="0" MinValue="Negative"/>
+    <Property Name="FlotillaFlakShortRangePenalty"            BaseValue="0" MinValue="Negative"/>
+    <Property Name="FlotillaManpowerDamageOverTimeIncrease"   BaseValue="0"/>
+    <Property Name="EMPFlotillaDefense"                       BaseValue="0"/>
+    <Property Name="MaximumShieldCapForFlotilla"              BaseValue="0"/>
+    <Property Name="ShieldAbsorptionForFlotilla"              BaseValue="0"/>
+    <Property Name="IsntImmuneToSpecialNodes"                 BaseValue="1"/>
+    
+    <!-- *** MODIFIERS ***-->  
     <BinaryModifier TargetProperty="ExperienceRewardFromLevel"   Operation="Addition"           Left="$(Level)"                         BinaryOperation="Multiplication"    Right="0.2"/>
     <BinaryModifier TargetProperty="ExperienceReward"            Operation="Multiplication"     Left="$(ExperienceRewardFromLevel)"     BinaryOperation="Multiplication"    Right="$(CommandPoints)"/>
     <!-- Compute passive xp value for the ship for admirals : shipCP * (1 + nbStratModules/10)-->
@@ -342,7 +356,7 @@
     <!-- Trade -->
     <BinaryModifier TargetProperty="ShipTradingRouteBlockadePower" Operation="Addition" Left="$(MilitaryPower)" BinaryOperation="Division" Right="2000" />
     <Modifier TargetProperty="TradingRouteBlockadePower" Operation="Addition" Value="$(ShipTradingRouteBlockadePower)" Path="./ClassGarrisonFleet" />
-    <Modifier TargetProperty="TradeValue" Operation="Addition" Value="$(RelativeMilitaryPower)"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(RelativeMilitaryPower)" BinaryOperation="Multiplication" Right="0.5"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ShipRoleRootCreator"      Type="ShipRole">
@@ -400,57 +414,57 @@
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ShipLevel02" Type="ShipLevel" IsSerializable="false">
-    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.24" Path="ClassShip/ClassSectionCore"/>
-    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.24" Path="ClassShip"/>
-    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="0.24" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
+    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.05" Path="ClassShip/ClassSectionCore"/>
+    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.05" Path="ClassShip"/>
+    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="0.05" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ShipLevel03" Type="ShipLevel" IsSerializable="false">
-    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.45" Path="ClassShip/ClassSectionCore"/>
-    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.45" Path="ClassShip"/>
-    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="0.45" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
+    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.1" Path="ClassShip/ClassSectionCore"/>
+    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.1" Path="ClassShip"/>
+    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="0.1" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ShipLevel04" Type="ShipLevel" IsSerializable="false">
-    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.65" Path="ClassShip/ClassSectionCore"/>
-    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.65" Path="ClassShip"/>
-    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="0.65" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
+    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.15" Path="ClassShip/ClassSectionCore"/>
+    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.15" Path="ClassShip"/>
+    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="0.15" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ShipLevel05" Type="ShipLevel" IsSerializable="false">
-    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.83" Path="ClassShip/ClassSectionCore"/>
-    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.83" Path="ClassShip"/>
-    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="0.83" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
+    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.2" Path="ClassShip/ClassSectionCore"/>
+    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.2" Path="ClassShip"/>
+    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="0.2" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ShipLevel06" Type="ShipLevel" IsSerializable="false">
-    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="1.00" Path="ClassShip/ClassSectionCore"/>
-    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="1.00" Path="ClassShip"/>
-    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="1.00" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
+    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.25" Path="ClassShip/ClassSectionCore"/>
+    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.25" Path="ClassShip"/>
+    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="0.25" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ShipLevel07" Type="ShipLevel" IsSerializable="false">
-    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="1.15" Path="ClassShip/ClassSectionCore"/>
-    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="1.15" Path="ClassShip"/>
-    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="1.15" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
+    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.3" Path="ClassShip/ClassSectionCore"/>
+    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.3" Path="ClassShip"/>
+    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="0.3" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ShipLevel08" Type="ShipLevel" IsSerializable="false">
-    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="1.30" Path="ClassShip/ClassSectionCore"/>
-    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="1.30" Path="ClassShip"/>
-    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="1.30" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
+    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.35" Path="ClassShip/ClassSectionCore"/>
+    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.35" Path="ClassShip"/>
+    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="0.35" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ShipLevel09" Type="ShipLevel" IsSerializable="false">
-    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="1.43" Path="ClassShip/ClassSectionCore"/>
-    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="1.43" Path="ClassShip"/>
-    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="1.43" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
+    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.4" Path="ClassShip/ClassSectionCore"/>
+    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.4" Path="ClassShip"/>
+    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="0.4" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ShipLevel10" Type="ShipLevel" IsSerializable="false">
-    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="1.55" Path="ClassShip/ClassSectionCore"/>
-    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="1.55" Path="ClassShip"/>
-    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="1.55" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
+    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.5" Path="ClassShip/ClassSectionCore"/>
+    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.5" Path="ClassShip"/>
+    <Modifier TargetProperty="FlotillaMaximumShield" Operation="Percent" Value="0.5" Path="ClassShip//ClassModuleSupport,ModuleSupportFlotillaShield"/>
   </SimulationDescriptor>
 
   <!-- Remove invisible ship bonuses -->
@@ -481,4 +495,42 @@
   <!-- Module Abilities -->
   <SimulationDescriptor Name="ClassModuleIgnoresArmor"      Type="ClassModuleIgnoresDefenses"/>
   <SimulationDescriptor Name="ClassModuleIgnoresShields"    Type="ClassModuleIgnoresDefenses"/>
+
+  <!-- ******************** -->
+  <!-- **   SHIP SIZES   ** -->
+  <!-- ******************** -->
+  <SimulationDescriptor Name="ShipSizeMothership"  Type="ShipSize">
+    <Modifier  TargetProperty="MaximumEmpireManpowerStock"          Operation="Addition"  Value="200" Path="../ClassEmpire" />
+
+    <Modifier TargetProperty="VisionRange"      Operation="Addition"  Value="3"        Path="ClassShip"/>
+    <Modifier TargetProperty="CommandPoints"        Operation="Addition"    Value="4"     Path="ClassShip"/>
+    <Modifier TargetProperty="ShieldRadius"         Operation="Addition"    Value="4"     Path="ClassShip"/>
+    <Modifier TargetProperty="ScrapPriority"        Operation="Subtraction" Value="5"     Path="ClassShip"/>
+    <Modifier TargetProperty="VisualImportanceScore" Operation="Addition" Value="500"     Path="ClassShip"/>
+    <Modifier TargetProperty="HullWeakness"         Operation="Addition" Value="600"     Path="ClassShip"/>
+    <Modifier TargetProperty="SizeDamageMultiplierForSquadron" Operation="Addition" Value="1" Path="ClassShip" TooltipHidden="true"/>
+    <!--<Modifier TargetProperty="Evasion"              Operation="Addition"  Value="-0.1"   Path="ClassShip"/>-->
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ShipSizeLarge"  Type="ShipSize">
+    <Modifier TargetProperty="VisionRange"      Operation="Addition"  Value="1"        Path="ClassShip"/>
+    <Modifier TargetProperty="CommandPoints"        Operation="Addition"    Value="6"     Path="ClassShip"/>
+    <Modifier TargetProperty="ShieldRadius"         Operation="Addition"    Value="2.5"     Path="ClassShip"/>
+    <Modifier TargetProperty="ScrapPriority"        Operation="Subtraction" Value="2"     Path="ClassShip"/>
+    <Modifier TargetProperty="VisualImportanceScore" Operation="Addition" Value="100"     Path="ClassShip"/>
+    <Modifier TargetProperty="HullWeakness"         Operation="Addition" Value="600"     Path="ClassShip"/>
+    <Modifier TargetProperty="SizeDamageMultiplierForSquadron" Operation="Addition" Value="1" Path="ClassShip" TooltipHidden="true"/>
+    <!--<Modifier TargetProperty="Evasion"              Operation="Addition"  Value="-0.1"   Path="ClassShip"/>-->
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ShipSizeMedium" Type="ShipSize">
+    <Modifier TargetProperty="VisionRange"      Operation="Addition"  Value="0.5"        Path="ClassShip"/>
+    <Modifier TargetProperty="CommandPoints"        Operation="Addition"    Value="3"     Path="ClassShip"/>
+    <Modifier TargetProperty="ShieldRadius"         Operation="Addition"    Value="1"   Path="ClassShip"/>
+    <Modifier TargetProperty="ScrapPriority"        Operation="Addition"    Value="2"     Path="ClassShip"/>
+    <Modifier TargetProperty="VisualImportanceScore" Operation="Addition" Value="50"     Path="ClassShip"/>
+    <Modifier TargetProperty="HullWeakness"         Operation="Addition" Value="200"     Path="ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ShipRoleBehemoth" Type="ShipRole"/>
 </Datatable>

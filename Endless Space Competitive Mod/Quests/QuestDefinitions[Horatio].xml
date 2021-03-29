@@ -1,0 +1,1947 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+
+    <!-- ############################################# -->
+    <!-- ######### HORATIO QUEST - CHAPTER 0 ######### -->
+    <!-- ############################################# -->
+    
+    <QuestDefinition Name="HoratioQuest-Chapter0" Category="MajorQuest" SubCategory="Horatio">      
+
+        <!--============ TAGS ============-->
+        
+        <Tags>BeginTurn,Hidden</Tags>        
+
+        <!--============ CONTEXT ============-->
+        
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+           
+            <Var VarName="$HomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>
+                        <PathPrerequisite Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+            <Var VarName="$QuestSystem" IsGlobal="true" AutoLockTargets="true">
+                <First>
+                    <From Source="$AllStarSystems">
+                        <OrderBy>
+                            <SortSystemByDistance OriginVarName="$HomeSystem" SortBy="Nearest" MinimumDistance="1" MinimumCandidateCount="1" ConsiderFreeMovement="true"/>
+                        </OrderBy>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$DefinitionName" StringValue="QuestNodeHoratio"/>          
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityHoratio,PopulationMajor</PathPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Objective_Fake">
+                        <Sequence>
+                            <Action_ApplyStarSystemDefinition>
+                                <Input_DefinitionName VarName="$DefinitionName"/>
+                                <Input_StarSystemNode VarName="$QuestSystem"/>
+                            </Action_ApplyStarSystemDefinition>                           
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter1.Part1-Summary</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    
+    <!-- ############################################# -->
+    <!-- ######### HORATIO QUEST - CHAPTER 1 ######### -->
+    <!-- ############################################# -->
+
+    <QuestDefinition Name="HoratioQuest-Chapter1.Part1-Summary" Category="MajorQuest" SubCategory="Horatio" MinimumTurn="5">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn,HoratioQuest-Chapter1.Part1-Summary</Tags>
+        
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>           
+            <Var VarName="$IAEmpire">
+                <From Source="$LesserEmpire"/>
+            </Var>
+
+            <Var VarName="$QuestSystem" IsGlobal="true"/>
+            <Var VarName="$QuestPlanet" IsGlobal="true">
+                <Any>
+                    <From Source="$QuestSystem.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$HoratioPopulation" StringValue="AffinityHoratio"/>
+            <Var VarName="$Expression"        StringValue="Property(Context, AllLuxuriesStock) ge $(Amount02Objective)"/>
+
+            <Var VarName="$PoliticalEffectEcologist"       StringValue="PopulationEventHoratio01-Ecologist"/>
+            <Var VarName="$PoliticalEffectReligious"       StringValue="PopulationEventHoratio01-Religious"/>
+            <Var VarName="$PoliticalEffectIndustrialist"   StringValue="PopulationEventHoratio01-Industrialist"/>
+            <Var VarName="$ColonizedStarSystem" IsGlobal="true"/>
+            <Var VarName="$ColonizedStarSystemGUID"/>           
+            <Var VarName="$SystemControllerName" StringValue="%HoratioQuest-LesserEmpireName01"/>
+
+            <Var VarName="$Amount01" IntValue="4"/>
+            
+            <Var VarName="$PopulationAffinity" StringValue="AffinityEyders"/>
+
+            <InterpretedVar VarName="$Amount01Start" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityHoratio', PopulationCount, true)</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount01Objective" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityHoratio', PopulationCount, true) + 10</Expression>
+            </InterpretedVar>
+            <Var VarName="$Expression1" StringValue="Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityHoratio', PopulationCount, true)"/>
+
+            <InterpretedVar VarName="$Amount02Start" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire', AllLuxuriesStock)</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount02Objective" Target="$(Empire)">
+                <Expression>Min(Property(Context, @'ClassEmpire', AllLuxuriesStock) + 50, (999*6))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Expression2" StringValue="Property(Context, @'ClassEmpire', AllLuxuriesStock)"/>
+
+            <Var VarName="$MinimumAmount03" IntValue="1"/> 
+            <Var VarName="$MinimumAmount04" IntValue="100"/>
+            <Var VarName="$MinimumAmount05" IntValue="60"/>
+            <Var VarName="$MinimumAmount06" IntValue="5"/>
+            <Var VarName="$MinimumAmount07" IntValue="150"/>
+            <Var VarName="$Ships"/>
+            
+            <Var VarName="$ResourceName01" StringValue="SystemManpower"/>
+            
+            <Var VarName="$Descriptor01" StringValue="ManpowerStockIncreased"/>
+            <Var VarName="$Descriptor02" StringValue="CannotBeDestroyed"/>
+            <LocalizationVar LocalizationKey="$MinimumAmout01Name"  Source="$Amount01Objective"/>
+            <LocalizationVar LocalizationKey="$MinimumAmout02Name"  Source="$Amount02Objective"/>
+            <LocalizationVar LocalizationKey="$MinimumAmount03Name" Source="$MinimumAmount03"/>
+            <LocalizationVar LocalizationKey="$MinimumAmount04Name" Source="$MinimumAmount04"/>
+            <LocalizationVar LocalizationKey="$MinimumAmount05Name" Source="$MinimumAmount05"/>
+            <LocalizationVar LocalizationKey="$MinimumAmount06Name" Source="$MinimumAmount06"/>
+        </Vars>
+        
+        <!--============ PREREQUISITES ============-->
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityHoratio,PopulationMajor</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassStarSystem,HomeSystem</PathPrerequisite>
+        </Prerequisites>
+
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                    <ChoiceItem ObjectiveSetIndex="2"/>
+                </Choice>
+
+                <!--============ Choice Index 0: Ecologist ============-->
+                <ObjectiveSet>
+                    
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    
+                    <Objective Name="Objective_Ecologist" StartValue="$Amount01Start" EndValue="$Amount01Objective">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression1"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_Colonize>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_Planet VarName="$QuestPlanet"/>
+                                <Output_ColonizedStarSystemGUID VarName="$ColonizedStarSystemGUID"/>
+                            </Action_Colonize>                           
+                            <Decorator_EntityCreated>
+                                <Input_GUID VarName="$ColonizedStarSystemGUID"/>
+                                <Output_Entity VarName="$ColonizedStarSystem"/>
+                            </Decorator_EntityCreated>                          
+                            <Action_RegisterLesserName>
+                                <Input_GUIDs VarName="$ColonizedStarSystemGUID"/>
+                                <Input_Name VarName="$SystemControllerName"/>
+                            </Action_RegisterLesserName>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_TargetEntities VarName="$QuestSystem"/>
+                            </Action_SetInvisibility>
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_System VarName="$QuestSystem"/>
+                                <Input_Amount VarName="$Amount01"/>
+                                <Input_PopulationAffinity VarName="$PopulationAffinity"/>
+                            </Action_SpawnPopulation>
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor01"/>
+                                <Input_Targets VarName="$ColonizedStarSystem"/>
+                            </Action_ApplyDescriptor>
+                            <Action_TransferResource>
+                                <Input_Location VarName="$ColonizedStarSystem"/>
+                                <Input_ResourceName VarName="$ResourceName01"/>
+                                <Input_Amount VarName="$MinimumAmount07"/>
+                            </Action_TransferResource>
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor02"/>
+                                <Input_Targets VarName="$QuestPlanet"/>
+                            </Action_ApplyDescriptor>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter2-Part1-Ecologist</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio01" Picks="1"/>
+                
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: Religious ============-->
+                <ObjectiveSet>
+                    
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    
+                    <Objective Name="Objective_Religious" StartValue="$Amount02Start" EndValue="$Amount02Objective">        
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />                   
+                        <Sequence>                                
+                            <Decorator_BeginTurn>                     
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression2"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>                     
+                        </Sequence>                        
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter2-Part1-Religious</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    
+                    <Reward Droplist="DroplistRewardQuestHoratio02" Picks="1"/>
+
+                </ObjectiveSet>
+
+                <!--============ Choice Index 2: Industrialist ============-->
+                <ObjectiveSet>
+                    
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustrialist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    
+                    <Objective Name="Objective_Industrialist" StartValue="0" EndValue="5">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Loop Count="5">
+                                <!--SHOULD BE IN BEGIN TURN-->
+                                <Decorator_ShipConstructed Initiator="Empire" ProgressionIncrement="1">
+                                    <Condition_ShipStats>
+                                        <Input_ShipList VarName="$Ships"/>
+                                        <Input_MinimumAmount VarName="$MinimumAmount03"/>
+                                        <Input_MinimumDefensiveMilitaryPower VarName="$MinimumAmount04"/>
+                                    </Condition_ShipStats>
+                                    <Output_Ship VarName="$Ships"/>
+                                </Decorator_ShipConstructed>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter2-Part1-Industrialist</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>                    
+
+                    <Reward Droplist="DroplistRewardQuestHoratio03" Picks="1"/>
+                    
+                </ObjectiveSet>
+            </Step>            
+        </Steps>
+    </QuestDefinition>   
+    
+    
+    <!-- ######################################################### -->
+    <!-- ######### HORATIO QUEST - CHAPTER 2 - ECOLOGIST ######### -->
+    <!-- ######################################################### -->
+    
+    <QuestDefinition Name="HoratioQuest-Chapter2-Part1-EcologistSummary" Category="MajorQuest" SubCategory="Horatio" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>HoratioQuest-Chapter2-Part1-Ecologist</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$AllEmpires">
+                <From Source="$MajorEmpires"/>
+            </Var>
+            
+            <Var VarName="$QuestSystem" IsGlobal="true"/>
+            <Var VarName="$QuestPlanet" IsGlobal="true"/>
+            <Var VarName="$Amount02" IntValue="50"/>              
+            <Var VarName="$Marker01"/>                       
+            
+            <Var VarName="$Descriptor02" StringValue="CannotBeDestroyed"/>
+            <Var VarName="$PoliticalEffectEcologist"        StringValue="PopulationEventHoratio02-Ecologist"/>          
+                                   
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+            <LocalizationVar LocalizationKey="$QuestSystemName" Source="$QuestSystem"/>            
+                     
+        </Vars>
+
+        <!--============ OBJECTIVES ============-->
+        <Steps>
+            <Step Name="Step1">                
+                 <Choice DefaultChoiceIndex="0">
+                   <ChoiceItem ObjectiveSetIndex="0">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>  
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                     <ChoiceItem ObjectiveSetIndex="2">
+                         <Prerequisites Target="$(Empire)">
+                             <PathPrerequisite Flags="Prerequisite">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+                         </Prerequisites>
+                     </ChoiceItem>
+                 </Choice>
+
+                <!--============ Ecologist ============-->
+                <ObjectiveSet>                   
+                    <StartActions>
+                         <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist"/>
+                        </Action_TriggerPopulationEvent>                       
+                    </StartActions>
+                    <Objective Name="Objective_Ecologist">
+                        <!-- Invade the system and then raise its approval -->
+						<AIHint Category="Invade" Motivation="1">
+							<Input_Var VarName="$QuestSystem"/>
+						</AIHint>
+                        <Sequence>                           
+                            <Action_AddQuestMarkers RevealsLocation="true">
+                                <Input_Targets VarName="$QuestSystem"/>
+                                <Input_Empires VarName="$CurrentEmpire"/>                                
+                                <Output_Markers VarName="$Marker01"/>
+                            </Action_AddQuestMarkers>
+                            <Decorator_BeginTurn>
+                                <Condition_HasHappiness>                                    
+                                    <Input_Empire VarName="$CurrentEmpire"/>
+                                    <Input_System VarName="$QuestSystem"/>
+                                    <Input_MinimumAmount VarName="$Amount02"/>                                    
+                                </Condition_HasHappiness> 
+                            </Decorator_BeginTurn>                            
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$AllEmpires"/>
+                                <Input_TargetEntities VarName="$QuestSystem"/>
+                            </Action_SetInvisibility>
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor02"/>
+                                <Input_Targets VarName="$QuestPlanet"/>
+                            </Action_ApplyDescriptor>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter3-Ecologist-Religious-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio04" Picks="1"/>
+
+                </ObjectiveSet>
+            
+            <ObjectiveSet>                   
+                    <StartActions>
+                         <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist"/>
+                        </Action_TriggerPopulationEvent>                       
+                    </StartActions>
+                    <Objective Name="Objective_EcologistAlt">
+                        <!-- Invade the system and then raise its approval -->
+						<AIHint Category="Invade" Motivation="1">
+							<Input_Var VarName="$QuestSystem"/>
+						</AIHint>
+                        <Sequence>                           
+                            <Action_AddQuestMarkers RevealsLocation="true">
+                                <Input_Targets VarName="$QuestSystem"/>
+                                <Input_Empires VarName="$CurrentEmpire"/>                                
+                                <Output_Markers VarName="$Marker01"/>
+                            </Action_AddQuestMarkers>
+                            <Decorator_NameChanged>
+                                <Input_Entities VarName="$QuestSystem"/>
+                            </Decorator_NameChanged>                        
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$AllEmpires"/>
+                                <Input_TargetEntities VarName="$QuestSystem"/>
+                            </Action_SetInvisibility>
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor02"/>
+                                <Input_Targets VarName="$QuestPlanet"/>
+                            </Action_ApplyDescriptor>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter3-Ecologist-Religious-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio04" Picks="1"/>
+
+                </ObjectiveSet>
+                
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Ecologist">
+                        <!-- Invade the system -->
+                        <AIHint Category="Invade" Motivation="1">
+                            <Input_Var VarName="$QuestSystem"/>
+                        </AIHint>
+                        <Sequence>
+                            <Action_AddQuestMarkers RevealsLocation="true">
+                                <Input_Targets VarName="$QuestSystem"/>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Output_Markers VarName="$Marker01"/>
+                            </Action_AddQuestMarkers>
+                            <Decorator_BeginTurn>
+                                <Condition_HasSystems>
+                                    <Input_Empires VarName="$CurrentEmpire"/>
+                                    <Input_Systems VarName="$QuestSystem"/>
+                                </Condition_HasSystems>
+                            </Decorator_BeginTurn>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$AllEmpires"/>
+                                <Input_TargetEntities VarName="$QuestSystem"/>
+                            </Action_SetInvisibility>
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor02"/>
+                                <Input_Targets VarName="$QuestPlanet"/>
+                            </Action_ApplyDescriptor>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter3-Ecologist-Religious-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio04" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    
+    <!-- ######################################################### -->
+    <!-- ######### HORATIO QUEST - CHAPTER 2 - RELIGIOUS ######### -->
+    <!-- ######################################################### -->
+    
+    <QuestDefinition Name="HoratioQuest-Chapter2-Part1-ReligiousSummary" Category="MajorQuest" SubCategory="Horatio" MinimumTurn="1">       
+
+        <!--============ TAGS ============-->
+        <Tags>HoratioQuest-Chapter2-Part1-Religious</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <InterpretedVar VarName="$MinimumLevel01" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire//ClassHero', Level) + 2</Expression>
+            </InterpretedVar>
+            
+            <Var VarName="$MinimumAmount01"  IntValue="1"/>
+            <!--<Var VarName="$MinimumLevel01"   IntValue="4"/>--> 
+
+            <Var VarName="$PoliticalEffectReligious"        StringValue="PopulationEventHoratio02-Religious"/>
+
+            <LocalizationVar LocalizationKey="$MinimumAmount01Name" Source="$MinimumAmount01"/>
+            <LocalizationVar LocalizationKey="$MinimumLevel01Name" Source="$MinimumLevel01"/>
+            
+        </Vars>
+
+        <!--============ OBJECTIVES ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <!--============ Religious ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Religious">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_HasHeroes HeroAssignationFilter="System">
+                                    <Input_Empire VarName="$CurrentEmpire"/>
+                                    <Input_MinimumAmount VarName="$MinimumAmount01"/>
+                                    <Input_MinimumLevel VarName="$MinimumLevel01"/>
+                                </Condition_HasHeroes>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter3-Ecologist-Religious-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio04" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    
+    <!-- ############################################################# -->
+    <!-- ######### HORATIO QUEST - CHAPTER 2 - INDUSTRIALIST ######### -->
+    <!-- ############################################################# -->
+    
+    <QuestDefinition Name="HoratioQuest-Chapter2-Part1-IndustrialistSummary" Category="MajorQuest" SubCategory="Horatio" MinimumTurn="1">
+      
+        <!--============ TAGS ============-->
+        <Tags>HoratioQuest-Chapter2-Part1-Industrialist</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$IAEmpire">
+                <From Source="$LesserEmpire"/>
+            </Var>
+            
+            <Var VarName="$HomeSystem">
+                <From Source="$CurrentEmpire.$HomeStarSystem"/>
+            </Var>
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems"/>                  
+            </Var>
+
+            <Var VarName="$ConstellationSystems">                
+                <From Source="$AllStarSystems">
+                    <OrderBy>
+                        <SortSystemByDistance OriginVarName="$HomeSystem" SortBy="Farthest" MinimumDistance="10" MaximumDistance="40" MinimumCandidateCount="3" ConsiderFreeMovement="false"/>
+                    </OrderBy>
+                </From>               
+            </Var>
+            <Var VarName="$StarSystem01">
+                <First>
+                    <From Source="$ConstellationSystems"/>
+                </First>
+            </Var>
+            <Var VarName="$StarSystem02">
+                <First>
+                    <From Source="$ConstellationSystems">
+                        <Where>
+                            <IsNot EntityVarName="$StarSystem01"/>
+                        </Where>
+                    </From>
+                </First>
+            </Var>
+
+            <Var VarName="$HeroDefinitionName" StringValue="HeroQuestHoratio04"/>
+            <Var VarName="$HeroGUID"/>
+            
+            <DroplistVar VarName="$FleetToSpawn01" Droplist="DroplistSpawnHoratioQuestFleet01"/>
+            <DroplistVar VarName="$FleetToSpawn02" Droplist="DroplistSpawnHoratioQuestFleet02"/>
+            <Var VarName="$FleetToSpawnGUID01"/>
+            <Var VarName="$FleetToSpawnGUID02"/>
+            <Var VarName="$FleetToSpawnEntity01"/>
+            <Var VarName="$FleetToSpawnEntity02"/>
+            <Var VarName="$FleetControllerName01" StringValue="%HoratioQuest-LesserEmpireName"/>
+            
+            <Var VarName="$FleetMissionDefinitionName01" StringValue="HoratioRoamAndAttack"/>
+            <Var VarName="$FleetMissionDefinitionName02" StringValue="HoratioRoamAndAttack"/>
+            <Var VarName="$FleetMissionGUID01"/>
+            <Var VarName="$FleetMissionGUID02"/>
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Marker02"/>
+
+            <Var VarName="$PoliticalEffectIndustrialist"    StringValue="PopulationEventHoratio02-Industrialist"/>
+            
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ OBJECTIVES ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <!--============ Industrialist ============-->
+                <ObjectiveSet>
+
+                    <Objective Name="Objective_Industrialist" StartValue="0" EndValue="2">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Action_TriggerPopulationEvent>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_Target VarName="$CurrentEmpire"/>
+                                <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustrialist"/>
+                            </Action_TriggerPopulationEvent>
+                            
+                            <!--Create the 1st enemy quest fleet-->
+                            <Action_SpawnFleets>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_Locations VarName="$StarSystem01"/>
+                                <Input_DroppableFleet VarName="$FleetToSpawn01"/>
+                                <Output_FleetGUIDs VarName="$FleetToSpawnGUID01"/>
+                            </Action_SpawnFleets>
+                            <Decorator_EntityCreated>
+                                <Input_GUID VarName="$FleetToSpawnGUID01"/>
+                                <Output_Entity VarName="$FleetToSpawnEntity01"/>
+                            </Decorator_EntityCreated>
+                            <!--Assign a Hero to the fleet-->
+                            <Action_SpawnHero>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_HeroDefinition VarName="$HeroDefinitionName"/>
+                                <Output_HeroGUID VarName="$HeroGUID"/>
+                            </Action_SpawnHero>
+                            <Action_AssignHero>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_HeroGUID VarName="$HeroGUID"/>
+                                <Input_LocationGUID VarName="$FleetToSpawnGUID01"/>
+                            </Action_AssignHero>
+                            <!--Set Fleet Mission-->
+                            <Action_CreateFleetMissions>
+                                <Input_MissionDefinitionName VarName="$FleetMissionDefinitionName01"/>
+                                <Input_FleetGUIDs VarName="$FleetToSpawnGUID01"/>
+                                <Input_TargetEmpires VarName="$CurrentEmpire"/>
+                                <Output_MissionGUIDs VarName="$FleetMissionGUID01"/>
+                            </Action_CreateFleetMissions>
+                            <Action_RegisterLesserName>
+                                <Input_GUIDs VarName="$FleetToSpawnGUID01"/>
+                                <Input_Name VarName="$FleetControllerName01"/>
+                            </Action_RegisterLesserName>
+                            <!--Put marker on Fleet-->
+                            <Action_AddQuestMarkers RevealsLocation="false">
+                                <Input_Targets VarName="$FleetToSpawnEntity01"/>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Output_Markers VarName="$Marker01"/>
+                            </Action_AddQuestMarkers>
+
+                            <!--Create the 2nd enemy quest fleet-->
+                            <Action_SpawnFleets>
+                                <Input_Empire VarName="$IAEmpire"/>
+                                <Input_Locations VarName="$StarSystem02"/>
+                                <Input_DroppableFleet VarName="$FleetToSpawn02"/>
+                                <Output_FleetGUIDs VarName="$FleetToSpawnGUID02"/>
+                            </Action_SpawnFleets>
+                            <Decorator_EntityCreated>
+                                <Input_GUID VarName="$FleetToSpawnGUID02"/>
+                                <Output_Entity VarName="$FleetToSpawnEntity02"/>
+                            </Decorator_EntityCreated>
+                            <Action_CreateFleetMissions>
+                                <Input_MissionDefinitionName VarName="$FleetMissionDefinitionName02"/>
+                                <Input_FleetGUIDs VarName="$FleetToSpawnGUID02"/>
+                                <Input_TargetEmpires VarName="$CurrentEmpire"/>
+                                <Output_MissionGUIDs VarName="$FleetMissionGUID02"/>
+                            </Action_CreateFleetMissions>
+                            <Action_RegisterLesserName>
+                                <Input_GUIDs VarName="$FleetToSpawnGUID02"/>
+                                <Input_Name VarName="$FleetControllerName01"/>
+                            </Action_RegisterLesserName>
+                            <Action_AddQuestMarkers RevealsLocation="false">
+                                <Input_Targets VarName="$FleetToSpawnEntity02"/>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Output_Markers VarName="$Marker02"/>
+                            </Action_AddQuestMarkers>
+
+                            <Parallel CompletionPolicy="All">
+                                <Sequence>
+                                    <Decorator_BattleEnded ProgressionIncrement="1">
+                                        <Condition_BattleEnded_FleetDestroyed>
+                                            <Input_FleetGUIDs VarName="$FleetToSpawnGUID01"/>
+                                        </Condition_BattleEnded_FleetDestroyed>
+                                    </Decorator_BattleEnded>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                </Sequence>
+                                <Sequence>
+                                    <Decorator_BattleEnded ProgressionIncrement="1">
+                                        <Condition_BattleEnded_FleetDestroyed>
+                                            <Input_FleetGUIDs VarName="$FleetToSpawnGUID02"/>
+                                        </Condition_BattleEnded_FleetDestroyed>
+                                    </Decorator_BattleEnded>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker02"/>
+                                    </Action_RemoveQuestMarkers>
+                                </Sequence>
+                            </Parallel>    
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter3-Industrialist-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>                    
+                    <Reward Droplist="DroplistRewardQuestHoratio05" Picks="1"/>
+                    
+                </ObjectiveSet>
+            </Step>
+        </Steps>        
+    </QuestDefinition>
+    
+    <!-- ############################################# -->
+    <!-- ######### HORATIO QUEST - CHAPTER 3 ######### -->
+    <!-- ############################################# -->
+
+    <QuestDefinition Name="HoratioQuest-Chapter3-Ecologist-Religious-Part1" Category="MajorQuest" SubCategory="Horatio" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>HoratioQuest-Chapter3-Ecologist-Religious-Part1</Tags>
+
+            <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$IAEmpire">
+                <From Source="$LesserEmpire"/>
+            </Var>
+            <Var VarName="$EcologistPolitic" StringValue="Politics04"/>                   
+            <Var VarName="$Amount01" IntValue="3"/>           
+            
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>(Property(Context, @../ClassEmpire, NetEmpireEmpirePoint)+50)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Expression02" StringValue="Property(Context, NetEmpireEmpirePoint) ge $(Amount02)"/>
+
+            <Var VarName="$Amount03" IntValue="3"/>
+            <Var VarName="$Amount04" IntValue="3"/>
+            
+            <Var VarName="$PoliticalEffectEcologist"       StringValue="PopulationEventHoratio03-Ecologist"/>
+            <Var VarName="$PoliticalEffectReligious"       StringValue="PopulationEventHoratio03-Religious"/>
+            <Var VarName="$PoliticalEffectIndustrialist"   StringValue="PopulationEventHoratio03-Industrialist"/>
+
+            <LocalizationVar LocalizationKey="$Amount01Name"    Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Amount02Name"    Source="$Amount02"/>
+            <LocalizationVar LocalizationKey="$Amount03Name"    Source="$Amount03"/>
+            <LocalizationVar LocalizationKey="$Amount04Name"    Source="$Amount04"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                    <ChoiceItem ObjectiveSetIndex="2">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+
+                <!--============ Choice Index 0: Ecologist ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Ecologist">         
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />                    
+                       <Sequence>
+                           <Decorator_LawActivated>
+                               <Condition_HasLaws>
+                                   <Input_Empire VarName="$CurrentEmpire"/>
+                                   <Input_Politics VarName="$EcologistPolitic"/>
+                                   <Input_MinimumAmount VarName="$Amount01"/>
+                               </Condition_HasLaws>
+                               <Input_Politics VarName="$EcologistPolitic"/>                             
+                           </Decorator_LawActivated>                                               
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter3-Ecologist-Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    
+                    <Reward Droplist="DroplistTechnologyEmpireDevelopment" EvaluationMethod="Dynamic" Picks="1" PreviewLocalizationKey="%RandomTechnologyTitle"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: Religious ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Religious">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_CheckInterpreter>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression02"/>
+                                </Condition_CheckInterpreter>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter3-Religious-Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+        
+                    <Reward Droplist="DroplistTechnologyEmpireDevelopment" EvaluationMethod="Dynamic" Picks="1" PreviewLocalizationKey="%RandomTechnologyTitle"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 2: Industrialist ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustrialist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Industrialist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Parallel CompletionPolicy="Any">
+                                <Sequence>
+                                    <Decorator_SystemLevelChanged>
+                                        <Condition_HasSystems>
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                            <Input_MinimumAmount VarName="$Amount03"/>
+                                            <Input_MinimumLevel VarName="$Amount04"/>
+                                        </Condition_HasSystems>
+                                    </Decorator_SystemLevelChanged>
+                                    <Action_ChooseOutcome Name="Outcome1"/>
+                                </Sequence>
+                                <Sequence> 
+                                    <Decorator_BeginTurn>
+                                        <Condition_HasSystems>
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                            <Input_MinimumAmount VarName="$Amount03"/>
+                                            <Input_MinimumLevel VarName="$Amount04"/>
+                                        </Condition_HasSystems>
+                                    </Decorator_BeginTurn>
+                                    <Action_ChooseOutcome Name="Outcome1"/>
+                                </Sequence>
+                                </Parallel>  
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter3-Industrialist-Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>                    
+               
+                    <Reward Droplist="DroplistTechnologyEconomyAndTrade" EvaluationMethod="Dynamic" Picks="1" PreviewLocalizationKey="%RandomTechnologyTitle"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ############################################# -->
+    <!-- ######### HORATIO QUEST - CHAPTER 3 ######### -->
+    <!-- ############################################# -->
+
+    <QuestDefinition Name="HoratioQuest-Chapter3-Industrialist-Part1" Category="MajorQuest" SubCategory="Horatio" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>HoratioQuest-Chapter3-Industrialist-Part1</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$IAEmpire">
+                <From Source="$LesserEmpire"/>
+            </Var>
+           
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>(Property(Context, @../ClassEmpire, NetEmpireEmpirePoint)+50)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Expression01" StringValue="Property(Context, NetEmpireEmpirePoint) ge $(Amount01)"/>
+
+            <Var VarName="$Amount02" IntValue="2"/>
+            <Var VarName="$Amount03" IntValue="3"/>
+            
+            <Var VarName="$PoliticalEffectReligious"       StringValue="PopulationEventHoratio03-Religious"/>
+            <Var VarName="$PoliticalEffectIndustrialist"   StringValue="PopulationEventHoratio03-Industrialist"/>
+
+            <LocalizationVar LocalizationKey="$Amount01Name"    Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Amount02Name"    Source="$Amount02"/>
+            <LocalizationVar LocalizationKey="$Amount03Name"    Source="$Amount03"/>
+            
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+      
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>                  
+                </Choice>
+                            
+                <!--============ Choice Index 0: Religious ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Religious">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_CheckInterpreter>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_CheckInterpreter>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter3-Religious-Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                  
+                    <Reward Droplist="DroplistTechnologyEmpireDevelopment" EvaluationMethod="Dynamic" Picks="1" PreviewLocalizationKey="%RandomTechnologyTitle"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 2: Industrialist ============-->
+                <ObjectiveSet>
+
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustrialist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Industrialist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                       <Sequence>
+                            <Parallel CompletionPolicy="Any">
+                                <Sequence>
+                                    <Decorator_SystemLevelChanged>
+                                        <Condition_HasSystems>
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                            <Input_MinimumAmount VarName="$Amount03"/>
+                                            <Input_MinimumLevel VarName="$Amount02"/>
+                                        </Condition_HasSystems>
+                                    </Decorator_SystemLevelChanged>
+                                    <Action_ChooseOutcome Name="Outcome1"/>
+                                </Sequence>
+                                <Sequence> 
+                                    <Decorator_BeginTurn>
+                                        <Condition_HasSystems>
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                            <Input_MinimumAmount VarName="$Amount03"/>
+                                            <Input_MinimumLevel VarName="$Amount02"/>
+                                        </Condition_HasSystems>
+                                    </Decorator_BeginTurn>
+                                    <Action_ChooseOutcome Name="Outcome1"/>
+                                </Sequence>                                
+                             </Parallel>     
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter3-Industrialist-Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                   
+                    <Reward Droplist="DroplistTechnologyEconomyAndTrade" EvaluationMethod="Dynamic" Picks="1" PreviewLocalizationKey="%RandomTechnologyTitle"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ######################################################### -->
+    <!-- ###   HORATIO QUEST - CHAPTER 3 - ECOLOGIST - PART2   ### -->
+    <!-- ######################################################### -->
+
+    <QuestDefinition Name="HoratioQuest-Chapter3-Ecologist-Part2" Category="MajorQuest" SubCategory="Horatio" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>HoratioQuest-Chapter3-Ecologist-Part2</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$MySystem" IgnoreLockedTargets="true">
+                <Any>
+                  <From Source="$CurrentEmpire.$ColonizedStarSystems"/>
+                </Any>
+            </Var>
+            <Var VarName="$MySystemLocation" IgnoreLockedTargets="true">               
+                    <From Source="$MySystem.$StarSystem"/>                
+            </Var>                        
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems"/>
+            </Var>
+            <Var VarName="$ConstellationSystems">
+                <From Source="$AllStarSystems">                    
+                    <OrderBy>
+                        <SortSystemByDistance OriginVarName="$MySystemLocation" SortBy="Nearest" MinimumDistance="25" MinimumCandidateCount="1" ConsiderFreeMovement="true"/>
+                    </OrderBy>
+                </From>
+            </Var>
+            <Var VarName="$StarSystem01">
+                <First>
+                  <From Source="$ConstellationSystems">
+                    <Where>
+                      <PathPrerequisite Flags="Prerequisite">ClassStarSystem, !QuestNode</PathPrerequisite>
+                    </Where>
+                  </From>
+                  
+                </First>
+            </Var>
+            <Var VarName="$Planet01">
+                <Any>
+                    <From Source="$StarSystem01.$Planets"/>
+                </Any>
+            </Var>
+            
+            <Var VarName="$Amount01" IntValue="1000"/>
+            <Var VarName="$Curiosity01" StringValue="Curiosity_Quest_Horatio01"/>
+            <Var VarName="$Curiosity01GUID"/>
+            <Var VarName="$PoliticalEffectEcologist"        StringValue="PopulationEventHoratio04-Ecologist"/>
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Amount02" IntValue="-1000"/>
+            <Var VarName="$ResourceName" StringValue="EmpireMoney"/>
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Planet01Name" Source="$Planet01"/>
+            
+        </Vars>
+
+        <!--============ OBJECTIVES ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+                
+                <!--============ Religious ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$Planet01"/>
+                            <Input_CuriosityDefinition VarName="$Curiosity01"/>
+                            <Output_CuriosityGUIDs VarName="$Curiosity01GUID" />
+                        </Action_SpawnCuriosity>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$Planet01"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>                    
+                    <Objective Name="Objective_Ecologist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_CuriosityDiscovered>
+                                <Input_CuriosityGUIDs VarName="$Curiosity01GUID"/>                                
+                            </Decorator_CuriosityDiscovered>
+                            <Action_TransferResource>
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$ResourceName"/>
+                                <Input_Amount VarName="$Amount02"/>
+                            </Action_TransferResource>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter4-Ecologist-Part1</Tags>  
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio06" Picks="1"/>
+
+                </ObjectiveSet>
+
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$Planet01"/>
+                            <Input_CuriosityDefinition VarName="$Curiosity01"/>
+                            <Output_CuriosityGUIDs VarName="$Curiosity01GUID" />
+                        </Action_SpawnCuriosity>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$Planet01"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective_EcologistAlt">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_CuriosityDiscovered>
+                                <Input_CuriosityGUIDs VarName="$Curiosity01GUID"/>
+                            </Decorator_CuriosityDiscovered>
+                            <Action_TransferResource>
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$ResourceName"/>
+                                <Input_Amount VarName="$Amount02"/>
+                            </Action_TransferResource>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter4-Ecologist-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio06Alternative" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ######################################################### -->
+    <!-- ###   HORATIO QUEST - CHAPTER 3 - RELIGIOUS - PART2   ### -->
+    <!-- ######################################################### -->
+
+    <QuestDefinition Name="HoratioQuest-Chapter3-Religious-Part2" Category="MajorQuest" SubCategory="Horatio" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>HoratioQuest-Chapter3-Religious-Part2</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$MySystem">
+                <Any>
+                    <From Source="$CurrentEmpire.$ColonizedStarSystems"/>
+                </Any>
+            </Var>
+            <Var VarName="$MySystemLocation">
+                <From Source="$MySystem.$StarSystem"/>
+            </Var>
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems"/>
+            </Var>
+            <Var VarName="$ConstellationSystems">
+                <From Source="$AllStarSystems">
+                    <OrderBy>
+                        <SortSystemByDistance OriginVarName="$MySystemLocation" SortBy="Nearest" MinimumDistance="25" MinimumCandidateCount="1" ConsiderFreeMovement="false"/>
+                    </OrderBy>
+                </From>
+            </Var>
+            <Var VarName="$StarSystem01">
+                <First>
+                    <From Source="$ConstellationSystems"/>
+                </First>
+            </Var>
+            <Var VarName="$Planet01">
+                <Any>
+                    <From Source="$StarSystem01.$Planets"/>
+                </Any>
+            </Var>
+                   
+            <Var VarName="$Amount01" IntValue="9"/>
+            
+            <Var VarName="$Curiosity01" StringValue="Curiosity_Quest_Horatio02"/>
+            <Var VarName="$Curiosity01GUID"/>
+            <Var VarName="$PoliticalEffectReligious"        StringValue="PopulationEventHoratio04-Religious"/>
+            <Var VarName="$Marker01"/>
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Planet01Name" Source="$Planet01"/>
+        </Vars>
+
+        <!--============ OBJECTIVES ============-->
+        <Steps>
+            <Step Name="Step1">
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+                <!--============ Religious ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$Planet01"/>
+                            <Input_CuriosityDefinition VarName="$Curiosity01"/>
+                            <Output_CuriosityGUIDs VarName="$Curiosity01GUID" />
+                        </Action_SpawnCuriosity>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$Planet01"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective_Religious">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_CuriosityDiscovered>
+                                <Input_CuriosityGUIDs VarName="$Curiosity01GUID"/>
+                            </Decorator_CuriosityDiscovered>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter4-Religious-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio07" Picks="1"/>
+
+                </ObjectiveSet>
+            
+          <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$Planet01"/>
+                            <Input_CuriosityDefinition VarName="$Curiosity01"/>
+                            <Output_CuriosityGUIDs VarName="$Curiosity01GUID" />
+                        </Action_SpawnCuriosity>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$Planet01"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective_ReligiousAlt">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_CuriosityDiscovered>
+                                <Input_CuriosityGUIDs VarName="$Curiosity01GUID"/>
+                            </Decorator_CuriosityDiscovered>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>HoratioQuest-Chapter4-Religious-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio07Alternative" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ######################################################### -->
+    <!-- ### HORATIO QUEST - CHAPTER 3 - INDUSTRIALIST - PART2 ### -->
+    <!-- ######################################################### -->
+
+    <QuestDefinition Name="HoratioQuest-Chapter3-Industrialist-Part2" Category="MajorQuest" SubCategory="Horatio" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>HoratioQuest-Chapter3-Industrialist-Part2</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$MySystem">
+                <Any>
+                    <From Source="$CurrentEmpire.$ColonizedStarSystems"/>
+                </Any>
+            </Var>
+            <Var VarName="$MySystemLocation">
+                <From Source="$MySystem.$StarSystem"/>
+            </Var>
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems"/>
+            </Var>
+            <Var VarName="$ConstellationSystems">
+                <From Source="$AllStarSystems">
+                    <OrderBy>
+                        <SortSystemByDistance OriginVarName="$MySystemLocation" SortBy="Nearest" MinimumDistance="25" MinimumCandidateCount="1" ConsiderFreeMovement="false"/>
+                    </OrderBy>
+                </From>
+            </Var>
+            <Var VarName="$StarSystem01">
+                <First>
+                    <From Source="$ConstellationSystems"/>
+                </First>
+            </Var>
+            <Var VarName="$Planet01">
+                <Any>
+                    <From Source="$StarSystem01.$Planets"/>
+                </Any>
+            </Var>
+
+            <Var VarName="$Amount01" IntValue="20"/>
+            <Var VarName="$Curiosity01" StringValue="Curiosity_Quest_Horatio03"/>
+            <Var VarName="$Curiosity01GUID"/>
+            <Var VarName="$PoliticalEffectReligious"        StringValue="PopulationEventHoratio04-Industrialist"/>
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Amount02" IntValue="-20"/>
+            <Var VarName="$ResourceName" StringValue="Strategic4"/>
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Planet01Name" Source="$Planet01"/>
+        </Vars>
+
+        <!--============ OBJECTIVES ============-->
+        <Steps>
+            <Step Name="Step1">
+                
+                 <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+
+                <!--============ Religious ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$Planet01"/>
+                            <Input_CuriosityDefinition VarName="$Curiosity01"/>
+                            <Output_CuriosityGUIDs VarName="$Curiosity01GUID" />
+                        </Action_SpawnCuriosity>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$Planet01"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective_Industrialist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_CuriosityDiscovered>
+                                <Input_CuriosityGUIDs VarName="$Curiosity01GUID"/>
+                            </Decorator_CuriosityDiscovered>
+                            <Action_TransferResource>
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$ResourceName"/>
+                                <Input_Amount VarName="$Amount02"/>
+                            </Action_TransferResource>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>   
+                                    <Tags>HoratioQuest-Chapter4-Industrialist-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio08" Picks="1"/>
+
+                </ObjectiveSet>
+            
+          <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$Planet01"/>
+                            <Input_CuriosityDefinition VarName="$Curiosity01"/>
+                            <Output_CuriosityGUIDs VarName="$Curiosity01GUID" />
+                        </Action_SpawnCuriosity>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$Planet01"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective_IndustrialistAlt">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_CuriosityDiscovered>
+                                <Input_CuriosityGUIDs VarName="$Curiosity01GUID"/>
+                            </Decorator_CuriosityDiscovered>
+                            <Action_TransferResource>
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$ResourceName"/>
+                                <Input_Amount VarName="$Amount02"/>
+                            </Action_TransferResource>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>   
+                                    <Tags>HoratioQuest-Chapter4-Industrialist-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio08Alternative" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+    
+ 
+    <!-- ######################################################### -->
+    <!-- ###   HORATIO QUEST - CHAPTER 4 - ECOLOGIST - PART2   ### -->
+    <!-- ######################################################### -->
+
+    <QuestDefinition Name="HoratioQuest-Chapter4-Ecologist-Part1" Category="MajorQuest" SubCategory="Horatio" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>HoratioQuest-Chapter4-Ecologist-Part1,FactionFinalQuest,FactionQuestHoratio</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$PoliticalEffectEcologist"        StringValue="PopulationEventHoratio05-Ecologist"/>
+            <Var VarName="$TeemingPlanet" StringValue="PlanetGameplayTypeTeeming"/>
+            <Var VarName="$Expression01" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeTeeming')"/>
+            
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeTeeming')</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeTeeming')+3</Expression>
+            </InterpretedVar>
+            
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+
+        </Vars>
+
+        <!--============ OBJECTIVES ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <!--============ Religious ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Ecologist" StartValue="$Amount01" EndValue="$Amount02">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_IsProgressionComplete>                               
+                            </Decorator_BeginTurn>
+                        </Sequence>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio09" Picks="1"/>
+                    <Reward Droplist="DroplistRewardQuestHoratio10" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ######################################################### -->
+    <!-- ###   HORATIO QUEST - CHAPTER 4 - RELIGIOUS - PART1   ### -->
+    <!-- ######################################################### -->
+
+    <QuestDefinition Name="HoratioQuest-Chapter4-Religious-Part1" Category="MajorQuest" SubCategory="Horatio" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>HoratioQuest-Chapter4-Religious-Part1,FactionFinalQuest,FactionQuestHoratio</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$PoliticalEffectReligious"        StringValue="PopulationEventHoratio05-Religious"/>
+        
+            <Var VarName="$Expression01" StringValue="(Count(Context, @'ClassEmpire/ClassColonizedStarSystem') - Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassPopulationStarSystem,PopulationNonMajor') ge 4)"/>
+            <Var VarName="$Path" StringValue="ClassEmpire/ClassColonizedStarSystem"/>
+            <Var VarName="$SubPath" StringValue="ClassColonizedStarSystem/ClassPopulationStarSystem"/>
+            <Var VarName="$Tag" StringValue="PopulationMajor"/>           
+            
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Floor(Max(3,Count(Context, @'ClassEmpire/ColonizedStarSystemStateColony')/3))</Expression>
+            </InterpretedVar>
+            <LocalizationVar Source="$Amount01" LocalizationKey="$Amount01Name"/>
+        </Vars>
+
+        <!--============ OBJECTIVES ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <!--============ Religious ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Religious">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_CountSimulationObjectsWithTag Composition="Minimum"   SubComposition="All">
+                                    <Input_SimulationObjects VarName="$CurrentEmpire"/>
+                                    <Input_Path VarName="$Path"/>
+                                    <Input_SubPath VarName="$SubPath"/>
+                                    <Input_Tag VarName="$Tag"/>
+                                    <Input_Minimum VarName="$Amount01"/>                                   
+                                </Condition_CountSimulationObjectsWithTag>                        
+                            </Decorator_BeginTurn>
+                        </Sequence>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio09" Picks="1"/>
+                    <Reward Droplist="DroplistRewardQuestHoratio11" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ######################################################### -->
+    <!-- ### HORATIO QUEST - CHAPTER 4 - INDUSTRIALIST - PART1 ### -->
+    <!-- ######################################################### -->
+
+    <QuestDefinition Name="HoratioQuest-Chapter4-Industrialist-Part1" Category="MajorQuest" SubCategory="Horatio" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>HoratioQuest-Chapter4-Industrialist-Part1,FactionFinalQuest,FactionQuestHoratio</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ColonizedStarSystemStateColony/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeStrategic')</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ColonizedStarSystemStateColony/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeStrategic')+3</Expression>
+            </InterpretedVar>
+
+            <Var VarName="$PoliticalEffectIndustrialist"        StringValue="PopulationEventHoratio05-Industrialist"/>
+
+            <Var VarName="$Expression01" StringValue="Count(Context, @'ClassEmpire/ColonizedStarSystemStateColony/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeStrategic')"/>
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+
+        </Vars>
+
+        <!--============ OBJECTIVES ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <!--============ Religious ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustrialist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Industrialist" StartValue="$Amount01" EndValue="$Amount02">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                        </Sequence>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestHoratio10" Picks="1"/>
+                    <Reward Droplist="DroplistRewardQuestHoratio11" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+</Datatable>

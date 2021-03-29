@@ -467,4 +467,113 @@
   
   <!-- Unfallen Colonization -->
   <SimulationDescriptor Name="FactionTraitUnfallenColonization" Type="FactionTrait"/>
+
+  <!-- Cheap Population -->
+  <SimulationDescriptor Name="FactionTraitCheapPopulation" Type="FactionTrait">
+    <Modifier TargetProperty="PopulationGrowthUpkeep" Operation="Percent" Value="-0.3" Path="../ClassEmpire/ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+
+  <!-- Extra Food at Home (UC) -->
+  <SimulationDescriptor Name="FactionTraitExtraFoodAtHome" Type="FactionTrait">
+    <BinaryModifier TargetProperty="SystemGrowth" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem3,ColonizedStarSystemStateColony" SearchValueFromPath="true" TooltipOverride="%ExtraFoodAtHomeEffect1"/>
+    <BinaryModifier TargetProperty="SystemGrowth" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem4,ColonizedStarSystemStateColony" SearchValueFromPath="true" TooltipOverride="%ExtraFoodAtHomeEffect2"/>
+  </SimulationDescriptor>
+
+  <!-- Empire Points per CP Destroyed -->
+  <SimulationDescriptor Name="FactionTraitEmpirePointPerCPDestroyed" Type="FactionTrait">
+    <Modifier TargetProperty="AdditionalOpponentRecyclingEmpirePointPerCP"          Operation="Addition"     Value="10"  Path="ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="AdditionalOpponentRecyclingEmpirePointPerCP"          Operation="Addition"     Value="10"  Path="../ClassEmpire/ClassGarrisonFleet/ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Nakalim -->
+  <SimulationDescriptor Name="FactionTraitHeroAssignmentTemplars" Type="FactionTrait">
+    <Modifier TargetProperty="AssignmentCooldownDecrementPerTurn"    Operation="Percent"  Value="0.5" Path="ClassEmpire//ClassHero"/>
+  </SimulationDescriptor>
+
+  <!-- Alzon's Traits -->
+  <!-- Nature-Loving -->
+  <SimulationDescriptor Name="FactionTraitNatureLoving" Type="FactionTrait">
+    <BinaryModifier     TargetProperty="Happiness"          Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(OwnedPlanets)"    Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"  />
+    <Modifier TargetProperty="MaximumPopulation"        Operation="Addition"  Value="1"   Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <Modifier TargetProperty="MaximumPopulation"        Operation="Addition"  Value="-1"  Path="ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeTeeming"/>
+  </SimulationDescriptor>
+
+  <!-- Exotic Gourmands -->
+	<SimulationDescriptor Name="FactionTraitExoticGourmands" Type="FactionTrait">
+		<Modifier TargetProperty="PlanetRawFood" Operation="Addition" Value="5" Path="ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeMeager"/>
+		<Modifier TargetProperty="PlanetRawFood" Operation="Addition" Value="5" Path="ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeGas"/>
+		<Modifier TargetProperty="PlanetRawFood" Operation="Addition" Value="-5" Path="ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeTeeming"/>
+	</SimulationDescriptor>
+
+  <!-- Deep Space Exploiters I -->
+  <SimulationDescriptor Name="FactionTraitDeepSpaceExploitersI" Type="FactionTrait">
+    <Modifier TargetProperty="SpecialNodeFIDSIMultiplier" Operation="Percent" Value="1" Path="ClassEmpire/ClassColonizedStarSystem/ClassSpecialNodeEffect"/>
+  </SimulationDescriptor>
+
+  <!-- Deep Space Exploiters II -->
+  <SimulationDescriptor Name="FactionTraitDeepSpaceExploitersII" Type="FactionTrait">
+    <Modifier TargetProperty="SpecialNodeFIDSIMultiplier" Operation="Percent" Value="2" Path="ClassEmpire/ClassColonizedStarSystem/ClassSpecialNodeEffect"/>
+  </SimulationDescriptor>
+
+  <!-- Cheap Behemoths -->
+	<SimulationDescriptor Name="FactionTraitCheapBehemoths" Type="FactionTrait">
+		<Modifier TargetProperty="JuggernautShipProductionCostReduction" Operation="Percent" Value="-0.3" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="GarrisonMoneyUpkeep" Operation="Percent" Value="-0.2" Path="ClassEmpire//ClassShip,ShipRoleBehemoth"/>
+		<Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="-0.2" Path="ClassEmpire//ClassShip,ShipRoleBehemoth"/>
+	</SimulationDescriptor>
+
+  <!-- Control Freaks -->
+  <SimulationDescriptor Name="FactionTraitControlFreaks" Type="FactionTrait">
+    <Modifier TargetProperty="ConstellationFIDSIBonus" Operation="Percent" Value="1" Path="ClassEmpire/ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+
+	<!-- Technologically Inept -->
+	<SimulationDescriptor Name="FactionTraitTechnologicallyInept" Type="FactionTrait">
+		<Modifier TargetProperty="MaximumHackingOperationsCount" Operation="Subtraction" Value="1" Path="ClassEmpire"/>
+	</SimulationDescriptor>
+
+	<!-- Covert Smugglers -->
+	<SimulationDescriptor Name="FactionTraitCovertSmugglers" Type="FactionTrait">
+		<Modifier TargetProperty="BlockadeResourceImpactFactor" Operation="Percent" Value="-1" Path="ClassEmpire/ClassColonizedStarSystem"/>
+	</SimulationDescriptor>
+
+	<!-- Hero Worship -->
+	<SimulationDescriptor Name="FactionTraitHeroWorship" Type="FactionTrait">
+		<Modifier TargetProperty="HeroUnlockThresholdModifier" Operation="Percent" Value="-0.2" Path="ClassEmpire"/>
+	</SimulationDescriptor>
+
+	<!-- Strategically Inclined I -->
+	<SimulationDescriptor Name="FactionTraitStrategicallyInclinedI" Type="FactionTrait">
+		<Modifier TargetProperty="DepositValue"         Operation="Addition"  Value="1"  Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeStrategic"/>
+	</SimulationDescriptor>
+
+	<!-- Strategically Inclined II -->
+	<SimulationDescriptor Name="FactionTraitStrategicallyInclinedII" Type="FactionTrait">
+		<Modifier TargetProperty="DepositValue"         Operation="Addition"  Value="2"  Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeStrategic"/>
+	</SimulationDescriptor>
+
+	<!-- Luxuriously Inclined I -->
+	<SimulationDescriptor Name="FactionTraitLuxuriouslyInclinedI" Type="FactionTrait">
+		<Modifier TargetProperty="DepositValue"         Operation="Addition"  Value="1"  Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeLuxury"/>
+	</SimulationDescriptor>
+
+	<!-- Luxuriously Inclined II -->
+	<SimulationDescriptor Name="FactionTraitLuxuriouslyInclinedII" Type="FactionTrait">
+		<Modifier TargetProperty="DepositValue"         Operation="Addition"  Value="2"  Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeLuxury"/>
+	</SimulationDescriptor>
+  
+  <!-- Sedentary -->
+  <SimulationDescriptor Name="FactionTraitSedentary" Type="FactionTrait"/>  
+  
+  <!-- Lands of the Enemy -->
+  <SimulationDescriptor Name="FactionTraitLandsOfTheEnemy" Type="FactionTrait"/>  
+  
+  <!-- Ancient Knowledge -->
+  <SimulationDescriptor Name="FactionTraitAncientKnowledge" Type="FactionTrait"/>  
+  
+  <!-- War Desecration -->
+  <SimulationDescriptor Name="FactionTraitWarDesecration" Type="FactionTrait">
+		<Modifier TargetProperty="OpponentRecyclingManpowerPerCP"          Operation="Addition"     Value="20"  Path="ClassEmpire"/>
+		<Modifier TargetProperty="OpponentRecyclingManpowerPerCP"          Operation="Addition"     Value="20"  Path="../ClassEmpire/ClassGarrisonFleet/ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
 </Datatable>

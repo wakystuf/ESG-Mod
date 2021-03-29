@@ -122,10 +122,110 @@
     <Modifier TargetProperty="SystemProduction"      Operation="Addition"    Value="80"       Path="./ClassColonizedStarSystem"/>
   </SimulationDescriptor>
 
+  <!-- Hive Hall -->
+  <SimulationDescriptor Name="StarSystemImprovementQuestRuinsCravers" Type="StarSystemImprovement">
+    <Modifier TargetProperty="Upkeep"           Operation="Multiplication"     Value="0"     Path="./ClassColonizedStarSystem/ClassHero"    Priority="1000" TooltipHidden="true"/>
+    <Modifier TargetProperty="ExperienceMultiplier" Operation="Addition" Value="0.5" Path="./ClassColonizedStarSystem/ClassHero" TooltipOverride="%StarSystemImprovementQuestRuinsCraversEffectOverride"/>
+  </SimulationDescriptor>
+
   <!-- Synchronous Hive-->
   <SimulationDescriptor Name="StarSystemImprovementHeroCravers" Type="StarSystemImprovement">
-    <Modifier TargetProperty="Happiness"            Operation="Addition"        Value="10"      Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
-    <Modifier TargetProperty="SystemEmpirePoint"           Operation="Addition"     Value="10"     Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="Happiness"            Operation="Addition"        Value="10"      Path="../ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%StarSystemImprovementHeroCraversEffect1"/>
+    <Modifier TargetProperty="SystemEmpirePoint"           Operation="Addition"     Value="10"     Path="../ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%StarSystemImprovementHeroCraversEffect2"/>
   </SimulationDescriptor>
-  
+
+  <!-- ################################################################################ -->
+  <!-- #################################  CURIOSITY   ################################# -->
+  <!-- ################################################################################ -->
+
+  <!-- THE VAULT OF GOVERNANCE -->
+  <SimulationDescriptor Name="StarSystemImprovementUniqueCuriosity2" Type="StarSystemImprovement">
+    <Modifier TargetProperty="ExperienceMultiplier" Operation="Addition" Value="1" Path="./ClassColonizedStarSystem/ClassHero" TooltipOverride="%StarSystemImprovementUniqueCuriosity2EffectOverride"/>
+  </SimulationDescriptor>
+
+  <!-- THE ANALYTICAL ENGINE -->
+  <SimulationDescriptor Name="StarSystemImprovementUniqueCuriosity1" Type="StarSystemImprovement">
+    <!--Feedback is done by GuiElement EffectOverride-->
+    <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="3" BinaryOperation="Multiplication" Right="$(CuriositiesDiscovered)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true" />
+  </SimulationDescriptor>
+
+  <!-- THE REJUVENATION MAZE -->
+  <SimulationDescriptor Name="StarSystemImprovementUniqueCuriosity3" Type="StarSystemImprovement">
+    <!--Feedback is done by GuiElement EffectOverride-->
+    <Modifier TargetProperty="HealthRegenerationRatio" Operation="Addition" Value="0.5" Path="./ClassColonizedStarSystem/ClassGarrison/ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="DockedFleetsHealthRegenerationRatio" Operation="Addition" Value="0.5" Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- LUNAR SURVEILLANCE STATION -->
+  <SimulationDescriptor Name="StarSystemImprovementCuriosity5" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="SystemResearch"	  Operation="Addition"     Left="125"     BinaryOperation="Multiplication" Right="$(OwnedMoons)"		    Path="./ClassColonizedStarSystem" SearchValueFromPath="true" />
+  </SimulationDescriptor>
+
+  <!--United Empire-->
+  <SimulationDescriptor Name="StarSystemImprovementQuestUE05" Type="StarSystemImprovement">
+    <Modifier TargetProperty="PlanetRawScience"    Operation="Addition" Value="1" Path="./ClassColonizedStarSystem/ClassColonizedPlanet" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="PlanetRawScience"        Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(PlanetHasAnomaly)" Path="./ClassColonizedStarSystem/ClassColonizedPlanet" SearchValueFromPath="true" />
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="StarSystemImprovementQuestUnitedEmpire11" Type="StarSystemImprovement">
+        <BinaryModifier TargetProperty="SystemProduction"     Operation="Addition"      Left="150"      BinaryOperation="Multiplication" Right="$(SystemLevel)"  Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
+        <BinaryModifier TargetProperty="SystemEmpirePoint"    Operation="Addition"      Left="100"       BinaryOperation="Multiplication" Right="$(SystemLevel)"  Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
+        <BinaryModifier TargetProperty="SystemProduction"	    Operation="Percent"       Left="0.02"     BinaryOperation="Multiplication" Right="$(EmpirePopulationTypeCount)"		    Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="StarSystemImprovementQuestUnitedEmpire12" Type="StarSystemImprovement">
+        <Modifier TargetProperty="PlanetRawScience"    Operation="Addition" Value="5" Path="./ClassColonizedStarSystem/ClassColonizedPlanet" SearchValueFromPath="true"/>
+        <Modifier       TargetProperty="SystemResearch"     Operation="Percent"     Value="0.1"  Path="./ClassColonizedStarSystem"/>  
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="StarSystemImprovementUniqueTerrans" Type="StarSystemImprovement">
+        <!-- Old loc key used for reference (in effect override): %StarSystemImprovementUniqueTerransTooltipEffect -->
+        <BinaryModifier TargetProperty="SystemProduction"              Operation="Addition"  Left="0.30" BinaryOperation="Multiplication" Right="$(SystemEmpirePoint)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementUniqueTerransEffect1"/>
+        <BinaryModifier TargetProperty="SystemMoney"                   Operation="Addition"  Left="0.30" BinaryOperation="Multiplication" Right="$(SystemEmpirePoint)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementUniqueTerransEffect2"/>
+        <BinaryModifier TargetProperty="SystemResearch"                   Operation="Addition"  Left="0.30" BinaryOperation="Multiplication" Right="$(SystemEmpirePoint)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementUniqueTerransEffect3"/>
+    </SimulationDescriptor>
+
+  <!--Unfallen-->
+
+  <SimulationDescriptor Name="StarSystemImprovementUniqueUnfallen" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="SystemEmpirePoint"              Operation="Addition"  Left="50" BinaryOperation="Multiplication" Right="$(PeaceCount)"      Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="SystemEmpirePoint"              Operation="Addition"  Left="150" BinaryOperation="Multiplication" Right="$(AllianceCount)"   Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="StarSystemImprovementQuestUnfallen04" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="SystemResearch"	  Operation="Addition"     Left="30"     BinaryOperation="Multiplication" Right="$(PopulationType)"		    Path="./ClassColonizedStarSystem" SearchValueFromPath="true"  TooltipOverride="%StarSystemImprovementQuestUnfallen04TooltipsEffect"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="StarSystemImprovementQuestUnfallen05" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="Happiness"	  Operation="Addition"     Left="7"     BinaryOperation="Multiplication" Right="$(PopulationType)"		    Path="./ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementQuestUnfallen05TooltipsEffect"/>
+  </SimulationDescriptor>
+
+  <!-- Sophons -->
+
+  <SimulationDescriptor Name="StarSystemImprovementPropagandaSophons" Type="StarSystemImprovement">
+    <Modifier TargetProperty="Happiness"           Operation="Addition"     Value="5"     Path="./ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="SystemEmpirePoint" Operation="Addition" Value="20" Path="./ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="StarSystemImprovementDefenseSophons" Type="StarSystemImprovement">
+    <Modifier TargetProperty="MaximumSystemManpower"                Operation="Addition"    Value="250"     Path="./ColonizedStarSystemStateColony,ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="GroundBattleDefenderManpowerLimit"    Operation="Addition"    Value="150"     Path="./ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamages"           Operation="Addition"    Value="750"     Path="./ColonizedStarSystemStateColony,ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+
+  <!-- Vaulters -->
+  <SimulationDescriptor Name="StarSystemImprovementUniqueVaulters" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="Happiness"		Operation="Addition"		Left="5"   BinaryOperation="Multiplication" Right="$(OwnedAnomalies)"		    Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="SystemResearch"		Operation="Addition"		Left="30"   BinaryOperation="Multiplication" Right="$(OwnedAnomalies)"		    Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="PlanetRawScience"        Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(PlanetHasAnomaly)" Path="./ClassColonizedStarSystem/ClassColonizedPlanet" SearchValueFromPath="true" />
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="StarSystemImprovementQuestTimeLords01" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="Happiness"          Operation="Addition" Left="2"      BinaryOperation="Multiplication" Right="$(NonMajorPopulationCount)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementQuestTimeLords01TooltipsEffect"/>
+  </SimulationDescriptor>
+
+  <!--Sensory Deprevation-->
+  <SimulationDescriptor Name="StarSystemImprovementQuestTimeLords02" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="Happiness"          Operation="Addition" Left="2"      BinaryOperation="Multiplication" Right="$(MajorPopulationCount)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementQuestTimeLords02TooltipsEffect"/>
+  </SimulationDescriptor>
 </Datatable>
