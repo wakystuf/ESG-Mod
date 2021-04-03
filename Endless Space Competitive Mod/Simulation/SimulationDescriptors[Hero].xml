@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+  <SimulationDescriptor Name="ClassHero" Type="Class">
+
+    <Property Name="Experience"                     BaseValue="0" IsSealed="true"/>
+    <Property Name="ExperiencePerTurn"              BaseValue="0"/>
+    <Property Name="ExperienceMultiplier"			BaseValue="1"/>
+    <Property Name="NextLevelRequestedExperience"   BaseValue="0"/>
+    <Property Name="Level"                          BaseValue="1" IsSealed="true"/>
+    <Property Name="CompleteSkill"            BaseValue="0"/>
+    <Property Name="Health" MinValue="0" MaxValue="100" BaseValue="100" IsSealed="true"/>
+    <Property Name="HealthPerTurn" BaseValue="6.5"/>
+
+    <Property Name="AssignmentCooldown" MinValue="0" BaseValue="0" IsSealed="true"/>
+    <Property Name="AssignmentCooldownBaseDuration" BaseValue="8"/>
+    <Property Name="AssignmentCooldownDecrementPerTurn" BaseValue="1" />
+    <Property Name="CanBeAssignedOutOfTerritory" BaseValue="0"/>
+
+    <Property Name="AssignmentLockdownDuration" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="Upkeep" BaseValue="0"/>
+
+    <Property Name="SkillPoints" BaseValue="0"/>
+    <Property Name="SpecializationPoints" BaseValue="0"/>
+
+    <Property Name="HealthRegenerationRatioFromHero" BaseValue="0"/>
+    <Property Name="ShipManpowerRefillRateFromHero" BaseValue="0"/>
+
+    <Property Name="SenatorSkillEffectDictatorshipMultiplier" BaseValue="1" MinValue="1" MaxValue="2"/>
+
+    <Property Name="CanBeSold" BaseValue="1"/>
+
+    <Property Name="HeroPolitics01" BaseValue="0"/>
+    <Property Name="HeroPolitics02" BaseValue="0"/>
+    <Property Name="HeroPolitics03" BaseValue="0"/>
+    <Property Name="HeroPolitics04" BaseValue="0"/>
+    <Property Name="HeroPolitics05" BaseValue="0"/>
+    <Property Name="HeroPolitics06" BaseValue="0"/>
+
+    <Modifier TargetProperty="HeroPolitics01" Operation="Addition" Value="1" Path="ClassHero,Politics01"/>
+    <Modifier TargetProperty="HeroPolitics02" Operation="Addition" Value="1" Path="ClassHero,Politics02"/>
+    <Modifier TargetProperty="HeroPolitics03" Operation="Addition" Value="1" Path="ClassHero,Politics03"/>
+    <Modifier TargetProperty="HeroPolitics04" Operation="Addition" Value="1" Path="ClassHero,Politics04"/>
+    <Modifier TargetProperty="HeroPolitics05" Operation="Addition" Value="1" Path="ClassHero,Politics05"/>
+    <Modifier TargetProperty="HeroPolitics06" Operation="Addition" Value="1" Path="ClassHero,Politics06"/>
+
+    <Modifier TargetProperty="HeroCountHeroPolitics01"      Operation="Addition" Value="$(HeroPolitics01)" Path="../ClassEmpire" />
+    <Modifier TargetProperty="HeroCountHeroPolitics02"      Operation="Addition" Value="$(HeroPolitics02)" Path="../ClassEmpire" />
+    <Modifier TargetProperty="HeroCountHeroPolitics03"      Operation="Addition" Value="$(HeroPolitics03)" Path="../ClassEmpire" />
+    <Modifier TargetProperty="HeroCountHeroPolitics04"      Operation="Addition" Value="$(HeroPolitics04)" Path="../ClassEmpire" />
+    <Modifier TargetProperty="HeroCountHeroPolitics05"      Operation="Addition" Value="$(HeroPolitics05)" Path="../ClassEmpire" />
+    <Modifier TargetProperty="HeroCountHeroPolitics06"      Operation="Addition" Value="$(HeroPolitics06)" Path="../ClassEmpire" />
+
+    <Property Name="HeroRelics" BaseValue="0" MinValue="0"/>
+
+    <BinaryModifier TargetProperty="SkillPoints" Operation="Addition" Left="$(Level)" BinaryOperation="Subtraction" Right="1" Path="ClassHero"/>
+    <BinaryModifier TargetProperty="SpecializationPoints" Operation="Addition" Left="$(Level)" BinaryOperation="Division" Right="5" Path="ClassHero"/>
+
+    <Modifier TargetProperty="HealthRegenerationRatio"      Operation="Addition" Value="$(HealthRegenerationRatioFromHero)" Path="./ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="NetShipManpower"      Operation="Percent" Value="$(ShipManpowerRefillRateFromHero)" Path="./ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="HeroCount" Operation="Addition" Value="1" Path="../ClassEmpire/ClassEducation"/>
+    <Modifier TargetProperty="HeroLevelCount" Operation="Addition" Value="$(Level)" Path="../ClassEmpire/ClassEducation" />
+    <Modifier TargetProperty="HeroRelics" Operation="Addition" Value="$(HeroRelics)" Path="../ClassEmpire" />
+
+    <!-- Calculate upkeep : HeroUpkeep = 0 + (Level - 1) * (Level / 4) + (2 * Level) + (skillPointsUsed) -->
+    <BinaryModifier TargetProperty="Upkeep" Operation="Addition" Left="$(Level)" BinaryOperation="Subtraction" Right="1" Priority="-3" Path="ClassHero"/>
+    <BinaryModifier TargetProperty="Upkeep" Operation="Multiplication" Left="$(Level)" BinaryOperation="Division" Right="4" Priority="-2" Path="ClassHero"/>
+    <BinaryModifier TargetProperty="Upkeep" Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Level)" Priority="-1" Path="ClassHero"/>
+
+    <!-- This is to balance the fact that UC governor also impact Haunts partially -->
+    <Modifier TargetProperty="Upkeep" Operation="Multiplication" Value="1.25" Path="ClassHero,HeroAffinityUmbralChoir,HeroAssignedToSystem"/>
+
+  </SimulationDescriptor>
+</Datatable>

@@ -1,0 +1,1802 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+
+
+    <QuestDefinition Name="TimeLordsQuest-Chapter0" Category="MajorQuest" SubCategory="TimeLords">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn, Hidden</Tags>
+
+        <QuestContextSolo/>
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$VaguardSystem" IsGlobal="true">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityTimeLords,PopulationMajor</PathPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step1_Objective1">
+                        <Sequence>
+                            <Decorator_BeginTurn/>
+                        </Sequence>                       
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+   
+    <!-- ############################################# -->
+    <!-- ######### TIME LORDS QUEST - CHAPTER 1####### -->
+    <!-- ############################################# -->
+
+    <QuestDefinition Name="TimeLordsQuest-Chapter1.Part1" Category="MajorQuest" SubCategory="TimeLords" MinimumTurn="5">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn</Tags>
+        
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$MyHomeSystem">
+                <From Source="$Empire.$HomeStarSystem"/>
+            </Var>
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems"/>
+            </Var>
+            <Var VarName="$AllStarSystemsClose">                
+                    <From Source="$AllStarSystems">
+                        <OrderBy>
+                            <SortSystemByDistance OriginVarName="$MyHomeSystem" SortBy="Farthest" MinimumDistance="10" MaximumDistance="60" MinimumCandidateCount="5"/>
+                        </OrderBy>
+                    </From>              
+            </Var>
+            <Var VarName="$FirstSystem">
+                <Any>
+                    <From Source="$AllStarSystemsClose"/>
+                </Any>
+            </Var>
+            <Var VarName="$SecondSystem">
+                <Any>
+                    <From Source="$AllStarSystemsClose">
+                        <Where>
+                            <IsNot EntityVarName="$FirstSystem"/>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$ThirdSystem">
+                <Any>
+                    <From Source="$AllStarSystemsClose">
+                        <Where>
+                            <IsNot EntityVarName="$FirstSystem"/>
+                            <IsNot EntityVarName="$SecondSystem"/>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$Planet01">
+                <Any>
+                    <From Source="$FirstSystem.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$Planet02">
+                <Any>
+                    <From Source="$SecondSystem.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$Planet03">
+                <Any>
+                    <From Source="$ThirdSystem.$Planets"/>
+                </Any>
+            </Var>
+            
+            <Var VarName="$Curiosity01" StringValue="Curiosity_Loot_Lifeform_Era2"/>
+            <Var VarName="$Curiosity02" StringValue="Curiosity_Loot_Signal_Era2"/>
+            <Var VarName="$Curiosity03" StringValue="Curiosity_Loot_Underground_Era2"/>
+            <Var VarName="$Curiosity01GUID"/>
+            <Var VarName="$Curiosity02GUID"/>
+            <Var VarName="$Curiosity03GUID"/>
+            <!--Requiered Curiosities-->
+            <Var VarName="$Amount01" IntValue="7"/>
+            <!--Improvements we have to Build-->
+            <Var VarName="$Amount02" IntValue="7"/>
+
+            <Var VarName="$Path" StringValue="ClassEmpire/ClassColonizedStarSystem"/>
+            <Var VarName="$SubPath" StringValue="ClassColonizedStarSystem/ClassImprovement"/>
+            <Var VarName="$Tag" StringValue="ClassImprovement"/>
+            <Var VarName="$Count" IntValue="1"/>
+            <Var VarName="$SubCount" IntValue="9"/>          
+          
+
+            <!--MinorFaction NB-->
+            <Var VarName="$Amount03" IntValue="1"/>
+            <!--Nb of requiered points-->
+            <Var VarName="$Amount04" IntValue="75"/>
+            <Var VarName="$Amount06" IntValue="1"/>
+            <Var VarName="$Assimilate" StringValue="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
+            <Var VarName="$FleetGUID"/>
+
+            <Var VarName="$PoliticalEffectEcologist"         StringValue="PopulationEventTimeLords01-Ecologist"/>
+            <Var VarName="$PoliticalEffectIndustrialist"     StringValue="PopulationEventTimeLords01-Industrialist"/>
+            <Var VarName="$PoliticalEffectPacifist"          StringValue="PopulationEventTimeLords01-Pacifist"/>
+
+            <!--Requiered Curiosities-->
+            <LocalizationVar Source="$Amount01" LocalizationKey="$Amount01Name"/>
+            <!--Improvements we have to Build-->
+            <LocalizationVar Source="$Amount02" LocalizationKey="$Amount02Name"/>
+            <!--MinorFaction NB-->
+            <LocalizationVar Source="$Amount03" LocalizationKey="$Amount03Name"/>
+            <!--Nb of requiered points-->
+            <LocalizationVar Source="$Amount04" LocalizationKey="$Amount04Name"/>
+        </Vars>
+        
+        <!--============ PREREQUISITES ============-->
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityTimeLords,PopulationMajor</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassStarSystem,HomeSystem</PathPrerequisite>
+        </Prerequisites>
+
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                    <ChoiceItem ObjectiveSetIndex="2"/>
+                </Choice>
+
+                <!--============ Choice Index 0: Ecologist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Ecologist" StartValue="0" EndValue="$Amount01">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Action_SpawnCuriosity>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_Planets VarName="$Planet01"/>
+                                <Input_CuriosityDefinition VarName="$Curiosity01"/>
+                                <Output_CuriosityGUIDs VarName="$Curiosity01GUID"/>
+                            </Action_SpawnCuriosity>
+                            <Loop Count="2">                         
+                                <Action_SpawnCuriosity>
+                                    <Input_Empires VarName="$CurrentEmpire"/>
+                                    <Input_Planets VarName="$Planet02"/>
+                                    <Input_CuriosityDefinition VarName="$Curiosity02"/>
+                                    <Output_CuriosityGUIDs VarName="$Curiosity02GUID"/>
+                                </Action_SpawnCuriosity>
+                                <Action_SpawnCuriosity>
+                                    <Input_Empires VarName="$CurrentEmpire"/>
+                                    <Input_Planets VarName="$Planet03"/>
+                                    <Input_CuriosityDefinition VarName="$Curiosity03"/>
+                                    <Output_CuriosityGUIDs VarName="$Curiosity03GUID"/>
+                                </Action_SpawnCuriosity>                               
+                            </Loop>
+                            <Loop>
+                                <Decorator_CuriosityDiscovered OnlyAllowDiscoveryByFleet="true" Initiator="Empire" ProgressionIncrement="1">
+                                    <Output_FleetGUID VarName="$FleetGUID"/>
+                                </Decorator_CuriosityDiscovered>
+                                <Input_Count VarName="$Amount01"/>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordsQuest-Chapter1.Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistMinorRewardsEra2" Picks="1"/>
+                
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: INDUSTRIALIST ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustrialist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    
+                    <Objective Name="Objective_Industrialist">    
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />            
+                        <Sequence>
+                            <Decorator_BeginTurn>                                
+                                <Condition_CountSimulationObjectsWithTag Composition="Minimum" SubComposition="Minimum">
+                                    <Input_SimulationObjects VarName="$CurrentEmpire"/>
+                                    <Input_Path VarName="$Path"/>
+                                    <Input_SubPath VarName="$SubPath"/>
+                                    <Input_Tag VarName="$Tag"/>
+                                    <Input_Minimum VarName="$Count"/>
+                                    <Input_SubMinimum VarName="$SubCount"/>
+                                </Condition_CountSimulationObjectsWithTag>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>                        
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordsQuest-Chapter1.Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    
+                    <Reward Droplist="DroplistMinorRewardsEra2" Picks="1"/>
+                    
+                </ObjectiveSet>
+
+                <!--============ Choice Index 2: Pacifist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Pacifist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Parallel CompletionPolicy="Any">
+                                 <Sequence>                            
+                                    <Decorator_BeginTurn>
+                                        <Condition_MinorFactionRelationship>                                  
+                                            <Input_MajorEmpire VarName="$CurrentEmpire"/>
+                                            <Input_NumberOfMinorFactions VarName="$Amount03"/>
+                                            <Input_MinimumRelationPoints VarName="$Amount04"/>
+                                        </Condition_MinorFactionRelationship>
+                                    </Decorator_BeginTurn>
+                                 </Sequence>
+                                <Sequence>
+                                    <Parallel CompletionPolicy="All">
+                                        <Sequence>
+                                            <Decorator_BeginTurn>
+                                                <Condition_MinorFactionRelationship>
+                                                    <Input_MajorEmpire VarName="$CurrentEmpire"/>
+                                                    <Input_NumberOfMinorFactions VarName="$Amount06"/>
+                                                    <Input_MinimumRelationPoints VarName="$Amount04"/>
+                                                </Condition_MinorFactionRelationship>
+                                            </Decorator_BeginTurn>
+                                       </Sequence>
+                                        <Sequence>
+                                            <Decorator_BeginTurn>
+                                                <Condition_MinorFactionRelationship>
+                                                    <Input_MajorEmpire VarName="$CurrentEmpire"/>
+                                                    <Input_NumberOfMinorFactions VarName="$Amount06"/>
+                                                    <Input_DiplomaticRelationState VarName="$Assimilate"/>
+                                                </Condition_MinorFactionRelationship>
+                                            </Decorator_BeginTurn>
+                                        </Sequence>
+                                    </Parallel>
+                                    <Sequence>
+                                        <Decorator_BeginTurn>
+                                            <Condition_MinorFactionRelationship>
+                                                <Input_MajorEmpire VarName="$CurrentEmpire"/>
+                                                <Input_NumberOfMinorFactions VarName="$Amount03"/>
+                                                <Input_DiplomaticRelationState VarName="$Assimilate"/>
+                                            </Condition_MinorFactionRelationship>
+                                        </Decorator_BeginTurn>
+                                    </Sequence>
+                                </Sequence>
+                            </Parallel>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordsQuest-Chapter1.Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>                    
+
+                    <Reward Droplist="DroplistMinorRewardsEra2" Picks="1"/>
+                    
+                </ObjectiveSet>
+            </Step>            
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ############################################# -->
+    <!-- ####### TIMELORDS QUEST - CHAPTER 2 ######### -->
+    <!-- ############################################# -->
+
+    <QuestDefinition Name="TimeLordsQuest-Chapter1.Part2" Category="MajorQuest" SubCategory="TimeLords" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>TimeLordsQuest-Chapter1.Part2</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$MyHomeSystem">
+                <From Source="$CurrentEmpire.$HomeStarSystem"/>
+            </Var>
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>
+                        <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+
+            <Var VarName="$CloseStarSystem">
+                <First>
+                    <From Source="$AllStarSystems">
+                        <Where>
+                            <IsNot EntityVarName="$MyHomeSystem"/>
+                        </Where>
+                        <OrderBy>
+                            <SortSystemByDistance OriginVarName="$MyHomeSystem" SortBy="Farthest" MinimumDistance="10" MaximumDistance="30" MinimumCandidateCount="1"/>
+                        </OrderBy>                           
+                    </From>
+               </First>
+            </Var>
+            <Var VarName="$Planet01">
+                <Any>
+                    <From Source="$AllStarSystems.$Planets"/>
+                </Any>
+            </Var>
+            
+            <Var VarName="$Amount01" IntValue="85"/>
+            <Var VarName="$Amount03" IntValue="125"/>
+            <Var VarName="$ColonizedStarSystem01"/>
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*10</Expression>
+            </InterpretedVar>
+
+            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire',Happiness) ge $(Amount01)"/>
+            <Var VarName="$Curiosity01" StringValue="Curiosity_Quest_TimeLords01"/>
+            <Var VarName="$Curiosity01GUID"/>
+            <Var VarName="$Marker01"/>
+            
+            <Var VarName="$Hero" StringValue="HeroQuestVirus01"/>
+            <Var VarName="$HeroLevel" IntValue="5"/>
+            
+            <Var VarName="$ResourceName" StringValue="EmpireMoney"/>
+              
+            <Var VarName="$Amount05" IntValue="750"/>
+            
+            <Var VarName="$PoliticalEffectEcologist"         StringValue="PopulationEventTimeLords02-Ecologist"/>
+            <Var VarName="$PoliticalEffectIndustrialist"     StringValue="PopulationEventTimeLords02-Industrialist"/>
+            <Var VarName="$PoliticalEffectPacifist"          StringValue="PopulationEventTimeLords02-Pacifist"/>
+            
+            <!-- Happiness Amount -->
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <!-- Gamespeed -->
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+            <!-- Science Amount -->
+            <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03"/>
+            <!-- Dust Amount -->
+            <LocalizationVar LocalizationKey="$Amount04Name" Source="$Amount05"/>
+            <!-- Planet where the Curio is spawned -->
+            <LocalizationVar LocalizationKey="$Planet01Name" Source="$Planet01"/>
+
+            <DroplistVar VarName="$DroppableHero" Droplist="DroplistVirusQuestHero01"/>
+            
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                   <ChoiceItem ObjectiveSetIndex="0">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>                   
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                    <ChoiceItem ObjectiveSetIndex="2">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="3">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+
+                <!--============ Choice Index 0: Ecologist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Ecologist" StartValue="0" EndValue="$Amount02">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Loop>
+                                <Decorator_BeginTurn ProgressionIncrement="1">
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression01"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Input_Count VarName="$Amount02"/>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordQuest-Chapter2-Pacifist-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestTimeLords02" Picks="1"/>
+
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: Religious ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustrialist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Industrialist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        
+                        <Sequence>
+                            <Parallel CompletionPolicy="Any">
+                                <Sequence>
+                                    <Decorator_ColonizedSystem Initiator="Empire">
+                                        <Output_ColonizedStarSystem VarName="$ColonizedStarSystem01"/>
+                                    </Decorator_ColonizedSystem>
+                                </Sequence>
+                                <Sequence>
+                                    <Decorator_MothershipAttached Initiator="Empire">
+                                        <Output_ColonizedStarSystem VarName="$ColonizedStarSystem01"/>    
+                                    </Decorator_MothershipAttached>
+                                </Sequence>
+                            </Parallel>
+
+                            <Decorator_BeginTurn>
+                                <Condition_HasFidsi>
+                                    <Input_Location VarName="$ColonizedStarSystem01"/>
+                                    <Input_Science VarName="$Amount03"/>
+                                </Condition_HasFidsi>
+                            </Decorator_BeginTurn>
+                            <Action_SpawnHero>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_HeroDefinition VarName="$Hero"/>
+                                <Input_HeroLevel VarName="$HeroLevel"/>
+                            </Action_SpawnHero>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordsQuest-Chapter2-Industrialist-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward DropVar="$DroppableHero"/>
+
+                </ObjectiveSet>
+
+                <!--============ Choice Index 2: Pacifist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>              
+                        <Action_SpawnCuriosity>                           
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                             <Input_Planets VarName="$Planet01"/>
+                            <Input_CuriosityDefinition VarName="$Curiosity01"/>
+                            <Output_CuriosityGUIDs VarName="$Curiosity01GUID"/>
+                        </Action_SpawnCuriosity>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$Planet01"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective_Pacifist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_CuriosityDiscovered Initiator="Empire">
+                                <Input_CuriosityGUIDs VarName="$Curiosity01GUID"/>
+                            </Decorator_CuriosityDiscovered>
+                            <Action_TransferResource> 
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$ResourceName"/>
+                                <Input_Amount VarName="$Amount05"/>
+                            </Action_TransferResource>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>                                
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordQuest-Chapter2-Pacifist-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestTimeLords01" Picks="1"/>
+
+                </ObjectiveSet>
+
+                <!--============ Choice Index 2: Alternative Pacifist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$Planet01"/>
+                            <Input_CuriosityDefinition VarName="$Curiosity01"/>
+                            <Output_CuriosityGUIDs VarName="$Curiosity01GUID"/>
+                        </Action_SpawnCuriosity>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$Planet01"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective_PacifistAlt">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_CuriosityDiscovered Initiator="Empire">
+                                <Input_CuriosityGUIDs VarName="$Curiosity01GUID"/>
+                            </Decorator_CuriosityDiscovered>
+                            <Action_TransferResource>
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$ResourceName"/>
+                                <Input_Amount VarName="$Amount05"/>
+                            </Action_TransferResource>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordQuest-Chapter2-Pacifist-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestTimeLords01Alternative" Picks="1"/>
+
+                </ObjectiveSet>
+                
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ############################################# -->
+    <!-- ####### TIMELORDS QUEST - CHAPTER 2 ######### -->
+    <!-- ############################################# -->
+
+    <QuestDefinition Name="TimeLordsQuest-Chapter2-Pacifist-Part1" Category="MajorQuest" SubCategory="TimeLords" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>TimeLordQuest-Chapter2-Pacifist-Part1</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            
+            <InterpretedVar VarName="$Amount01Start" Target="$(Empire)">
+                <Expression>SumProperty(Context, @'ClassEmpire/ClassPopulation,PopulationNonMajor', PopulationCount)</Expression>
+            </InterpretedVar>          
+            <InterpretedVar VarName="$Amount01Objective" Target="$(Empire)">
+                <Expression>SumProperty(Context, @'ClassEmpire/ClassPopulation,PopulationNonMajor', PopulationCount) + 12</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*10</Expression>
+            </InterpretedVar>
+            <Var VarName="$Expression01" StringValue="SumProperty(Context, @'ClassEmpire/ClassPopulation,PopulationNonMajor', PopulationCount)"/>
+            <Var VarName="$Expression02" StringValue="Path(Context, @'ClassEmpire/!BesiegedColonizedStarSystem,ClassColonizedStarSystem')"/>
+            <Var VarName="$Expression03" StringValue="Path(Context, @'ClassEmpire/!BlockadedColonizedStarSystem,ClassColonizedStarSystem')"/>
+
+            <Var VarName="$PoliticalEffectEcologist"         StringValue="PopulationEventTimeLords03-Ecologist"/>            
+            <Var VarName="$PoliticalEffectPacifist"          StringValue="PopulationEventTimeLords03-Pacifist"/>
+
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+            <LocalizationVar LocalizationKey="$Amount01ObjectiveName" Source="$Amount01Objective"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,AffinityGameplayVampirilis</PathPrerequisite>
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+              
+                <!--============ Choice Index 1: PACIFIST ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Pacifist" StartValue="0" EndValue="$Amount02">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                            <Sequence>
+                                <Loop>
+                                    <Decorator_BeginTurn ProgressionIncrement="1">
+                                        <Condition_CheckInterpreter>
+                                            <Input_Context VarName="$CurrentEmpire"/>
+                                            <Input_Expression VarName="$Expression02"/>
+                                        </Condition_CheckInterpreter>
+                                        <Condition_CheckInterpreter>
+                                            <Input_Context VarName="$CurrentEmpire"/>
+                                            <Input_Expression VarName="$Expression03"/>
+                                        </Condition_CheckInterpreter>
+                                    </Decorator_BeginTurn>
+                                    <Input_Count VarName="$Amount02"/>
+                                </Loop>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>  
+                            <Outcome Name="Outcome1">
+                                <Triggers Weight="1">
+                                    <QuestTrigger>
+                                        <Tags>TimeLordsQuest-Chapter3.Part1</Tags>
+                                        <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                    </QuestTrigger>
+                                </Triggers>
+                            </Outcome>
+                    </Objective>
+                    
+                    <Reward Droplist="DroplistRewardQuestTimeLords04" Picks="1"/>
+
+                </ObjectiveSet>
+
+                <!--============ Choice Index 0: Ecologist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Ecologist" StartValue="$Amount01Start" EndValue="$Amount01Objective">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordsQuest-Chapter3.Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestTimeLords03" Picks="1"/>
+
+                </ObjectiveSet>
+
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ############################################# -->
+    <!-- ####### TIMELORDS QUEST - CHAPTER 2 ######### -->
+    <!-- ############################################# -->
+
+    <QuestDefinition Name="TimeLordsQuest-Chapter2-Industrialist-Part1" Category="MajorQuest" SubCategory="TimeLords" MinimumTurn="1">
+      
+
+        <!--============ TAGS ============-->
+        <Tags>TimeLordsQuest-Chapter2-Industrialist-Part1</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$MyStarSystems">
+                <From Source="$CurrentEmpire.$ColonizedStarSystems"/>
+            </Var>
+            <Var VarName="$ColonizedSystem01"/>
+            <Var VarName="$ColonizedSystem02"/>
+            <Var VarName="$Hero01" StringValue="HeroQuestVirus01"/>
+
+            <Var VarName="$Amount01" IntValue="4000"/>
+            <Var VarName="$Ships"/>
+
+            <Var VarName="$Expression01"      StringValue="Property(Context, OffensiveMilitaryPower) ge $(Amount01)"/>
+            <Var VarName="$Expression02"      StringValue="Path(Context, @'ClassColonizedStarSystem/ClassImprovement,StarSystemImprovementTradingCompanyHeadquarters')"/>
+            <Var VarName="$Expression03"      StringValue="Path(Context, @'ClassColonizedStarSystem/ClassHero,HeroSkill_QuestTag')"/>
+            <Var VarName="$TradeRouteHQ"      StringValue="StarSystemImprovementTradingCompanyHeadquarters"/>
+            <Var VarName="$OutFleet"/>
+
+            <Var VarName="$HeadQuarter"     StringValue="StarSystemImprovementTradingCompanyHeadquarters"/>
+           
+            <Var VarName="$PoliticalEffectIndustrialist"     StringValue="PopulationEventTimeLords03-Industrialist"/>
+            <Var VarName="$PoliticalEffectPacifist"          StringValue="PopulationEventTimeLords03Bis-Pacifist"/>
+         
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Hero01Name" Source="$Hero01"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+   
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ Choice Index 0: Industrialist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustrialist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Industrialist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_HeroAssigned StopAtFirstFailedCondition="true">
+                                <Condition_IsVariableNotEmpty>
+                                    <Input_Variable VarName="$OutFleet"/>
+                                </Condition_IsVariableNotEmpty>
+                                <Condition_CheckInterpreter>
+                                    <Input_Context VarName="$OutFleet"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_CheckInterpreter>
+                                <Input_HeroName VarName="$Hero01"/>
+                                <Output_Fleet VarName="$OutFleet"/>
+                            </Decorator_HeroAssigned>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordsQuest-Chapter3.Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestTimeLords04" Picks="1"/>
+
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: PACIFIST ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Pacifist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Parallel CompletionPolicy="Any">
+                            <Sequence>
+                                <Decorator_HeroAssigned>
+                                    <Condition_IsVariableNotEmpty>
+                                        <Input_Variable VarName="$ColonizedSystem01"/>
+                                    </Condition_IsVariableNotEmpty>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$ColonizedSystem01"/>
+                                        <Input_Expression VarName="$Expression02"/>
+                                    </Condition_CheckInterpreter>
+                                    <Input_HeroName VarName="$Hero01"/>
+                                    <Output_ColonizedStarSystem VarName="$ColonizedSystem01"/>
+                                </Decorator_HeroAssigned>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_ConstructionCompleted>
+                                    <Condition_IsVariableNotEmpty>
+                                        <Input_Variable VarName="$ColonizedSystem02"/>
+                                    </Condition_IsVariableNotEmpty>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$ColonizedSystem02"/>
+                                        <Input_Expression VarName="$Expression03"/>
+                                    </Condition_CheckInterpreter>
+                                    <Input_ConstructionName VarName="$TradeRouteHQ"/>
+                                    <Output_System VarName="$ColonizedSystem02"/>
+                                </Decorator_ConstructionCompleted>                            
+                              <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                        </Parallel>
+               
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordsQuest-Chapter3.Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistRewardQuestTimeLords03" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ############################################# -->
+    <!-- ######### TIME LORD QUEST - CHAPTER 3 ####### -->
+    <!-- ############################################# -->
+
+    <QuestDefinition Name="TimeLordsQuest-Chapter3.Part1" Category="MajorQuest" SubCategory="TimeLords" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>TimeLordsQuest-Chapter3.Part1</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Min(4, (MaxProperty(Context, @'../ClassEmpire/ClassColonizedStarSystem', SystemLevel)+1))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Amount02" IntValue="4"/>
+
+            <InterpretedVar VarName="$Amount03" Target="$(Empire)">
+                <Expression>Property(Context, @'../ClassEmpire', MaximumEmpireManpowerStock)</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount04" Target="$(Empire)">
+                <Expression>Property(Context, @'../ClassEmpire', MaximumEmpireManpowerStock)+500 </Expression>
+            </InterpretedVar>
+            <Var VarName="$Expression1" StringValue="Property(Context, @'../ClassEmpire', MaximumEmpireManpowerStock) ge $(Amount04)"/>
+
+            <InterpretedVar VarName="$Amount05" Target="$(Empire)">
+                <Expression>Property(Context, @'../ClassEmpire', GameSpeedMultiplier, true)*10</Expression>
+            </InterpretedVar>
+            <Var VarName="$Expression2" StringValue="Property(Context, @'../ClassEmpire', WarCount) lt 1"/>
+            
+            <Var VarName="$PoliticalEffectEcologist"         StringValue="PopulationEventTimeLords04-Ecologist"/>
+            <Var VarName="$PoliticalEffectIndustrialist"     StringValue="PopulationEventTimeLords04-Industrialist"/>
+            <Var VarName="$PoliticalEffectPacifist"          StringValue="PopulationEventTimeLords04-Pacifist"/>
+
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+            <LocalizationVar LocalizationKey="$Amount04Name" Source="$Amount04"/>
+            <LocalizationVar LocalizationKey="$Amount05Name" Source="$Amount05"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+     
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                    <ChoiceItem ObjectiveSetIndex="2"/>
+                </Choice>
+
+                <!--============ Choice Index 0: Ecologist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Ecologist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                        <Parallel CompletionPolicy="Any">
+                            <Sequence>
+                                <Decorator_SystemLevelChanged Initiator="Empire">
+                                    <Condition_HasSystems>
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                        <Input_MinimumAmount VarName="$Amount02"/>
+                                        <Input_MinimumLevel VarName="$Amount01"/>
+                                    </Condition_HasSystems>                                    
+                                </Decorator_SystemLevelChanged>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_HasSystems>
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                        <Input_MinimumAmount VarName="$Amount02"/>
+                                        <Input_MinimumLevel VarName="$Amount01"/>
+                                    </Condition_HasSystems>
+                                </Decorator_BeginTurn>
+                            </Sequence>
+                        </Parallel>
+                        <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordsQuest-Chapter4-Ecologist-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestTimeLords05" Picks="1"/>
+
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: INDUSTRIALIST ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustrialist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Industrialist" StartValue="$Amount03" EndValue="$Amount04">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn ProgressionIncrement="1">
+                                <Condition_CheckInterpreter>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression1"/>
+                                </Condition_CheckInterpreter>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordsQuest-Chapter4-Industrialist-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestTimeLords06" Picks="1"/>
+
+                </ObjectiveSet>
+
+                <!--============ Choice Index 2: Pacifist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Pacifist" StartValue="0" EndValue="$Amount05">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Loop>
+                            <Decorator_BeginTurn ProgressionIncrement="1">
+                                <Condition_CheckInterpreter>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression2"/>
+                                </Condition_CheckInterpreter>
+                            </Decorator_BeginTurn>
+                            <Input_Count VarName="$Amount05"/>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordsQuest-Chapter4-Pacifist-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistRewardQuestTimeLords07" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ####################################### -->
+    <!--   TIME LORDS  Chapter 4 - ECOLOGIST     -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="TimeLordsQuest-Chapter4-Ecologist-Part1" Category="MajorQuest" SubCategory="TimeLords" CheckRandom="false">
+
+        <!--============ TAGS ============-->
+        <Tags>TimeLordsQuest-Chapter4-Ecologist-Part1,FactionFinalQuest,FactionQuestTimeLords</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            
+            <Var VarName="$PoliticalEffectEcologist" StringValue="PopulationEventTimeLords05-Ecologist"/>
+            
+            <!--Military Politic-->
+            <Var VarName="$Politics" StringValue="Politics04"/>
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Min(2,(Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics04') + 1))</Expression>
+            </InterpretedVar>
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+     
+        
+        <!--============ STEPS ============-->
+
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Ecologist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Parallel CompletionPolicy="Any">
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_HasLaws>
+                                        <Input_Empire VarName="$CurrentEmpire"/>
+                                        <Input_Politics VarName="$Politics"/>
+                                        <Input_MinimumAmount VarName="$Amount01"/>
+                                    </Condition_HasLaws>
+                                </Decorator_BeginTurn>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_LawActivated>
+                                    <Condition_HasLaws>
+                                        <Input_Empire VarName="$CurrentEmpire"/>
+                                        <Input_Politics VarName="$Politics"/>
+                                        <Input_MinimumAmount VarName="$Amount01"/>
+                                    </Condition_HasLaws>                                    
+                                </Decorator_LawActivated>
+                            </Sequence>
+                        </Parallel>
+                    </Objective> 
+
+                    <Reward Droplist="DroplistRewardQuestTimeLords08" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ############################################# -->
+    <!-- ######### TIME LORD QUEST - CHAPTER 4 ####### -->
+    <!-- ############################################# -->
+
+    <QuestDefinition Name="TimeLordsQuest-Chapter4-Industrialist-Part1" Category="MajorQuest" SubCategory="TimeLords" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>TimeLordsQuest-Chapter4-Industrialist-Part1</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            
+            <Var VarName="$OtherEmpire">
+                <Any>
+                    <From Source="$LesserEmpire">
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$MyColonizedStarSystems">
+                <Any>
+                    <From Source="$CurrentEmpire.$ColonizedStarSystems"/>  
+                </Any>
+            </Var>
+            <Var VarName="$MyStarSystem" IgnoreLockedTargets="true">
+                <From Source="$MyColonizedStarSystems.$StarSystem"/>
+            </Var>
+
+            <Var VarName="$HomeConstellation">
+                <From Source="$MyStarSystem.$Constellation"/>
+            </Var>            
+            <Var VarName="$ConstellationStarSystems">
+                <From Source="$HomeConstellation.$StarSystems">
+                    <Where>                   
+                        <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                        <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+            <Var VarName="$StarSystemToChoose">
+                <From Source="$ConstellationStarSystems">
+                    <OrderBy>
+                        <SortSystemByDistance OriginVarName="$MyStarSystem" SortBy="Farthest" MinimumDistance="10" MaximumDistance="60" MinimumCandidateCount="2"/>
+                    </OrderBy>
+                </From>
+            </Var>
+            <!--Take 2 Systems-->
+            <Var VarName="$StarSystem01">
+                <First>
+                    <From Source="$StarSystemToChoose"/>
+                </First>
+            </Var>
+            <Var VarName="$StarSystem02">
+                <First>
+                    <From Source="$StarSystemToChoose">
+                        <Where>
+                            <IsNot EntityVarName="$StarSystem01"/>
+                        </Where>
+                    </From>
+                </First>
+            </Var>
+
+            <DroplistVar VarName="$FleetToSpawn01" Droplist="DroplistFleetQuestTimeLords01"/>
+            <Var VarName="$GUID01"/>
+            <Var VarName="$GUID02"/>
+            <Var VarName="$GUID03"/>
+            <DroplistVar VarName="$FleetToSpawn02" Droplist="DroplistFleetQuestTimeLords02"/>
+            <Var VarName="$FleetMissionDefinitionName01" StringValue="RoamAndAttackTimeLords"/>
+            <Var VarName="$MissionGUID01"/>
+            <Var VarName="$MissionGUID02"/>
+            <Var VarName="$MissionGUID03"/>
+
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Marker02"/>
+            <Var VarName="$Marker03"/>
+            
+            <Var VarName="$PoliticalEffectIndustrialist"     StringValue="PopulationEventTimeLords05-Industrialist"/>
+            <Var VarName="$PoliticalEffectPacifist"     StringValue="PopulationEventTimeLords05-Pacifisit"/>
+
+            <!--Military Politic-->
+            <Var VarName="$Politics" StringValue="Politics01"/>
+            <!--Percentage = 30% -->
+            <Var VarName="$MinimumPercentage" IntValue="30"/>
+            <!--In X Systems -->
+            <Var VarName="$MinimumSystemAmount" IntValue="4"/>
+
+            <LocalizationVar LocalizationKey="$MinimumPercentageName" Source="$MinimumPercentage"/>
+            <LocalizationVar LocalizationKey="$MinimumSystemAmountName" Source="$MinimumSystemAmount"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->     
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>                    
+                </Choice>
+
+                <!--============ Choice Index 0: Industrialist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustrialist"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnFleets>
+                            <Input_Empire VarName="$OtherEmpire"/>
+                            <Input_Locations VarName="$StarSystem01"/>
+                            <Input_DroppableFleet VarName="$FleetToSpawn01"/>
+                            <Output_FleetGUIDs VarName="$GUID01"/>
+                        </Action_SpawnFleets>                     
+                        <Action_CreateFleetMissions>
+                            <Input_MissionDefinitionName VarName="$FleetMissionDefinitionName01"/>
+                            <Input_FleetGUIDs VarName="$GUID01"/>
+                            <Input_TargetEmpires VarName="$CurrentEmpire"/>
+                            <Output_MissionGUIDs VarName="$MissionGUID01"/>
+                        </Action_CreateFleetMissions>
+                        <Action_AddQuestMarkers>
+                            <Input_TargetGUIDs VarName="$GUID01"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                        
+                        <Action_SpawnFleets>
+                            <Input_Empire VarName="$OtherEmpire"/>
+                            <Input_Locations VarName="$StarSystem02"/>
+                            <Input_DroppableFleet VarName="$FleetToSpawn02"/>
+                            <Output_FleetGUIDs VarName="$GUID02"/>
+                        </Action_SpawnFleets>                 
+                        <Action_CreateFleetMissions>
+                            <Input_MissionDefinitionName VarName="$FleetMissionDefinitionName01"/>
+                            <Input_FleetGUIDs VarName="$GUID02"/>
+                            <Input_TargetEmpires VarName="$CurrentEmpire"/>
+                            <Output_MissionGUIDs VarName="$MissionGUID02"/>
+                        </Action_CreateFleetMissions>
+                        <Action_AddQuestMarkers>
+                            <Input_TargetGUIDs VarName="$GUID02"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker02"/>
+                        </Action_AddQuestMarkers>
+
+                        <Action_SpawnFleets>
+                            <Input_Empire VarName="$OtherEmpire"/>
+                            <Input_Locations VarName="$MyStarSystem"/>
+                            <Input_DroppableFleet VarName="$FleetToSpawn01"/>
+                            <Output_FleetGUIDs VarName="$GUID03"/>
+                        </Action_SpawnFleets>
+                        <Action_CreateFleetMissions>
+                            <Input_MissionDefinitionName VarName="$FleetMissionDefinitionName01"/>
+                            <Input_FleetGUIDs VarName="$GUID03"/>
+                            <Input_TargetEmpires VarName="$CurrentEmpire"/>
+                            <Output_MissionGUIDs VarName="$MissionGUID03"/>
+                        </Action_CreateFleetMissions>
+                        <Action_AddQuestMarkers>
+                            <Input_TargetGUIDs VarName="$GUID03"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker03"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective_Industrialist" StartValue="0" EndValue="3">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Parallel CompletionPolicy="All">
+                                <Sequence>
+                                    <!--All battles increase the progression Increment in Objective-->
+                                    <!--Be aware that all Empires can defeat those fleet including Minor Factions-->
+                                    <Decorator_BattleEnded Status="Won" ProgressionIncrement="1">
+                                        <Condition_BattleEnded_FleetDestroyed>
+                                            <Input_FleetGUIDs VarName="$GUID01"/>
+                                        </Condition_BattleEnded_FleetDestroyed>
+                                    </Decorator_BattleEnded>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                </Sequence>
+                                <Sequence>
+                                    <Decorator_BattleEnded Status="Won" ProgressionIncrement="1">
+                                        <Condition_BattleEnded_FleetDestroyed>
+                                            <Input_FleetGUIDs VarName="$GUID02"/>
+                                        </Condition_BattleEnded_FleetDestroyed>
+                                    </Decorator_BattleEnded>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker02"/>
+                                    </Action_RemoveQuestMarkers>
+                                </Sequence>
+                                <Sequence>
+                                    <Decorator_BattleEnded Status="Won" ProgressionIncrement="1">
+                                        <Condition_BattleEnded_FleetDestroyed>
+                                            <Input_FleetGUIDs VarName="$GUID03"/>
+                                        </Condition_BattleEnded_FleetDestroyed>
+                                    </Decorator_BattleEnded>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker03"/>
+                                    </Action_RemoveQuestMarkers>
+                                </Sequence>
+                            </Parallel>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordsQuest-Chapter4-Industrialist-Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistMoneyEra5" Picks="1"/>
+
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: INDUSTRIALIST ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective Name="Objective_Pacifist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_HasPoliticsScore>
+                                    <Input_Empire VarName="$CurrentEmpire"/>
+                                    <Input_PoliticsName VarName="$Politics"/>
+                                    <Input_MinimumPercentage VarName="$MinimumPercentage"/>
+                                    <Input_MinimumSystemAmount VarName="$MinimumSystemAmount"/>
+                                </Condition_HasPoliticsScore>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>TimeLordsQuest-Chapter4-Pacifist-Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistPrestigeEra5" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ####################################### -->
+    <!--   TIME LORDS  Chapter 4 - PACIFIST     -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="TimeLordsQuest-Chapter4-Pacifist-Part1" Category="MajorQuest" SubCategory="TimeLords" CheckRandom="false">
+
+        <!--============ TAGS ============-->
+        <Tags>TimeLordsQuest-Chapter4-Pacifist-Part1,FactionFinalQuest,FactionQuestTimeLords</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems"/>
+            </Var>
+            <Var VarName="$VaguardSystem" IsGlobal="true"/>
+     
+            <Var VarName="$OnePlanet">
+                <Any>
+                    <From Source="$VaguardSystem.$Planets">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassPlanet,HomePlanet</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$Marker01"/>
+            
+            <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventTimeLords05Bis-Pacifist"/>
+
+            <Var VarName="$Amount01" IntValue="10"/>
+            <Var VarName="$Amount02" IntValue="-10"/>
+            <Var VarName="$CuriosityTimeLords" StringValue="Curiosity_Quest_TimeLords02"/>
+            <Var VarName="$CuriosityTimeLordsGUID"/>
+            <Var VarName="$Startegic01" StringValue="Strategic1"/>
+            <Var VarName="$Startegic02" StringValue="Strategic2"/>
+            <Var VarName="$Startegic03" StringValue="Strategic3"/>
+            <Var VarName="$Startegic04" StringValue="Strategic4"/>
+            <Var VarName="$Startegic05" StringValue="Strategic5"/>
+            <Var VarName="$Startegic06" StringValue="Strategic6"/>
+            <LocalizationVar Source="$Amount01" LocalizationKey="$Amount01Name"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+   
+        
+        <!--============ STEPS ============-->
+
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$OnePlanet"/>
+                            <Input_CuriosityDefinition VarName="$CuriosityTimeLords"/>
+                            <Output_CuriosityGUIDs VarName="$CuriosityTimeLordsGUID"/>
+                        </Action_SpawnCuriosity>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$OnePlanet"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective_Pacifist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_CuriosityDiscovered Initiator="Empire" OnlyAllowDiscoveryByFleet="false">
+                                <Input_CuriosityGUIDs VarName="$CuriosityTimeLordsGUID"/>
+                            </Decorator_CuriosityDiscovered>
+                            <Action_TransferResource>                                
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$Startegic01"/>
+                                <Input_Amount VarName="$Amount02"/>                               
+                            </Action_TransferResource>
+                            <Action_TransferResource>
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$Startegic02"/>
+                                <Input_Amount VarName="$Amount02"/>
+                            </Action_TransferResource>
+                            <Action_TransferResource>
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$Startegic03"/>
+                                <Input_Amount VarName="$Amount02"/>
+                            </Action_TransferResource>
+                            <Action_TransferResource>
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$Startegic04"/>
+                                <Input_Amount VarName="$Amount02"/>
+                            </Action_TransferResource>     
+                            <Action_TransferResource>                                
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$Startegic05"/>
+                                <Input_Amount VarName="$Amount02"/>                               
+                            </Action_TransferResource>
+                            <Action_TransferResource>                                
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$Startegic06"/>
+                                <Input_Amount VarName="$Amount02"/>                               
+                            </Action_TransferResource>                         
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                        </Sequence>
+                    </Objective>
+                    <Reward Droplist="DroplistRewardQuestTimeLords11" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>  
+
+    <!-- ####################################### -->
+    <!--  TIME LORDS  Chapter 4 - INDUSTRIALIST  -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="TimeLordsQuest-Chapter4-Industrialist-Part2" Category="MajorQuest" SubCategory="TimeLords" CheckRandom="false">
+
+        <!--============ TAGS ============-->
+        <Tags>TimeLordsQuest-Chapter4-Industrialist-Part2,FactionFinalQuest,FactionQuestTimeLords</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$PoliticalEffectIndustrialist" StringValue="PopulationEventTimeLords06-Industrialist"/>
+
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ColonizedStarSystemStateColony')</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ColonizedStarSystemStateColony')+3</Expression>
+            </InterpretedVar>
+
+            <Var VarName="$Expression01" StringValue="Count(Context, @'ClassEmpire/ColonizedStarSystemStateColony')"/>
+
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+    
+        
+        <!--============ STEPS ============-->
+
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustrialist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Industrialist" StartValue="$Amount01" EndValue="$Amount02">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                        </Sequence>
+                    </Objective>
+
+                  
+                    <Reward Droplist="DroplistRewardQuestTimeLords10" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ####################################### -->
+    <!--  TIME LORDS  Chapter 4 - INDUSTRIALIST  -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="TimeLordsQuest-Chapter4-Pacifist-Part2" Category="MajorQuest" SubCategory="TimeLords" CheckRandom="false">
+
+        <!--============ TAGS ============-->
+        <Tags>TimeLordsQuest-Chapter4-Pacifist-Part2,FactionFinalQuest,FactionQuestTimeLords</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventTimeLords06-Pacifist"/>
+
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceStrategic3')</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceStrategic3')+2</Expression>
+            </InterpretedVar>
+          
+            <Var VarName="$Expression01" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassColonizedResourceDeposit,ResourceStrategic3') ge $(Amount02)"/>
+
+            <InterpretedVar VarName="$Amount03" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceStrategic4')</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount04" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceStrategic4')+2</Expression>
+            </InterpretedVar>
+
+            <Var VarName="$Expression02" StringValue="Count(Context, @'ClassEmpire/ColonizedStarSystemStateColony/ClassColonizedPlanet/ClassColonizedResourceDeposit,ResourceStrategic4') ge $(Amount04)"/>
+            
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+            <LocalizationVar LocalizationKey="$Amount04Name" Source="$Amount04"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+     
+        
+        <!--============ STEPS ============-->
+
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Pacifist">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Parallel CompletionPolicy="All">
+                        <Sequence>                          
+                            <Decorator_BeginTurn>
+                                <Condition_CheckInterpreter>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_CheckInterpreter>
+                            </Decorator_BeginTurn>
+                            <Decorator_BeginTurn>
+                                <Condition_CheckInterpreter>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression02"/>
+                                </Condition_CheckInterpreter>
+                            </Decorator_BeginTurn>
+                        </Sequence>
+                        </Parallel>
+                    </Objective>
+
+                    <Reward Droplist="DroplistRewardQuestTimeLords09" Picks="1"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+</Datatable>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+  <SimulationDescriptor Name="ClassGarrison" Type="Class">
+    <Property Name="ShipCount" Composition="Sum" />
+
+    <Property Name="CommandPoints" BaseValue="0" Composition="Sum"/>
+    <Property Name="GarrisonMoneyUpkeep"   Composition="Sum"/>
+    <Property Name="GarrisonMoneyUpkeepModifierFromPrivateers"      BaseValue="1" />
+
+    <Property Name="ActionPointStock" Composition="Minimum"/>
+
+    <!-- Military Power -->
+    <Property Name="MilitaryPower" BaseValue="0" Composition="Sum"/>
+    <Property Name="OffensiveMilitaryPower" Composition="Sum"/>
+    <Property Name="DefensiveMilitaryPower" Composition="Sum"/>
+    <Property Name="ShownMilitaryPowerMultiplier" BaseValue="1"/>
+    <Property Name="ShownHealthMultiplier" BaseValue="1"/>
+
+    <!-- Used by AI, do not remove -->
+    <Property Name="ShownOffensiveMilitaryPower" Composition="Sum"/>
+    <Property Name="ShownDefensiveMilitaryPower" Composition="Sum"/>
+
+    <!-- Experience -->
+    <Property Name="ExperiencePerTurn" BaseValue="0" MinValue="Negative"/>
+    <Property Name="ExperienceAtShipCreation"  BaseValue="0"/>
+
+    <Property Name="ActionPointAttackCost" BaseValue="1"/>
+
+    <Property Name="MiningProbeLifetime"/>
+    <Property Name="MiningProbeDepositValueMultiplier"  BaseValue="0" MinValue="0" Composition="Maximum"/>
+    <Property Name="MiningProbePlanetStatsMultiplier"   BaseValue="0" MinValue="0" Composition="Maximum"/>
+    <Property Name="MiningProbeDepletionPerTurn"        BaseValue="0" MinValue="Negative"/>
+
+    <Property Name="CannotFight"                MaxValue="1"/>
+
+    <!--  ESG -->
+    <Property Name="IsntImmuneToSpecialNodes" BaseValue="1"/>
+    
+    <!-- Modifier -->
+    <Modifier TargetProperty="ExperiencePerTurn" Operation="Addition" Value="$(ExperiencePerTurn)" Path="ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="GarrisonMoneyUpkeep" Operation="Multiplication" Value="$(GarrisonMoneyUpkeepModifierFromPrivateers)"      Priority="100" />
+
+  </SimulationDescriptor>
+</Datatable>

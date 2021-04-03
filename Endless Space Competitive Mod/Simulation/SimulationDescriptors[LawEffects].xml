@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
   <!-- Peace and Prayer-->
-  <SimulationDescriptor Name="LawEffectP05L04VampirilisCommon" Type="LawEffect">
-    <Modifier TargetProperty="InfluenceConversionGainMultiplier" Operation="Force" Value="0" Priority="1000" TooltipHidden="true"/>
-    <Modifier TargetProperty="IsImmuneToSystemConversion" Operation="Force" Value="1" Priority="1000" TooltipHidden="true" Path="../ClassEmpire"/>
-  </SimulationDescriptor>
-
   <SimulationDescriptor Name="LawEffectP05L04Vampirilis" Type="LawEffect">
     <BinaryModifier TargetProperty="EmpireLifeforce"      Operation="Addition"      Left="100" BinaryOperation="Multiplication" Right="$(InfluencedSystemsCount)" Path="../ClassEmpire"  SearchValueFromPath="true"/>
     <BinaryModifier TargetProperty="EmpireLifeforce"      Operation="Percent"       Left="0.1" BinaryOperation="Multiplication" Right="$(InfluencedSystemsCount)" Path="../ClassEmpire"  SearchValueFromPath="true"/>
@@ -89,6 +84,18 @@
     <Modifier       TargetProperty="NetSystemGrowth"                    Operation="Addition"  Value="10"     Path="../ClassEmpire/ClassStarSystem,ColonizedStarSystemStateOutpost"/>
   </SimulationDescriptor>
 
+  <SimulationDescriptor Name="LawEffectP01L01TimeLords" Type="LawEffect">
+        <Modifier       TargetProperty="BoostHappinessOnColonies"   Operation="Addition"    Value="1"       Path="../ClassEmpire" TooltipHidden="true" />
+        <Modifier       TargetProperty="SystemProduction"           Operation="Addition"    Value="5"      Path="../ClassEmpire/ClassStarSystem,ColonizedStarSystemStateOutpost" TooltipHidden="false" />
+        <Modifier TargetProperty="DemocracyLawsDiversityHasIndustrialist" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="true"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="LawEffectP01L01TimeLordsRepublic" Type="LawEffect">
+        <Modifier       TargetProperty="BoostHappinessOnColonies"           Operation="Addition"    Value="1"       Path="../ClassEmpire" TooltipHidden="true" />
+        <Modifier       TargetProperty="HappinessFromExpansion"             Operation="Addition"    Value="10"      Path="../ClassEmpire/ClassColonizedStarSystem,TemporaryEffectColonyHappinessBoost" TooltipHidden="true" />
+        <Modifier       TargetProperty="SystemProduction"                   Operation="Addition"    Value="10"      Path="../ClassEmpire/ClassStarSystem,ColonizedStarSystemStateOutpost" TooltipHidden="false" />
+    </SimulationDescriptor>
+
   <!-- Ecologist Free Law -->
   <SimulationDescriptor Name="LawEffectP04L00" Type="LawEffect">
     <Modifier TargetProperty="PlanetInitialFIDSPenalty"       Operation="Addition"     Value="-0.5"    Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,!PlanetGameplayTypeGas"  TooltipHidden="true"/>
@@ -127,5 +134,27 @@
   <SimulationDescriptor Name="LawEffectP04L04Republic" Type="LawEffect">
       <BinaryModifier TargetProperty="SystemProduction"             Operation="Percent"     Left="0.05" BinaryOperation="Multiplication" Right="$(PopulationsAssimilated)"    Path="../AffinityGameplayHoratio,ClassEmpire/ClassColonizedStarSystem" TooltipHiddenIfPathInvalid="true"     SearchValueFromPath="true"/>
       <BinaryModifier TargetProperty="SystemProduction"             Operation="Percent"     Left="0.05" BinaryOperation="Multiplication" Right="$(PopulationType)"            Path="../!AffinityGameplayHoratio,ClassEmpire/ClassColonizedStarSystem" TooltipHiddenIfPathInvalid="true"   SearchValueFromPath="true" />
+  </SimulationDescriptor>
+
+  <!--Timelords-->
+  <SimulationDescriptor Name="LawEffectP00L01-QuestTimeLords" Type="LawEffect">
+        <Modifier TargetProperty="DiplomacyCostReduction"           Operation="Percent"      Value="-0.4"     Path="../ClassEmpire"/>
+        <Modifier TargetProperty="DemocracyLawsDiversityHasNeutral" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="true"/>
+    </SimulationDescriptor>
+
+  <SimulationDescriptor Name="LawEffectP00L02-QuestTimeLords" Type="LawEffect">
+        <Modifier TargetProperty="ShipProductionCostReduction"           Operation="Addition"      Value="0.35"     Path="../ClassEmpire/ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="ExperienceAtShipCreation" Operation="Addition" Value="40" Path="../ClassEmpire/ClassColonizedStarSystem/ClassGarrison" TooltipOverride="%LawEffectP00L02-QuestTimeLordsEffectOverride"/>
+        <Modifier TargetProperty="DemocracyLawsDiversityHasNeutral" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="true"/>
+    </SimulationDescriptor>
+
+  <SimulationDescriptor Name="LawEffectP00L13-PopulationCollectionBots" Type="LawEffect">
+    <Modifier TargetProperty="OwnerShipRecoveryRate" Operation="Percent" Value="0.5" Priority="10" Path="../ClassEmpire/ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="DemocracyLawsDiversityHasNeutral" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+  
+  <!-- Basryxo Law -->
+  <SimulationDescriptor Name="LawEffectP00L36-PopulationCollectionBasryxo" Type="LawEffect">
+    <BinaryModifier		TargetProperty="SystemGrowth"       Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(OwnedMeagerPlanets)" SearchValueFromPath="true" Path="../ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
 </Datatable>
