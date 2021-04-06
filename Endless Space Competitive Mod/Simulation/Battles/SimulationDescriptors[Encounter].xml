@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
-  <!-- GROUP -->
+  <!-- Team in Battle -->
   <SimulationDescriptor Name="ClassGroup" Type="Class">
+		<!-- ESG Properties -->
+		<Property Name="OpponentRecyclingManpowerPerCP" BaseValue="0" Composition="Sum"/>
+		
+		<!-- Vanilla Properties -->
     <Property Name="InitialFlotillasCount" BaseValue="0" IsSealed="true"/>
     <Property Name="InitialEffectiveFlotillasCount" BaseValue="0" IsSealed="true"/>
     <Property Name="EffectiveFlotillasCount" BaseValue="0" IsSealed="true"/>
@@ -94,118 +98,15 @@
 
     <Property Name="VisionStrength" BaseValue="0" IsSealed="true"/>
     <Property Name="OpponentVisionStrength" BaseValue="0" IsSealed="true"/>
-
+    
+    <!--Vanilla Modifiers-->
     <Modifier TargetProperty="OpponentRecyclingDustPerCP" Operation="Addition"          Value="$(AdditionalOpponentRecyclingDustPerCP)"         Path="ClassGroup"/>
     <Modifier TargetProperty="OpponentRecyclingSciencePerCP" Operation="Addition"       Value="$(AdditionalOpponentRecyclingSciencePerCP)"      Path="ClassGroup"/>
     <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP" Operation="Addition"   Value="$(AdditionalOpponentRecyclingEmpirePointPerCP)"  Path="ClassGroup"/>
 
   </SimulationDescriptor>
 
-  <SimulationDescriptor Name="MoraleBonusDescriptor" Type="MoraleBonus">
-    <Property Name="MoraleBonusDamageEffective" BaseValue="0" MinValue="Negative"/>
-    <Property Name="MoraleBonusAccuracyEffective" BaseValue="0" MinValue="Negative"/>
-    <Property Name="MoraleBonusEvasionEffective" BaseValue="0" MinValue="Negative"/>
-
-
-    <!-- Compute Morale Bonus Effect -->
-    <BinaryModifier TargetProperty="MoraleBonus" Operation="Addition" Left="$(EffectiveFlotillasCount)" BinaryOperation="Subtraction" Right="$(OpponentEffectiveFlotillasCount)" TooltipHidden="true"/>
-
-    <BinaryModifier TargetProperty="MoraleBonusDamageEffective"     Operation="Addition" Left="0.05" BinaryOperation="Multiplication" Right="$(MoraleBonus)" Path="ClassGroup" TooltipHidden="true" />
-    <BinaryModifier TargetProperty="MoraleBonusEvasionEffective"     Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(MoraleBonus)" Path="ClassGroup" TooltipHidden="true" />
-    <BinaryModifier TargetProperty="MoraleBonusAccuracyEffective"   Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(MoraleBonus)" Path="ClassGroup" TooltipHidden="true" />
-
-    <Modifier       TargetProperty="MoraleBonusDamage" Operation="Addition" Value="$(MoraleBonusDamageEffective)" Path="ClassGroup" EnforceContext="true"/>
-    <Modifier       TargetProperty="MoraleBonusEvasion" Operation="Addition" Value="$(MoraleBonusEvasionEffective)" Path="ClassGroup" EnforceContext="true"/>
-    <Modifier       TargetProperty="MoraleBonusAccuracy" Operation="Addition" Value="$(MoraleBonusAccuracyEffective)" Path="ClassGroup" EnforceContext="true"/>
-
-    <Modifier TargetProperty="Damage"     Operation="Percent" Value="$(MoraleBonusDamageEffective)" Path="ClassGroup/ClassFlotilla/ClassShip/ClassSection/ClassModuleWeapon" TooltipHidden="true" />
-    <Modifier TargetProperty="Accuracy"   Operation="Percent" Value="$(MoraleBonusAccuracyEffective)" Path="ClassGroup/ClassFlotilla/ClassShip/ClassSection/ClassModuleWeapon" TooltipHidden="true" />
-    <Modifier TargetProperty="Evasion"   Operation="Addition" Value="$(MoraleBonusEvasionEffective)" Path="ClassGroup/ClassFlotilla/ClassShip" TooltipHidden="true" />
-    <Modifier TargetProperty="Damage"     Operation="Percent" Value="$(MoraleBonusDamageEffective)" Path="ClassGroup/ClassFlotilla/ClassShip/ClassSection/ClassModuleSquadron" TooltipHidden="true" />
-  </SimulationDescriptor>
-
-  <!-- Team Spirit Effect -->
-  <SimulationDescriptor Name="PlayEffectMoraleBonusIncrease"   Type="PlayEffect">
-    <Modifier TargetProperty="MoraleBonus"      Operation="Percent"   Value="1"  Path="ClassGroup"/>
-
-    <!--CARRIER AIR SUPPORT - CAS %-->
-    <Modifier TargetProperty="FightersWithOffensiveStanceRatio" Operation="Addition" Value="0.7" Path="ClassGroup" TooltipHidden="true"/>
-    <Modifier TargetProperty="FightersWithDefensiveStanceRatio" Operation="Addition" Value="0.3" Path="ClassGroup" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="PlayEffectMoralePenalty"   Type="PlayEffect">
-    <Modifier TargetProperty="MoraleBonusDamage"            Operation="Multiplication"   Value="-0.5"  Path="ClassGroup" TooltipHidden="true"/>
-    <Modifier TargetProperty="MoraleBonusAccuracy"          Operation="Multiplication"   Value="-0.5"  Path="ClassGroup" TooltipHidden="true"/>
-    <Modifier TargetProperty="MoraleBonusEvasion"          Operation="Multiplication"   Value="-0.5"  Path="ClassGroup" TooltipHidden="true"/>
-
-    <!--CARRIER AIR SUPPORT - CAS %-->
-    <Modifier TargetProperty="FightersWithOffensiveStanceRatio" Operation="Addition" Value="0.3" Path="ClassGroup" TooltipHidden="true"/>
-    <Modifier TargetProperty="FightersWithDefensiveStanceRatio" Operation="Addition" Value="0.7" Path="ClassGroup" TooltipHidden="true"/>
-  </SimulationDescriptor>
-  
-  <SimulationDescriptor Name="PlayEffectCooldownIncrease"   Type="PlayEffect">
-    <Modifier TargetProperty="Cooldown"                   Operation="Percent"   Value="0.3" Path="ClassGroup//ClassModuleWeapon"/>
-    <Modifier TargetProperty="CooldownVariation"          Operation="Percent"   Value="0.3" Path="ClassGroup//ClassModuleWeapon,ClassModuleWeaponMissileSwarm" TooltipHidden="true"/>
-
-    <!--CARRIER AIR SUPPORT - CAS %-->
-    <Modifier TargetProperty="FightersWithOffensiveStanceRatio" Operation="Addition" Value="0.3" Path="ClassGroup" TooltipHidden="true"/>
-    <Modifier TargetProperty="FightersWithDefensiveStanceRatio" Operation="Addition" Value="0.7" Path="ClassGroup" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="EncounterShipTemporaryCooldownReductionPercent" Type="EncounterShipTemporaryCooldownReductionPercent">
-    <Modifier TargetProperty="Cooldown"           Operation="Percent"   Value="$(CooldownReductionPercentFromOpponent)" Path="ClassShip//ClassModuleWeapon" TooltipHidden="true"/>
-    <Modifier TargetProperty="CooldownVariation"  Operation="Percent"   Value="$(CooldownReductionPercentFromOpponent)" Path="ClassGroup//ClassModuleWeapon,ClassModuleWeaponMissileSwarm" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
-  <!-- Battle Effects -->
-  <SimulationDescriptor Name="ClassModuleWeaponEncounter" Type="ClassModuleWeapon">
-    <Property Name="AdditionalAccuracy" IsSealed="true" MinValue="Negative"/>
-
-    <Property Name="TotalLongShot" IsSealed="true" MinValue="Negative"/>
-    <Property Name="TotalLongHit" IsSealed="true" MinValue="Negative"/>
-
-    <Property Name="TotalMediumShot" IsSealed="true" MinValue="Negative"/>
-    <Property Name="TotalMediumHit" IsSealed="true" MinValue="Negative"/>
-
-    <Property Name="TotalShortShot" IsSealed="true" MinValue="Negative"/>
-    <Property Name="TotalShortHit" IsSealed="true" MinValue="Negative"/>
-
-    <Property Name="TotalShot"/>
-    <Property Name="TotalHit"/>
-
-    <Property Name="DamageApplied" BaseValue="0" IsSealed="true"/>
-    <Property Name="DamageAppliedAbsorbedByShield" BaseValue="0" IsSealed="true"/>
-    <Property Name="DamageAppliedAbsorbedByHullPlating" BaseValue="0" IsSealed="true"/>
-
-    <Property Name="WeaponDeactivationDuration"          BaseValue="0" IsSealed="true"/>
-
-    <Property Name="DamageBonusIfOneShip" IsSealed="true" BaseValue="1"/>
-
-    <Modifier TargetProperty="Damage" Operation="Multiplication" Value="$(DamageBonusIfOneShip)" Path="ClassModuleWeapon"/>
-
-    <Modifier TargetProperty="Accuracy" Operation="Addition" Value="$(AdditionalAccuracy)" Path="ClassModuleWeapon"/>
-
-    <Modifier TargetProperty="TotalShot" Operation="Addition" Value="$(TotalLongShot)"/>
-    <Modifier TargetProperty="TotalShot" Operation="Addition" Value="$(TotalMediumShot)"/>
-    <Modifier TargetProperty="TotalShot" Operation="Addition" Value="$(TotalShortShot)"/>
-
-    <Modifier TargetProperty="TotalHit" Operation="Addition" Value="$(TotalLongHit)"/>
-    <Modifier TargetProperty="TotalHit" Operation="Addition" Value="$(TotalMediumHit)"/>
-    <Modifier TargetProperty="TotalHit" Operation="Addition" Value="$(TotalShortHit)"/>
-
-    <Modifier   TargetProperty="Accuracy"  Operation="Addition" Value="$(Accuracy)"      Path="ClassModuleWeaponEncounter/ClassSalvo" TooltipHidden="true"/>
-
-    <Modifier   TargetProperty="OpponentEnergyWeaponAccuracyPercent"  Operation="Addition" Value="$(OpponentEnergyWeaponAccuracyPercent)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
-    <Modifier   TargetProperty="OpponentCooldownReductionPercent"  Operation="Addition" Value="$(OpponentCooldownReductionPercent)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
-    <Modifier   TargetProperty="SplashFlotillaDamagePercent"  Operation="Addition" Value="$(SplashFlotillaDamagePercent)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
-
-    <Modifier   TargetProperty="MaximumHealth"  Operation="Percent" Value="$(SalvoHealthPercent)"      Path="ClassModuleWeaponEncounter/ClassSalvo"/>
-    <Modifier   TargetProperty="DamageAbsorbedByShieldMultiplier"  Operation="Percent" Value="$(DamageAbsorbedByShieldMultiplier)"      Path="ClassModuleWeaponEncounter/ClassSalvo"/>
-
-    <!-- Coilgun -->
-    <Modifier   TargetProperty="ArmorDestructionDynamic"  Operation="Addition" Value="$(ArmorDestructionDynamic)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
-  </SimulationDescriptor>
-
+  <!-- Ship in Battle -->
   <SimulationDescriptor Name="ClassShipEncounter" Type="ClassShip">
     <Property Name="MedalScore" BaseValue="0" IsSealed="true"/>
     <Property Name="InitialMilitaryPower" BaseValue="0" IsSealed="true"/>
@@ -250,6 +151,8 @@
     <Property Name="EncounterDamageMissile"             BaseValue="0" MinValue="-0.95"/>
     <Property Name="EncounterDamageLaser"               BaseValue="0" MinValue="-0.95"/>
     <Property Name="EncounterDamageBeam"                BaseValue="0" MinValue="-0.95"/>
+    <Property Name="EncounterDamageExplosives"           BaseValue="0" MinValue="-0.95"/>
+    <Property Name="EncounterCriticalExplosives"        BaseValue="0" MinValue="-0.95"/>
 
     <Property Name="AdditionalShipManpowerKillPerHitProjectile"	    BaseValue="0" MinValue="-0.95"/>
     <Property Name="AdditionalShipManpowerKillPerHitEnergy"         BaseValue="0" MinValue="-0.95"/>
@@ -331,9 +234,64 @@
     <Modifier       TargetProperty="Accuracy"                       Operation="Subtraction"  Value="$(AccuracyPenalty)"  Path="ClassShip/ClassSection/ClassModuleWeapon"/>
     <BinaryModifier TargetProperty="RelativeMilitaryPower"          Operation="Multiplication" Left="$(Health)" BinaryOperation="Division" Right="$(MaximumHealth)" />
 
+  
+    <!-- ESG -->
+    <Modifier TargetProperty="IsntImmuneToSpecialNodes" Operation="Force" Value="$(IsntImmuneToSpecialNodes)" Path="ClassShip//ClassModuleWeapon"/>
   </SimulationDescriptor>
 
+  <!-- Ship in Battle - Firing -->
+  <SimulationDescriptor Name="EncounterShipActive" Type="EncounterShipActive">
+    <Modifier       TargetProperty="Damage"                         Operation="Percent"  Value="$(DamageIncreasePercent)"  Path="ClassShip/ClassSection/ClassModuleWeapon"/>
+
+    <Modifier TargetProperty="EncounterDamageKinetic"			 Operation="Addition" Value="$(EncounterDamageProjectile)"			Path="ClassShip"/>
+    <Modifier TargetProperty="EncounterDamageMissile"			 Operation="Addition" Value="$(EncounterDamageProjectile)"			Path="ClassShip"/>
+    <Modifier TargetProperty="EncounterDamageLaser"				 Operation="Addition" Value="$(EncounterDamageEnergy)"				  Path="ClassShip"/>
+    <Modifier TargetProperty="EncounterDamageBeam"				 Operation="Addition" Value="$(EncounterDamageEnergy)"				  Path="ClassShip"/>
+
+    <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(EncounterDamage)"                  Path="ClassShip/ClassSection/ClassModuleWeapon" />
+    <Modifier TargetProperty="Damage"					   Operation="Percent" Value="$(EncounterDamageKinetic)"           Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponKinetic" />
+    <Modifier TargetProperty="Damage"					   Operation="Percent" Value="$(EncounterDamageMissile)"           Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponMissile" />
+    <Modifier TargetProperty="Damage"					   Operation="Percent" Value="$(EncounterDamageLaser)"             Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponLaser" />
+    <Modifier TargetProperty="Damage"					   Operation="Percent" Value="$(EncounterDamageBeam)"              Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponBeam" />
+    <Modifier TargetProperty="Damage"            Operation="Percent" Value="$(EncounterDamage)"                  Path="ClassShip/ClassSection/ClassModuleSquadron" />
+    <Modifier TargetProperty="Damage"					   Operation="Percent" Value="$(EncounterDamageExplosives)"        Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponMissile" />
+    <Modifier TargetProperty="Damage"					   Operation="Percent" Value="$(EncounterDamageExplosives)"        Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeBomber" />
+    <Modifier TargetProperty="CriticalHitChance" Operation="Percent" Value="$(EncounterCriticalExplosives)"      Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponMissile" />
+    <Modifier TargetProperty="CriticalHitChance" Operation="Percent" Value="$(EncounterCriticalExplosives)"      Path="ClassShip/ClassSection/ClassModuleSquadron,SquadronTypeBomber" />
+
+    <Modifier TargetProperty="ShipManpowerKillPerHit"	Operation="Addition" Value="$(AdditionalShipManpowerKillPerHitProjectile)"      Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponKinetic" />
+    <Modifier TargetProperty="ShipManpowerKillPerHit"	Operation="Addition" Value="$(AdditionalShipManpowerKillPerHitProjectile)"      Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponMissile" />
+    <Modifier TargetProperty="ShipManpowerKillPerHit"	Operation="Addition" Value="$(AdditionalShipManpowerKillPerHitEnergy)"          Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponLaser" />
+    <Modifier TargetProperty="ShipManpowerKillPerHit"	Operation="Addition" Value="$(AdditionalShipManpowerKillPerHitEnergy)"          Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponBeam" />
+
+    <Modifier TargetProperty="ShipManpowerKillPerHit"   Operation="Percent" Value="$(ShipManpowerKillPerHitPercentEncounter)"  Path="ClassShip/ClassSection/ClassModuleWeapon" />
+    <BinaryModifier TargetProperty="OffensiveMilitaryPowerIfWeakestTargeting"   Operation="Addition" Left="$(OffensiveMilitaryPower)" BinaryOperation="Multiplication" Right="$(IsWeakestTargeting)" />
+
+    <BinaryModifier TargetProperty="DamageBonusFromManpower"        Operation="Addition"                Left="$(ShipManpowerStock)"                      BinaryOperation="Division" Right="$(MaximumShipManpower)"                  Path="ClassShip" />
+    <Modifier TargetProperty="DamageBonusFromManpower"              Operation="Multiplication"          Value="$(MaximumDamageBonusFromManpower)"        Path="ClassShip" />
+    <Modifier TargetProperty="EncounterDamage"                      Operation="Addition"                Value="$(DamageBonusFromManpower)"               Path="ClassShip" />
+
+    <BinaryModifier TargetProperty="ShipManpowerKillAbsorption"   Operation="Addition" Left="$(EffectiveHullPlatingAbsorption)" BinaryOperation="Multiplication" Right="$(ProjectileManpowerAbsorption)" />
+    <BinaryModifier TargetProperty="ShipManpowerKillAbsorption"   Operation="Addition" Left="$(EffectiveShieldAbsorption)"      BinaryOperation="Multiplication" Right="$(EnergyManpowerAbsorption)" />
+
+    <BinaryModifier TargetProperty="HullPlatingAbsorptionPercent"   Operation="Percent" Left="$(DefenseGainPerCP)"      BinaryOperation="Multiplication" Right="$(CommandPoints)" />
+    <BinaryModifier TargetProperty="ShieldAbsorptionPercent"        Operation="Percent" Left="$(DefenseGainPerCP)"      BinaryOperation="Multiplication" Right="$(CommandPoints)" />
+
+    <Modifier TargetProperty="HullPlatingPenetrationFactor"     Operation="Addition"    Value="$(ProjectileHullPlatingPenetrationFactor)"   Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponKinetic"/>
+    <Modifier TargetProperty="HullPlatingPenetrationFactor"     Operation="Addition"    Value="$(ProjectileHullPlatingPenetrationFactor)"   Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponMissile"/>
+
+    <Modifier TargetProperty="ShipManpowerStock"                Operation="Addition"    Value="$(ShipManpowerStock)"                        Path="ClassShip,!EncounterShipStatusDestroyed/../ClassGroup"/>
+
+    <Modifier TargetProperty="HullPlatingAbsorptionPercent" Operation="Multiplication" Value="$(DefenseBonusIfOneShipEncounter)" Path="ClassShip"/>
+    <Modifier TargetProperty="ShieldAbsorptionPercent"      Operation="Multiplication" Value="$(DefenseBonusIfOneShipEncounter)" Path="ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- Flotilla in Battle -->
   <SimulationDescriptor Name="ClassFlotilla" Type="Class">
+		<!-- ESG Properties -->
+		<Property Name="OpponentRecyclingManpowerPerCP" BaseValue="0" Composition="Sum"/>
+
+		<!-- Vanilla Properties -->
     <Property Name="InitialShipsCount" BaseValue="0"/>
     <Property Name="InitialSmallShipsCount" BaseValue="0"/>
     <Property Name="InitialMediumShipsCount" BaseValue="0"/>
@@ -422,9 +380,29 @@
     <Property Name="AttackingFlotillaInvisibilityStatusPhase2" BaseValue="0" MinValue="0" MaxValue="1" IsSealed="true"/>
     <Property Name="AttackingFlotillaInvisibilityStatusPhase3" BaseValue="0" MinValue="0" MaxValue="1" IsSealed="true"/>
 
-    <!--<Modifier TargetProperty="InitialMainMilitaryPower"             Operation="Addition" Value="$(RelativeMilitaryPower)" Path="FlotillaTypeMain/./ClassGroup"/>
-        <Modifier TargetProperty="InitialReinforcementMilitaryPower"    Operation="Addition" Value="$(RelativeMilitaryPower)" Path="FlotillaTypeReinforcement/./ClassGroup"/>-->
+    <!--ESG Properties-->
+    <Property Name="FlotillaFlakDamageModifier"          BaseValue="0"  MinValue="Negative"   Composition="Sum"/>
+    <Property Name="FlotillaFlakLongRangePenalty"          BaseValue="0"  MinValue="Negative"  Composition="Sum"/>
+    <Property Name="FlotillaFlakMediumRangePenalty"          BaseValue="0" MinValue="Negative" Composition="Sum"/>
+    <Property Name="FlotillaFlakShortRangePenalty"          BaseValue="0"  MinValue="Negative" Composition="Sum"/>
+    <Property Name="FlotillaManpowerDamageOverTimeIncrease"          BaseValue="0"  MinValue="0" Composition="Sum"/>
+    <Property Name="EMPFlotillaDefense"          BaseValue="0"  MinValue="0" Composition="Sum"/>
+    <Property Name="MaximumShieldCapForFlotilla"          BaseValue="0"  MinValue="0" Composition="Sum"/>
+    <Property Name="ShieldAbsorptionForFlotilla"          BaseValue="0"  MinValue="0" Composition="Sum"/>
 
+    <!--ESG Modifiers-->
+    <Modifier TargetProperty="FlakDamage" Operation="Percent" Value="$(FlotillaFlakDamageModifier)" Path="ClassFlotilla/ClassShip//ClassModuleWeapon,ClassModuleWeaponKinetic"/>
+    <Modifier TargetProperty="Damage" Operation="Percent" Value="$(FlotillaFlakDamageModifier)" Path="ClassFlotilla/ClassShip//ClassModuleWeapon,ClassModuleWeaponFlack"/>
+    <Modifier TargetProperty="LongRangePenalty" Operation="Addition" Value="$(FlotillaFlakLongRangePenalty)" Path="ClassFlotilla/ClassShip/ClassModuleWeapon,ClassModuleWeaponFlack"/>
+    <Modifier TargetProperty="MediumRangePenalty" Operation="Addition" Value="$(FlotillaFlakMediumRangePenalty)" Path="ClassFlotilla/ClassShip/ClassModuleWeapon,ClassModuleWeaponFlack"/>
+    <Modifier TargetProperty="ShortRangePenalty" Operation="Addition" Value="$(FlotillaFlakShortRangePenalty)" Path="ClassFlotilla/ClassShip/ClassModuleWeapon,ClassModuleWeaponFlack"/>
+    <Modifier TargetProperty="ManpowerDamageOverTime" Operation="Percent" Value="$(FlotillaManpowerDamageOverTimeIncrease)" Path="ClassFlotilla/ClassShip"/>
+    <Modifier TargetProperty="EMPWeaponDefense" Operation="Addition" Value="$(EMPFlotillaDefense)" Path="ClassFlotilla/ClassShip"/>
+    <Modifier TargetProperty="EMPShieldDefense" Operation="Addition" Value="$(EMPFlotillaDefense)" Path="ClassFlotilla/ClassShip"/>
+    <Modifier TargetProperty="MaximumShield" Operation="Addition" Value="$(MaximumShieldCapForFlotilla)" Path="ClassFlotilla/ClassShip"/>
+    <Modifier TargetProperty="ShieldAbsorption" Operation="Addition" Value="$(ShieldAbsorptionForFlotilla)" Path="ClassFlotilla/ClassShip"/>
+    
+    <!-- Vanilla -->
     <Modifier TargetProperty="MainRelativeMilitaryPower" Operation="Addition" Value="$(RelativeMilitaryPower)" Path="FlotillaTypeMain/./ClassGroup"/>
     <Modifier TargetProperty="ReinforcementRelativeMilitaryPower" Operation="Addition" Value="$(RelativeMilitaryPower)" Path="FlotillaTypeReinforcement/./ClassGroup"/>
 
@@ -443,9 +421,54 @@
     <Modifier TargetProperty="CommandPoints" Operation="Addition" Value="$(CommandPoints)" Path="./ClassGroup"/>
   </SimulationDescriptor>
 
+  <!-- Weapon in Battle -->
+  <SimulationDescriptor Name="ClassModuleWeaponEncounter" Type="ClassModuleWeapon">
+    <Property Name="AdditionalAccuracy" IsSealed="true" MinValue="Negative"/>
 
-  <!-- Coilgun Armor Destruction -->
-  <SimulationDescriptor Name="EncounterShipTemporaryArmorDestructionAccuracyPercent" Type="EncounterShipTemporaryArmorDestructionAccuracyPercent">
-    <Modifier TargetProperty="HullPlatingAbsorptionDebuffDynamic"      Operation="Addition"   Value="$(CoilgunArmorDescructionPercentFromOpponent)" Path="ClassShip" TooltipHidden="true"/>
+    <Property Name="TotalLongShot" IsSealed="true" MinValue="Negative"/>
+    <Property Name="TotalLongHit" IsSealed="true" MinValue="Negative"/>
+
+    <Property Name="TotalMediumShot" IsSealed="true" MinValue="Negative"/>
+    <Property Name="TotalMediumHit" IsSealed="true" MinValue="Negative"/>
+
+    <Property Name="TotalShortShot" IsSealed="true" MinValue="Negative"/>
+    <Property Name="TotalShortHit" IsSealed="true" MinValue="Negative"/>
+
+    <Property Name="TotalShot"/>
+    <Property Name="TotalHit"/>
+
+    <Property Name="DamageApplied" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedAbsorbedByShield" BaseValue="0" IsSealed="true"/>
+    <Property Name="DamageAppliedAbsorbedByHullPlating" BaseValue="0" IsSealed="true"/>
+
+    <Property Name="WeaponDeactivationDuration"          BaseValue="0" IsSealed="true"/>
+
+    <Property Name="DamageBonusIfOneShip" IsSealed="true" BaseValue="1"/>
+    <Property Name="IsntImmuneToSpecialNodes" BaseValue="1"/>
+
+    <Modifier TargetProperty="Damage" Operation="Multiplication" Value="$(DamageBonusIfOneShip)" Path="ClassModuleWeapon"/>
+
+    <Modifier TargetProperty="Accuracy" Operation="Addition" Value="$(AdditionalAccuracy)" Path="ClassModuleWeapon"/>
+
+    <Modifier TargetProperty="TotalShot" Operation="Addition" Value="$(TotalLongShot)"/>
+    <Modifier TargetProperty="TotalShot" Operation="Addition" Value="$(TotalMediumShot)"/>
+    <Modifier TargetProperty="TotalShot" Operation="Addition" Value="$(TotalShortShot)"/>
+
+    <Modifier TargetProperty="TotalHit" Operation="Addition" Value="$(TotalLongHit)"/>
+    <Modifier TargetProperty="TotalHit" Operation="Addition" Value="$(TotalMediumHit)"/>
+    <Modifier TargetProperty="TotalHit" Operation="Addition" Value="$(TotalShortHit)"/>
+
+    <Modifier   TargetProperty="Accuracy"  Operation="Addition" Value="$(Accuracy)"      Path="ClassModuleWeaponEncounter/ClassSalvo" TooltipHidden="true"/>
+
+    <Modifier   TargetProperty="OpponentEnergyWeaponAccuracyPercent"  Operation="Addition" Value="$(OpponentEnergyWeaponAccuracyPercent)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+    <Modifier   TargetProperty="OpponentCooldownReductionPercent"  Operation="Addition" Value="$(OpponentCooldownReductionPercent)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+    <Modifier   TargetProperty="SplashFlotillaDamagePercent"  Operation="Addition" Value="$(SplashFlotillaDamagePercent)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+
+    <Modifier   TargetProperty="MaximumHealth"  Operation="Percent" Value="$(SalvoHealthPercent)"      Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+    <Modifier   TargetProperty="DamageAbsorbedByShieldMultiplier"  Operation="Percent" Value="$(DamageAbsorbedByShieldMultiplier)"      Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+
+    <!-- Coilgun -->
+    <Modifier   TargetProperty="ArmorDestructionDynamic"  Operation="Addition" Value="$(ArmorDestructionDynamic)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+    <Modifier   TargetProperty="IsntImmuneToSpecialNodes"  Operation="Force" Value="$(IsntImmuneToSpecialNodes)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
   </SimulationDescriptor>
 </Datatable>

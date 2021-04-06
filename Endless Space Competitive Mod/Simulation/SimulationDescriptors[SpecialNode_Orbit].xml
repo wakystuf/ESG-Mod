@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+	<SimulationDescriptor Name="ClassSpecialNodeEffect" Type="ClassSpecialNodeEffect">
+		<Property Name="SystemResearch"/>
+		<Property Name="SystemProduction"/>
+		<Property Name="SystemEmpirePoint"/>
+		<Property Name="SystemMoney"/>
+		<Property Name="HealthRegenerationRatio"/>
+		<Property Name="DockedFleetsHealthRegenerationRatio"/>
+		<Property Name="SystemPopulation"/>
+
+		<Property Name="SpecialNodeEffectMultiplier" BaseValue="1" IsSealed="true"/>
+		<Property Name="SpecialNodeFIDSIMultiplier" BaseValue="1"/>
+		<Property Name="SpecialNodeMultiplier" BaseValue="0"/>
+
+		<BinaryModifier TargetProperty="SpecialNodeMultiplier" Operation="Addition" Left="$(SpecialNodeEffectMultiplier)" BinaryOperation="Multiplication" Right="$(SpecialNodeFIDSIMultiplier)"/>
+		
+		<BinaryModifier TargetProperty="SystemResearch"                         Operation="Addition" Left="$(SystemResearch)"                       BinaryOperation="Multiplication" Right="$(SpecialNodeMultiplier)" Path="../ClassColonizedStarSystem"/>
+		<BinaryModifier TargetProperty="SystemProduction"                       Operation="Addition" Left="$(SystemProduction)"                     BinaryOperation="Multiplication" Right="$(SpecialNodeMultiplier)" Path="../ClassColonizedStarSystem"/>
+		<BinaryModifier TargetProperty="SystemEmpirePoint"                      Operation="Addition" Left="$(SystemEmpirePoint)"                    BinaryOperation="Multiplication" Right="$(SpecialNodeMultiplier)" Path="../ClassColonizedStarSystem"/>
+		<BinaryModifier TargetProperty="SystemMoney"                            Operation="Addition" Left="$(SystemMoney)"                          BinaryOperation="Multiplication" Right="$(SpecialNodeMultiplier)" Path="../ClassColonizedStarSystem"/>
+		<BinaryModifier TargetProperty="HealthRegenerationRatio"                Operation="Addition" Left="$(HealthRegenerationRatio)"              BinaryOperation="Multiplication" Right="$(SpecialNodeEffectMultiplier)" Path="../ClassColonizedStarSystem/ClassGarrison/ClassShip"/>
+		<BinaryModifier TargetProperty="DockedFleetsHealthRegenerationRatio"    Operation="Addition" Left="$(DockedFleetsHealthRegenerationRatio)"  BinaryOperation="Multiplication" Right="$(SpecialNodeEffectMultiplier)" Path="../ClassColonizedStarSystem"/>
+	</SimulationDescriptor>
+
+	<!-- Black Hole -->
+	<SimulationDescriptor Name="FleetOrbitingSpecialNodeBlackHole"      Type="FleetOrbitingSpecialNode">
+		<Modifier TargetProperty="PreventsEnemyRetreat" Operation="Addition" Value="1" Path="ClassGarrisonFleet/ClassShip"/>
+	</SimulationDescriptor>
+
+	<!-- Asteroid Field -->
+	<SimulationDescriptor Name="FleetOrbitingSpecialNodeAsteroidField"  Type="FleetOrbitingSpecialNode">
+		<Modifier TargetProperty="HealthRegenerationRatio" Operation="Force" Value="0" Path="ClassGarrisonFleet/ClassShip,!ShipFactionUmbralChoir"/>
+	</SimulationDescriptor>
+
+	<!-- Collapsing Star -->
+	<SimulationDescriptor Name="FleetOrbitingSpecialNodeCollapsingStar" Type="FleetOrbitingSpecialNode">
+		<Modifier TargetProperty="ExperiencePerTurn" Operation="Addition" Value="4" Path="ClassGarrisonFleet/ClassShip,!ShipRoleHero"/>
+	</SimulationDescriptor>
+
+	<!-- Solar Nebula -->
+	<SimulationDescriptor Name="FleetOrbitingSpecialNodeSolarNebula"    Type="FleetOrbitingSpecialNode">
+		<Modifier TargetProperty="GarrisonMoneyUpkeep" Operation="Force" Value="0" Path="ClassGarrisonFleet/ClassShip,!ShipRoleHero"/>
+	</SimulationDescriptor>
+
+	<!-- Neutron Star -->
+  <SimulationDescriptor Name="FleetOrbitingSpecialNodeNeutronStar"    Type="FleetOrbitingSpecialNode">
+    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Multiplication" Value="0"   Path="ClassGarrisonFleet,!FleetInfluenceStateOwner/ClassShip"/>
+    <Modifier TargetProperty="IsInvisible"                 Operation="Force"          Value="0"   Path="ClassGarrisonFleet,!FleetInfluenceStateOwner"/>
+    <Modifier TargetProperty="VisionRange"                 Operation="Addition"       Value="10"  Path="ClassGarrisonFleet/ClassShip"/>
+  </SimulationDescriptor>
+
+	<!-- Nebula Clouds -->
+	<SimulationDescriptor Name="FleetOrbitingSpecialNodeSpaceClouds"    Type="FleetOrbitingSpecialNode">
+		<Modifier TargetProperty="AntiVisionStrengthForModule"  Operation="Force"   Value="3"    Path="ClassGarrisonFleet/ClassShip"/>
+		<Modifier TargetProperty="VisionRange"                  Operation="Percent" Value="-0.5" Path="ClassGarrisonFleet/ClassShip,!ShipFactionUmbralChoir"/>
+	</SimulationDescriptor>
+
+	<!-- Rejuvenation Field -->
+	<SimulationDescriptor Name="FleetOrbitingSpecialNodeVaulters"       Type="FleetOrbitingSpecialNode">
+		<Modifier TargetProperty="HealthRegenerationRatio" Operation="Addition" Value="0.1" Path="ClassGarrisonFleet/ClassShip"/>
+	</SimulationDescriptor>
+</Datatable>

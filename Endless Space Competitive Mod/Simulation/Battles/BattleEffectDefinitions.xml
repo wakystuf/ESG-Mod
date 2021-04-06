@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/BattleEffectDefinition.xsd">
-  <BattleEffect_SetPropertyValue Name="Ship_ReloadRegeneratePerSecond" PropertyName="Shield" Operation="Set" InterpreterFormula="Min(Property(Target, @ClassShip, Shield) + Property(Target, @ClassShip, ShieldRegeneratePerSecond), Property(Target, @ClassShip, MaximumShield))" Duration="-1" Frequency="1">
+  <!-- Shield Regeneration -->
+	<!-- Flat -->
+	<BattleEffect_SetPropertyValue Name="Ship_ReloadRegeneratePerSecond" PropertyName="Shield" Operation="Set" InterpreterFormula="Min(Property(Target, @ClassShip, Shield) + Property(Target, @ClassShip, ShieldRegeneratePerSecond), Property(Target, @ClassShip, MaximumShield))" Duration="-1" Frequency="1">
     <CancellationEventPrerequisite EventType="LastPhaseStart"/>
   </BattleEffect_SetPropertyValue>
 
+	<!-- Dynamic -->
   <BattleEffect_SetPropertyValue Name="Ship_ReloadRegeneratePerSecondDynamic" PropertyName="Shield" Operation="Set" InterpreterFormula="Min(Property(Target, @ClassShip, Shield) + Max(Property(Target, @ClassShip, ShieldRegeneratePerSecondDynamic) * Property(Target, @ClassShip, MaximumShield), 0), Property(Target, @ClassShip, MaximumShield))" Duration="-1" Frequency="1">
     <CancellationEventPrerequisite EventType="LastPhaseStart"/>
   </BattleEffect_SetPropertyValue>
 
+	<!-- Manpower per CP -->
+	<BattleEffect_EmpireReward_Resource Name="Group_OpponentRecyclingManpowerGainReward"            ResourceName="EmpireManpower"          InterpreterFormula="Property(Owner, @ClassGroup, OpponentRecyclingManpowerPerCP) * Property(Owner, @ClassGroup, DestroyedCP)" />
+	
   <!-- Coilgun -->
   <BattleEffect_SetPropertyValue Name="Ship_SetArmorDestructionFromOpponentCoilgun"             PropertyName="CoilgunArmorDescructionPercentFromOpponent"        Operation="Set" InterpreterFormula="Property(Initiator, @ClassSalvo, ArmorDestructionDynamic)" />
 
