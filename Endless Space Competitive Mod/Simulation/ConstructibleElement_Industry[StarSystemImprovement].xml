@@ -142,7 +142,7 @@
     <SupervisorGain Name="Science"  Weight="0.15"/>
     <Tags>NoBuyout</Tags>
     <QueuedSimulationDescriptorReference Name="QueuedDescriptorIncreaseVirtualPopulation"/>
-    <CustomCost ResourceName="SystemProduction">(50 + Property(StockLocation,@'../ClassEmpire',Population) * 50) * Property(StockLocation, @'../ClassEmpire', GameSpeedMultiplier, true)</CustomCost>
+    <CustomCost ResourceName="SystemProduction">(50 + Property(StockLocation,@ClassColonizedStarSystem,Population) * 50) * Property(StockLocation, @'../ClassEmpire', GameSpeedMultiplier, true)</CustomCost>
     <DownloadableContentPrerequisite>DLCUC</DownloadableContentPrerequisite>
     <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">ClassColonizedStarSystem</PathPrerequisite>
     <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayUmbralChoir/PopulationMajor,ClassPopulationEmpireAffinityTimeLords</PathPrerequisite>
@@ -231,7 +231,7 @@
         <SimulationDescriptorReference Name="StarSystemImprovementCloneMajorPopulation"/>
     </StarSystemPopulationTransformImprovementDefinition>
 
-  <!--Cutting Guardian as non-UF-->
+  <!--Smoke Guardian as non-UF-->
   <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementSacrificeGuardian2" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt"
                                                     PopulationSource="AffinityGuardians" IgnoreInvinciblePopulation="true">
     <Tags>NoBuyout</Tags>
@@ -245,4 +245,17 @@
     <SimulationDescriptorReference Name="StarSystemImprovementSacrificeGuardian"/>
     <TemporaryEffect>SacrificeGuardianHappiness</TemporaryEffect>
   </StarSystemPopulationTransformImprovementDefinition>
+  
+  <!-- Holy Proliferation -->
+  <StarSystemResourceImprovementDefinition Name="StarSystemImprovementGrowthFromLifeforce" SubCategory="SubCategoryVampirilis" ScoreProvider="StarSystemImprovementBuilt">
+    <AIGain RessourceName="LifeForceGain" Inverted="true"/>
+    <AIGain RessourceName="FoodGain"/>
+
+    <Tags>NoBuyout</Tags>
+    <Cost ResourceName="SystemTurnBased">1</Cost>
+    <CustomCost ResourceName="EmpireLifeforce"      Instant="true">250 * Max(1,Property(StockLocation, @ClassExploitedStarSystem, PopulationOnMothership, true)) * Property(StockLocation, @../ClassEmpire,GameSpeedMultiplier)</CustomCost>
+    <PathPrerequisite Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
+    <InterpreterPrerequisite Flags="Prerequisite,Disable">Property(Context, Population) lt Property(Context, MaximumPopulation)</InterpreterPrerequisite>
+    <Resource Name="SystemGrowth">(1220 + (Property(Context,@ClassColonizedStarSystem, Population) * 40)) * Property(Empire, GameSpeedMultiplier)</Resource>
+  </StarSystemResourceImprovementDefinition>
 </Datatable>
