@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/HackingOperationOutcomeDefinition.xsd">
+
+
+	<!-- ########################### -->
+    <!-- ## MAJOR ON PIRATE LAIRS ## -->
+    <!-- ########################### -->
+
+    <HackingOperationOutcomeTransferResourcesDefinition Name="HackingOperationOutcomeReducePirateReinforcements" Level="1">
+        <PathPrerequisite Flags="Discard">EmpireTypeMajor</PathPrerequisite>
+        <InterpreterPrerequisite Flags="Discard" Inverted="false">Path(Target,@'../ClassEmpire,EmpireTypePirate')</InterpreterPrerequisite>
+        <!-- ResourceTransfer parameters: Context/StockLocation = system, Empire = target, HackerEmpire = attacker -->
+        <InterpreterPrerequisite Flags="Discard" Inverted="true">$(IsTraceOperation)</InterpreterPrerequisite>
+        <ResourceTransfer ResourceName="TurnsBeforeFleetSpawn">Property(Empire,GameSpeedMultiplier) * 4</ResourceTransfer>
+        <ResourceTransfer ResourceName="PirateReinforcements">-Min(Property(Empire,PirateReinforcementsStock,true),30)</ResourceTransfer>
+    </HackingOperationOutcomeTransferResourcesDefinition>
+
+    <HackingOperationOutcomeChangePirateRelationDefinition Name="HackingOperationOutcomeBoostPirateRelation" RelationPointsGain="15" Level="1">
+        <PathPrerequisite Flags="Discard">EmpireTypeMajor,!FactionTraitPirateHaters</PathPrerequisite>
+        <InterpreterPrerequisite Flags="Discard" Inverted="false">Path(Target,@'../ClassEmpire,EmpireTypePirate')</InterpreterPrerequisite>
+        <InterpreterPrerequisite Flags="Discard" Inverted="true">$(IsTraceOperation)</InterpreterPrerequisite>
+    </HackingOperationOutcomeChangePirateRelationDefinition>
+
+    <HackingOperationOutcomeTemporaryEffectDefinition Name="HackingOperationOutcomeReducePirateActionsCost" ApplyOnHacker="true" Level="1">
+        <PathPrerequisite Flags="Discard">EmpireTypeMajor,!FactionTraitPirateHaters</PathPrerequisite>
+        <InterpreterPrerequisite Flags="Discard" Inverted="false">Path(Target,@'../ClassEmpire,EmpireTypePirate')</InterpreterPrerequisite>
+        <InterpreterPrerequisite Flags="Discard" Inverted="true">$(IsTraceOperation)</InterpreterPrerequisite>
+        <TemporaryEffectReference Name="ReducedPirateActionsCost"/>
+    </HackingOperationOutcomeTemporaryEffectDefinition>
+
+    <HackingOperationOutcomeStealPirateResourcesDefinition Name="HackingOperationOutcomeStealPirateResources" LootRatio="0.5" Level="1">
+        <PathPrerequisite Flags="Discard">EmpireTypeMajor</PathPrerequisite>
+        <InterpreterPrerequisite Flags="Discard" Inverted="false">Path(Target,@'../ClassEmpire,EmpireTypePirate')</InterpreterPrerequisite>
+        <InterpreterPrerequisite Flags="Discard" Inverted="true">$(IsTraceOperation)</InterpreterPrerequisite>
+    </HackingOperationOutcomeStealPirateResourcesDefinition>
+	
+</Datatable>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+
+    <!--PIRATE POWER 0-->
+    <SimulationDescriptor Name="PiratePowerLevel0Effect" Type="PiratePowerLevel"/>
+
+    <!--PIRATE POWER 1-->
+    <SimulationDescriptor Name="PiratePowerLevel1Effect" Type="PiratePowerLevel">
+        <!--Add effects here-->
+        <Property Name="ManpowerGivenPerLair" BaseValue="100"/>
+        <Modifier TargetProperty="MaximumLairsByEmpire"         Operation="Addition"    Value="1"       Path="ClassEmpire,EmpireTypePirate"/>
+        <Modifier TargetProperty="PowerPointBonusFromRaid"      Operation="Force"       Value="1"       Path="ClassEmpire" />
+        <Modifier TargetProperty="MaximumSystemManpower"        Operation="Force"       Value="400"     Path="ClassEmpire/ClassColonizedStarSystem" />
+        <Modifier TargetProperty="VisionStrength"               Operation="Force"       Value="0"       Path="ClassEmpire,EmpireTypePirate/ClassGarrison" />
+    </SimulationDescriptor>
+
+    <!--PIRATE POWER 2-->
+    <SimulationDescriptor Name="PiratePowerLevel2Effect" Type="PiratePowerLevel">
+        <!--Add effects here-->
+        <Property Name="ManpowerGivenPerLair" BaseValue="200"/>
+        <Modifier TargetProperty="MaximumLairsByEmpire"         Operation="Addition"    Value="1"       Path="ClassEmpire,EmpireTypePirate"/>
+        <Modifier TargetProperty="MaximumMovement"              Operation="Addition"    Value="1"       Path="ClassEmpire/ClassGarrison/ClassShip" />
+        <Modifier TargetProperty="PowerPointBonusFromRaid"      Operation="Force"       Value="3"       Path="ClassEmpire" />
+        <Modifier TargetProperty="MaximumSystemManpower"        Operation="Force"       Value="600"     Path="ClassEmpire/ClassColonizedStarSystem" />
+        <Modifier TargetProperty="VisionStrength"               Operation="Force"       Value="0"       Path="ClassEmpire,EmpireTypePirate/ClassGarrison" />
+    </SimulationDescriptor>
+
+    <!--PIRATE POWER 3-->
+
+    <SimulationDescriptor Name="PiratePowerLevel3Effect" Type="PiratePowerLevel">
+        <Property Name="ManpowerGivenPerLair" BaseValue="300"/>
+        <Modifier TargetProperty="MaximumLairsByEmpire"         Operation="Addition"    Value="1"      Path="ClassEmpire,EmpireTypePirate"/>
+        <Modifier TargetProperty="PowerPointBonusFromRaid"      Operation="Force"       Value="6"      Path="ClassEmpire" />
+        <Modifier TargetProperty="MaximumSystemManpower"        Operation="Force"       Value="800"    Path="ClassEmpire/ClassColonizedStarSystem" />
+        <Modifier TargetProperty="FreeMovementSpeed"            Operation="Addition"    Value="0.4"    Path="ClassEmpire/ClassGarrisonFleet/ClassShip" TooltipHidden="true" />
+        <Modifier TargetProperty="BaseFreeMovementSpeed"        Operation="Addition"    Value="0.4"    Path="ClassEmpire" TooltipHidden="true"/>
+        <Modifier TargetProperty="VisionStrength"               Operation="Force"       Value="1"      Path="ClassEmpire,EmpireTypePirate/ClassGarrison" />
+    </SimulationDescriptor>
+
+    <!--PIRATE POWER 4-->
+    <SimulationDescriptor Name="PiratePowerLevel4Effect" Type="PiratePowerLevel">
+        <!--Add effects here-->
+        <Property Name="ManpowerGivenPerLair" BaseValue="400"/>
+        <Modifier TargetProperty="MaximumLairsByEmpire"         Operation="Addition"    Value="2"       Path="ClassEmpire,EmpireTypePirate"/>
+        <Modifier TargetProperty="PowerPointBonusFromRaid"      Operation="Force"       Value="10"      Path="ClassEmpire" />
+        <Modifier TargetProperty="MaximumSystemManpower"        Operation="Force"       Value="1100"     Path="ClassEmpire/ClassColonizedStarSystem" />
+        <Modifier TargetProperty="FreeMovementSpeed"            Operation="Addition"    Value="0.2"     Path="ClassEmpire/ClassGarrisonFleet/ClassShip" TooltipHidden="true" />
+        <Modifier TargetProperty="BaseFreeMovementSpeed"        Operation="Addition"    Value="0.2"     Path="ClassEmpire" TooltipHidden="true"/>
+        <Modifier TargetProperty="VisionStrength"               Operation="Force"       Value="2"       Path="ClassEmpire,EmpireTypePirate/ClassGarrison" />
+    </SimulationDescriptor>
+
+    <!--PIRATE POWER 5-->
+    <SimulationDescriptor Name="PiratePowerLevel5Effect" Type="PiratePowerLevel">
+        <!--Add effects here-->
+        <Property Name="ManpowerGivenPerLair" BaseValue="600"/>
+        <Modifier TargetProperty="MaximumLairsByEmpire"         Operation="Addition"    Value="2"       Path="ClassEmpire,EmpireTypePirate"/>
+        <Modifier TargetProperty="MaximumMovement"              Operation="Addition"    Value="1"       Path="ClassEmpire/ClassGarrison/ClassShip" />
+        <Modifier TargetProperty="MaximumSystemManpower"        Operation="Force"       Value="1500"     Path="ClassEmpire/ClassColonizedStarSystem" />
+        <Modifier TargetProperty="FreeMovementSpeed"            Operation="Addition"    Value="0.2"     Path="ClassEmpire/ClassGarrisonFleet/ClassShip" TooltipHidden="true" />
+        <Modifier TargetProperty="BaseFreeMovementSpeed"        Operation="Addition"    Value="0.2"     Path="ClassEmpire" TooltipHidden="true"/>
+        <Modifier TargetProperty="VisionStrength"               Operation="Force"       Value="3"       Path="ClassEmpire,EmpireTypePirate/ClassGarrison" />
+    </SimulationDescriptor>
+    
+    <SimulationDescriptor Name="DisabledPiratesEffect" Type="DisabledPiratesEffect">
+    </SimulationDescriptor>
+
+    <!-- Applied onto ColonizedStarSystems which are lairs. -->
+    <SimulationDescriptor Name="ClassPirateLair" Type="ClassPirateLair">
+        <Property Name="MaximumPirateFleetCount" BaseValue="4"/>
+        
+        <Modifier TargetProperty="EmpireManpower" Operation="Addition" Value="$(ManpowerGivenPerLair)" Path="../ClassEmpire" SearchValueFromPath="true"/>
+    </SimulationDescriptor>
+
+
+    <SimulationDescriptor Name="PiratePowerTrendEffectSupport" Type="PiratePowerTrendEffect">
+        <Modifier TargetProperty="NetPowerPoints"           Operation="Percent" Value="0.03" Priority="7" Path="ClassEmpire,EmpireTypePirate"/>
+    </SimulationDescriptor>
+    
+    <SimulationDescriptor Name="PiratePowerTrendEffectSabotage" Type="PiratePowerTrendEffect">
+        <Modifier TargetProperty="NetPowerPoints"           Operation="Percent" Value="-0.03" Priority="7" Path="ClassEmpire,EmpireTypePirate"/>
+    </SimulationDescriptor>
+     
+
+    <!--PIRATE REINFORCEMENT EFFECTS-->
+    <!--SPEED MODIFIERS-->
+    <SimulationDescriptor Name="PirateReinforcementIncreasedSpeed01" Type="PirateReinforcement">
+        <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="1" Path="ClassGarrison/ClassShip"/> <!--+1 Movement Point-->
+    </SimulationDescriptor>
+    <SimulationDescriptor Name="PirateReinforcementIncreasedSpeed02" Type="PirateReinforcement">
+        <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="2" Path="ClassGarrison/ClassShip"/> <!--+2 Movement Point-->
+    </SimulationDescriptor>
+  <SimulationDescriptor Name="PirateReinforcementIncreasedSpeed03" Type="PirateReinforcement">
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ClassGarrison/ClassShip"/>    <!--+3 Movement Point-->
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="PirateReinforcementIncreasedSpeedAcademy" Type="PirateReinforcement">
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="10" Path="ClassGarrison/ClassShip"/>    <!--+10 Movement Point-->
+  </SimulationDescriptor>
+    
+    <!--HEALTH MODIFIERS-->
+    <SimulationDescriptor Name="PirateReinforcementIncreasedHealth01" Type="PirateReinforcement">
+        <Modifier TargetProperty="FleetMaximumHealth" Operation="Addition" Value="0.1" Path="ClassGarrison"/> <!--+10% Health-->
+    </SimulationDescriptor>
+    <SimulationDescriptor Name="PirateReinforcementIncreasedHealth02" Type="PirateReinforcement">
+        <Modifier TargetProperty="FleetMaximumHealth" Operation="Addition" Value="0.2" Path="ClassGarrison"/> <!--+20% Health-->
+    </SimulationDescriptor>
+    <SimulationDescriptor Name="PirateReinforcementIncreasedHealth03" Type="PirateReinforcement">
+        <Modifier TargetProperty="FleetMaximumHealth" Operation="Addition" Value="0.3" Path="ClassGarrison"/> <!--+30% Health-->
+    </SimulationDescriptor>
+
+    <!--DEFENSE MODIFIERS-->
+    <SimulationDescriptor Name="PirateReinforcementIncreasedDefense01" Type="PirateReinforcement">
+        <Modifier TargetProperty="DefenseBonusOverall" Operation="Addition" Value="0.1" Path="ClassGarrison/ClassShip"/> <!--+10% Defense-->
+    </SimulationDescriptor>
+    <!--DEFENSE MODIFIERS-->
+    <SimulationDescriptor Name="PirateReinforcementIncreasedDefense02" Type="PirateReinforcement">
+        <Modifier TargetProperty="DefenseBonusOverall" Operation="Addition" Value="0.2" Path="ClassGarrison/ClassShip"/> <!--+20% Defense-->
+    </SimulationDescriptor>
+    <!--DEFENSE MODIFIERS-->
+    <SimulationDescriptor Name="PirateReinforcementIncreasedDefense03" Type="PirateReinforcement">
+        <Modifier TargetProperty="DefenseBonusOverall" Operation="Addition" Value="0.3" Path="ClassGarrison/ClassShip"/> <!--+30% Defense-->
+    </SimulationDescriptor>
+
+    <!--ATTACK MODIFIERS-->
+    <SimulationDescriptor Name="PirateReinforcementIncreasedDamage01" Type="PirateReinforcement">
+        <Modifier TargetProperty="Damage" Operation="Percent" Value="0.1" Path="ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/> <!--+10% Damage-->
+    </SimulationDescriptor>
+    <SimulationDescriptor Name="PirateReinforcementIncreasedDamage02" Type="PirateReinforcement">
+        <Modifier TargetProperty="Damage" Operation="Percent" Value="0.2" Path="ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/> <!--+20% Damage-->
+    </SimulationDescriptor>
+    <SimulationDescriptor Name="PirateReinforcementIncreasedDamage03" Type="PirateReinforcement">
+        <Modifier TargetProperty="Damage" Operation="Percent" Value="0.3" Path="ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/> <!--+30% Damage-->
+    </SimulationDescriptor>
+    
+</Datatable>
