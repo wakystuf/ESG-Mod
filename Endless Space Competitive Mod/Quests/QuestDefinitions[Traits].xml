@@ -32,4 +32,116 @@
       </Step>
     </Steps>
   </QuestDefinition>
+  
+<QuestDefinition Name="FactionTraitRevealConstellation" Category="Start" SubCategory="Regular" TriggeringProbability="1" MinimumTurn="0">
+
+    <!--============ TAGS ============-->
+    <Tags>BeginTurn,Hidden</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$HomeSystem">
+        <From Source="$CurrentEmpire.$StartingNode"/>
+      </Var>
+      <Var VarName="$HomeConstellation">
+        <From Source="$HomeSystem.$Constellation"/>
+      </Var>
+      <Var VarName="$ConstellationSystems">
+        <From Source="$HomeConstellation.$GameNodes"/>
+      </Var>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <PathPrerequisite Flags="Prerequisite">ClassEmpire,FactionTraitRevealConstellation</PathPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Reveal_Constellation">
+            <Sequence>
+              <Action_RevealEntities NewExplorationState="Owned">
+                <Input_Empires VarName="$CurrentEmpire"/>
+                <Input_TargetSystems VarName="$ConstellationSystems"/>
+              </Action_RevealEntities>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+  <QuestDefinition Name="FactionTraitRevealSpecialNodes" Category="Start" SubCategory="Regular" TriggeringProbability="1" MinimumTurn="0">
+
+    <!--============ TAGS ============-->
+    <Tags>BeginTurn,Hidden</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+    <Vars>
+      <Var VarName="$WholeMap">
+        <From Source="$Constellations.$SpecialNodes"/>
+      </Var>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <PathPrerequisite Flags="Prerequisite">ClassEmpire,FactionTraitRevealSpecialNodes</PathPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Reveal_Galaxy">
+            <Sequence>
+              <Action_RevealEntities NewExplorationState="Revealed">
+                <Input_Empires VarName="$CurrentEmpire"/>
+                <Input_TargetSystems VarName="$WholeMap"/>
+              </Action_RevealEntities>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+  <QuestDefinition Name="FactionTraitRevealHomeSystems" Category="Start" SubCategory="Regular" TriggeringProbability="1" MinimumTurn="0">
+
+    <!--============ TAGS ============-->
+    <Tags>BeginTurn,Hidden</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      
+      <!-- Get All Home Systems -->
+      <Var VarName="$WholeMap">
+        <From Source="$Constellations.$StarSystems"/>
+      </Var>
+      <Var VarName="$MajorFactionHomeSystems">
+        <From Source="$WholeMap">
+          <Where>
+            <PathPrerequisite Flags="Prerequisite">ClassStarSystem,MajorHomeSystem</PathPrerequisite>
+          </Where>
+        </From>
+      </Var>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <PathPrerequisite Flags="Prerequisite">ClassEmpire,FactionTraitRevealHomeSystems</PathPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Reveal_Systems">
+            <Sequence>
+              <Action_RevealEntities NewExplorationState="Localized">
+                <Input_Empires VarName="$CurrentEmpire"/>
+                <Input_TargetSystems VarName="$MajorFactionHomeSystems"/>
+              </Action_RevealEntities>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
 </Datatable>
