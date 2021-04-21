@@ -464,6 +464,137 @@
   </QuestDefinition>
 
 
+
+
+   <!-- ############################################# -->
+  <!-- #### TEMPLARS QUEST - CHAPTER 4 - Part 2A #### -->
+  <!-- ############################################# -->
+
+  <QuestDefinition Name="LostTemplarsQuest-Chapter4-Part2A" Category="MajorQuest" SubCategory="Templars" MinimumTurn="1">
+
+    <!--============ TAGS ============-->
+    <Tags>LostTemplarsQuest-Chapter4-Part2A,FactionFinalQuest,FactionQuestLostTemplars</Tags>
+
+    <!--============ CONTEXT ============-->
+    <QuestContextSolo/>
+
+    <!--============ OCCURRENCE RULES ============-->
+    <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                      NumberOfOccurrencesPerEmpire="1"
+                      NumberOfConcurrentInstances="0"/>
+
+    <!--============ VARIABLES ============-->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$OtherEmpires">
+        <From Source="$Empires"/>
+      </Var>
+
+      <InterpretedVar VarName="$ScienceAmountStart" Target="$(Empire)">
+        <Expression>Property(Context, @'ClassEmpire', EmpireResearch)</Expression>
+      </InterpretedVar>
+
+      <InterpretedVar VarName="$ScienceAmount" Target="$(Empire)">
+        <Expression>Property(Context, @'ClassEmpire', EmpireResearch)+400</Expression>
+      </InterpretedVar>
+
+      <InterpretedVar VarName="$ScienceAmountNoRelics" Target="$(Empire)">
+        <Expression>Property(Context, @../ClassEmpire, EmpireResearch) *1.4</Expression>
+      </InterpretedVar>
+      
+      <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire', EmpireResearch) ge $(ScienceAmount)"/>
+      <Var VarName="$PoliticalEffectReligious"     StringValue="PopulationEventLostTemplars4-2AReligious"/>
+      <InterpretedVar VarName="$TurnsNumber" Target="$(Empire)">
+        <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*10</Expression>
+      </InterpretedVar>
+
+      <!--EcologistObjective-->
+      <LocalizationVar LocalizationKey="$ScienceAmoutName" Source="$ScienceAmount"/>
+      <LocalizationVar LocalizationKey="$TurnsAmoutName" Source="$TurnsNumber"/>
+      <LocalizationVar LocalizationKey="$ScienceAmountNoRelicsName" Source="$ScienceAmountNoRelics"/>
+    </Vars>
+
+    <!--============ STEPS ============-->
+    <Steps>
+      <Step Name="Step1">
+        <!--============ STEP 0 - Choose ============-->
+        <Choice DefaultChoiceIndex="0">
+          <!--if Empire has the Affinity Templar-->
+          <ChoiceItem ObjectiveSetIndex="0">
+            <Prerequisites Target="$(Empire)">
+              <PathPrerequisite Flags="Prerequisite">../ClassEmpire,AffinityGameplayTemplars</PathPrerequisite>
+            </Prerequisites>
+          </ChoiceItem>
+          <!--if Empire hasn't the Affinity Templar-->
+          <ChoiceItem ObjectiveSetIndex="1">
+            <Prerequisites Target="$(Empire)">
+              <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,AffinityGameplayTemplars</PathPrerequisite>
+            </Prerequisites>
+          </ChoiceItem>
+        </Choice>
+        <!--============No Choice Index 0: 2A Templar ============-->
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire"/>
+              <Input_Target VarName="$CurrentEmpire"/>
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+
+          <Objective Name="Objective0" EndValue="$TurnsNumber" StartValue="0">
+            <!-- TODO -->
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <Sequence>
+              <Loop>
+                <Decorator_BeginTurn ProgressionIncrement="1">
+                  <Condition_CheckInterpreter>
+                    <Input_Context VarName="$CurrentEmpire"/>
+                    <Input_Expression VarName="$Expression01"/>
+                  </Condition_CheckInterpreter>
+                </Decorator_BeginTurn>
+                <Input_Count VarName="$TurnsNumber"/>
+              </Loop>
+            </Sequence>
+          </Objective>
+
+          <Reward Droplist="DroplistRewardQuestTemplars05" Picks="1"/>
+          <Reward Droplist="DroplistRewardTokenRelics" Picks="1"/>
+        </ObjectiveSet>
+
+        <!--============No Choice Index 1: 2A No Templar ============-->
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire"/>
+              <Input_Target VarName="$CurrentEmpire"/>
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+
+          <Objective Name="Objective1">
+            <!-- TODO -->
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_HasFidsi>
+                    <Input_Location VarName="$CurrentEmpire"/>
+                    <Input_Science VarName="$ScienceAmountNoRelics"/>
+                  </Condition_HasFidsi>
+                </Decorator_BeginTurn>
+            </Sequence>
+          </Objective>
+
+          <Reward Droplist="DroplistRewardQuestTemplars05" Picks="1"/>
+          <Reward Droplist="DroplistRewardTokenRelics" Picks="1"/>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
+
   <!-- ############################################# -->
   <!-- #### TEMPLARS QUEST - CHAPTER 4 - Part 1A #### -->
   <!-- ############################################# -->
