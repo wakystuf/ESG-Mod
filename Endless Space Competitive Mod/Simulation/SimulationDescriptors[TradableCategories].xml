@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+
+    
+    <!-- CATEGORIES -->
+    <SimulationDescriptor Name="ClassTradableCategory" Type="ClassTradableCategory">
+        
+        <Property Name="Quantity"                   Composition="Sum"/>
+        <Property Name="MaximumCount"               BaseValue="10000"/>
+        
+        <Property Name="QuantityBoughtThisTurn"     Composition="Sum"/>
+        <Property Name="QuantitySoldThisTurn"       Composition="Sum"/>
+        
+        <Property Name="QuantityBoughtLastTurn"     Composition="Sum"/>
+        <Property Name="QuantitySoldLastTurn"       Composition="Sum"/>
+
+        <Property Name="TurnsSinceLastTimeBought"   Composition="Minimum"/>
+        <Property Name="TurnsSinceLastTimeSold"     Composition="Minimum"/>
+        
+        <Property Name="Demand"                     BaseValue="0" MinValue="Negative"/>
+        <Property Name="DemandLastTurn"             IsSealed="true" BaseValue="0" MinValue="Negative"/>
+
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="TradableCategoryResource" Type="TradableCategoryResource"/>
+    
+    <SimulationDescriptor Name="TradableCategoryShip" Type="TradableCategoryShip">
+        
+        <Modifier TargetProperty="MaximumCount" Operation="Force" Value="20"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="TradableCategoryHero" Type="TradableCategoryHero"/>
+
+    
+    <!-- SUBCATEGORIES -->
+    <SimulationDescriptor Name="ClassTradableSubCategory" Type="ClassTradableSubCategory">
+		
+        <Property Name="Quantity"                   Composition="Sum"/>
+        <Property Name="MaximumCount"               BaseValue="10000"/>
+
+        <Property Name="QuantityBoughtThisTurn"     IsSealed="true"/>
+        <Property Name="QuantitySoldThisTurn"       IsSealed="true"/>
+
+        <Property Name="QuantityBoughtLastTurn"     IsSealed="true"/>
+        <Property Name="QuantitySoldLastTurn"       IsSealed="true"/>
+
+        <Property Name="TurnsSinceLastTimeBought"   IsSealed="true"/>
+        <Property Name="TurnsSinceLastTimeSold"     IsSealed="true"/>
+
+        <Property Name="Demand"                     BaseValue="0" MinValue="Negative"/>
+        <Property Name="DemandLastTurn"             IsSealed="true" BaseValue="0" MinValue="Negative"/>    
+		
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="TradableSubCategoryResource" Type="TradableSubCategoryResource">
+        <Property Name="StockIncreasePerTurn"   BaseValue="0"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="TradableSubCategoryResourceLuxury" Type="TradableSubCategoryResourceLuxury"/>
+    <SimulationDescriptor Name="TradableSubCategoryResourceStrategic" Type="TradableSubCategoryResourceStrategic"/>
+
+	<SimulationDescriptor Name="TradableSubCategoryShip" Type="TradableSubCategoryShip">
+		<!-- SIM PROPERTIES -->
+		<!-- Stock values -->
+		<Property Name="StockLastTurn"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="StockSum"					BaseValue="0"			MinValue="Negative"/>
+
+		<!--QUANTITIES & SEALED VALUES-->
+		<!-- Note: Bought = bought by empires (quantity in marketplace reduced). Sold = sold by empires (quantity increased) -->
+		<Property Name="QuantityBoughtThisTurn"     IsSealed="true"/>
+		<Property Name="QuantitySoldThisTurn"       IsSealed="true"/>
+
+		<!-- Sum of the transactions of this turn -->
+		<Property Name="QuantitySum"                MinValue="0.001"/>
+
+		<!-- Difference between buyouts and sellouts -->
+		<Property Name="QuantityDifference"         MinValue="Negative"/>
+
+		<!-- Log(QuantitySum / 2 + 1) -->
+		<Property Name="QuantityDifferenceLogarithm"   MinValue="Negative"/>
+
+		<Property Name="QuantityBoughtLastTurn"     IsSealed="true"/>
+		<Property Name="QuantitySoldLastTurn"       IsSealed="true"/>
+
+		<Property Name="TurnsSinceLastTimeBought"   IsSealed="true"/>
+		<Property Name="TurnsSinceLastTimeSold"     IsSealed="true"/>
+
+		<!--VALUE CHECK AND ADD-->
+		<!--Set Value of Increments-->
+		<BinaryModifier TargetProperty="DemandPriceChangeFactor"	Operation="Addition"	Left="10"	BinaryOperation="Multiplication"	Right="$(DemandValueIncrementShip)"	Priority="-10"	Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier TargetProperty="DemandMinPriceChangeFactor"	Operation="Addition"	Left="3"	BinaryOperation="Multiplication"	Right="$(ValueIncrementShip)"	Priority="-10"	Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier TargetProperty="PriceChangeFactor"			Operation="Addition"	Left="1"	BinaryOperation="Multiplication"	Right="$(ValueIncrementShip)"	Priority="-10"  Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+
+		
+		<Modifier TargetProperty="MaximumQuantity"                          Operation="Addition"        Value="4999" Priority="-1"/>
+
+		<!-- Quantity bought & sold -->
+		<Modifier TargetProperty="QuantitySum"                              Operation="Addition"        Value="$(QuantityBoughtThisTurn)" Priority="-1"/>
+		<Modifier TargetProperty="QuantitySum"                              Operation="Addition"        Value="$(QuantitySoldThisTurn)" Priority="-1"/>
+
+		<Modifier TargetProperty="QuantityDifference"                       Operation="Addition"        Value="$(QuantityBoughtThisTurn)" Priority="-1"/>
+		<Modifier TargetProperty="QuantityDifference"                       Operation="Subtraction"     Value="$(QuantitySoldThisTurn)" Priority="-1"/>
+
+		<!-- PRICE COMPUTATIONS -->
+		<!-- Last Turn Stock -->
+		<Modifier TargetProperty="StockLastTurn" Operation="Addition" Value="$(Quantity)" Priority="-1"/>
+		<Modifier TargetProperty="StockLastTurn" Operation="Addition" Value="$(QuantityBoughtThisTurn)" Priority="-1"/>
+		<Modifier TargetProperty="StockLastTurn" Operation="Subtraction" Value="$(QuantitySoldThisTurn)" Priority="-1"/>
+
+		<!-- StockSum -->
+		<Modifier		TargetProperty="StockSum"			Operation="Addition"	Value="$(StockLastTurn)" Priority="-1"/>
+		<Modifier		TargetProperty="StockSum"			Operation="Addition"	Value="$(Quantity)" Priority="-1"/>
+		<Modifier		TargetProperty="StockSum"			Operation="Addition"	Value="1" Priority="-1"/>
+
+		<!-- StockDifference -->
+		<Modifier TargetProperty="StockDifference" Operation="Addition" Value="$(StockLastTurn)" Priority="-1"/>
+		<Modifier TargetProperty="StockDifference" Operation="Subtraction" Value="$(Quantity)" Priority="-1"/>
+		<Modifier TargetProperty="StockDifference" Operation="Addition"	Value="$(StockDifference)" Priority="-1" Path="TradableSubCategoryShip/ClassTradable"/>
+
+		<!-- MinPriceChange-->
+		<BinaryModifier TargetProperty="MinPriceChange"			Operation="Addition"	Left="$(BaseValue)"	BinaryOperation="Multiplication"	Right="$(PriceChangeFactor)" Priority="-1" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier TargetProperty="MinDemandPriceChange"	Operation="Addition"	Left="$(BaseValue)"	BinaryOperation="Multiplication"	Right="$(DemandMinPriceChangeFactor)" Priority="-1"  Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<!-- PriceChange-->
+		<BinaryModifier		TargetProperty="PriceChange"		Operation="Addition"	Left="$(MinPriceChange)"	BinaryOperation="Multiplication"	Right="$(StockDifference)" Priority="-1" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<!--Demandvalues-->
+		<BinaryModifier TargetProperty="DemandPriceChange"		Operation="Addition"	Left="$(BaseValue)"	BinaryOperation="Multiplication"	Right="$(DemandPriceChangeFactor)" Priority="-1" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<Modifier TargetProperty="PassedDemand"			Operation="Addition" Value="$(Demand)"			Priority="-1" Path="TradableSubCategoryShip/ClassTradable"/>
+		<Modifier TargetProperty="PassedDemandLastTurn"	Operation="Addition" Value="$(DemandLastTurn)"	Priority="-1" Path="TradableSubCategoryShip/ClassTradable"/>
+		
+		<!-- MinValue -->
+		<BinaryModifier TargetProperty="MinValue"		Operation="Addition" Left="0.4" BinaryOperation="Multiplication" Right="$(BaseValue)" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier	TargetProperty="MinValue"		Operation="Addition"     Left="$(DemandPriceChange)" BinaryOperation="Multiplication" Right="$(PassedDemand)" Path="TradableSubCategoryShip/ClassTradable"  SearchValueFromPath="true"/>
+		
+		<BinaryModifier TargetProperty="FakeMinValue"	Operation="Addition" Left="0.4" BinaryOperation="Multiplication" Right="$(BaseValue)" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier	TargetProperty="FakeMinValue"	Operation="Addition"     Left="$(DemandPriceChange)" BinaryOperation="Multiplication" Right="$(PassedDemand)" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+
+		<!-- Value -->
+		<!-- Just standard price variations for buy / sell transactions -->
+		<Modifier			TargetProperty="Value"					Operation="Addition"        Value="$(ValueLastTurn)"  Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<Modifier			TargetProperty="Value"					Operation="Division"		Value="$(InflationLastTurn)" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<Modifier			TargetProperty="Value"					Operation="Addition"        Value="$(PriceChange)" Path="TradableSubCategoryShip/ClassTradable"  SearchValueFromPath="true"/>
+		<BinaryModifier		TargetProperty="Value"					Operation="Addition"		Left="$(PassedDemand)" BinaryOperation="Multiplication" Right="$(MinDemandPriceChange)" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+
+		<Modifier			TargetProperty="FakeValue"				Operation="Addition"        Value="$(ValueLastTurn)" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<Modifier			TargetProperty="FakeValue"				Operation="Division"		Value="$(InflationLastTurn)" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<Modifier			TargetProperty="FakeValue"				Operation="Addition"        Value="$(PriceChange)" Path="TradableSubCategoryShip/ClassTradable"  SearchValueFromPath="true"/>
+		<BinaryModifier		TargetProperty="FakeValue"				Operation="Addition"		Left="$(PassedDemand)" BinaryOperation="Multiplication" Right="$(MinDemandPriceChange)" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+
+		<Modifier			TargetProperty="FakeValueForCorrect"	Operation="Addition"        Value="$(ValueLastTurn)" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<Modifier			TargetProperty="FakeValueForCorrect"	Operation="Division"		Value="$(InflationLastTurn)" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<Modifier			TargetProperty="FakeValueForCorrect"	Operation="Addition"        Value="$(PriceChange)" Path="TradableSubCategoryShip/ClassTradable"  SearchValueFromPath="true"/>
+		<BinaryModifier		TargetProperty="FakeValueForCorrect"	Operation="Addition"		Left="$(PassedDemand)" BinaryOperation="Multiplication" Right="$(MinDemandPriceChange)" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+
+		<Modifier			TargetProperty="FakeValue"				Operation="Addition"		Value="0.001"	Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+
+		<!-- Check the booleans for comparison -->
+		<BinaryModifier TargetProperty="ValueLowerThanMinValue"	Operation="Addition" Left="$(FakeMinValue)" BinaryOperation="Subtraction"		Right="$(FakeValue)" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier TargetProperty="MinValueLowerThanValue"	Operation="Addition" Left="$(FakeValue)" BinaryOperation="Subtraction"		Right="$(FakeMinValue)" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+
+		<!-- Add either real value or min value : 	Add real value IF min value < real value  OR	Add min value IF real value < min value -->
+		<Modifier	TargetProperty="Value"	Operation="Force" Value="0" Priority="2" Path="TradableSubCategoryShip/ClassTradable"/>
+		<!-- Force 0 then add correct value -->
+		<BinaryModifier TargetProperty="Value" Operation="Addition" Left="$(MinValue)" BinaryOperation="Multiplication" Right="$(ValueLowerThanMinValue)" Priority="3" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier TargetProperty="Value" Operation="Addition" Left="$(FakeValueForCorrect)" BinaryOperation="Multiplication" Right="$(MinValueLowerThanValue)" Priority="3" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+
+		<!-- Add Inflation -->
+		<Modifier TargetProperty="Value"	Operation="Multiplication" Value="$(Inflation)" Priority="4" Path="TradableSubCategoryShip/ClassTradable" SearchValueFromPath="true"/>
+	</SimulationDescriptor>
+
+	<SimulationDescriptor Name="TradableSubCategoryShipColonizer"	Type="TradableSubCategoryShipColonizer"/>
+	<SimulationDescriptor Name="TradableSubCategoryShipExplorer"	Type="TradableSubCategoryShipExplorer"/>
+	<SimulationDescriptor Name="TradableSubCategoryShipOffense"		Type="TradableSubCategoryShipOffense"/>
+	<SimulationDescriptor Name="TradableSubCategoryShipSupport"		Type="TradableSubCategoryShipSupport"/>
+	<SimulationDescriptor Name="TradableSubCategoryShipCarrier"		Type="TradableSubCategoryShipCarrier"/>
+	<SimulationDescriptor Name="TradableSubCategoryShipLeecher"		Type="TradableSubCategoryShipLeecher"/>
+	<SimulationDescriptor Name="TradableSubCategoryShipRootCreator" Type="TradableSubCategoryShipRootCreator"/>
+
+	<SimulationDescriptor Name="TradableSubCategoryHero" Type="TradableSubCategoryHero">
+		<!-- SIM PROPERTIES -->
+		<!-- Stock values -->
+		<Property Name="StockLastTurn"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="StockSum"					BaseValue="0"			MinValue="Negative"/>
+
+		<!--QUANTITIES & SEALED VALUES-->
+		<!-- Note: Bought = bought by empires (quantity in marketplace reduced). Sold = sold by empires (quantity increased) -->
+		<Property Name="QuantityBoughtThisTurn"     IsSealed="true"/>
+		<Property Name="QuantitySoldThisTurn"       IsSealed="true"/>
+
+		<!-- Sum of the transactions of this turn -->
+		<Property Name="QuantitySum"                MinValue="0.001"/>
+
+		<!-- Difference between buyouts and sellouts -->
+		<Property Name="QuantityDifference"         MinValue="Negative"/>
+
+		<!-- Log(QuantitySum / 2 + 1) -->
+		<Property Name="QuantityDifferenceLogarithm"   MinValue="Negative"/>
+
+		<Property Name="QuantityBoughtLastTurn"     IsSealed="true"/>
+		<Property Name="QuantitySoldLastTurn"       IsSealed="true"/>
+
+		<Property Name="TurnsSinceLastTimeBought"   IsSealed="true"/>
+		<Property Name="TurnsSinceLastTimeSold"     IsSealed="true"/>
+
+		<!--VALUE CHECK AND ADD-->
+		<!--Set Value of Increments-->
+		<BinaryModifier TargetProperty="DemandPriceChangeFactor"	Operation="Addition"	Left="10"		BinaryOperation="Multiplication"	Right="$(DemandValueIncrementHero)"	Priority="-10"	Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier TargetProperty="DemandMinPriceChangeFactor"	Operation="Addition"	Left="3"	BinaryOperation="Multiplication"	Right="$(ValueIncrementHero)"	Priority="-10"	Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier TargetProperty="PriceChangeFactor"		Operation="Addition"	Left="1"	BinaryOperation="Multiplication"	Right="$(ValueIncrementHero)"	Priority="-10"  Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		
+		<Modifier TargetProperty="MaximumQuantity"                          Operation="Addition"        Value="4999" Priority="-1"/>
+
+		<!-- Quantity bought & sold -->
+		<Modifier TargetProperty="QuantitySum"                              Operation="Addition"        Value="$(QuantityBoughtThisTurn)" Priority="-1"/>
+		<Modifier TargetProperty="QuantitySum"                              Operation="Addition"        Value="$(QuantitySoldThisTurn)" Priority="-1"/>
+
+		<Modifier TargetProperty="QuantityDifference"                       Operation="Addition"        Value="$(QuantityBoughtThisTurn)" Priority="-1"/>
+		<Modifier TargetProperty="QuantityDifference"                       Operation="Subtraction"     Value="$(QuantitySoldThisTurn)" Priority="-1"/>
+
+		<!-- PRICE COMPUTATIONS -->
+		<!-- Last Turn Stock -->
+		<Modifier TargetProperty="StockLastTurn" Operation="Addition" Value="$(Quantity)" Priority="-1"/>
+		<Modifier TargetProperty="StockLastTurn" Operation="Addition" Value="$(QuantityBoughtThisTurn)" Priority="-1"/>
+		<Modifier TargetProperty="StockLastTurn" Operation="Subtraction" Value="$(QuantitySoldThisTurn)" Priority="-1"/>
+
+		<!-- StockSum -->
+		<Modifier		TargetProperty="StockSum"			Operation="Addition"	Value="$(StockLastTurn)" Priority="-1"/>
+		<Modifier		TargetProperty="StockSum"			Operation="Addition"	Value="$(Quantity)" Priority="-1"/>
+		<Modifier		TargetProperty="StockSum"			Operation="Addition"	Value="1" Priority="-1"/>
+
+		<!-- StockDifference -->
+		<Modifier TargetProperty="StockDifference" Operation="Addition" Value="$(StockLastTurn)" Priority="-1"/>
+		<Modifier TargetProperty="StockDifference" Operation="Subtraction" Value="$(Quantity)" Priority="-1"/>
+		<Modifier TargetProperty="StockDifference" Operation="Addition"	Value="$(StockDifference)" Priority="-1" Path="TradableSubCategoryHero/ClassTradable"/>
+
+		<!-- MinPriceChange-->
+		<BinaryModifier TargetProperty="MinPriceChange"			Operation="Addition"	Left="$(BaseValue)"	BinaryOperation="Multiplication"	Right="$(PriceChangeFactor)" Priority="-1" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier TargetProperty="MinDemandPriceChange"	Operation="Addition"	Left="$(BaseValue)"	BinaryOperation="Multiplication"	Right="$(DemandMinPriceChangeFactor)" Priority="-1"  Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<!-- PriceChange-->
+		<BinaryModifier		TargetProperty="PriceChange"		Operation="Addition"	Left="$(MinPriceChange)"	BinaryOperation="Multiplication"	Right="$(StockDifference)" Priority="-1" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<!--Demandvalues-->
+		<BinaryModifier TargetProperty="DemandPriceChange"		Operation="Addition"	Left="$(BaseValue)"	BinaryOperation="Multiplication"	Right="$(DemandPriceChangeFactor)" Priority="-1" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<Modifier TargetProperty="PassedDemand"			Operation="Addition" Value="$(Demand)"			Priority="-1" Path="TradableSubCategoryHero/ClassTradable"/>
+		<Modifier TargetProperty="PassedDemandLastTurn"	Operation="Addition" Value="$(DemandLastTurn)"	Priority="-1" Path="TradableSubCategoryHero/ClassTradable"/>
+
+		<!-- MinValue -->
+		<BinaryModifier TargetProperty="MinValue"		Operation="Addition" Left="0.4" BinaryOperation="Multiplication" Right="$(BaseValue)" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier	TargetProperty="MinValue"		Operation="Addition"     Left="$(DemandPriceChange)" BinaryOperation="Multiplication" Right="$(PassedDemand)" Path="TradableSubCategoryHero/ClassTradable"  SearchValueFromPath="true"/>
+		
+		<BinaryModifier TargetProperty="FakeMinValue"	Operation="Addition" Left="0.4" BinaryOperation="Multiplication" Right="$(BaseValue)" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier	TargetProperty="FakeMinValue"	Operation="Addition"     Left="$(DemandPriceChange)" BinaryOperation="Multiplication" Right="$(PassedDemand)" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+
+		<!-- Value -->
+		<!-- Just standard price variations for buy / sell transactions -->
+		<Modifier			TargetProperty="Value"					Operation="Addition"        Value="$(ValueLastTurn)"  Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier		TargetProperty="Value"					Operation="Division"		Left="$(InflationLastTurn)" BinaryOperation="Multiplication" Right="2" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<Modifier			TargetProperty="Value"					Operation="Addition"        Value="$(PriceChange)" Path="TradableSubCategoryHero/ClassTradable"  SearchValueFromPath="true"/>
+		<BinaryModifier		TargetProperty="Value"					Operation="Addition"		Left="$(PassedDemand)" BinaryOperation="Multiplication" Right="$(MinDemandPriceChange)" Priority="4" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+
+		<Modifier			TargetProperty="FakeValue"				Operation="Addition"        Value="$(ValueLastTurn)" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier		TargetProperty="FakeValue"				Operation="Division"		Left="$(InflationLastTurn)" BinaryOperation="Multiplication" Right="2" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<Modifier			TargetProperty="FakeValue"				Operation="Addition"        Value="$(PriceChange)" Path="TradableSubCategoryHero/ClassTradable"  SearchValueFromPath="true"/>
+		<BinaryModifier		TargetProperty="FakeValue"				Operation="Addition"		Left="$(PassedDemand)" BinaryOperation="Multiplication" Right="$(MinDemandPriceChange)" Priority="4" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+
+		<Modifier			TargetProperty="FakeValueForCorrect"	Operation="Addition"        Value="$(ValueLastTurn)" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier		TargetProperty="FakeValueForCorrect"	Operation="Division"		Left="$(InflationLastTurn)" BinaryOperation="Multiplication" Right="2" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<Modifier			TargetProperty="FakeValueForCorrect"	Operation="Addition"        Value="$(PriceChange)" Path="TradableSubCategoryHero/ClassTradable"  SearchValueFromPath="true"/>
+		<BinaryModifier		TargetProperty="FakeValueForCorrect"	Operation="Addition"		Left="$(PassedDemand)" BinaryOperation="Multiplication" Right="$(MinDemandPriceChange)" Priority="4" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+
+		<Modifier			TargetProperty="FakeValue"				Operation="Addition"		Value="0.1"	Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+
+		<!-- Check the booleans for comparison -->
+		<BinaryModifier TargetProperty="ValueLowerThanMinValue"	Operation="Addition" Left="$(FakeMinValue)" BinaryOperation="Subtraction"		Right="$(FakeValue)" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier TargetProperty="MinValueLowerThanValue"	Operation="Addition" Left="$(FakeValue)" BinaryOperation="Subtraction"		Right="$(FakeMinValue)" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+
+		<!-- Add either real value or min value : 	Add real value IF min value < real value  OR	Add min value IF real value < min value -->
+		<Modifier	TargetProperty="Value"	Operation="Force" Value="0" Priority="2" Path="TradableSubCategoryHero/ClassTradable"/>
+		<!-- Force 0 then add correct value -->
+		<BinaryModifier TargetProperty="Value" Operation="Addition" Left="$(MinValue)" BinaryOperation="Multiplication" Right="$(ValueLowerThanMinValue)" Priority="3" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+		<BinaryModifier TargetProperty="Value" Operation="Addition" Left="$(FakeValueForCorrect)" BinaryOperation="Multiplication" Right="$(MinValueLowerThanValue)" Priority="3" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+
+		<!-- Add Inflation -->
+		<BinaryModifier TargetProperty="Value"	Operation="Multiplication" Left="$(Inflation)" BinaryOperation="Multiplication" Right="2" Priority="4" Path="TradableSubCategoryHero/ClassTradable" SearchValueFromPath="true"/>
+	</SimulationDescriptor>
+
+</Datatable>
