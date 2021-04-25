@@ -15,13 +15,15 @@
         </DepartmentOfCommerce>
         <DepartmentOfTheInterior>
           <GrowthFormula>(300 + (5 * $(Population))) * Property(Empire, @ClassEmpire, GameSpeedMultiplier) * $(Population)</GrowthFormula>
+          <MothershipGrowthFormula>(1200 + (20 * $(Population))) * Property(Empire, @ClassEmpire, GameSpeedMultiplier) * $(Population)</MothershipGrowthFormula>
+
           <OutpostBuyoutCostFormula>((Ceil(((((Property(Empire, @AffinityGameplayVenetians, OwnedSystems) + Property(Empire, @AffinityGameplayVenetians, OwnedOutposts) - 1)) + 1) * 100) ^ (1 + 1.25 * ((Property(Empire, @AffinityGameplayVenetians, OwnedSystems) + Property(Empire, @AffinityGameplayVenetians, OwnedOutposts) - 1) / Property(Empire, @AffinityGameplayVenetians, NumberOfGalaxyNodes)))) + 100))</OutpostBuyoutCostFormula>
           <OutpostBuyoutRefoundFormula>((Ceil(((((Property(Empire, @AffinityGameplayVenetians, OwnedSystems) + Property(Empire, @AffinityGameplayVenetians, OwnedOutposts) - 2)) + 1) * 100) ^ (1 + 1.25 * ((Property(Empire, @AffinityGameplayVenetians, OwnedSystems) + Property(Empire, @AffinityGameplayVenetians, OwnedOutposts) - 2) / Property(Empire, @AffinityGameplayVenetians, NumberOfGalaxyNodes)))) + 100))</OutpostBuyoutRefoundFormula>
           <InfluenceConversionLifeforceGain>1500</InfluenceConversionLifeforceGain>
         </DepartmentOfTheInterior>
         <DepartmentOfDefense>
-          <RetrofitCostFormula>(30 * Property(Empire, @ClassEmpire, DustInflation) * Property(Empire, @ClassEmpire, GameSpeedMultiplier)) * Property(Empire, @ClassEmpire, RetrofitCost)</RetrofitCostFormula>
-          <RepairCostFormula>((0.25 + 0.25 * Count(Ship, @'ClassShip,ShipRoleSuperColonizer')) * (Property(Ship, @ClassShip, MaximumHealth) - Property(Ship, @ClassShip, Health)) * Property(Empire, @ClassEmpire, GameSpeedMultiplier) * Property(Empire, @ClassEmpire, DustInflation) + 500 * Property(Empire, @ClassEmpire, DustInflation) * Count(Ship, @'ClassShip,ShipStateLockedInGarrisonFromDamage')) * Property(Empire, @ClassEmpire, RepairCost)</RepairCostFormula>
+          <RetrofitCostFormula>(30 * (Property(Empire, @ClassEmpire, DustInflation)^0.33) * Property(Empire, @ClassEmpire, GameSpeedMultiplier)) * Property(Empire, @ClassEmpire, RetrofitCost)</RetrofitCostFormula>
+          <RepairCostFormula>((0.25 + 0.25 * Count(Ship, @'ClassShip,ShipRoleSuperColonizer')) * (Property(Ship, @ClassShip, MaximumHealth) - Property(Ship, @ClassShip, Health)) * Property(Empire, @ClassEmpire, GameSpeedMultiplier) * (Property(Empire, @ClassEmpire, DustInflation)^0.33) + 500 * (Property(Empire, @ClassEmpire, DustInflation)^0.33) * Count(Ship, @'ClassShip,ShipStateLockedInGarrisonFromDamage')) * Property(Empire, @ClassEmpire, RepairCost)</RepairCostFormula>
         </DepartmentOfDefense>
       </Agencies>
     </Empire>

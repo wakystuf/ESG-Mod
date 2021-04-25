@@ -6,16 +6,16 @@
       <InterpreterModifier>$(Input)</InterpreterModifier>
     </ToConverter>
     <ToConverter To="Retrofit">
-      <InterpreterModifier>($(Input)) * Property(StockLocation,@../ClassEmpire, GameSpeedMultiplier) * Property(StockLocation, @../ClassEmpire, DustInflation)</InterpreterModifier>
+      <InterpreterModifier>($(Input)) * Property(StockLocation,@../ClassEmpire, GameSpeedMultiplier) * (Property(StockLocation, @../ClassEmpire, DustInflation)^0.33)</InterpreterModifier>
     </ToConverter>
     <ToConverter To="ScrapShip">
       <!-- ((x -> money) ^ 1.2) * modifier * health ratio -->
       <!--Sale is another formula-->
-      <InterpreterModifier>($(Input)) * 0.15 * Property(StockLocation, @../ClassEmpire, DustInflation)</InterpreterModifier>
+      <InterpreterModifier>($(Input)) * 0.15 * (Property(StockLocation, @../ClassEmpire, DustInflation)^0.33)</InterpreterModifier>
     </ToConverter>
     <ToConverter To="ScrapImprovement">
       <!-- ((x -> money) ^ 1.2) * modifier -->
-      <InterpreterModifier>Property(ScrappedElement, @../ClassEmpire, CanSellImprovements) * (0.20 * $(Input) * Property(ScrappedElement, @../ClassEmpire, GameSpeedMultiplier)) * Property(ScrappedElement, @../ClassEmpire,ImprovementScrapValueModifier) * Property(StockLocation, @../ClassEmpire, DustInflation)</InterpreterModifier>
+      <InterpreterModifier>Property(ScrappedElement, @../ClassEmpire, CanSellImprovements) * (0.20 * $(Input) * Property(ScrappedElement, @../ClassEmpire, GameSpeedMultiplier)) * Property(ScrappedElement, @../ClassEmpire,ImprovementScrapValueModifier) * (Property(StockLocation, @../ClassEmpire, DustInflation)^0.33)</InterpreterModifier>
     </ToConverter>
     <ToConverter To="MoneyGainOnConstructionComplete">
       <InterpreterModifier>$(Input) * Property(StockLocation, @../ClassEmpire, RatioOfProductionSpentGainedAsMoney)</InterpreterModifier>
@@ -31,7 +31,7 @@
   <ResourceConverterDefinition ResourceName="Buyout">
     <ToConverter To="EmpireMoney">
       <InterpreterModifier>
-        (($(Input)) ^ 1.2125 + 50) * Property(StockLocation, @../ClassEmpire,BuyoutActivated) * Property(StockLocation, @../ClassEmpire, DustInflation)
+        (($(Input)) ^ 1.15 + 50) * Property(StockLocation, @../ClassEmpire,BuyoutActivated) * (Property(StockLocation, @../ClassEmpire, DustInflation)^0.33)
       </InterpreterModifier>
     </ToConverter>
     <ToConverter To="EmpireEmpirePoint">
