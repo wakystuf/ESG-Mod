@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+    
+    <SimulationDescriptor Name="ClassTradable" Type="ClassTradable">
+		<Property Name="Value"						MinValue="0"/>
+		<Property Name="ValueLastTurn"              IsSealed="true"/>
+		<Property Name="BaseValue"                  IsSealed="true"/>
+		<Property Name="FakeValue"					MinValue="0"/>
+		<Property Name="FakeValueForCorrect"		MinValue="0"/>
+		<Property Name="MinValue"					BaseValue="1" MinValue="1"/>
+		<Property Name="FakeMinValue"				BaseValue="1" MinValue="1"/>
+		<Property Name="ValueLowerThanMinValue"		MinValue="0" MaxValue="1"		RoundingFunction="Ceil"/>
+		<Property Name="MinValueLowerThanValue"		MinValue="0" MaxValue="1"		RoundingFunction="Ceil"/>
+		<Property Name="AddedMinValue"				BaseValue="-1" MinValue="Negative"/>
+		<Property Name="GameSpeedMultiplier"		BaseValue="1"/>
+
+		<Property Name="ValueIncrementResource"     BaseValue="0.025"/>
+		<Property Name="ValueIncrementShip"         BaseValue="0.1"/>
+		<Property Name="ValueIncrementHero"         BaseValue="0.1"/>
+		
+		<Property Name="DemandValueIncrementResource"     BaseValue="0.025"/>
+		<Property Name="DemandValueIncrementShip"         BaseValue="0.025"/>
+		<Property Name="DemandValueIncrementHero"         BaseValue="0.025"/>
+		
+		<Property Name="DemandPriceChange"			BaseValue="0"/>
+
+		<Property Name="Quantity"                   IsSealed="true"/>
+		<Property Name="MaximumQuantity"            BaseValue="1"/>
+
+		<Property Name="Inflation"                  BaseValue="1"/>
+		<Property Name="InflationLastTurn"			BaseValue="1"/>
+
+		<Property Name="Lifetime"                   IsSealed="true"/>
+		<Property Name="MaximumLifetime"/>
+
+        <!-- For MarketplaceEvents testing purposes: Demand increases value by 10% per demand per turn. Off for now -->
+        <!--<BinaryModifier TargetProperty="Value" Operation="Percent" Left="$(Demand)" BinaryOperation="Multiplication" Right="0.1" Priority="4"/>-->
+	</SimulationDescriptor>
+
+	<SimulationDescriptor Name="TradableResource" Type="TradableResource">
+		<Property Name="Value"						MinValue="0"/>
+		<Property Name="FakeValue"					MinValue="0"/>
+		<Property Name="FakeValueForCorrect"		MinValue="0"/>
+		<Property Name="MinValue"					BaseValue="0"/>
+		<Property Name="FakeMinValue"				BaseValue="0"/>
+		<Property Name="ValueLowerThanMinValue"		MinValue="0" MaxValue="1"		RoundingFunction="Ceil"/>
+		<Property Name="MinValueLowerThanValue"		MinValue="0" MaxValue="1"		RoundingFunction="Ceil"/>
+		<Property Name="AddedMinValue"				BaseValue="-1" MinValue="Negative"/>
+
+        <Property Name="Demand"                     BaseValue="0" MinValue="Negative"/>
+        <Property Name="DemandLastTurn"             IsSealed="true" BaseValue="0" MinValue="Negative"/>
+		<Property Name="DemandPriceChange"			BaseValue="0" MinValue="Negative"/>
+		<Property Name="DemandPriceChangeFactor"	BaseValue="0"/>
+
+        <!-- SIM PROPERTIES -->
+        <!-- Stock values -->
+        <Property Name="StockLastTurn"				BaseValue="0"			MinValue="Negative"/>
+        <Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+        <Property Name="StockSum"					BaseValue="0"			MinValue="Negative"/>
+        <Property Name="StockIncreasePerTurn"		BaseValue="0"			MinValue="Negative"/>
+        <Property Name="StockThresholdForDecay"     BaseValue="50"/>
+        
+		<!-- Price variations according to market state -->
+		<Property Name="PriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinPriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinDemandPriceChange"		BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceChangeFactor"			BaseValue="0"/>
+		<Property Name="DemandMinPriceChangeFactor"	BaseValue="0"/>
+		<!--1 Price increment-->
+		<!-- Price decay values -->
+		<Property Name="PriceShouldDecay"			BaseValue="0"			MinValue="0" MaxValue="1" RoundingFunction="Ceil"/> <!-- PriceShouldDecay = (PriceDecayTSSCheck * PriceDecayTSBCheck) -->
+		<Property Name="PriceDecayTurnDelay"		BaseValue="0"/> <!--Constant: delay until price starts to decay-->
+		<Property Name="PriceDecayTSSCheck"			BaseValue="0" MinValue="0" MaxValue="1"/> <!--TurnsSinceLastTimeSold - PriceDecayTurnDelay-->
+		<Property Name="PriceDecayTSBCheck"			BaseValue="0" MinValue="0" MaxValue="1"/> <!--TurnsSinceLastTimeBought - PriceDecayTurnDelay-->
+		<Property Name="PriceDecay"					BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceDecayValue"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceDecayFactor"			BaseValue="0"/>
+		<!--2 Price increments-->
+		<!-- Price increase values -->
+		<Property Name="PriceShouldIncrease"		BaseValue="0"			MinValue="0" MaxValue="1"/>
+		<Property Name="PriceIncrease"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceIncreaseValue"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceIncreaseFactor"		BaseValue="0"/>
+		<!--3 Price increments-->
+		
+		<!--QUANTITIES & SEALED VALUES-->
+		<!-- Note: Bought = bought by empires (quantity in marketplace reduced). Sold = sold by empires (quantity increased) -->
+		<Property Name="QuantityBoughtThisTurn"     IsSealed="true"/>
+		<Property Name="QuantitySoldThisTurn"       IsSealed="true"/>
+
+		<!-- Sum of the transactions of this turn -->
+		<Property Name="QuantitySum"                MinValue="0.001"/>
+
+		<!-- Difference between buyouts and sellouts -->
+		<Property Name="QuantityDifference"         MinValue="Negative"/>
+
+		<!-- Log(QuantitySum / 2 + 1) -->
+		<Property Name="QuantityDifferenceLogarithm"   MinValue="Negative"/>
+
+		<Property Name="QuantityBoughtLastTurn"     IsSealed="true"/>
+		<Property Name="QuantitySoldLastTurn"       IsSealed="true"/>
+
+		<Property Name="TurnsSinceLastTimeBought"   IsSealed="true"/>
+		<Property Name="TurnsSinceLastTimeSold"     IsSealed="true"/>
+
+		<Property Name="ChancesToRefill"            BaseValue="-15"/>
+
+		<!--VALUE CHECK AND ADD-->
+		<!--Set Value of Increments-->
+		<BinaryModifier TargetProperty="PriceChangeFactor"			Operation="Addition"	Left="1"	BinaryOperation="Multiplication"	Right="$(ValueIncrementResource)"		Priority="-10"/>
+		<BinaryModifier TargetProperty="PriceDecayFactor"			Operation="Addition"	Left="2"	BinaryOperation="Multiplication"	Right="$(ValueIncrementResource)"		Priority="-10"/>
+		<BinaryModifier TargetProperty="PriceIncreaseFactor"		Operation="Addition"	Left="3"	BinaryOperation="Multiplication"	Right="$(ValueIncrementResource)"		Priority="-10"/>
+		<BinaryModifier TargetProperty="DemandMinPriceChangeFactor"	Operation="Addition"	Left="3"	BinaryOperation="Multiplication"	Right="$(ValueIncrementResource)"		Priority="-10"/>
+		<BinaryModifier TargetProperty="DemandPriceChangeFactor"	Operation="Addition"	Left="10"	BinaryOperation="Multiplication"	Right="$(DemandValueIncrementResource)"	Priority="-10"/>
+		<BinaryModifier	TargetProperty="PriceDecayTurnDelay"		Operation="Addition"	Left="5"	BinaryOperation="Multiplication"	Right="$(GameSpeedMultiplier)"			Priority="-10"/>
+
+		<Modifier TargetProperty="MaximumQuantity"                          Operation="Addition"        Value="4999" Priority="-1"/>
+
+		<!-- Quantity bought & sold -->
+		<Modifier TargetProperty="QuantitySum"                              Operation="Addition"        Value="$(QuantityBoughtThisTurn)" Priority="-1"/>
+		<Modifier TargetProperty="QuantitySum"                              Operation="Addition"        Value="$(QuantitySoldThisTurn)" Priority="-1"/>
+
+		<Modifier TargetProperty="QuantityDifference"                       Operation="Addition"        Value="$(QuantityBoughtThisTurn)" Priority="-1"/>
+		<Modifier TargetProperty="QuantityDifference"                       Operation="Subtraction"     Value="$(QuantitySoldThisTurn)" Priority="-1"/>
+
+		<!-- PRICE COMPUTATIONS -->
+		<!-- Last Turn Stock -->
+		<Modifier TargetProperty="StockLastTurn" Operation="Addition" Value="$(Quantity)" Priority="-1"/>
+		<Modifier TargetProperty="StockLastTurn" Operation="Addition" Value="$(QuantityBoughtThisTurn)" Priority="-1"/>
+		<Modifier TargetProperty="StockLastTurn" Operation="Subtraction" Value="$(QuantitySoldThisTurn)" Priority="-1"/>
+
+		<!-- StockSum -->
+		<Modifier		TargetProperty="StockSum"			Operation="Addition"	Value="$(StockLastTurn)" Priority="-1"/>
+		<Modifier		TargetProperty="StockSum"			Operation="Addition"	Value="$(Quantity)" Priority="-1"/>
+		<Modifier		TargetProperty="StockSum"			Operation="Addition"	Value="1" Priority="-1"/>
+
+		<!-- StockDifference -->
+		<Modifier TargetProperty="StockDifference" Operation="Addition" Value="$(StockLastTurn)" Priority="-1"/>
+		<Modifier TargetProperty="StockDifference" Operation="Subtraction" Value="$(Quantity)" Priority="-1"/>
+
+		<!-- MinPriceChange-->
+		<BinaryModifier TargetProperty="MinPriceChange"			Operation="Addition"	Left="$(BaseValue)"	BinaryOperation="Multiplication"	Right="$(PriceChangeFactor)" Priority="-1"/>
+		<BinaryModifier TargetProperty="MinDemandPriceChange"	Operation="Addition"	Left="$(BaseValue)"	BinaryOperation="Multiplication"	Right="$(DemandMinPriceChangeFactor)" Priority="-1"/>
+		<!-- PriceChange-->
+		<BinaryModifier		TargetProperty="PriceChange"		Operation="Addition"	Left="$(MinPriceChange)"	BinaryOperation="Multiplication"	Right="$(StockDifference)" Priority="-1"/>
+		<!--DemandValues-->
+		<BinaryModifier TargetProperty="DemandPriceChange"		Operation="Addition"	Left="$(BaseValue)"	BinaryOperation="Multiplication"	Right="$(DemandPriceChangeFactor)" Priority="-1"/>
+
+		<!-- PRICE DECAY COMPUTATIONS -->
+		<BinaryModifier TargetProperty="PriceDecayValue"		Operation="Subtraction"		Left="$(BaseValue)"					BinaryOperation="Multiplication"	Right="$(PriceDecayFactor)"		Priority="-1"/>
+		<!-- If no activity over PriceDecayTurnDelay turns, PriceShouldDecay will be at 1, otherwise 0-->
+		<BinaryModifier TargetProperty="PriceDecayTSSCheck"		Operation="Addition"		Left="$(TurnsSinceLastTimeSold)"	BinaryOperation="Subtraction"		Right="$(PriceDecayTurnDelay)"	Priority="-1"/>
+		<BinaryModifier TargetProperty="PriceDecayTSBCheck"		Operation="Addition"		Left="$(TurnsSinceLastTimeBought)"	BinaryOperation="Subtraction"		Right="$(PriceDecayTurnDelay)"	Priority="-1"/>
+		<!-- This is more or less a hack: if the stock is not yet at 50, we basically force the PriceDecayTSSCheck at 0 so the price won't decay-->
+        <BinaryModifier TargetProperty="PriceDecayTSSCheck"     Operation="Addition"        Left="$(StockLastTurn)"             BinaryOperation="Subtraction"       Right="$(StockThresholdForDecay)"/>
+        <!-- End hack -->
+        <BinaryModifier TargetProperty="PriceShouldDecay"		Operation="Addition"		Left="$(PriceDecayTSSCheck)"		BinaryOperation="Multiplication"	Right="$(PriceDecayTSBCheck)"	Priority="-1"/>
+		<!-- If should decay, add PriceDecayValue -->
+		<Modifier		TargetProperty="PriceDecay"				Operation="Addition"		Value="0"			Priority="-1"/>
+		<BinaryModifier TargetProperty="PriceDecay"				Operation="Addition"		Left="$(PriceShouldDecay)"			BinaryOperation="Multiplication"	Right="$(PriceDecayValue)"		Priority="-1"/>
+
+		<!--PRICE INCREASE COMPUTATIONS-->
+		<BinaryModifier TargetProperty="PriceIncreaseValue"		Operation="Addition"		Left="$(BaseValue)"					BinaryOperation="Multiplication"	Right="$(PriceIncreaseFactor)"	Priority="-1"/>
+		<!-- If no stock, PriceShouldIncrease will be at 1-->
+		<BinaryModifier TargetProperty="PriceShouldIncrease"	Operation="Addition"		Left="$(StockThresholdForDecay)"	BinaryOperation="Subtraction"		Right="$(StockLastTurn)"		Priority="-1"/>
+		<!-- As PriceIncreaseValue is negative, add it to price Increase-->
+		<BinaryModifier	TargetProperty="PriceIncrease"			Operation="Addition"		Left="$(PriceIncreaseValue)"		BinaryOperation="Multiplication"	Right="$(PriceShouldIncrease)"	Priority="-1"/>
+		<!-- If PriceIncrease should not Increase, we substract the negative PriceIncreaseValue to PriceIncreaseValue, which makes PriceIncrease a null value and will thus not impact price -->
+
+		<!-- MinValue -->
+		<!--<BinaryModifier TargetProperty="MinValue"		Operation="Addition" Left="0.4" BinaryOperation="Multiplication" Right="$(BaseValue)"/>-->
+		<BinaryModifier TargetProperty="MinValue"		Operation="Addition" Left="$(DemandPriceChange)" BinaryOperation="Multiplication" Right="$(Demand)"/>
+		
+		<!--<BinaryModifier TargetProperty="FakeMinValue"	Operation="Addition" Left="0.4" BinaryOperation="Multiplication" Right="$(BaseValue)"/>-->
+		<BinaryModifier TargetProperty="FakeMinValue"	Operation="Addition" Left="$(DemandPriceChange)" BinaryOperation="Multiplication" Right="$(Demand)"/>
+
+		<!-- Value -->
+		<!-- Just standard price variations for buy / sell transactions -->
+		<Modifier			TargetProperty="Value"					Operation="Addition"        Value="$(ValueLastTurn)"/>
+		<BinaryModifier		TargetProperty="Value"					Operation="Division"		Left="$(InflationLastTurn)" BinaryOperation="Power" Right="0.33"/>
+		<Modifier			TargetProperty="Value"					Operation="Addition"        Value="$(PriceChange)"/>
+		<BinaryModifier		TargetProperty="Value"					Operation="Addition"		Left="$(Demand)" BinaryOperation="Multiplication" Right="$(MinDemandPriceChange)"/>
+
+		<Modifier			TargetProperty="FakeValue"				Operation="Addition"        Value="$(ValueLastTurn)"/>
+		<BinaryModifier		TargetProperty="FakeValue"				Operation="Division"		Left="$(InflationLastTurn)" BinaryOperation="Power" Right="0.33"/>
+		<Modifier			TargetProperty="FakeValue"				Operation="Addition"        Value="$(PriceChange)"/>
+		<BinaryModifier		TargetProperty="FakeValue"				Operation="Addition"		Left="$(Demand)" BinaryOperation="Multiplication" Right="$(MinDemandPriceChange)"/>
+
+		<Modifier			TargetProperty="FakeValueForCorrect"	Operation="Addition"        Value="$(ValueLastTurn)"/>
+		<BinaryModifier		TargetProperty="FakeValueForCorrect"	Operation="Division"		Left="$(InflationLastTurn)" BinaryOperation="Power" Right="0.33"/>
+		<Modifier			TargetProperty="FakeValueForCorrect"	Operation="Addition"        Value="$(PriceChange)"/>
+		<BinaryModifier		TargetProperty="FakeValueForCorrect"	Operation="Addition"		Left="$(Demand)" BinaryOperation="Multiplication" Right="$(MinDemandPriceChange)"/>
+		
+		<Modifier			TargetProperty="FakeValue"				Operation="Addition"		Value="0.001"/>
+
+		<!-- Add price decay - will be null if not correct -->
+		<Modifier			TargetProperty="Value"					Operation="Addition"		Value="$(PriceDecay)"/>
+		<Modifier			TargetProperty="FakeValue"				Operation="Addition"		Value="$(PriceDecay)"/>
+		<Modifier			TargetProperty="FakeValueForCorrect"	Operation="Addition"		Value="$(PriceDecay)"/>
+
+		<!-- Add price increase - will be null if not correct -->
+		<Modifier			TargetProperty="Value"					Operation="Addition"		Value="$(PriceIncrease)"/>
+		<Modifier			TargetProperty="FakeValue"				Operation="Addition"		Value="$(PriceIncrease)"/>
+		<Modifier			TargetProperty="FakeValueForCorrect"	Operation="Addition"		Value="$(PriceIncrease)"/>
+
+		<!-- Check the booleans for comparison -->
+		<BinaryModifier TargetProperty="ValueLowerThanMinValue"	Operation="Addition" Left="$(FakeMinValue)" BinaryOperation="Subtraction"		Right="$(FakeValue)"/>
+		<BinaryModifier TargetProperty="MinValueLowerThanValue"	Operation="Addition" Left="$(FakeValue)" BinaryOperation="Subtraction"		Right="$(FakeMinValue)"/>
+
+		<!-- Add either real value or min value : 	Add real value IF min value < real value  OR	Add min value IF real value < min value -->
+		<Modifier	TargetProperty="Value"	Operation="Force" Value="0" Priority="2"/>
+		<!-- Force 0 then add correct value -->
+		<BinaryModifier TargetProperty="Value" Operation="Addition" Left="$(MinValue)" BinaryOperation="Multiplication" Right="$(ValueLowerThanMinValue)" Priority="3"/>
+		<BinaryModifier TargetProperty="Value" Operation="Addition" Left="$(FakeValueForCorrect)" BinaryOperation="Multiplication" Right="$(MinValueLowerThanValue)" Priority="3"/>
+
+		<!-- Add Inflation -->
+		<BinaryModifier TargetProperty="Value"	Operation="Multiplication" Left="$(Inflation)" BinaryOperation="Power" Right="0.33" Priority="4"/>
+	</SimulationDescriptor>
+	
+    <SimulationDescriptor Name="TradableResourceLuxuryCommon"		Type="TradableResourceLuxuryCommon"/>
+    <SimulationDescriptor Name="TradableResourceLuxuryUncommon"		Type="TradableResourceLuxuryUncommon"/>
+    <SimulationDescriptor Name="TradableResourceLuxuryRare"			Type="TradableResourceLuxuryRare"/>
+
+    <SimulationDescriptor Name="TradableResourceLuxuryFood"			Type="TradableResourceLuxuryFood"/>
+    <SimulationDescriptor Name="TradableResourceLuxuryIndustry"		Type="TradableResourceLuxuryIndustry"/>
+    <SimulationDescriptor Name="TradableResourceLuxuryMoney"		Type="TradableResourceLuxuryMoney"/>
+    <SimulationDescriptor Name="TradableResourceLuxuryResearch"		Type="TradableResourceLuxuryResearch"/>
+    <SimulationDescriptor Name="TradableResourceLuxuryInfluence"	Type="TradableResourceLuxuryInfluence"/>
+    <SimulationDescriptor Name="TradableResourceLuxuryHappiness"	Type="TradableResourceLuxuryHappiness"/>
+    <SimulationDescriptor Name="TradableResourceLuxuryDefense"		Type="TradableResourceLuxuryDefense"/>
+    <SimulationDescriptor Name="TradableResourceLuxuryTrading"		Type="TradableResourceLuxuryTrading"/>
+
+    <SimulationDescriptor Name="TradableResourceStrategicCommon"	Type="TradableResourceStrategicCommon"/>
+    <SimulationDescriptor Name="TradableResourceStrategicUncommon"	Type="TradableResourceStrategicUncommon"/>
+    <SimulationDescriptor Name="TradableResourceStrategicRare"		Type="TradableResourceStrategicRare"/>
+	
+	<SimulationDescriptor Name="TradableResourceStrategic1"		Type="TradableResourceStrategic1"/>
+	<SimulationDescriptor Name="TradableResourceStrategic2"		Type="TradableResourceStrategic2"/>
+	<SimulationDescriptor Name="TradableResourceStrategic3"		Type="TradableResourceStrategic3"/>
+	<SimulationDescriptor Name="TradableResourceStrategic4"		Type="TradableResourceStrategic4"/>
+	<SimulationDescriptor Name="TradableResourceStrategic5"		Type="TradableResourceStrategic5"/>
+	<SimulationDescriptor Name="TradableResourceStrategic6"		Type="TradableResourceStrategic6"/>
+	
+	<SimulationDescriptor Name="TradableResourceLuxury1"		Type="TradableResourceLuxury1"/>
+	<SimulationDescriptor Name="TradableResourceLuxury2"		Type="TradableResourceLuxury2"/>
+	<SimulationDescriptor Name="TradableResourceLuxury3"		Type="TradableResourceLuxury3"/>
+	<SimulationDescriptor Name="TradableResourceLuxury4"		Type="TradableResourceLuxury4"/>
+	<SimulationDescriptor Name="TradableResourceLuxury5"		Type="TradableResourceLuxury5"/>
+	<SimulationDescriptor Name="TradableResourceLuxury6"		Type="TradableResourceLuxury6"/>
+	<SimulationDescriptor Name="TradableResourceLuxury7"		Type="TradableResourceLuxury7"/>
+	<SimulationDescriptor Name="TradableResourceLuxury8"		Type="TradableResourceLuxury8"/>
+	<SimulationDescriptor Name="TradableResourceLuxury9"		Type="TradableResourceLuxury9"/>
+	<SimulationDescriptor Name="TradableResourceLuxury10"		Type="TradableResourceLuxury10"/>
+	<SimulationDescriptor Name="TradableResourceLuxury11"		Type="TradableResourceLuxury11"/>
+	<SimulationDescriptor Name="TradableResourceLuxury12"		Type="TradableResourceLuxury12"/>
+	<SimulationDescriptor Name="TradableResourceLuxury13"		Type="TradableResourceLuxury13"/>
+	<SimulationDescriptor Name="TradableResourceLuxury14"		Type="TradableResourceLuxury14"/>
+	<SimulationDescriptor Name="TradableResourceLuxury15"		Type="TradableResourceLuxury15"/>
+	<SimulationDescriptor Name="TradableResourceLuxury16"		Type="TradableResourceLuxury16"/>
+	<SimulationDescriptor Name="TradableResourceLuxury17"		Type="TradableResourceLuxury17"/>
+	<SimulationDescriptor Name="TradableResourceLuxury18"		Type="TradableResourceLuxury18"/>
+	<SimulationDescriptor Name="TradableResourceLuxury19"		Type="TradableResourceLuxury19"/>
+	<SimulationDescriptor Name="TradableResourceLuxury20"		Type="TradableResourceLuxury20"/>
+	<SimulationDescriptor Name="TradableResourceLuxury21"		Type="TradableResourceLuxury21"/>
+	<SimulationDescriptor Name="TradableResourceLuxury22"		Type="TradableResourceLuxury22"/>
+	<SimulationDescriptor Name="TradableResourceLuxury23"		Type="TradableResourceLuxury23"/>
+	<SimulationDescriptor Name="TradableResourceLuxury24"		Type="TradableResourceLuxury24"/>
+
+	<!--SHIPS-->
+	<SimulationDescriptor Name="TradableShipColonizer"				Type="TradableShipColonizer">
+		<!-- Price variations according to market state -->
+		<Property Name="PriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinPriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinDemandPriceChange"		BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceChangeFactor"			BaseValue="0"/>
+		<Property Name="DemandMinPriceChangeFactor"	BaseValue="0"/>
+		<Property Name="DemandPriceChange"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="DemandPriceChangeFactor"    BaseValue="0"/>
+		<Property Name="PassedDemand"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PassedDemandLastTurn"		BaseValue="0"			MinValue="Negative"/>
+		<!--1 Price increment-->
+		<Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+	</SimulationDescriptor>
+    <SimulationDescriptor Name="TradableShipRootCreator"				Type="TradableShipRootCreator">
+        <!-- Price variations according to market state -->
+        <Property Name="PriceChange"				BaseValue="0"			MinValue="Negative"/>
+        <Property Name="MinPriceChange"				BaseValue="0"			MinValue="Negative"/>
+        <Property Name="MinDemandPriceChange"		BaseValue="0"			MinValue="Negative"/>
+        <Property Name="PriceChangeFactor"			BaseValue="0"/>
+        <Property Name="DemandMinPriceChangeFactor"	BaseValue="0"/>
+        <Property Name="DemandPriceChange"			BaseValue="0"			MinValue="Negative"/>
+        <Property Name="DemandPriceChangeFactor"    BaseValue="0"/>
+        <Property Name="PassedDemand"				BaseValue="0"			MinValue="Negative"/>
+        <Property Name="PassedDemandLastTurn"		BaseValue="0"			MinValue="Negative"/>
+        <!--1 Price increment-->
+        <Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+    </SimulationDescriptor>
+	<SimulationDescriptor Name="TradableShipExplorer"				Type="TradableShipExplorer">
+		<!-- Price variations according to market state -->
+		<Property Name="PriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinPriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinDemandPriceChange"		BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceChangeFactor"			BaseValue="0"/>
+		<Property Name="DemandMinPriceChangeFactor"	BaseValue="0"/>
+		<Property Name="DemandPriceChange"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="DemandPriceChangeFactor"    BaseValue="0"/>
+		<Property Name="PassedDemand"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PassedDemandLastTurn"		BaseValue="0"			MinValue="Negative"/>
+		<!--1 Price increment-->
+		<Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+	</SimulationDescriptor>
+	<SimulationDescriptor Name="TradableShipOffense"				Type="TradableShipOffense">
+		<!-- Price variations according to market state -->
+		<Property Name="PriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinPriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinDemandPriceChange"		BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceChangeFactor"			BaseValue="0"/>
+		<Property Name="DemandMinPriceChangeFactor"	BaseValue="0"/>
+		<Property Name="DemandPriceChange"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="DemandPriceChangeFactor"    BaseValue="0"/>
+		<Property Name="PassedDemand"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PassedDemandLastTurn"		BaseValue="0"			MinValue="Negative"/>
+		<!--1 Price increment-->
+		<Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+	</SimulationDescriptor>
+	<SimulationDescriptor Name="TradableShipSupport"				Type="TradableShipSupport">
+		<!-- Price variations according to market state -->
+		<Property Name="PriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinPriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinDemandPriceChange"		BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceChangeFactor"			BaseValue="0"/>
+		<Property Name="DemandMinPriceChangeFactor"	BaseValue="0"/>
+		<Property Name="DemandPriceChange"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="DemandPriceChangeFactor"    BaseValue="0"/>
+		<Property Name="PassedDemand"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PassedDemandLastTurn"		BaseValue="0"			MinValue="Negative"/>
+		<!--1 Price increment-->
+		<Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+	</SimulationDescriptor>
+	<SimulationDescriptor Name="TradableShipCarrier"				Type="TradableShipCarrier">
+		<!-- Price variations according to market state -->
+		<Property Name="PriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinPriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinDemandPriceChange"		BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceChangeFactor"			BaseValue="0"/>
+		<Property Name="DemandMinPriceChangeFactor"	BaseValue="0"/>
+		<Property Name="DemandPriceChange"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="DemandPriceChangeFactor"    BaseValue="0"/>
+		<Property Name="PassedDemand"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PassedDemandLastTurn"		BaseValue="0"			MinValue="Negative"/>
+		<!--1 Price increment-->
+		<Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+	</SimulationDescriptor>
+	<SimulationDescriptor Name="TradableShipLeecher"				Type="TradableShipLeecher">
+		<!-- Price variations according to market state -->
+		<Property Name="PriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinPriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinDemandPriceChange"		BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceChangeFactor"			BaseValue="0"/>
+		<Property Name="DemandMinPriceChangeFactor"	BaseValue="0"/>
+		<Property Name="DemandPriceChange"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="DemandPriceChangeFactor"    BaseValue="0"/>
+		<Property Name="PassedDemand"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PassedDemandLastTurn"		BaseValue="0"			MinValue="Negative"/>
+		<!--1 Price increment-->
+		<Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+	</SimulationDescriptor>
+	
+	<!--HEROES-->
+	<SimulationDescriptor Name="TradableHeroAdventurer"				Type="TradableHeroAdventurer">
+		<!-- Price variations according to market state -->
+		<Property Name="PriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinPriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinDemandPriceChange"		BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceChangeFactor"			BaseValue="0"/>
+		<Property Name="DemandMinPriceChangeFactor"	BaseValue="0"/>
+		<Property Name="DemandPriceChange"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="DemandPriceChangeFactor"    BaseValue="0"/>
+		<Property Name="PassedDemand"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PassedDemandLastTurn"		BaseValue="0"			MinValue="Negative"/>
+		<!--1 Price increment-->
+		<Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+	</SimulationDescriptor>
+	<SimulationDescriptor Name="TradableHeroAdmiral"				Type="TradableHeroAdmiral">
+		<!-- Price variations according to market state -->
+		<Property Name="PriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinPriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinDemandPriceChange"		BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceChangeFactor"			BaseValue="0"/>
+		<Property Name="DemandMinPriceChangeFactor"	BaseValue="0"/>
+		<Property Name="DemandPriceChange"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="DemandPriceChangeFactor"    BaseValue="0"/>
+		<Property Name="PassedDemand"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PassedDemandLastTurn"		BaseValue="0"			MinValue="Negative"/>
+		<!--1 Price increment-->
+		<Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+	</SimulationDescriptor>
+	<SimulationDescriptor Name="TradableHeroCorporate"				Type="TradableHeroCorporate">
+		<!-- Price variations according to market state -->
+		<Property Name="PriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinPriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinDemandPriceChange"		BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceChangeFactor"			BaseValue="0"/>
+		<Property Name="DemandMinPriceChangeFactor"	BaseValue="0"/>
+		<Property Name="DemandPriceChange"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="DemandPriceChangeFactor"    BaseValue="0"/>
+		<Property Name="PassedDemand"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PassedDemandLastTurn"		BaseValue="0"			MinValue="Negative"/>
+		<!--1 Price increment-->
+		<Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+	</SimulationDescriptor>
+	<SimulationDescriptor Name="TradableHeroAdministrator"			Type="TradableHeroAdministrator">
+		<!-- Price variations according to market state -->
+		<Property Name="PriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinPriceChange"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="MinDemandPriceChange"		BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PriceChangeFactor"			BaseValue="0"/>
+		<Property Name="DemandMinPriceChangeFactor"	BaseValue="0"/>
+		<Property Name="DemandPriceChange"			BaseValue="0"			MinValue="Negative"/>
+		<Property Name="DemandPriceChangeFactor"    BaseValue="0"/>
+		<Property Name="PassedDemand"				BaseValue="0"			MinValue="Negative"/>
+		<Property Name="PassedDemandLastTurn"		BaseValue="0"			MinValue="Negative"/>
+		<!--1 Price increment-->
+		<Property Name="StockDifference"			BaseValue="0"			MinValue="Negative"/>
+	</SimulationDescriptor>
+
+</Datatable>
