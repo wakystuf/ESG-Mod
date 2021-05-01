@@ -1256,4 +1256,56 @@
 	<SimulationDescriptor Name="RelicScience" Type="RelicScience">
 		<BinaryModifier TargetProperty="NetRelicsResearch" Operation="Addition" Left="0" BinaryOperation="Multiplication" Right="$(ResearchRelics)" Path="ClassEmpire" Priority="10" TooltipHidden="true"/>
 	</SimulationDescriptor>
+
+
+	 <SimulationDescriptor Name="EmpireTypePirate" Type="EmpireType">
+
+        <!-- Obsolete? -->
+        <Property Name="AdditionalMaximumCommandPoints"     BaseValue="0"       IsSealed="true"/>
+
+        <Property Name="MaximumLairsByEmpire"               BaseValue="0"/>
+
+        <Property Name="PowerPointsStock"                   BaseValue="1"       IsSealed="true"/>
+        <Property Name="NetPowerPoints"                     BaseValue="0"       MinValue="0"/>
+        <Property Name="PowerPointBonusFromRaid"            BaseValue="5"/>
+
+        <Property Name="TurnsBeforeFleetSpawn"              BaseValue="0"       IsSealed="true"/>
+        <Property Name="NetTurnsBeforeFleetSpawn"           BaseValue="-1"      MinValue="Negative"/>
+        <Property Name="BaseTurnsBeforeFleetSpawn"          BaseValue="12"/>
+
+        <Property Name="PirateReinforcementsStock"          BaseValue="0"       IsSealed="true"/>
+        <Property Name="NetPirateReinforcements"            BaseValue="0"/>
+
+        <Property Name="MaximumPirateReinforcementsStock"   BaseValue="100"/>
+        <Property Name="MinimumPirateReinforcementsStock"   BaseValue="0"/>
+
+        <Property Name="PirateDifficultyMultiplier"         BaseValue="0.42"/>
+        <Property Name="GameSpeedPirateTrendMultiplier"     BaseValue="1"/>
+
+        <Property Name="SupportPirateActionCount"           BaseValue="0"       IsSealed="true"/>
+        <Property Name="SabotagePirateActionCount"          BaseValue="0"       IsSealed="true"/>
+        <Property Name="BuyMarkPirateActionCount"          BaseValue="0"       IsSealed="true"/>
+		<Property Name="PiratePowerModifier"				BaseValue="0"/>
+
+		<Modifier TargetProperty="MaximumManpowerPerGroundBattleTurn" Operation="Addition"	Value="750"/>
+
+		<Modifier TargetProperty="TroopDamageBonuses" Operation="Addition"	Value="0.75"/>
+		<Modifier TargetProperty="TroopHealthBonuses" Operation="Addition"	Value="0.75"/>
+
+        <Modifier TargetProperty="MaximumCommandPoints"         Operation="Addition"    Value="$(AdditionalMaximumCommandPoints)"/>
+        <Modifier TargetProperty="Happiness"                    Operation="Force"       Value="50" Priority="1000"/>
+        <Modifier TargetProperty="MaximumEmpireManpowerStock"   Operation="Addition"    Value="5000" />
+        <Modifier TargetProperty="EmpireManpower"               Operation="Addition"    Value="200" />
+        <!--Pirate Trend Formula: x+((x^c)*Speed)-->
+        <BinaryModifier TargetProperty="NetPowerPoints"     Operation="Addition"    Left="$(PowerPointsStock)" BinaryOperation="Power" Right="$(PirateDifficultyMultiplier)" Priority="3"/>
+        <Modifier TargetProperty="NetPowerPoints"           Operation="Multiplication" Value="$(GameSpeedPirateTrendMultiplier)" Priority="4"/>
+
+
+        <Modifier TargetProperty="CannotUsePortals"         Operation="Addition" Value="1" Path="ClassEmpire" />
+        <Modifier TargetProperty="HasPortal"                Operation="Addition" Value="1" Path="ClassEmpire/ClassColonizedStarSystem" />
+
+        <Modifier TargetProperty="MaximumHackingOperationsCount" Operation="Force" Value="100"/>
+    </SimulationDescriptor>
+
+
 </Datatable>
