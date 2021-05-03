@@ -1332,6 +1332,176 @@
 
     <LevelUpRuleReference Name="ShipLevelUpRule"/>
   </HullDefinition>
+    <!-- UC -->
+  <HullDefinition Name="HullSmall01UmbralChoir" ScoreProvider="WarShipConstructed" Category="CategoryHull" SubCategory="SubCategoryShipDesign">
+    <CustomCost ResourceName="SystemProduction">Property(StockLocation, @../ClassEmpire, AttackerBaseIndustry, true)</CustomCost>
+    <CustomCost ResourceName="Strategic1">Property(StockLocation, @../ClassEmpire, AttackerBaseStrategic1, true)</CustomCost>
+    <CustomCost ResourceName="Strategic2">Property(StockLocation, @../ClassEmpire, AttackerBaseStrategic2, true)</CustomCost>
+    <CustomCost ResourceName="Strategic3">Property(StockLocation, @../ClassEmpire, AttackerBaseStrategic3, true)</CustomCost>
+    <CustomCost ResourceName="Strategic4">Property(StockLocation, @../ClassEmpire, AttackerBaseStrategic4, true)</CustomCost>
+    <CustomCost ResourceName="Strategic5">Property(StockLocation, @../ClassEmpire, AttackerBaseStrategic5, true)</CustomCost>
+    <CustomCost ResourceName="Strategic6">Property(StockLocation, @../ClassEmpire, AttackerBaseStrategic6, true)</CustomCost>
+
+    <PathPrerequisite Flags="Prerequisite,Discard">ClassColonizedStarSystem,ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard,Edition">../ClassEmpire,AffinityMappingUmbralChoir</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Edition,Technology,Discard">TechnologyHull2UmbralChoir</TechnologyPrerequisite>
+
+    <SimulationDescriptorReference Name="ClassHullSmallAttack"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityKinetic"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityBeam"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityLaser"/>
+    <SimulationDescriptorReference Name="ShipSizeSmall"/>
+    <SimulationDescriptorReference Name="ShipFactionUmbralChoir"/>
+    <SimulationDescriptorReference Name="ShipHull01"/>
+
+    <ShipDesignLayout>
+      <ShipRoleReference Name="ShipRoleSmallAttacker"/>
+      <SectionPattern_Eight>
+        <!-- Core Section -->
+        <CoreSection Name="CoreSection">
+          <VisualSectionName>Core</VisualSectionName>
+          <SimulationDescriptorReference Name="ClassSectionCore"/>
+          <SimulationDescriptorReference Name="ClassSectionCoreSmallOffense"/>
+          <Slot Name="DefenseSupport01">
+            <Cost ResourceName="Strategic1" Instant="true">1</Cost>
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyImproveHull1</TechnologyPrerequisite>
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UICore07</UISlotName>
+          </Slot>
+          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="180">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="0" Z="1"/>
+              <Angle>270</Angle>
+              <VisualSlot Name="MDL_Wp_Small_Up_01"></VisualSlot>
+            </LineOfSight>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="TopWeapon"/>
+            </ModuleModifier>
+            <UISlotName>UICoreWeapon08</UISlotName>
+          </Slot>
+        </CoreSection>
+
+        <!-- Forward Section -->
+        <Section Name="SectionN">
+          <VisualSectionName>Front</VisualSectionName>
+          <Slot Name="Support01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UIFront01</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Forward/Right Section -->
+        <Section Name="SectionNE">
+          <VisualSectionName>FrontRight</VisualSectionName>
+          <Slot Name="Support01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <UISlotName>UIFrontRight02</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Right Section -->
+        <Section Name="SectionE">
+          <VisualSectionName>Right</VisualSectionName>
+          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="0">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_00"></VisualSlot>
+            </LineOfSight>
+            <LineOfSight>
+              <Direction X="-1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_00"></VisualSlot>
+            </LineOfSight>
+            <UISlotName>UIRightWeapon03</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back/Right Section -->
+        <Section Name="SectionSE">
+          <VisualSectionName>BackRight</VisualSectionName>
+          <Slot Name="Defense01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <UISlotName>UIBackRight04</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back Section -->
+        <Section Name="SectionS">
+          <VisualSectionName>Back</VisualSectionName>
+          <Slot Name="Defense01">
+            <Cost ResourceName="Strategic1" Instant="true">1</Cost>
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyImproveHull1</TechnologyPrerequisite>
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="0" Z="-1"/>
+            <UISlotName>UIBack05</UISlotName>
+          </Slot>
+          <Slot Name="SupportWeapon01" ShowPositionMarker="true" PositionMarkerAngle="90">
+            <Cost ResourceName="Strategic1" Instant="true">1</Cost>
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyImproveHull1</TechnologyPrerequisite>
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="0" Z="1"/>
+              <Angle>270</Angle>
+              <VisualSlot Name="MDL_Wp_Small_Up_02"></VisualSlot>
+            </LineOfSight>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="TopWeapon"/>
+            </ModuleModifier>
+            <UISlotName>UIBackWeapon06</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back/Left Section -->
+        <Section Name="SectionSW">
+          <VisualSectionName>BackLeft</VisualSectionName>
+        </Section>
+
+        <!-- Left Section -->
+        <Section Name="SectionW">
+          <VisualSectionName>Left</VisualSectionName>
+        </Section>
+
+        <!-- Forward/Left Section -->
+        <Section Name="SectionNW">
+          <VisualSectionName>FrontLeft</VisualSectionName>
+        </Section>
+      </SectionPattern_Eight>
+    </ShipDesignLayout>
+
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterAttack"/>
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterDamage"/>
+    <BattleActionReference Name="Ship_Healing"/>
+    <BattleActionReference Name="Ship_OnDestruction"/>
+
+    <LevelUpRuleReference Name="ShipLevelUpRule"/>
+  </HullDefinition>
   <!-- UE -->
   <HullDefinition Name="HullSmall01Terrans" ScoreProvider="WarShipConstructed" Category="CategoryHull" SubCategory="SubCategoryShipDesign">
     <CustomCost ResourceName="SystemProduction">Max(0,((Property(StockLocation, @../ClassEmpire/ClassResearch, TechnologyQuadrantMilitaryActualStageNumber, true) - 1 ) * 37.5)) + 75</CustomCost>
@@ -1517,8 +1687,8 @@
 
     <LevelUpRuleReference Name="ShipLevelUpRule"/>
   </HullDefinition>
-  <!-- Umbral Choir -->
-  <HullDefinition Name="HullSmall01UmbralChoir" ScoreProvider="WarShipConstructed" Category="CategoryHull" SubCategory="SubCategoryShipDesign">
+  <!-- Unfallen -->
+  <HullDefinition Name="HullSmall01Unfallen" ScoreProvider="WarShipConstructed" Category="CategoryHull" SubCategory="SubCategoryShipDesign">
     <CustomCost ResourceName="SystemProduction">Property(StockLocation, @../ClassEmpire, AttackerBaseIndustry, true)</CustomCost>
     <CustomCost ResourceName="Strategic1">Property(StockLocation, @../ClassEmpire, AttackerBaseStrategic1, true)</CustomCost>
     <CustomCost ResourceName="Strategic2">Property(StockLocation, @../ClassEmpire, AttackerBaseStrategic2, true)</CustomCost>
@@ -1526,17 +1696,18 @@
     <CustomCost ResourceName="Strategic4">Property(StockLocation, @../ClassEmpire, AttackerBaseStrategic4, true)</CustomCost>
     <CustomCost ResourceName="Strategic5">Property(StockLocation, @../ClassEmpire, AttackerBaseStrategic5, true)</CustomCost>
     <CustomCost ResourceName="Strategic6">Property(StockLocation, @../ClassEmpire, AttackerBaseStrategic6, true)</CustomCost>
+    <!-- S2 costs here -->
 
     <PathPrerequisite Flags="Prerequisite,Discard">ClassColonizedStarSystem,ColonizedStarSystemStateColony</PathPrerequisite>
-    <PathPrerequisite Flags="Prerequisite,Discard,Edition">../ClassEmpire,AffinityMappingUmbralChoir</PathPrerequisite>
-    <TechnologyPrerequisite Flags="Prerequisite,Edition,Technology,Discard">TechnologyHull2UmbralChoir</TechnologyPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard,Edition">../ClassEmpire,AffinityMappingUnfallen</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Edition,Technology,Discard">TechnologyHull2Unfallen</TechnologyPrerequisite>
 
     <SimulationDescriptorReference Name="ClassHullSmallAttack"/>
     <SimulationDescriptorReference Name="WeaponAvailabilityKinetic"/>
     <SimulationDescriptorReference Name="WeaponAvailabilityBeam"/>
     <SimulationDescriptorReference Name="WeaponAvailabilityLaser"/>
     <SimulationDescriptorReference Name="ShipSizeSmall"/>
-    <SimulationDescriptorReference Name="ShipFactionUmbralChoir"/>
+    <SimulationDescriptorReference Name="ShipFactionUnfallen"/>
     <SimulationDescriptorReference Name="ShipHull01"/>
 
     <ShipDesignLayout>
@@ -1547,16 +1718,9 @@
           <VisualSectionName>Core</VisualSectionName>
           <SimulationDescriptorReference Name="ClassSectionCore"/>
           <SimulationDescriptorReference Name="ClassSectionCoreSmallOffense"/>
-          <Slot Name="DefenseSupport01">
-            <Cost ResourceName="Strategic1" Instant="true">1</Cost>
-            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyImproveHull1</TechnologyPrerequisite>
-            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
-            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
-            <Direction X="0" Z="1"/>
-            <UISlotName>UICore07</UISlotName>
-          </Slot>
-          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="180">
+          <Slot Name="WeaponDefense01" ShowPositionMarker="true" PositionMarkerAngle="180">
             <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
             <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
             <RestrictedWeaponType>Missile</RestrictedWeaponType>
             <RestrictedWeaponType>Laser</RestrictedWeaponType>
@@ -1571,34 +1735,56 @@
             <ModuleModifier>
               <SimulationDescriptorReference Name="TopWeapon"/>
             </ModuleModifier>
-            <UISlotName>UICoreWeapon08</UISlotName>
+            <UISlotName>UICoreWeapon07</UISlotName>
+          </Slot>
+          <Slot Name="Defense01">
+            <Cost ResourceName="Strategic1" Instant="true">1</Cost>
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyImproveHull1</TechnologyPrerequisite>
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UICore08</UISlotName>
           </Slot>
         </CoreSection>
 
         <!-- Forward Section -->
         <Section Name="SectionN">
           <VisualSectionName>Front</VisualSectionName>
-          <Slot Name="Support01">
-            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="180">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="0" Z="1"/>
+              <Angle>270</Angle>
+              <VisualSlot Name="MDL_Wp_Small_Up_00"></VisualSlot>
+            </LineOfSight>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="TopWeapon"/>
+            </ModuleModifier>
+            <UISlotName>UIFrontWeapon01</UISlotName>
+          </Slot>
+          <Slot Name="Defense01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
             <Direction X="0" Z="1"/>
-            <UISlotName>UIFront01</UISlotName>
+            <UISlotName>UIFront02</UISlotName>
           </Slot>
         </Section>
 
         <!-- Forward/Right Section -->
         <Section Name="SectionNE">
           <VisualSectionName>FrontRight</VisualSectionName>
-          <Slot Name="Support01">
-            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+          <Slot Name="Defense01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
             <Direction X="1" Z="0"/>
-            <UISlotName>UIFrontRight02</UISlotName>
+            <UISlotName>UIFrontRight03</UISlotName>
           </Slot>
-        </Section>
-
-        <!-- Right Section -->
-        <Section Name="SectionE">
-          <VisualSectionName>Right</VisualSectionName>
           <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="0">
+            <Cost ResourceName="Strategic1" Instant="true">1</Cost>
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyImproveHull1</TechnologyPrerequisite>
             <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
             <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
             <RestrictedWeaponType>Missile</RestrictedWeaponType>
@@ -1616,50 +1802,35 @@
               <Angle>120</Angle>
               <VisualSlot Name="MDL_Wp_SmallSide_Left_00"></VisualSlot>
             </LineOfSight>
-            <UISlotName>UIRightWeapon03</UISlotName>
+            <UISlotName>UIFrontRightWeapon04</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Right Section -->
+        <Section Name="SectionE">
+          <VisualSectionName>Right</VisualSectionName>
+          <Slot Name="DefenseSupport01">
+            <Cost ResourceName="Strategic1" Instant="true">1</Cost>
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyImproveHull1</TechnologyPrerequisite>
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <UISlotName>UIRight05</UISlotName>
           </Slot>
         </Section>
 
         <!-- Back/Right Section -->
         <Section Name="SectionSE">
           <VisualSectionName>BackRight</VisualSectionName>
-          <Slot Name="Defense01">
-            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
-            <Direction X="1" Z="0"/>
-            <UISlotName>UIBackRight04</UISlotName>
-          </Slot>
         </Section>
 
         <!-- Back Section -->
         <Section Name="SectionS">
           <VisualSectionName>Back</VisualSectionName>
-          <Slot Name="Defense01">
-            <Cost ResourceName="Strategic1" Instant="true">1</Cost>
-            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyImproveHull1</TechnologyPrerequisite>
-            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
-            <Direction X="0" Z="-1"/>
-            <UISlotName>UIBack05</UISlotName>
-          </Slot>
-          <Slot Name="SupportWeapon01" ShowPositionMarker="true" PositionMarkerAngle="90">
-            <Cost ResourceName="Strategic1" Instant="true">1</Cost>
-            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyImproveHull1</TechnologyPrerequisite>
+          <Slot Name="Support01">
             <RestrictedModuleCategory>Support</RestrictedModuleCategory>
-            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
-            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
-            <RestrictedWeaponType>Missile</RestrictedWeaponType>
-            <RestrictedWeaponType>Laser</RestrictedWeaponType>
-            <RestrictedWeaponType>Beam</RestrictedWeaponType>
-            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
-            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
-            <LineOfSight>
-              <Direction X="0" Z="1"/>
-              <Angle>270</Angle>
-              <VisualSlot Name="MDL_Wp_Small_Up_02"></VisualSlot>
-            </LineOfSight>
-            <ModuleModifier>
-              <SimulationDescriptorReference Name="TopWeapon"/>
-            </ModuleModifier>
-            <UISlotName>UIBackWeapon06</UISlotName>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UIBack06</UISlotName>
           </Slot>
         </Section>
 
