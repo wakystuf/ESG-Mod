@@ -10,6 +10,13 @@
     <Property Name="TotalStrategic4Cost" BaseValue="0"/>
     <Property Name="TotalStrategic5Cost" BaseValue="0"/>
     <Property Name="TotalStrategic6Cost" BaseValue="0"/>
+    <Property Name="Strategic1Price" BaseValue="1" MinValue="1"/>
+    <Property Name="Strategic2Price" BaseValue="1" MinValue="1"/>
+    <Property Name="Strategic3Price" BaseValue="1" MinValue="1"/>
+    <Property Name="Strategic4Price" BaseValue="1" MinValue="1"/>
+    <Property Name="Strategic5Price" BaseValue="1" MinValue="1"/>
+    <Property Name="Strategic6Price" BaseValue="1" MinValue="1"/>
+
     
 		<!-- Vanilla -->
     <!-- Base values -->
@@ -129,6 +136,8 @@
     <Property Name="ExperienceBonusFromBattle"         BaseValue="0"/>
     <Property Name="ExperienceBonusPercentFromModule"  BaseValue="1"/>
     <Property Name="Level"                             BaseValue="1" IsSealed="true"/>
+    <Property Name="FakeLevel"                         BaseValue="0"/>
+    <Property Name="UpkeepLevelAdjustment"             BaseValue="0"/>
     <Property Name="ShipLevelForGUI"                   BaseValue="0"/>
     <Property Name="NextLevelRequestedExperience"      BaseValue="0"/>
     <Property Name="ExperienceReward"                  BaseValue="4" RoundingFunction="Round"/>
@@ -349,6 +358,9 @@
     <!-- Upkeep-->
     <BinaryModifier TargetProperty="GarrisonMoneyUpkeep"    Operation="Addition"  Left="$(CommandPoints)"    BinaryOperation ="Multiplication" Right="2" />
     <Modifier       TargetProperty="GarrisonMoneyUpkeep"    Operation="Multiplication" Value="$(GarrisonMoneyUpkeepMultiplierFromJuggernauts)"  Path="ShipSizeJuggernaut"  Priority="100" />
+    <BinaryModifier TargetProperty="FakeLevel"              Operation="Addition"  Left="$(Level)"    BinaryOperation ="Subtraction" Right="1" />
+    <BinaryModifier TargetProperty="UpkeepLevelAdjustment"  Operation="Addition"  Left="$(FakeLevel)"    BinaryOperation ="Multiplication" Right="0.1" />
+    <Modifier TargetProperty="GarrisonMoneyUpkeep"          Operation="Percent"  Value="$(UpkeepLevelAdjustment)" Priority="100000000000"/>
 
     <!-- speed bonuses-->
     <Modifier       TargetProperty="WarpSpeed"                  Operation="Multiplication"  Value="$(GlobalSpeed)"    Path="ClassShip"/>
@@ -363,7 +375,20 @@
     <!-- Trade -->
     <BinaryModifier TargetProperty="ShipTradingRouteBlockadePower" Operation="Addition" Left="$(MilitaryPower)" BinaryOperation="Division" Right="2000" />
     <Modifier TargetProperty="TradingRouteBlockadePower" Operation="Addition" Value="$(ShipTradingRouteBlockadePower)" Path="./ClassGarrisonFleet" />
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(RelativeMilitaryPower)" BinaryOperation="Multiplication" Right="0.5"/>
+    
+    <!-- Calculate base trade value including strat costs (computed using pseudoprices) -->
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalIndustryCost)" BinaryOperation="Multiplication" Right="0.4" />
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic1Cost)" BinaryOperation="Multiplication" Right="$(Strategic1Price)"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic2Cost)" BinaryOperation="Multiplication" Right="$(Strategic2Price)"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic3Cost)" BinaryOperation="Multiplication" Right="$(Strategic3Price)"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic4Cost)" BinaryOperation="Multiplication" Right="$(Strategic4Price)"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic5Cost)" BinaryOperation="Multiplication" Right="$(Strategic5Price)"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic6Cost)" BinaryOperation="Multiplication" Right="$(Strategic6Price)"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic6Cost)" BinaryOperation="Multiplication" Right="$(Strategic6Price)"/>
+
+    <!--Adjust for stupid Market shenanigans -->
+    <Modifier TargetProperty="TradeValue" Operation="Multiplication" Value="1" />
+
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ShipRoleRootCreator"      Type="ShipRole">
