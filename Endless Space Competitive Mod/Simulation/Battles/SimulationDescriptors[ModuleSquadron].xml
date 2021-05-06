@@ -1,5 +1,60 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+  
+<SimulationDescriptor Name="ClassModuleSquadron" Type="ClassModule">
+
+  <!-- ESG: Add Missing Upkeep Stats -->
+  <Modifier TargetProperty="GarrisonMoneyUpkeep" Operation="Addition" Value="$(UpkeepFromModules)" Path="../ClassShip" Priority="1"/>
+  
+  <!-- PROPERTIES -->
+  <ProportionalProperty Name="Health" BaseValue="0" IsSealed="true" Maximum="$(MaximumHealth)" StartingRatio="1"/>
+  <Property Name="SquadronDefense" BaseValue="1"/>
+  <Property Name="MaximumHealth" BaseValue="0"/>
+  <Property Name="Speed" BaseValue="0"/>
+  <Property Name="Damage" BaseValue="0"/>
+  <Property Name="FlakEvasionSquadron" BaseValue="0" MaxValue="0.95"/>
+  <Property Name="DamageAgainstSmallShipsModifier" BaseValue="0"/>
+  <Property Name="DamageAgainstMediumShipsModifier" BaseValue="0"/>
+  <Property Name="DamageAgainstLargeShipsModifier" BaseValue="0"/>
+  <Property Name="BaseUnitsCount" BaseValue="0" MinValue="0" RoundingFunction="Ceil"/>
+  <Property Name="FighterUnitsCount" BaseValue="0" MinValue="0" RoundingFunction="Ceil"/>
+  <Property Name="BomberUnitsCount" BaseValue="0" MinValue="0" RoundingFunction="Ceil"/>
+  <Property Name="CriticalAttackChance" BaseValue="0" MaxValue="1"/>
+  <Property Name="DodgeChance" BaseValue="0" MaxValue="1"/>
+  <!-- Shield & Hull penetration values -->
+  <Property Name="HullPlatingPenetrationFactor" BaseValue="0" MinValue="0" MaxValue="1"/>
+  <Property Name="HullPlatingAbsorptionValue" BaseValue="0"/>
+  <Property Name="ShieldPenetrationFactor" BaseValue="0" MinValue="0" MaxValue="1"/>
+  <Property Name="ShieldAbsorptionValue" BaseValue="0"/>
+  <Property Name="SquadronTypeDamageMultiplier" BaseValue="0"/>
+  <!-- This is 1 if Bomber, 0.1 if Fighter -->
+  <!-- GUI PROPERTIES -->
+  <Property Name="DamagePerSecond" BaseValue="0"/>
+  <Property Name="WeaponTypePhysical" BaseValue="0" MinValue="0" MaxValue="1"/>
+  <Property Name="WeaponTypeEnergy" BaseValue="0" MinValue="0" MaxValue="1"/>
+  <Property Name="ProjectilesFlyingDuration" BaseValue="0"/>
+  <Property Name="ProjectilesCount" BaseValue="0"/>
+  <Property Name="ShootingDuration" BaseValue="0"/>
+  <Property Name="AssaultSequenceDuration" BaseValue="0"/>
+  <Property Name="AssaultAttackDuration" BaseValue="0"/>
+  <Property Name="DuelSequenceDuration" BaseValue="0"/>
+  <Property Name="DuelAttackDuration" BaseValue="0"/>
+  <Property Name="ChaseSequenceDuration" BaseValue="0"/>
+  <Property Name="CanAttack" BaseValue="1" IsSealed="true"/>
+  <!-- PROPERTY SET -->
+  <Modifier TargetProperty="Damage" Operation="Multiplication" Value="$(Multiplier)" Path="ClassModuleSquadron" TooltipHidden="true"/>
+  <BinaryModifier TargetProperty="BaseUnitsCount" Operation="Multiplication" Left="$(Multiplier)" BinaryOperation="Division" Right="2" Path="ClassModuleSquadron" TooltipHidden="true"/>
+  <BinaryModifier TargetProperty="FighterUnitsCount" Operation="Multiplication" Left="$(Multiplier)" BinaryOperation="Division" Right="2" Path="ClassModuleSquadron,SquadronTypeSquadronFighter" TooltipHidden="true"/>
+  <BinaryModifier TargetProperty="BomberUnitsCount" Operation="Multiplication" Left="$(Multiplier)" BinaryOperation="Division" Right="2" Path="ClassModuleSquadron,SquadronTypeSquadronBomber" TooltipHidden="true"/>
+  <Modifier TargetProperty="FighterUnitsCount" Operation="Addition" Value="$(FighterUnitsCount)" Path="ClassModuleSquadron,SquadronTypeSquadronFighter/../ClassShip"/>
+  <Modifier TargetProperty="BomberUnitsCount" Operation="Addition" Value="$(BomberUnitsCount)" Path="ClassModuleSquadron,SquadronTypeSquadronBomber/../ClassShip"/>
+  <!-- GUI PROPERTY MODIFIER -->
+  <!-- Always update with latest cooldown -->
+  <BinaryModifier TargetProperty="DamagePerSecond" Operation="Addition" Left="$(Damage)" BinaryOperation="Division" Right="$(AssaultSequenceDuration)" Path="ClassModuleSquadron" TooltipHidden="true" Priority="2"/>
+  <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Addition" Value="1" Path="ClassModuleSquadron" TooltipHidden="true" Priority="2"/>
+  <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Multiplication" Value="$(DamagePerSecond)" Path="ClassModuleSquadron" TooltipHidden="true" Priority="2"/>
+</SimulationDescriptor>
+  
   <!-- Fighter Class -->
   <SimulationDescriptor Name="SquadronTypeFighter" Type="SquadronType">
     <Modifier TargetProperty="WeaponTypePhysical"           Operation="Addition"        Value="1"        Path="ClassModuleSquadron" TooltipHidden="true"/>
