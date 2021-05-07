@@ -106,11 +106,54 @@
     <Modifier TargetProperty="PlanetInitialFIDSPenalty"       Operation="Addition"     Value="-0.25"    Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,!PlanetGameplayTypeGas"  TooltipHidden="true"/>
   </SimulationDescriptor>
 
-  <SimulationDescriptor Name="LawEffectP04L00Dictatorship" Type="LawEffect">
-    <Modifier TargetProperty="PlanetInitialFIDSPenalty"     Operation="Addition"    Value="-0.25"    Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,!PlanetGameplayTypeGas"  TooltipHidden="true"/>
-    <Modifier TargetProperty="Happiness"                    Operation="Addition"    Value="15"      Path="../ClassEmpire/ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-  
+    <!-- DICTATORSHIP SUPER-LAWS -->
+
+    <!-- Industrialist -->
+    <SimulationDescriptor Name="LawEffectP01L00Dictatorship" Type="LawEffect">
+        <Modifier       TargetProperty="RatioOfProductionSpentGainedAsMoney" Operation="Addition" Value="0.25" Path="../ClassEmpire" TooltipHidden="true" />
+        <Modifier       TargetProperty="BonusPopulationIndustry"             Operation="Addition" Value="2"    Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" />
+    </SimulationDescriptor>
+
+    <!-- Pacifist -->
+    <SimulationDescriptor Name="LawEffectP03L00Dictatorship" Type="LawEffect">
+        <Modifier       TargetProperty="BonusPopulationDust"      Operation="Addition"            Value="2"       Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" />
+        <Modifier       TargetProperty="BuildingBuyoutReduction"  Operation="Addition"            Value="0.1"     Path="../ClassEmpire/ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+
+    <!--  Ecologist  -->
+    <SimulationDescriptor Name="LawEffectP04L00Dictatorship" Type="LawEffect">
+      <Modifier TargetProperty="PlanetInitialFIDSPenalty"     Operation="Addition"    Value="-0.25"    Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,!PlanetGameplayTypeGas"  TooltipHidden="true"/>
+      <Modifier TargetProperty="Happiness"                    Operation="Addition"    Value="15"      Path="../ClassEmpire/ClassColonizedStarSystem"/>
+      <Modifier TargetProperty="PlanetRawFood"    Operation="Addition"         Value="2"     Path="../ClassEmpire/ClassColonizedStarSystem/ClassPlanet"/>
+    </SimulationDescriptor>
+
+    <!-- Religious -->
+    <SimulationDescriptor Name="LawEffectP05L00Dictatorship" Type="LawEffect">
+        <Modifier TargetProperty="IgnoresColdWarRules"  Operation="Addition"         Value="1" Path="../ClassEmpire" TooltipHidden="true"/>
+        <Modifier TargetProperty="PlanetRawPrestige"    Operation="Addition"         Value="2"     Path="../ClassEmpire/ClassColonizedStarSystem/ClassPlanet"/>
+        <Modifier TargetProperty="ExperiencePerTurn"    Operation="Percent"          Value="0.15"  Path="ClassEmpire//ClassHero"/>
+    </SimulationDescriptor>
+    
+    <!-- Militarist (including nerf in republic) -->
+    <SimulationDescriptor Name="LawEffectP06L00Republic" Type="LawEffect">
+        <Modifier TargetProperty="FreeWarDeclaration"          Operation="Force"        Value="0"     Path="../ClassEmpire" TooltipHidden="true"/>
+        <Modifier TargetProperty="FreeWarDeclaration"          Operation="Force"        Value="0"     Path="../ClassEmpire/ClassDiplomacy/ClassDiplomaticEmpire" Priority="1" TooltipHidden="true"/>
+        <!-- Contact AI if you change the following modifier -->
+        <Modifier TargetProperty="HappinessPerWar"          Operation="Addition"     Value="20"  Path="../ClassEmpire/ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="HappinessPerMinorWar"     Operation="Addition"     Value="10"  Path="../ClassEmpire/ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="LawEffectP06L00Dictatorship" Type="LawEffect">
+        <Modifier TargetProperty="FreeWarDeclaration"          Operation="Force"        Value="0"     Path="../ClassEmpire" TooltipHidden="true"/>
+        <Modifier TargetProperty="FreeWarDeclaration"          Operation="Force"        Value="0"     Path="../ClassEmpire/ClassDiplomacy/ClassDiplomaticEmpire" Priority="1" TooltipHidden="true"/>
+        <!-- Contact AI if you change the following modifier -->
+        <Modifier TargetProperty="HappinessPerWar"          Operation="Addition"     Value="20"  Path="../ClassEmpire/ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="HappinessPerMinorWar"     Operation="Addition"     Value="10"  Path="../ClassEmpire/ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="NetSystemManpower"     Operation="Percent"      Value="0.25" Path="../ClassEmpire/ClassColonizedStarSystem"/>
+        <BinaryModifier TargetProperty="NetSystemManpower" 	   Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire/ClassColonizedStarSystem" />
+    </SimulationDescriptor>
+
+
   <!--Ecologist laws about pop type and assimilation-->
   <!-- Law 3 -->
   <SimulationDescriptor Name="LawEffectP04L03" Type="LawEffect">
