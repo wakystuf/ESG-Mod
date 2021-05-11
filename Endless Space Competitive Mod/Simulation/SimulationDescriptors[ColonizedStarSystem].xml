@@ -293,7 +293,7 @@
 		<Property Name="GroundBattleDefenderManpowerLimitFromGhosts"	BaseValue="0" IsSealed="true"/>
 		<Property Name="GroundBattleAttackerOwnership"	BaseValue="0" IsSealed="true"/>
 		<Property Name="GroundBattleAttackerManpowerLimit"	BaseValue="0" />
-		<Property Name="GroundBattleDefenderManpowerLimit"	BaseValue="0" />
+		<Property Name="GroundBattleDefenderManpowerLimit"	BaseValue="25000" />
 		<Property Name="GroundBattleAttackerManpowerLimitBonus"	BaseValue="0" MinValue="Negative" />
 		<Property Name="GroundBattleDefenderManpowerLimitBonus"	BaseValue="0" MinValue="Negative" />
 		<Property Name="GroundBattleAttackerTroopsMaxHealthMultiplier"	BaseValue="1" />
@@ -494,6 +494,7 @@
 		<Property Name="RecipeIngredientEffectBTier1Luxury7" BaseValue="0"/>
 		<Property Name="RecipeIngredientEffectCTier1Luxury7" BaseValue="0"/>
 		<Property Name="RecipeIngredientEffectDTier1Luxury7" BaseValue="0"/>
+		<Property Name="RecipeIngredientEffectETier1Luxury7" BaseValue="0"/>
 		<Property Name="RecipeIngredientEffectATier1Luxury8" BaseValue="0"/>
 		<Property Name="RecipeIngredientEffectBTier1Luxury8" BaseValue="0"/>
 		<Property Name="RecipeIngredientEffectTier2Luxury9" BaseValue="0"/>
@@ -1113,6 +1114,7 @@
 		<Modifier TargetProperty="GrowthForManpower"                                        Operation="Addition"    Value="$(RecipeIngredientEffectBTier1Luxury7)"                  Path="ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="GroundBattlePopulationToManpowerPermanentConversionRate"  Operation="Addition"    Value="$(RecipeIngredientEffectCTier1Luxury7)"                  Path="ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="GroundBattleDefenderManpowerLimitBonus"                   Operation="Addition"    Value="$(RecipeIngredientEffectDTier1Luxury7)"                  Path="ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="MaximumSystemManpower"                  					Operation="Addition"    Value="$(RecipeIngredientEffectETier1Luxury7)"                  Path="ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="BuildingBuyoutReduction"                                  Operation="Addition"    Value="$(RecipeIngredientEffectATier1Luxury8)"                  Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
 		<Modifier TargetProperty="ShipBuyoutReduction"                                      Operation="Addition"    Value="$(RecipeIngredientEffectBTier1Luxury8)"                  Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
 		<Modifier TargetProperty="SystemGrowth"                                             Operation="Addition"    Value="$(RecipeIngredientEffectTier1Luxury1)"                   Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
@@ -1760,5 +1762,11 @@
 		<BinaryModifier TargetProperty="SystemMoney"            Operation="Percent"       Left="-0.50" BinaryOperation="Multiplication" Right="$(BlockadeImpactFactor)" Path="FAKE,ClassColonizedStarSystem"/>
 		<BinaryModifier TargetProperty="SystemResearch"         Operation="Percent"       Left="-0.50" BinaryOperation="Multiplication" Right="$(BlockadeImpactFactor)" Path="FAKE,ClassColonizedStarSystem"/>
 		<BinaryModifier TargetProperty="SystemEmpirePoint"      Operation="Percent"       Left="-0.50" BinaryOperation="Multiplication" Right="$(BlockadeImpactFactor)" Path="FAKE,ClassColonizedStarSystem"/>
+	</SimulationDescriptor>
+
+	<SimulationDescriptor Name="ColonizedStarSystemInfluenceStateOwnerFriend" Type="ColonizedStarSystemInfluenceState">
+		<BinaryModifier TargetProperty="NetSystemMoney"         Operation="Percent" Left="0" BinaryOperation="Multiplication" Right="$(CanBeTargetedByInfluenceEffects)"/>
+		<BinaryModifier TargetProperty="NetSystemResearch"      Operation="Percent" Left="0" BinaryOperation="Multiplication" Right="$(CanBeTargetedByInfluenceEffects)"/>
+		<BinaryModifier TargetProperty="NetSystemEmpirePoint"   Operation="Percent" Left="0" BinaryOperation="Multiplication" Right="$(CanBeTargetedByInfluenceEffects)"/>
 	</SimulationDescriptor>
 </Datatable>
