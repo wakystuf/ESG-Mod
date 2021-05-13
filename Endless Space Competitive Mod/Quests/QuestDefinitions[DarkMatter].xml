@@ -1,0 +1,1067 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+	<!-- A Galaxy Far Far Away -->
+	<QuestDefinition Name="a_galaxy_far_far_away"
+					 Category="Quest" SubCategory="Exploration"
+					 MinimumTurn="38"
+					 TriggeringProbability="1" CheckRandom="false">
+
+		<!-- ============ TAGS ================= -->
+		<Tags>BeginTurn</Tags>
+
+		<QuestContextSolo/>
+
+		<RepetitionRules  NumberOfOccurrencesPerGame="0"
+						  NumberOfOccurrencesPerEmpire="1"
+						  NumberOfConcurrentInstances="0"/>
+
+		<!-- ============ VARIABLES ============ -->
+		<Vars>
+
+			<Var VarName="$ImprovementNumber" IntValue="3"/>
+
+			<Var VarName="$CurrentEmpire">
+				<From Source="$Empire"/>
+			</Var>
+
+			<Var VarName="$ToSpawnSystemNode"/>
+
+			<DroplistVar VarName="$FleetRewardDesign" Droplist="RewardUCFleet"/>
+
+			<Var VarName="$RewardUCFleetName" StringValue="%a_galaxy_far_far_away_fleet_name"/>
+
+			<Var VarName="$OpticsResearchLabImprovement" StringValue="StarSystemImprovementScience3"/>
+
+			<Var VarName="$StasisSingularityImprovement" StringValue="StarSystemTimeBubbleImprovementFreezeTime"/>
+
+			<Var VarName="$DescriptorName" StringValue="QuestUnlockUCCoordinator"/>
+
+			<LocalizationVar LocalizationKey="$Number" Source="$ImprovementNumber"/>
+
+		</Vars>
+
+		<!--============ PREREQUISITES ============-->
+		<Prerequisites Target="$(Empire)">
+			<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCDarkMatter</DownloadableContentPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">TutorialModeBeginner</PathPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,EmpireTypeMajor,AffinityGameplayVaulters</PathPrerequisite>
+			<InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateColony') ge 1</InterpreterPrerequisite>
+			<PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassResearch,TechnologyStageScienceAndExploration3</PathPrerequisite>
+			<PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassResearch,TechnologyHull5</PathPrerequisite>
+			<InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire', CurrentTurn) gt 37</InterpreterPrerequisite>
+			<GameSettingPrerequisite Flags="Prerequisite,Discard">EnableHullUnlockQuests,False</GameSettingPrerequisite>
+		</Prerequisites>
+
+		<!--============ STEPS ============-->
+		<Steps>
+
+			<Step Name="Step1">
+
+				<!-- STEP 1  -->
+				<ObjectiveSet>
+					<Objective Name="Step1_Objective1" StartValue="0" EndValue="$ImprovementNumber">
+						<AIHint Category="Minimal" MinAutoResolutionTurn="40" MaxAutoResolutionTurn="50" AutoResolutionProbability="1" />
+						<Sequence>
+							<Loop>
+								<Parallel CompletionPolicy="Any">
+									<Sequence>
+										<!-- Build one Optical Research Lab improvement -->
+										<Decorator_ConstructionCompleted ProgressionIncrement="1" Initiator="Empire">
+											<Input_ConstructionName VarName="$OpticsResearchLabImprovement"/>
+											<Output_Node VarName="$ToSpawnSystemNode"/>
+										</Decorator_ConstructionCompleted>
+									</Sequence>
+									<Sequence>
+										<!-- Build one Stasis Singularity improvement (Time Lords) -->
+										<Decorator_ConstructionCompleted ProgressionIncrement="1" Initiator="Empire">
+											<Input_ConstructionName VarName="$StasisSingularityImprovement"/>
+											<Output_Node VarName="$ToSpawnSystemNode"/>
+										</Decorator_ConstructionCompleted>
+									</Sequence>
+								</Parallel>
+								<Input_Count VarName="$ImprovementNumber"/>
+							</Loop>
+							<Action_SpawnFleets>
+								<Input_Empire VarName="$CurrentEmpire"/>
+								<Input_Locations VarName="$ToSpawnSystemNode"/>
+								<Input_DroppableFleet VarName="$FleetRewardDesign"/>
+								<Input_FleetName VarName="$RewardUCFleetName"/>
+							</Action_SpawnFleets>
+						</Sequence>
+					</Objective>
+
+					<Reward LocalizationKey="%a_galaxy_far_far_away-Reward"/>
+
+				</ObjectiveSet>
+
+			</Step>
+		</Steps>
+	</QuestDefinition>
+	<QuestDefinition Name="a_galaxy_far_far_away_ESG"
+					 Category="Quest" SubCategory="Exploration"
+					 MinimumTurn="38"
+					 TriggeringProbability="1" CheckRandom="false">
+
+		<!-- ============ TAGS ================= -->
+		<Tags>BeginTurn</Tags>
+
+		<QuestContextSolo/>
+
+		<RepetitionRules  NumberOfOccurrencesPerGame="0"
+						  NumberOfOccurrencesPerEmpire="1"
+						  NumberOfConcurrentInstances="0"/>
+
+		<!-- ============ VARIABLES ============ -->
+		<Vars>
+
+			<Var VarName="$ImprovementNumber" IntValue="3"/>
+
+			<Var VarName="$CurrentEmpire">
+				<From Source="$Empire"/>
+			</Var>
+
+			<Var VarName="$ToSpawnSystemNode"/>
+
+			<DroplistVar VarName="$FleetRewardDesign" Droplist="RewardUCFleet"/>
+
+			<Var VarName="$RewardUCFleetName" StringValue="%a_galaxy_far_far_away_fleet_name"/>
+
+			<Var VarName="$OpticsResearchLabImprovement" StringValue="StarSystemImprovementScience3"/>
+
+			<Var VarName="$StasisSingularityImprovement" StringValue="StarSystemTimeBubbleImprovementFreezeTime"/>
+
+			<Var VarName="$DescriptorName" StringValue="QuestUnlockUCCoordinator"/>
+
+			<LocalizationVar LocalizationKey="$Number" Source="$ImprovementNumber"/>
+
+		</Vars>
+
+		<!--============ PREREQUISITES ============-->
+		<Prerequisites Target="$(Empire)">
+			<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCDarkMatter</DownloadableContentPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">TutorialModeBeginner</PathPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,EmpireTypeMajor,AffinityGameplayVaulters</PathPrerequisite>
+			<InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateColony') ge 1</InterpreterPrerequisite>
+			<PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassResearch,TechnologyStageScienceAndExploration3</PathPrerequisite>
+			<PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassResearch,TechnologyHull5</PathPrerequisite>
+			<InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire', CurrentTurn) gt 37</InterpreterPrerequisite>
+			<GameSettingPrerequisite Flags="Prerequisite,Discard">EnableHullUnlockQuests,True</GameSettingPrerequisite>
+		</Prerequisites>
+
+		<!--============ STEPS ============-->
+		<Steps>
+
+			<Step Name="Step1">
+
+				<!-- STEP 1  -->
+				<ObjectiveSet>
+					<Objective Name="Step1_Objective1" StartValue="0" EndValue="$ImprovementNumber">
+						<AIHint Category="Minimal" MinAutoResolutionTurn="40" MaxAutoResolutionTurn="50" AutoResolutionProbability="1" />
+						<Sequence>
+							<Loop>
+								<Parallel CompletionPolicy="Any">
+									<Sequence>
+										<!-- Build one Optical Research Lab improvement -->
+										<Decorator_ConstructionCompleted ProgressionIncrement="1" Initiator="Empire">
+											<Input_ConstructionName VarName="$OpticsResearchLabImprovement"/>
+											<Output_Node VarName="$ToSpawnSystemNode"/>
+										</Decorator_ConstructionCompleted>
+									</Sequence>
+									<Sequence>
+										<!-- Build one Stasis Singularity improvement (Time Lords) -->
+										<Decorator_ConstructionCompleted ProgressionIncrement="1" Initiator="Empire">
+											<Input_ConstructionName VarName="$StasisSingularityImprovement"/>
+											<Output_Node VarName="$ToSpawnSystemNode"/>
+										</Decorator_ConstructionCompleted>
+									</Sequence>
+								</Parallel>
+								<Input_Count VarName="$ImprovementNumber"/>
+							</Loop>
+							<Action_SpawnFleets>
+								<Input_Empire VarName="$CurrentEmpire"/>
+								<Input_Locations VarName="$ToSpawnSystemNode"/>
+								<Input_DroppableFleet VarName="$FleetRewardDesign"/>
+								<Input_FleetName VarName="$RewardUCFleetName"/>
+							</Action_SpawnFleets>
+							<Action_ApplyDescriptor>
+								<Input_DescriptorName VarName="$DescriptorName"/>
+								<Input_Targets VarName="$CurrentEmpire"/>
+							</Action_ApplyDescriptor>
+						</Sequence>
+					</Objective>
+
+					<Reward LocalizationKey="%a_galaxy_far_far_away-Reward"/>
+					<Reward Droplist="a_galaxy_far_far_away_ship" Picks="1"/>
+
+				</ObjectiveSet>
+
+			</Step>
+		</Steps>
+	</QuestDefinition>
+
+	<!-- Wisdom of the Past -->
+	<QuestDefinition Name="wisdom_of_the_past"
+                   Category="Quest" SubCategory="Exploration"
+                   MinimumTurn="50"
+                   TriggeringProbability="1" CheckRandom="false">
+
+		<!-- ============ TAGS ================= -->
+		<Tags>BeginTurn</Tags>
+
+		<QuestContextSolo/>
+
+		<RepetitionRules  NumberOfOccurrencesPerGame="0"
+                      NumberOfOccurrencesPerEmpire="1"
+                      NumberOfConcurrentInstances="0"/>
+
+		<!-- ============ VARIABLES ============ -->
+		<Vars>
+
+			<Var VarName="$CuriositiesNumber" IntValue="2"/>
+
+			<Var VarName="$CurrentEmpire">
+				<From Source="$Empire"/>
+			</Var>
+
+			<Var VarName="$CuriositiesMinimumNumber" IntValue="1"/>
+			<!-- The following query work as a prerequisite variable -->
+			<Var VarName="$Planets">
+				<From Source="$Constellations.$StarSystems.$Planets">
+					<Where>
+						<FilterPlanetByCuriosity FilteringOperation="CanBeSearched" EmpireVarName="$CurrentEmpire" CountVarName="$CuriositiesMinimumNumber" DisplayedTypeVarName="CuriosityTypeRuins"/>
+					</Where>
+				</From>
+			</Var>
+
+			<Var VarName="$ForSpawningNode"/>
+
+			<DroplistVar VarName="$FleetRewardDesign" Droplist="RewardNakalimFleet"/>
+			<Var VarName="$NakalimFleetName" StringValue="%wisdom_of_the_past_reward_fleet_name"/>
+
+			<Var VarName="$CuriosityTypeRuin" StringValue="CuriosityTypeRuins"/>
+			<Var VarName="$DescriptorName" StringValue="QuestUnlockNakalimAttacker"/>
+			<LocalizationVar LocalizationKey="$NumberRuinsLocale" Source="$CuriositiesNumber"/>
+
+		</Vars>
+
+		<!--============ PREREQUISITES ============-->
+		<Prerequisites Target="$(Empire)">
+			<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCDarkMatter</DownloadableContentPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">TutorialModeBeginner</PathPrerequisite>
+			<PathPrerequisite Inverted="true" Flags="Prerequisite">../ClassEmpire,AffinityGameplayTemplars</PathPrerequisite>
+			<PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassResearch,TechnologyHull2</PathPrerequisite>
+			<InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire', CurrentTurn) gt 49 </InterpreterPrerequisite>
+			<GameSettingPrerequisite Flags="Prerequisite,Discard">EnableHullUnlockQuests,False</GameSettingPrerequisite>
+		</Prerequisites>
+
+		<!--============ STEPS ============-->
+		<Steps>
+
+			<Step Name="Step1">
+
+				<!-- STEP 1 -->
+				<ObjectiveSet>
+					<Objective Name="Step1_Objective1" StartValue="0" EndValue="$CuriositiesNumber">
+						<AIHint Category="Minimal" MinAutoResolutionTurn="50" MaxAutoResolutionTurn="70" AutoResolutionProbability="1" />
+						<Sequence>
+							<Loop>
+								<Decorator_CuriosityDiscovered ProgressionIncrement="1" Initiator="Empire">
+									<Input_DisplayedType VarName="$CuriosityTypeRuin"/>
+									<Output_Node VarName="$ForSpawningNode"/>
+								</Decorator_CuriosityDiscovered>
+								<Input_Count VarName="$CuriositiesNumber"/>
+							</Loop>
+							<Action_SpawnFleets>
+								<Input_Empire VarName="$CurrentEmpire"/>
+								<Input_Locations VarName="$ForSpawningNode"/>
+								<Input_DroppableFleet VarName="$FleetRewardDesign"/>
+								<Input_FleetName VarName="$NakalimFleetName"/>
+							</Action_SpawnFleets>
+						</Sequence>
+					</Objective>
+
+					<Reward LocalizationKey="%wisdom_of_the_past_Reward"/>
+					<!--<Reward Droplist="PugRewardDLC5"/>-->
+
+				</ObjectiveSet>
+
+			</Step>
+		</Steps>
+	</QuestDefinition>
+	<QuestDefinition Name="wisdom_of_the_past_ESG"
+                   Category="Quest" SubCategory="Exploration"
+                   MinimumTurn="50"
+                   TriggeringProbability="1" CheckRandom="false">
+
+		<!-- ============ TAGS ================= -->
+		<Tags>BeginTurn</Tags>
+
+		<QuestContextSolo/>
+
+		<RepetitionRules  NumberOfOccurrencesPerGame="0"
+                      NumberOfOccurrencesPerEmpire="1"
+                      NumberOfConcurrentInstances="0"/>
+
+		<!-- ============ VARIABLES ============ -->
+		<Vars>
+
+			<Var VarName="$CuriositiesNumber" IntValue="2"/>
+
+			<Var VarName="$CurrentEmpire">
+				<From Source="$Empire"/>
+			</Var>
+
+			<Var VarName="$CuriositiesMinimumNumber" IntValue="1"/>
+			<!-- The following query work as a prerequisite variable -->
+			<Var VarName="$Planets">
+				<From Source="$Constellations.$StarSystems.$Planets">
+					<Where>
+						<FilterPlanetByCuriosity FilteringOperation="CanBeSearched" EmpireVarName="$CurrentEmpire" CountVarName="$CuriositiesMinimumNumber" DisplayedTypeVarName="CuriosityTypeRuins"/>
+					</Where>
+				</From>
+			</Var>
+
+			<Var VarName="$ForSpawningNode"/>
+
+			<DroplistVar VarName="$FleetRewardDesign" Droplist="RewardNakalimFleet"/>
+			<Var VarName="$NakalimFleetName" StringValue="%wisdom_of_the_past_reward_fleet_name"/>
+
+			<Var VarName="$CuriosityTypeRuin" StringValue="CuriosityTypeRuins"/>
+			<Var VarName="$DescriptorName" StringValue="QuestUnlockNakalimAttacker"/>
+			<LocalizationVar LocalizationKey="$NumberRuinsLocale" Source="$CuriositiesNumber"/>
+
+		</Vars>
+
+		<!--============ PREREQUISITES ============-->
+		<Prerequisites Target="$(Empire)">
+			<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCDarkMatter</DownloadableContentPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">TutorialModeBeginner</PathPrerequisite>
+			<PathPrerequisite Inverted="true" Flags="Prerequisite">../ClassEmpire,AffinityGameplayTemplars</PathPrerequisite>
+			<PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassResearch,TechnologyHull2</PathPrerequisite>
+			<InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire', CurrentTurn) gt 49 </InterpreterPrerequisite>
+			<GameSettingPrerequisite Flags="Prerequisite,Discard">EnableHullUnlockQuests,True</GameSettingPrerequisite>
+		</Prerequisites>
+
+		<!--============ STEPS ============-->
+		<Steps>
+
+			<Step Name="Step1">
+
+				<!-- STEP 1 -->
+				<ObjectiveSet>
+					<Objective Name="Step1_Objective1" StartValue="0" EndValue="$CuriositiesNumber">
+						<AIHint Category="Minimal" MinAutoResolutionTurn="50" MaxAutoResolutionTurn="70" AutoResolutionProbability="1" />
+						<Sequence>
+							<Loop>
+								<Decorator_CuriosityDiscovered ProgressionIncrement="1" Initiator="Empire">
+									<Input_DisplayedType VarName="$CuriosityTypeRuin"/>
+									<Output_Node VarName="$ForSpawningNode"/>
+								</Decorator_CuriosityDiscovered>
+								<Input_Count VarName="$CuriositiesNumber"/>
+							</Loop>
+							<Action_SpawnFleets>
+								<Input_Empire VarName="$CurrentEmpire"/>
+								<Input_Locations VarName="$ForSpawningNode"/>
+								<Input_DroppableFleet VarName="$FleetRewardDesign"/>
+								<Input_FleetName VarName="$NakalimFleetName"/>
+							</Action_SpawnFleets>
+							<Action_ApplyDescriptor>
+								<Input_DescriptorName VarName="$DescriptorName"/>
+								<Input_Targets VarName="$CurrentEmpire"/>
+							</Action_ApplyDescriptor>
+						</Sequence>
+					</Objective>
+
+					<Reward LocalizationKey="%wisdom_of_the_past_Reward"/>
+					<Reward Droplist="wisdom_of_the_past_ship" Picks="1"/>
+					<!--<Reward Droplist="PugRewardDLC5"/>-->
+
+				</ObjectiveSet>
+
+			</Step>
+		</Steps>
+	</QuestDefinition>
+
+	<!-- Thieves and Traitors no Awakening -->
+	<QuestDefinition Name="thieves_and_traitors" Category="SideQuest" SubCategory="Dlc21">
+
+		<!--============ TAGS ============-->
+		<Tags>thieves_and_traitors,BeginTurn</Tags>
+		<QuestContextSolo/>
+		<RepetitionRules  NumberOfOccurrencesPerGame="0"
+						  NumberOfOccurrencesPerEmpire="1"
+						  NumberOfConcurrentInstances="1"/>
+
+		<!--============ VARIABLES ============-->
+		<Vars>
+
+			<Var VarName="$CurrentEmpire">
+				<From Source="$Empire"/>
+			</Var>
+
+			<!-- Get the lesser empire -->
+			<Var VarName="$Lesser" >
+				<From Source="$LesserEmpire"/>
+			</Var>
+
+			<!-- Get the academy empire -->
+			<Var VarName="$Academy">
+				<From Source="$AcademyEmpire"/>
+			</Var>
+
+			<Var VarName="$PlayerSystem"/>
+
+			<Var VarName="$CloseAcademySystem">
+				<From Source="$CurrentEmpire.$ColonizedStarSystems.$StarSystem" />
+			</Var>
+
+			<DroplistVar VarName="$RogueAcademyFleetToSpawn1" Droplist="AcademyStrongFleetDesign"/>
+
+			<DroplistVar VarName="$FleetRewardDesign" Droplist="RewardFleet1"/>
+
+			<Var VarName="$RogueAcademyFleets"/>
+
+			<Var VarName="$FleetMission" StringValue="Roam"/>
+
+			<Var VarName="$AcademyTraitorsFleetName" StringValue="%thieves_and_traitors-AcademyTraitorsFleetName"/>
+
+			<Var VarName="$Count1" IntValue="3"/>
+
+			<Var VarName="$Markers"/>
+
+			<Var VarName="$SystemMarker"/>
+
+			<!-- In case the empire broke the relationship with the academy -->
+			<Var VarName="$WarStatus" StringValue="AcademyDiplomaticRelationStateWar"/>
+			<Var VarName="$AcademyFleetName" StringValue="%thieves_and_traitors-RewardFleetName"/>
+			<Var VarName="$DescriptorName" StringValue="QuestUnlockAcademyCarrier"/>
+			<LocalizationVar LocalizationKey="$RogueKilledAmount" Source="$Count1"/>
+
+		</Vars>
+
+		<!--============ PREREQUISITES ============-->
+		<Prerequisites Target="$(Empire)">
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">TutorialModeBeginner</PathPrerequisite>
+			<QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="thieves_x_traitors" QuestState="Completed"/>
+			<PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassResearch,TechnologyHull6</PathPrerequisite>
+			<GameSettingPrerequisite Flags="Prerequisite,Discard">EnableHullUnlockQuests,False</GameSettingPrerequisite>
+		</Prerequisites>
+
+		<!--============ STEPS ============-->
+		<Steps>
+			<Step Name="Step1">
+				<!--============ STEP 1 ============-->
+				<ObjectiveSet>
+					<StartActions>
+
+						<Action_SpawnFleets LockShipsInTheFleet="true">
+							<Input_Empire VarName="$Lesser"/>
+							<Input_Locations VarName="$CloseAcademySystem"/>
+							<Input_DroppableFleet VarName="$RogueAcademyFleetToSpawn1"/>
+							<Input_Count VarName="$Count1"/>
+							<Input_FleetName VarName="$AcademyTraitorsFleetName"/>
+							<Output_FleetGUIDs VarName="$RogueAcademyFleets"/>
+						</Action_SpawnFleets>
+
+						<Action_CreateFleetMissions>
+							<Input_MissionDefinitionName VarName="$FleetMission"/>
+							<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+						</Action_CreateFleetMissions>
+
+						<Action_AddQuestMarkers RevealsLocation="true">
+							<Input_TargetGUIDs VarName="$RogueAcademyFleets"/>
+							<Input_Empires VarName="$CurrentEmpire"/>
+							<Output_Markers VarName="$Markers"/>
+						</Action_AddQuestMarkers>
+
+					</StartActions>
+
+					<Objective Name="Step1_Objective1" StartValue="0" EndValue="$Count1">
+						<AIHint Category="Minimal" MinAutoResolutionTurn="2" MaxAutoResolutionTurn="10" AutoResolutionProbability="1" />
+						<Sequence>
+
+							<Parallel CompletionPolicy="First">
+
+								<!-- We count the defeated (by any empire) rogue fleets -->
+								<Sequence>
+									<Loop>
+										<Decorator_BattleEnded Status="Won" Initiator="Empire" ProgressionIncrement="1">
+											<Condition_BattleEnded_FleetDestroyed>
+												<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+											</Condition_BattleEnded_FleetDestroyed>
+											<Output_Node VarName="$PlayerSystem"/>
+										</Decorator_BattleEnded>
+										<Input_Count VarName="$Count1"/>
+									</Loop>
+
+									<!-- When reached the goal, the reward (an academy fleet) is spawned at the last system-->
+									<Action_SpawnFleets>
+										<Input_Empire VarName="$CurrentEmpire"/>
+										<Input_Locations VarName="$PlayerSystem"/>
+										<Input_DroppableFleet VarName="$FleetRewardDesign"/>
+										<Input_FleetName VarName="$AcademyFleetName"/>
+									</Action_SpawnFleets>
+
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Markers"/>
+									</Action_RemoveQuestMarkers>
+
+								</Sequence>
+
+								<!-- The quest fails if one of the rebel fleets is destroyed by other empire -->
+								<Sequence>
+									<Decorator_BattleEnded Status="Won" Initiator="OtherEmpires">
+										<Condition_BattleEnded_FleetDestroyed>
+											<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+										</Condition_BattleEnded_FleetDestroyed>
+									</Decorator_BattleEnded>
+
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Markers"/>
+									</Action_RemoveQuestMarkers>
+
+									<Action_DestroyFleets>
+										<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+									</Action_DestroyFleets>
+
+									<Action_Fail/>
+								</Sequence>
+
+								<!-- The quest fails if the empire changes its diplomatic reltionship with the academy to war -->
+								<Sequence>
+									<Decorator_DiplomaticRelationChanged Initiator="Empire">
+										<Input_OtherEmpire VarName="$Academy"/>
+										<Input_DiplomaticRelationState VarName="$WarStatus"/>
+									</Decorator_DiplomaticRelationChanged>
+
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Markers"/>
+									</Action_RemoveQuestMarkers>
+
+									<Action_DestroyFleets>
+										<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+									</Action_DestroyFleets>
+
+									<Action_Fail/>
+								</Sequence>
+
+							</Parallel>
+						</Sequence>
+					</Objective>
+				</ObjectiveSet>
+				<Reward LocalizationKey="%thieves_and_traitors-Reward"/>
+			</Step>
+		</Steps>
+
+	</QuestDefinition>
+	<QuestDefinition Name="thieves_and_traitors_ESG" Category="SideQuest" SubCategory="Dlc21">
+
+		<!--============ TAGS ============-->
+		<Tags>thieves_and_traitors,BeginTurn</Tags>
+		<QuestContextSolo/>
+		<RepetitionRules  NumberOfOccurrencesPerGame="0"
+						  NumberOfOccurrencesPerEmpire="1"
+						  NumberOfConcurrentInstances="1"/>
+
+		<!--============ VARIABLES ============-->
+		<Vars>
+
+			<Var VarName="$CurrentEmpire">
+				<From Source="$Empire"/>
+			</Var>
+
+			<!-- Get the lesser empire -->
+			<Var VarName="$Lesser" >
+				<From Source="$LesserEmpire"/>
+			</Var>
+
+			<!-- Get the academy empire -->
+			<Var VarName="$Academy">
+				<From Source="$AcademyEmpire"/>
+			</Var>
+
+			<Var VarName="$PlayerSystem"/>
+
+			<Var VarName="$CloseAcademySystem">
+				<From Source="$CurrentEmpire.$ColonizedStarSystems.$StarSystem" />
+			</Var>
+
+			<DroplistVar VarName="$RogueAcademyFleetToSpawn1" Droplist="AcademyStrongFleetDesign"/>
+
+			<DroplistVar VarName="$FleetRewardDesign" Droplist="RewardFleet1"/>
+
+			<Var VarName="$RogueAcademyFleets"/>
+
+			<Var VarName="$FleetMission" StringValue="Roam"/>
+
+			<Var VarName="$AcademyTraitorsFleetName" StringValue="%thieves_and_traitors-AcademyTraitorsFleetName"/>
+
+			<Var VarName="$Count1" IntValue="3"/>
+
+			<Var VarName="$Markers"/>
+
+			<Var VarName="$SystemMarker"/>
+
+			<!-- In case the empire broke the relationship with the academy -->
+			<Var VarName="$WarStatus" StringValue="AcademyDiplomaticRelationStateWar"/>
+			<Var VarName="$AcademyFleetName" StringValue="%thieves_and_traitors-RewardFleetName"/>
+			<Var VarName="$DescriptorName" StringValue="QuestUnlockAcademyCarrier"/>
+			<LocalizationVar LocalizationKey="$RogueKilledAmount" Source="$Count1"/>
+
+		</Vars>
+
+		<!--============ PREREQUISITES ============-->
+		<Prerequisites Target="$(Empire)">
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">TutorialModeBeginner</PathPrerequisite>
+			<QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="thieves_x_traitors" QuestState="Completed"/>
+			<PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassResearch,TechnologyHull6</PathPrerequisite>
+			<GameSettingPrerequisite Flags="Prerequisite,Discard">EnableHullUnlockQuests,True</GameSettingPrerequisite>
+		</Prerequisites>
+
+		<!--============ STEPS ============-->
+		<Steps>
+			<Step Name="Step1">
+				<!--============ STEP 1 ============-->
+				<ObjectiveSet>
+					<StartActions>
+
+						<Action_SpawnFleets LockShipsInTheFleet="true">
+							<Input_Empire VarName="$Lesser"/>
+							<Input_Locations VarName="$CloseAcademySystem"/>
+							<Input_DroppableFleet VarName="$RogueAcademyFleetToSpawn1"/>
+							<Input_Count VarName="$Count1"/>
+							<Input_FleetName VarName="$AcademyTraitorsFleetName"/>
+							<Output_FleetGUIDs VarName="$RogueAcademyFleets"/>
+						</Action_SpawnFleets>
+
+						<Action_CreateFleetMissions>
+							<Input_MissionDefinitionName VarName="$FleetMission"/>
+							<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+						</Action_CreateFleetMissions>
+
+						<Action_AddQuestMarkers RevealsLocation="true">
+							<Input_TargetGUIDs VarName="$RogueAcademyFleets"/>
+							<Input_Empires VarName="$CurrentEmpire"/>
+							<Output_Markers VarName="$Markers"/>
+						</Action_AddQuestMarkers>
+
+					</StartActions>
+
+					<Objective Name="Step1_Objective1" StartValue="0" EndValue="$Count1">
+						<AIHint Category="Minimal" MinAutoResolutionTurn="2" MaxAutoResolutionTurn="10" AutoResolutionProbability="1" />
+						<Sequence>
+
+							<Parallel CompletionPolicy="First">
+
+								<!-- We count the defeated (by any empire) rogue fleets -->
+								<Sequence>
+									<Loop>
+										<Decorator_BattleEnded Status="Won" Initiator="Empire" ProgressionIncrement="1">
+											<Condition_BattleEnded_FleetDestroyed>
+												<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+											</Condition_BattleEnded_FleetDestroyed>
+											<Output_Node VarName="$PlayerSystem"/>
+										</Decorator_BattleEnded>
+										<Input_Count VarName="$Count1"/>
+									</Loop>
+
+									<!-- When reached the goal, the reward (an academy fleet) is spawned at the last system-->
+									<Action_SpawnFleets>
+										<Input_Empire VarName="$CurrentEmpire"/>
+										<Input_Locations VarName="$PlayerSystem"/>
+										<Input_DroppableFleet VarName="$FleetRewardDesign"/>
+										<Input_FleetName VarName="$AcademyFleetName"/>
+									</Action_SpawnFleets>
+
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Markers"/>
+									</Action_RemoveQuestMarkers>
+
+								</Sequence>
+
+								<!-- The quest fails if one of the rebel fleets is destroyed by other empire -->
+								<Sequence>
+									<Decorator_BattleEnded Status="Won" Initiator="OtherEmpires">
+										<Condition_BattleEnded_FleetDestroyed>
+											<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+										</Condition_BattleEnded_FleetDestroyed>
+									</Decorator_BattleEnded>
+
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Markers"/>
+									</Action_RemoveQuestMarkers>
+
+									<Action_DestroyFleets>
+										<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+									</Action_DestroyFleets>
+
+									<Action_Fail/>
+								</Sequence>
+
+								<!-- The quest fails if the empire changes its diplomatic reltionship with the academy to war -->
+								<Sequence>
+									<Decorator_DiplomaticRelationChanged Initiator="Empire">
+										<Input_OtherEmpire VarName="$Academy"/>
+										<Input_DiplomaticRelationState VarName="$WarStatus"/>
+									</Decorator_DiplomaticRelationChanged>
+
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Markers"/>
+									</Action_RemoveQuestMarkers>
+
+									<Action_DestroyFleets>
+										<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+									</Action_DestroyFleets>
+
+									<Action_Fail/>
+								</Sequence>
+
+							</Parallel>
+							<Action_ApplyDescriptor>
+								<Input_DescriptorName VarName="$DescriptorName"/>
+								<Input_Targets VarName="$CurrentEmpire"/>
+							</Action_ApplyDescriptor>
+						</Sequence>
+					</Objective>
+				</ObjectiveSet>
+				<Reward LocalizationKey="%thieves_and_traitors-Reward"/>
+				<Reward Droplist="thieves_and_traitors_ship" Picks="1"/>
+			</Step>
+		</Steps>
+
+	</QuestDefinition>
+
+	<!-- Thieves and Traitors Awakening -->
+	<QuestDefinition Name="thieves_and_traitors_alt"
+					 Category="Quest"
+					 SubCategory="Exploration"
+					 MinimumTurn="56"
+					 TriggeringProbability="1"
+					 CheckRandom="false">
+
+		<!-- ============ TAGS ============ -->
+		<Tags>BeginTurn</Tags>
+
+		<QuestContextSolo/>
+
+		<RepetitionRules  NumberOfOccurrencesPerGame="0"
+						  NumberOfOccurrencesPerEmpire="1"
+						  NumberOfConcurrentInstances="1"/>
+
+		<!-- ========= VARIABLES ========== -->
+		<Vars>
+
+			<Var VarName="$CurrentEmpire">
+				<From Source="$Empire"/>
+			</Var>
+
+			<!-- Get the lesser empire -->
+			<Var VarName="$Lesser" >
+				<From Source="$LesserEmpire"/>
+			</Var>
+
+			<Var VarName="$PlayerSystem"/>
+
+			<Var VarName="$CloseAcademySystem">
+				<From Source="$CurrentEmpire.$ColonizedStarSystems.$StarSystem" />
+			</Var>
+
+			<DroplistVar VarName="$RogueAcademyFleetToSpawn1" Droplist="AcademyStrongFleetDesign"/>
+
+			<DroplistVar VarName="$FleetRewardDesign" Droplist="RewardFleet1"/>
+
+			<Var VarName="$RogueAcademyFleets"/>
+
+			<Var VarName="$FleetMission" StringValue="Roam"/>
+
+			<Var VarName="$AcademyTraitorsFleetName" StringValue="%thieves_and_traitors-AcademyTraitorsFleetName"/>
+
+			<Var VarName="$Count1" IntValue="3"/>
+
+			<Var VarName="$Markers"/>
+
+			<Var VarName="$SystemMarker"/>
+
+			<Var VarName="$AcademyFleetName" StringValue="%thieves_and_traitors-RewardFleetName"/>
+
+			<Var VarName="$DescriptorName" StringValue="QuestUnlockAcademyCarrier"/>
+
+			<LocalizationVar LocalizationKey="$RogueKilledAmount" Source="$Count1"/>
+
+		</Vars>
+
+		<!--============ PREREQUISITES ============-->
+		<Prerequisites Target="$(Empire)">
+			<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCDarkMatter</DownloadableContentPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">TutorialModeBeginner</PathPrerequisite>
+			<DownloadableContentPrerequisite Inverted="true" Flags="Prerequisite,Discard">DLCTemplars</DownloadableContentPrerequisite>
+			<InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire', CurrentTurn) gt 50 </InterpreterPrerequisite>
+			<PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassResearch,TechnologyHull6</PathPrerequisite>
+			<GameSettingPrerequisite Flags="Prerequisite,Discard">EnableHullUnlockQuests,False</GameSettingPrerequisite>
+		</Prerequisites>
+
+		<!--============ STEPS ============-->
+		<Steps>
+			<Step Name="Step1">
+				<!--============ STEP 1 ============-->
+				<ObjectiveSet>
+					<StartActions>
+
+						<Action_SpawnFleets>
+							<Input_Empire VarName="$Lesser"/>
+							<Input_Locations VarName="$CloseAcademySystem"/>
+							<Input_DroppableFleet VarName="$RogueAcademyFleetToSpawn1"/>
+							<Input_Count VarName="$Count1"/>
+							<Input_FleetName VarName="$AcademyTraitorsFleetName"/>
+							<Output_FleetGUIDs VarName="$RogueAcademyFleets"/>
+						</Action_SpawnFleets>
+
+						<Action_CreateFleetMissions>
+							<Input_MissionDefinitionName VarName="$FleetMission"/>
+							<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+						</Action_CreateFleetMissions>
+
+						<Action_AddQuestMarkers RevealsLocation="true">
+							<Input_TargetGUIDs VarName="$RogueAcademyFleets"/>
+							<Input_Empires VarName="$CurrentEmpire"/>
+							<Output_Markers VarName="$Markers"/>
+						</Action_AddQuestMarkers>
+
+					</StartActions>
+
+					<Objective Name="Step1_Objective1" StartValue="0" EndValue="$Count1">
+
+						<AIHint Category="Minimal" MinAutoResolutionTurn="2" MaxAutoResolutionTurn="10" AutoResolutionProbability="1" />
+						<Sequence>
+							<Parallel CompletionPolicy="First">
+
+								<!-- We count the defeated (by any empire) rogue fleets -->
+								<Sequence>
+									<Loop>
+										<Decorator_BattleEnded Status="Won" Initiator="Empire" ProgressionIncrement="1">
+											<Condition_BattleEnded_FleetDestroyed>
+												<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+											</Condition_BattleEnded_FleetDestroyed>
+											<Output_Node VarName="$PlayerSystem"/>
+										</Decorator_BattleEnded>
+										<Input_Count VarName="$Count1"/>
+									</Loop>
+
+									<!-- When reached the goal, the reward (an academy fleet) is spawned at the last system-->
+									<Action_SpawnFleets>
+										<Input_Empire VarName="$CurrentEmpire"/>
+										<Input_Locations VarName="$PlayerSystem"/>
+										<Input_DroppableFleet VarName="$FleetRewardDesign"/>
+										<Input_FleetName VarName="$AcademyFleetName"/>
+									</Action_SpawnFleets>
+
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Markers"/>
+									</Action_RemoveQuestMarkers>
+
+									<Action_DestroyFleets>
+										<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+									</Action_DestroyFleets>
+								</Sequence>
+
+								<!-- The quest fails if one of the rebel fleets is destroyed by other empire -->
+								<Sequence>
+									<Decorator_BattleEnded Status="Won" Initiator="OtherEmpires">
+										<Condition_BattleEnded_FleetDestroyed>
+											<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+										</Condition_BattleEnded_FleetDestroyed>
+									</Decorator_BattleEnded>
+
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Markers"/>
+									</Action_RemoveQuestMarkers>
+
+									<Action_DestroyFleets>
+										<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+									</Action_DestroyFleets>
+
+									<Action_Fail/>
+								</Sequence>
+
+							</Parallel>
+						</Sequence>
+					</Objective>
+				</ObjectiveSet>
+
+				<Reward LocalizationKey="%thieves_and_traitors-Reward"/>
+
+			</Step>
+		</Steps>
+
+	</QuestDefinition>
+	<QuestDefinition Name="thieves_and_traitors_alt_ESG"
+					 Category="Quest"
+					 SubCategory="Exploration"
+					 MinimumTurn="56"
+					 TriggeringProbability="1"
+					 CheckRandom="false">
+
+		<!-- ============ TAGS ============ -->
+		<Tags>BeginTurn</Tags>
+
+		<QuestContextSolo/>
+
+		<RepetitionRules  NumberOfOccurrencesPerGame="0"
+						  NumberOfOccurrencesPerEmpire="1"
+						  NumberOfConcurrentInstances="1"/>
+
+		<!-- ========= VARIABLES ========== -->
+		<Vars>
+
+			<Var VarName="$CurrentEmpire">
+				<From Source="$Empire"/>
+			</Var>
+
+			<!-- Get the lesser empire -->
+			<Var VarName="$Lesser" >
+				<From Source="$LesserEmpire"/>
+			</Var>
+
+			<Var VarName="$PlayerSystem"/>
+
+			<Var VarName="$CloseAcademySystem">
+				<From Source="$CurrentEmpire.$ColonizedStarSystems.$StarSystem" />
+			</Var>
+
+			<DroplistVar VarName="$RogueAcademyFleetToSpawn1" Droplist="AcademyStrongFleetDesign"/>
+
+			<DroplistVar VarName="$FleetRewardDesign" Droplist="RewardFleet1"/>
+
+			<Var VarName="$RogueAcademyFleets"/>
+
+			<Var VarName="$FleetMission" StringValue="Roam"/>
+
+			<Var VarName="$AcademyTraitorsFleetName" StringValue="%thieves_and_traitors-AcademyTraitorsFleetName"/>
+
+			<Var VarName="$Count1" IntValue="3"/>
+
+			<Var VarName="$Markers"/>
+
+			<Var VarName="$SystemMarker"/>
+
+			<Var VarName="$AcademyFleetName" StringValue="%thieves_and_traitors-RewardFleetName"/>
+
+			<Var VarName="$DescriptorName" StringValue="QuestUnlockAcademyCarrier"/>
+
+			<LocalizationVar LocalizationKey="$RogueKilledAmount" Source="$Count1"/>
+
+		</Vars>
+
+		<!--============ PREREQUISITES ============-->
+		<Prerequisites Target="$(Empire)">
+			<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCDarkMatter</DownloadableContentPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">TutorialModeBeginner</PathPrerequisite>
+			<DownloadableContentPrerequisite Inverted="true" Flags="Prerequisite,Discard">DLCTemplars</DownloadableContentPrerequisite>
+			<InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire', CurrentTurn) gt 50 </InterpreterPrerequisite>
+			<PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassResearch,TechnologyHull6</PathPrerequisite>
+			<GameSettingPrerequisite Flags="Prerequisite,Discard">EnableHullUnlockQuests,True</GameSettingPrerequisite>
+		</Prerequisites>
+
+		<!--============ STEPS ============-->
+		<Steps>
+			<Step Name="Step1">
+				<!--============ STEP 1 ============-->
+				<ObjectiveSet>
+					<StartActions>
+
+						<Action_SpawnFleets>
+							<Input_Empire VarName="$Lesser"/>
+							<Input_Locations VarName="$CloseAcademySystem"/>
+							<Input_DroppableFleet VarName="$RogueAcademyFleetToSpawn1"/>
+							<Input_Count VarName="$Count1"/>
+							<Input_FleetName VarName="$AcademyTraitorsFleetName"/>
+							<Output_FleetGUIDs VarName="$RogueAcademyFleets"/>
+						</Action_SpawnFleets>
+
+						<Action_CreateFleetMissions>
+							<Input_MissionDefinitionName VarName="$FleetMission"/>
+							<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+						</Action_CreateFleetMissions>
+
+						<Action_AddQuestMarkers RevealsLocation="true">
+							<Input_TargetGUIDs VarName="$RogueAcademyFleets"/>
+							<Input_Empires VarName="$CurrentEmpire"/>
+							<Output_Markers VarName="$Markers"/>
+						</Action_AddQuestMarkers>
+
+					</StartActions>
+
+					<Objective Name="Step1_Objective1" StartValue="0" EndValue="$Count1">
+
+						<AIHint Category="Minimal" MinAutoResolutionTurn="2" MaxAutoResolutionTurn="10" AutoResolutionProbability="1" />
+						<Sequence>
+							<Parallel CompletionPolicy="First">
+
+								<!-- We count the defeated (by any empire) rogue fleets -->
+								<Sequence>
+									<Loop>
+										<Decorator_BattleEnded Status="Won" Initiator="Empire" ProgressionIncrement="1">
+											<Condition_BattleEnded_FleetDestroyed>
+												<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+											</Condition_BattleEnded_FleetDestroyed>
+											<Output_Node VarName="$PlayerSystem"/>
+										</Decorator_BattleEnded>
+										<Input_Count VarName="$Count1"/>
+									</Loop>
+
+									<!-- When reached the goal, the reward (an academy fleet) is spawned at the last system-->
+									<Action_SpawnFleets>
+										<Input_Empire VarName="$CurrentEmpire"/>
+										<Input_Locations VarName="$PlayerSystem"/>
+										<Input_DroppableFleet VarName="$FleetRewardDesign"/>
+										<Input_FleetName VarName="$AcademyFleetName"/>
+									</Action_SpawnFleets>
+
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Markers"/>
+									</Action_RemoveQuestMarkers>
+
+									<Action_DestroyFleets>
+										<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+									</Action_DestroyFleets>
+								</Sequence>
+
+								<!-- The quest fails if one of the rebel fleets is destroyed by other empire -->
+								<Sequence>
+									<Decorator_BattleEnded Status="Won" Initiator="OtherEmpires">
+										<Condition_BattleEnded_FleetDestroyed>
+											<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+										</Condition_BattleEnded_FleetDestroyed>
+									</Decorator_BattleEnded>
+
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Markers"/>
+									</Action_RemoveQuestMarkers>
+
+									<Action_DestroyFleets>
+										<Input_FleetGUIDs VarName="$RogueAcademyFleets"/>
+									</Action_DestroyFleets>
+
+									<Action_Fail/>
+								</Sequence>
+
+							</Parallel>
+
+							<Action_ApplyDescriptor>
+								<Input_DescriptorName VarName="$DescriptorName"/>
+								<Input_Targets VarName="$CurrentEmpire"/>
+							</Action_ApplyDescriptor>
+						</Sequence>
+					</Objective>
+				</ObjectiveSet>
+
+				<Reward LocalizationKey="%thieves_and_traitors-Reward"/>
+				<Reward Droplist="thieves_and_traitors_ship" Picks="1"/>
+
+			</Step>
+		</Steps>
+
+	</QuestDefinition>
+</Datatable>
