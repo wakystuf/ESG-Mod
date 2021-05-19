@@ -554,4 +554,65 @@
       </Step>
     </Steps>
   </QuestDefinition>
+	
+	<!-- Only used for T0 Laws -->
+	<!-- Enable ESG Laws -->
+  <QuestDefinition Name="QuestEnableESGLaws" IsInstant="true" Category="General" SubCategory="Hacking" TriggeringProbability="1" MinimumTurn="0">
+    <Tags>Hidden,BeginTurn</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$Trait" StringValue="FactionTraitEnableLawRework"/>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <GameSettingPrerequisite>LawRework,True</GameSettingPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Add_Trait">
+            <Sequence>
+              <Action_ApplyDescriptor LogAction="false">
+                <Input_DescriptorName VarName="$Trait"/>
+                <Input_Targets VarName="$CurrentEmpire"/>
+              </Action_ApplyDescriptor>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+	
+	<!-- Disable ESG Laws -->
+	<QuestDefinition Name="QuestDisableESGLaws" IsInstant="true" Category="General" SubCategory="Hacking" TriggeringProbability="1" MinimumTurn="0">
+		<Tags>Hidden,BeginTurn</Tags>
+		<QuestContextSolo/>
+		<RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+		<Vars>
+			<Var VarName="$CurrentEmpire">
+				<From Source="$Empire"/>
+			</Var>
+			<Var VarName="$Trait" StringValue="FactionTraitDisableLawRework"/>
+		</Vars>
+		<Prerequisites Target="$(Empire)">
+			<GameSettingPrerequisite>LawRework,False</GameSettingPrerequisite>
+		</Prerequisites>
+		<Steps>
+			<Step Name="Step1">
+				<ObjectiveSet>
+					<Objective Name="Add_Trait">
+						<Sequence>
+							<Action_ApplyDescriptor LogAction="false">
+								<Input_DescriptorName VarName="$Trait"/>
+								<Input_Targets VarName="$CurrentEmpire"/>
+							</Action_ApplyDescriptor>
+						</Sequence>
+					</Objective>
+				</ObjectiveSet>
+			</Step>
+		</Steps>
+	</QuestDefinition>
 </Datatable>
