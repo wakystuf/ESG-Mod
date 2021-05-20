@@ -13,6 +13,9 @@
 
   <!-- Pacifist -->
   <SimulationDescriptor Name="LawEffectP03L00Dictatorship" Type="LawEffect">
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamages" Operation="Addition" Value="2250" Path="ClassEmpire/ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="25" BinaryOperation="Multiplication" Right="$(IsAtPeace)" Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="IgnoresColdWarTradingRouteBlockade" Operation="Addition" Value="1" Path="ClassEmpire" TooltipOverride="%LawEffectP03L00_RepublicESGToolTipOverride"/>
     <Modifier TargetProperty="BonusPopulationDust" Operation="Addition" Value="2" Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" />
     <Modifier TargetProperty="BuildingBuyoutReduction" Operation="Addition" Value="0.1" Path="../ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
@@ -29,14 +32,15 @@
     <Modifier TargetProperty="IgnoresColdWarRules" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="true"/>
     <Modifier TargetProperty="PlanetRawPrestige" Operation="Addition" Value="2" Path="../ClassEmpire/ClassColonizedStarSystem/ClassPlanet"/>
     <Modifier TargetProperty="ExperiencePerTurn" Operation="Percent" Value="0.15" Path="ClassEmpire//ClassHero"/>
+    <Modifier TargetProperty="HeroUnlockThresholdModifier" Operation="Multiplication" Value="0.75" Path="../ClassEmpire"/>
   </SimulationDescriptor>
 
+  <!-- Militarist -->
   <SimulationDescriptor Name="LawEffectP06L00Dictatorship" Type="LawEffect">
     <Modifier TargetProperty="FreeWarDeclaration" Operation="Force" Value="0" Path="../ClassEmpire" TooltipHidden="true"/>
     <Modifier TargetProperty="FreeWarDeclaration" Operation="Force" Value="0" Path="../ClassEmpire/ClassDiplomacy/ClassDiplomaticEmpire" Priority="1" TooltipHidden="true"/>
-    <!-- Contact AI if you change the following modifier -->
-    <Modifier TargetProperty="HappinessPerWar" Operation="Addition" Value="20" Path="../ClassEmpire/ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="HappinessPerMinorWar" Operation="Addition" Value="10" Path="../ClassEmpire/ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="-10" BinaryOperation="Multiplication" Right="$(IsAtPeace)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%LawEffectP06L00ESGTooltipOverride1"/>
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="45" BinaryOperation="Multiplication" Right="$(IsAtWar)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%LawEffectP06L00RepublicESGTooltipOverride2"/>
     <Modifier TargetProperty="NetSystemManpower" Operation="Percent" Value="0.25" Path="../ClassEmpire/ClassColonizedStarSystem"/>
     <BinaryModifier TargetProperty="NetSystemManpower" Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire/ClassColonizedStarSystem" />
   </SimulationDescriptor>
@@ -86,9 +90,15 @@
   <!--  ################################################################  -->
   <!--  Super Law  -->
   <SimulationDescriptor Name="LawEffectP03L00" Type="LawEffect">
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamages" Operation="Addition" Value="1500" Path="ClassEmpire/ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="15" BinaryOperation="Multiplication" Right="$(IsAtPeace)" Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="IgnoresColdWarTradingRouteBlockade" Operation="Addition" Value="1" Path="ClassEmpire" TooltipOverride="%LawEffectP03L00ESGToolTipOverride"/>
     <Modifier TargetProperty="DemocracyLawsDiversityHasPacifist" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="LawEffectP03L00Republic" Type="LawEffect">
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamages" Operation="Addition" Value="2250" Path="ClassEmpire/ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="25" BinaryOperation="Multiplication" Right="$(IsAtPeace)" Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="IgnoresColdWarTradingRouteBlockade" Operation="Addition" Value="1" Path="ClassEmpire" TooltipOverride="%LawEffectP03L00_RepublicESGToolTipOverride"/>
     <Modifier TargetProperty="BonusPopulationDust" Operation="Addition" Value="1" Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation"/>
   </SimulationDescriptor>
 
@@ -111,10 +121,12 @@
   <!--  Super Law  -->
   <SimulationDescriptor Name="LawEffectP05L00" Type="LawEffect">
     <Modifier TargetProperty="IgnoresColdWarRules" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="HeroUnlockThresholdModifier" Operation="Multiplication" Value="0.85" Path="../ClassEmpire"/>
     <Modifier TargetProperty="DemocracyLawsDiversityHasReligious" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="LawEffectP05L00Republic" Type="LawEffect">
     <Modifier TargetProperty="IgnoresColdWarRules" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="HeroUnlockThresholdModifier" Operation="Multiplication" Value="0.75" Path="../ClassEmpire"/>
     <Modifier TargetProperty="PlanetRawPrestige" Operation="Addition" Value="1" Path="../ClassEmpire/ClassColonizedStarSystem/ClassPlanet"/>
   </SimulationDescriptor>
 
@@ -125,17 +137,15 @@
   <SimulationDescriptor Name="LawEffectP06L00" Type="LawEffect">
     <Modifier TargetProperty="FreeWarDeclaration" Operation="Force" Value="0" Path="../ClassEmpire" TooltipHidden="true"/>
     <Modifier TargetProperty="FreeWarDeclaration" Operation="Force" Value="0" Path="../ClassEmpire/ClassDiplomacy/ClassDiplomaticEmpire" Priority="1" TooltipHidden="true"/>
-    <!--  Contact AI if you change the following modifier  -->
-    <Modifier TargetProperty="HappinessPerWar" Operation="Addition" Value="15" Path="../ClassEmpire/ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="HappinessPerMinorWar" Operation="Addition" Value="5" Path="../ClassEmpire/ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="-10" BinaryOperation="Multiplication" Right="$(IsAtPeace)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%LawEffectP06L00ESGTooltipOverride1"/>
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(IsAtWar)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%LawEffectP06L00ESGTooltipOverride2"/>
     <Modifier TargetProperty="DemocracyLawsDiversityHasMilitarist" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="LawEffectP06L00Republic" Type="LawEffect">
     <Modifier TargetProperty="FreeWarDeclaration" Operation="Force" Value="0" Path="../ClassEmpire" TooltipHidden="true"/>
     <Modifier TargetProperty="FreeWarDeclaration" Operation="Force" Value="0" Path="../ClassEmpire/ClassDiplomacy/ClassDiplomaticEmpire" Priority="1" TooltipHidden="true"/>
-    <!--  Contact AI if you change the following modifier  -->
-    <Modifier TargetProperty="HappinessPerWar" Operation="Addition" Value="25" Path="../ClassEmpire/ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="HappinessPerMinorWar" Operation="Addition" Value="15" Path="../ClassEmpire/ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="-10" BinaryOperation="Multiplication" Right="$(IsAtPeace)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%LawEffectP06L00ESGTooltipOverride1"/>
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="45" BinaryOperation="Multiplication" Right="$(IsAtWar)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%LawEffectP06L00RepublicESGTooltipOverride2"/>
   </SimulationDescriptor>
   
 

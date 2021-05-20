@@ -5,7 +5,7 @@
 
 	<SimulationDescriptor Name="ClassEmpire" Type="Class">
 		<!-- ESCM -->
-		<Property Name="IsAtWar"														BaseValue="1" MinValue="0" MaxValue="1"/>
+		<Property Name="IsAtWar"														BaseValue="0" MinValue="0" MaxValue="1"/>
 		<Property Name="IsAtPeace"													BaseValue="1" MinValue="0" MaxValue="1"/>
 		<Property Name="IsInAlliance"												BaseValue="1" MinValue="0" MaxValue="1"/>
 		<Property Name="TradeAgreementCost"									BaseValue="1" MinValue="0" MaxValue="1"/>
@@ -451,7 +451,7 @@
 
 
 		<Property Name="HeroCount" Composition="Sum"/>
-		<Property Name="HeroLevelCount" />
+		<Property Name="HeroLevelCount" BaseValue="0" MinValue="0"/>
 		<Property Name="HeroUnlockThresholdModifier" BaseValue="1" MinValue="0.0001"/>
 		<Property Name="HeroHealingBonus" BaseValue="1" MaxValue="1" MinValue="0" />
 		<Property Name="TotalCommandPointsOnHeroFleet"/>
@@ -896,6 +896,14 @@
 		<Modifier TargetProperty="TechnologyTotalStageUnlocked" Operation="Addition" Value="$(EmpireScienceStage)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="TechnologyTotalStageUnlocked" Operation="Addition" Value="$(EmpireEconomyStage)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="TechnologyTotalStageUnlocked" Operation="Addition" Value="$(EmpireMilitaryStage)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+
+		<BinaryModifier TargetProperty="IsAtPeace" Operation="Force" Left="1" BinaryOperation="Subtraction" Right="$(IsAtWar)"/>
+
+
+		<Modifier TargetProperty="IsAtPeace" Operation="Addition" Value="$(IsAtPeace)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="IsAtWar" Operation="Addition" Value="$(IsAtWar)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+
+		<!--<Modifier TargetProperty="HeroCount" Operation="Force" Value="$(HeroCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>-->
 
 		<!-- HACKING -->
 		<BinaryModifier TargetProperty="ProcessingPowerStockHackingSpeedMultiplier" Operation="Addition" Left="$(EmpireProcessingPowerStock)" BinaryOperation="Division" Right="10"/>
