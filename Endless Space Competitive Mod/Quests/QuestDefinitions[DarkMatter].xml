@@ -1058,4 +1058,206 @@
 		</Steps>
 
 	</QuestDefinition>
+
+	<!-- Death Without a Corpse -->
+	<QuestDefinition Name="death_without_a_corpse"
+								 Category="Quest" SubCategory="Exploration"
+								 MinimumTurn="34"
+								 TriggeringProbability="1" CheckRandom="false">
+
+		<!-- ============ TAGS ================= -->
+		<Tags>BeginTurn</Tags>
+
+		<QuestContextSolo/>
+
+		<RepetitionRules  NumberOfOccurrencesPerGame="0"
+                      NumberOfOccurrencesPerEmpire="1"
+                      NumberOfConcurrentInstances="0"/>
+
+		<!-- ============ VARIABLES ============ -->
+		<Vars>
+
+			<Var VarName="$CurrentEmpire">
+				<From Source="$Empire"/>
+			</Var>
+
+			<Var VarName="$HomeSystem">
+				<From Source="$CurrentEmpire.$StartingNode"/>
+			</Var>
+
+			<Var VarName="$HomeConstellation">
+				<From Source="$HomeSystem.$Constellation"/>
+			</Var>
+
+			<!--
+      Systems which are isolated and not colonized ordered by distance to my starting node.
+      -->
+			<Var VarName="$SystemsToVisit">
+				<From Source="$Constellations.$StarSystems">
+					<Where>
+						<PathPrerequisite Flags="Prerequisite">IsolatedNode,!QuestNode</PathPrerequisite>
+						<FilterSystemByStatus ColonizationState="NotColonized"/>
+					</Where>
+					<OrderBy>
+						<SortSystemByDistance ConsiderFreeMovement="true" OriginVarName="$HomeSystem" SortBy="Nearest"/>
+					</OrderBy>
+				</From>
+			</Var>
+
+			<!--
+      <Var VarName="$SpecialNodesToVisit">
+        <From Source="$Constellations.$SpecialNodes">
+          <Where>
+            <PathPrerequisite Flags="Prerequisite">IsolatedNode</PathPrerequisite>
+          </Where>
+          <OrderBy>
+            <SortSystemByDistance ConsiderFreeMovement="true" OriginVarName="$HomeSystem" SortBy="Nearest"/>
+          </OrderBy>
+        </From>
+      </Var>
+      -->
+
+			<Var VarName="$Marker1"/>
+			<Var VarName="$System1">
+				<First>
+					<From Source="$SystemsToVisit"/>
+				</First>
+			</Var>
+
+			<Var VarName="$Marker2"/>
+			<Var VarName="$System2">
+				<First>
+					<From Source="$SystemsToVisit">
+						<Where>
+							<IsNot EntityVarName="$System1"/>
+						</Where>
+					</From>
+				</First>
+			</Var>
+
+			<Var VarName="$Descriptor01" StringValue="CannotBeColonized"/>
+			<Var VarName="$Descriptor02" StringValue="CannotBeInvaded"/>
+			<Var VarName="$Descriptor03" StringValue="CannotBeConverted"/>
+			<Var VarName="$Descriptor04" StringValue="SystemCannotBeDestroyed"/>
+
+			<Var VarName="$SystemsToVisitCount" IntValue="2"/>
+
+			<LocalizationVar LocalizationKey="$NumberLocale" Source="$SystemsToVisitCount"/>
+
+		</Vars>
+
+		<!--============ PREREQUISITES ============-->
+		<Prerequisites Target="$(Empire)">
+			<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCDarkMatter</DownloadableContentPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">TutorialModeBeginner</PathPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,EmpireTypeMajor,AffinityGameplayVaulters</PathPrerequisite>
+			<InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire', CurrentTurn) gt 33 </InterpreterPrerequisite>
+		</Prerequisites>
+
+		<!--============ STEPS ============-->
+		<Steps>
+
+			<Step Name="Step1">
+				<StartActions>
+
+					<!-- The system 1 cannot be colonized, destroyed, invaded nor converted -->
+					<Action_AddQuestMarkers RevealsLocation="true">
+						<Input_Targets VarName="$System1"/>
+						<Input_Empires VarName="$CurrentEmpire"/>
+						<Output_Markers VarName="$Marker1"/>
+					</Action_AddQuestMarkers>
+
+					<!-- The system 2 cannot be colonized, destroyed, invaded nor converted -->
+					<Action_AddQuestMarkers RevealsLocation="true">
+						<Input_Targets VarName="$System2"/>
+						<Input_Empires VarName="$CurrentEmpire"/>
+						<Output_Markers VarName="$Marker2"/>
+					</Action_AddQuestMarkers>
+
+				</StartActions>
+
+				<ObjectiveSet>
+					<Objective Name="Step1_Objective1" StartValue="0" EndValue="$SystemsToVisitCount">
+						<AIHint Category="Minimal" MinAutoResolutionTurn="40" MaxAutoResolutionTurn="50" AutoResolutionProbability="1" />
+						<Sequence>
+							<Parallel CompletionPolicy="Any">
+
+								<!-- The first posibility: the player visiting the system 1 and then the system 2 -->
+								<Sequence>
+
+									<!-- Stops waiting until the system 1 is visited -->
+									<Decorator_FleetDocked ProgressionIncrement="1" Initiator="Empire">
+										<Input_Systems VarName="$System1"/>
+									</Decorator_FleetDocked>
+									<!-- Removes the system 1 quest marker -->
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Marker1"/>
+									</Action_RemoveQuestMarkers>
+
+									<!-- Once visited, the system 1 can be colonized, destroyed, invaded or converted again -->
+
+									<!-- Stops waiting the until the system 2 is visited -->
+									<Decorator_FleetDocked ProgressionIncrement="1" Initiator="Empire">
+										<Input_Systems VarName="$System2"/>
+									</Decorator_FleetDocked>
+									<!-- Removes the system 2 quest marker -->
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Marker2"/>
+									</Action_RemoveQuestMarkers>
+
+									<!-- Once visited, the system 2 can be colonized, destroyed, invaded or converted again -->
+								</Sequence>
+
+								<!-- The second posibility: the player visiting the system 2 and then the system 1 -->
+								<Sequence>
+
+									<!-- Stops waiting until the system 2 is visited -->
+									<Decorator_FleetDocked ProgressionIncrement="1" Initiator="Empire">
+										<Input_Systems VarName="$System2"/>
+									</Decorator_FleetDocked>
+									<!-- Removes the system 2 quest marker -->
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Marker2"/>
+									</Action_RemoveQuestMarkers>
+									<!-- Once visited, the system 2 can be colonized, destroyed, invaded or converted again -->
+
+									<!-- Stops waiting the until the system 1 is visited -->
+									<Decorator_FleetDocked ProgressionIncrement="1" Initiator="Empire">
+										<Input_Systems VarName="$System1"/>
+									</Decorator_FleetDocked>
+									<!-- Removes the system 1 quest marker -->
+									<Action_RemoveQuestMarkers>
+										<Input_Markers VarName="$Marker1"/>
+									</Action_RemoveQuestMarkers>
+								</Sequence>
+
+
+								<!-- The quest fails if the system 1 is destroyed
+                <Sequence>
+                  <Decorator_SystemDestroyed>
+                    <Input_Nodes VarName="$System1"/>
+                  </Decorator_SystemDestroyed>
+                  <Action_Fail/>
+                </Sequence>
+
+                The quest fails if the system 2 is destroyed
+                <Sequence>
+                  <Decorator_SystemDestroyed>
+                    <Input_Nodes VarName="$System2"/>
+                  </Decorator_SystemDestroyed>
+                  <Action_Fail/>
+                </Sequence>
+                -->
+
+							</Parallel>
+						</Sequence>
+					</Objective>
+
+					<Reward Droplist="DroplistMultiDust" Picks="1" />
+
+				</ObjectiveSet>
+
+			</Step>
+		</Steps>
+	</QuestDefinition>
 </Datatable>
