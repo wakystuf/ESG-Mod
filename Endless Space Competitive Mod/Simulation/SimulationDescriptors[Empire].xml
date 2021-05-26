@@ -5,15 +5,25 @@
 
 	<SimulationDescriptor Name="ClassEmpire" Type="Class">
 		<!-- ESCM -->
-		<Property Name="TradeAgreementCost" BaseValue="1" MinValue="0" MaxValue="1"/>
-		<Property Name="PercentageOfPlayersInYourAlliance" BaseValue="0" MinValue="0"/>
-		<Property Name="AllianceSize" BaseValue="0" MinValue="0"/>
-		<Property Name="LuxuryReworkEnabled" BaseValue="0"/>
-		<Property Name="LuxuryReworkDisabled" BaseValue="0"/>
-		<Property Name="IsntImmuneToSpecialNodes" BaseValue="1"/>
-		<Property Name="RetrofitCost" BaseValue="1"/>
-		<Property Name="RepairCost" BaseValue="1"/>
-		<Property Name="HomeSystemPopulationHomeSystem"	BaseValue="0" Composition="Sum"/>
+		<Property Name="FleetsBlockadingSpecialNodes"				BaseValue="0" MinValue="0" Composition="Sum"/>
+		<Property Name="SpecialNodesLaw_Boolean1"					BaseValue="0" MinValue="0" MaxValue="1"/>
+		<Property Name="SpecialNodesLaw_Boolean2"					BaseValue="0" MinValue="0" MaxValue="1"/>
+		<Property Name="SpecialNodesLaw_Boolean3"					BaseValue="1" MinValue="0" MaxValue="1"/>
+		<Property Name="SpecialNodesLaw"							BaseValue="0" MinValue="0"/>
+
+		
+		<Property Name="IsAtWar"														BaseValue="0" MinValue="0" MaxValue="1"/>
+		<Property Name="IsAtPeace"													BaseValue="1" MinValue="0" MaxValue="1"/>
+		<Property Name="IsInAlliance"												BaseValue="1" MinValue="0" MaxValue="1"/>
+		<Property Name="TradeAgreementCost"									BaseValue="1" MinValue="0" MaxValue="1"/>
+		<Property Name="PercentageOfPlayersInYourAlliance"	BaseValue="0" MinValue="0"/>
+		<Property Name="AllianceSize"												BaseValue="0" MinValue="0"/>
+		<Property Name="LuxuryReworkEnabled"								BaseValue="0"/>
+		<Property Name="LuxuryReworkDisabled"								BaseValue="0"/>
+		<Property Name="IsntImmuneToSpecialNodes"						BaseValue="1"/>
+		<Property Name="RetrofitCost"												BaseValue="1"/>
+		<Property Name="RepairCost"													BaseValue="1"/>
+		<Property Name="HomeSystemPopulationHomeSystem"			BaseValue="0" Composition="Sum"/>
 
 		<!--Tech Stages-->
 		<Property Name="EmpireEmpireDevelopmentStage" BaseValue="1"/>
@@ -196,6 +206,7 @@
 		<Property Name="MinorFactionCostReduction" BaseValue="1" />
 
 		<Property Name="OwnedTeemingPlanets" BaseValue="0" Composition="Sum" />
+		<Property Name="OwnedTeemingPlanetsEmpire" BaseValue="0" />
 
 		<!-- System's refined resources sum -->
 		<Property Name="NetSystemLifeforce" MinValue="Negative"/>
@@ -446,8 +457,8 @@
 		<Property Name="SystemsCapturedCount" IsSealed="true"/>
 
 
-		<Property Name="HeroCount" Composition="Sum"/>
-		<Property Name="HeroLevelCount" />
+		<Property Name="HeroCount" BaseValue="0" MinValue="0"/>
+		<Property Name="HeroLevelCount" BaseValue="0" MinValue="0"/>
 		<Property Name="HeroUnlockThresholdModifier" BaseValue="1" MinValue="0.0001"/>
 		<Property Name="HeroHealingBonus" BaseValue="1" MaxValue="1" MinValue="0" />
 		<Property Name="TotalCommandPointsOnHeroFleet"/>
@@ -878,7 +889,7 @@
 		<!-- ######################## MODIFIER ######################## -->
 		<!-- ########################################################## -->
 
-		<Modifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Force" Value="MaximumEmpireProcessingPowerStock" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Force" Value="$(MaximumEmpireProcessingPowerStock)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 		<Modifier TargetProperty="EmpireMajorPopulationCount" Operation="Addition" Value="$(MajorPopulationCount)" Path="ClassEmpire"/>
 		<Modifier TargetProperty="EmpireMajorPopulationCount" Operation="Force" Value="$(EmpireMajorPopulationCount)" Path="ClassEmpire/ClassColonizedStarSystem"/> <!--Do not use Search Value from path because different scope-->
@@ -887,6 +898,27 @@
 
 
 		<Modifier TargetProperty="ObliteratorShotCost" Operation="Multiplication" Value="$(ObliteratorShotCostMultiplier)" Path="ClassEmpire/ClassGarrisonFleet/ClassShip,ShipRoleObliterator"/>
+
+		<Modifier TargetProperty="TechnologyTotalStageUnlocked" Operation="Addition" Value="$(EmpireEmpireDevelopmentStage)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="TechnologyTotalStageUnlocked" Operation="Addition" Value="$(EmpireScienceStage)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="TechnologyTotalStageUnlocked" Operation="Addition" Value="$(EmpireEconomyStage)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="TechnologyTotalStageUnlocked" Operation="Addition" Value="$(EmpireMilitaryStage)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+
+		<BinaryModifier TargetProperty="IsAtPeace" Operation="Force" Left="1" BinaryOperation="Subtraction" Right="$(IsAtWar)"/>
+
+
+		<Modifier TargetProperty="IsAtPeace" Operation="Force" Value="$(IsAtPeace)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="IsAtWar" Operation="Force" Value="$(IsAtWar)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+
+		<Modifier TargetProperty="HeroCount" Operation="Force" Value="$(HeroCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+
+		<!-- Religious T1 law -->
+		<BinaryModifier TargetProperty="SpecialNodesLaw_Boolean1" Operation="Addition" Left="$(FleetsBlockadingSpecialNodes)" BinaryOperation="Subtraction" Right="$(HeroCount)"/>
+		<BinaryModifier TargetProperty="SpecialNodesLaw_Boolean2" Operation="Addition" Left="$(HeroCount)" BinaryOperation="Subtraction" Right="$(FleetsBlockadingSpecialNodes)"/>
+		<BinaryModifier TargetProperty="SpecialNodesLaw_Boolean3" Operation="Subtraction" Left="$(SpecialNodesLaw_Boolean1)" BinaryOperation="Addition" Right="$(SpecialNodesLaw_Boolean2)"/>
+		<BinaryModifier TargetProperty="SpecialNodesLaw" Operation="Addition" Left="$(HeroCount)" BinaryOperation="Multiplication" Right="$(SpecialNodesLaw_Boolean1)"/>
+		<BinaryModifier TargetProperty="SpecialNodesLaw" Operation="Addition" Left="$(FleetsBlockadingSpecialNodes)" BinaryOperation="Multiplication" Right="$(SpecialNodesLaw_Boolean2)"/>
+		<BinaryModifier TargetProperty="SpecialNodesLaw" Operation="Addition" Left="$(FleetsBlockadingSpecialNodes)" BinaryOperation="Multiplication" Right="$(SpecialNodesLaw_Boolean3)"/>
 
 		<!-- HACKING -->
 		<BinaryModifier TargetProperty="ProcessingPowerStockHackingSpeedMultiplier" Operation="Addition" Left="$(EmpireProcessingPowerStock)" BinaryOperation="Division" Right="10"/>
@@ -939,6 +971,7 @@
 		<!--Exploration Ratio-->
 		<Modifier TargetProperty="ExplorationRatio" Operation="Addition" Value="$(KnownSystemCount)" Priority="1" Path="ClassEmpire"/>
 		<Modifier TargetProperty="ExplorationRatio" Operation="Division" Value="$(NumberOfGalaxyNodes)" Priority="2" Path="ClassEmpire"/>
+		<Modifier TargetProperty="ExplorationRatio" Operation="Addition" Value="$(ExplorationRatio)" Priority="3" Path="ClassEmpire/ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="ExplorationScoreForOverColonizationThreshold" Operation="Addition" Value="$(ExplorationRatio)" Priority="3" Path="ClassEmpire"/>
 		<BinaryModifier TargetProperty="ExplorationScoreForOverColonizationThreshold" Operation="Multiplication" Left="1" BinaryOperation="Division" Right="$(DesiredExplorationRatioForOverColonizationThreshold)" Priority="4" Path="ClassEmpire" />
 
@@ -1410,6 +1443,9 @@
 		<!-- Mavros -->
 		<Modifier TargetProperty="NetEmpireScrap" Operation="Subtraction" Value="$(EmpireScrapUpkeep)"/>
 		<Modifier TargetProperty="NetEmpireScrap" Operation="Addition" Value="$(EmpireScrap)"/>
+
+		<Modifier TargetProperty="OwnedTeemingPlanetsEmpire" Operation="Force" Value="$(OwnedTeemingPlanets)" />
+		<Modifier TargetProperty="OwnedTeemingPlanetsEmpire" Operation="Force" Value="$(OwnedTeemingPlanetsEmpire)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 	</SimulationDescriptor>
 
 
