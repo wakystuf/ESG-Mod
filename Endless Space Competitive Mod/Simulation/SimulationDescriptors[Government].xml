@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
         
+<!--  DEMOCRACY  -->
+<SimulationDescriptor Name="GovernmentDemocracy" Type="Government">
+    <Modifier TargetProperty="NumberOfSenatorSlots" Operation="Force" Value="3" Path="ClassSenate"/>
+    <Modifier TargetProperty="NumberOfActiveLawSlots" Operation="Addition" Value="1" Path="ClassSenate"/>
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Population)" Path="./ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <Modifier TargetProperty="CandidateCountPerPopulation" Operation="Force" Value="1" Path="./ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="LawActivationCostModifier" Operation="Multiplication" Value="0.5" Path="ClassSenate" TooltipOverride="%GovernmentDemocracyReduceLawCostTooltipEffect"/>
+    <Modifier TargetProperty="UsesDemocracyLawsDiversity" Operation="Addition" Value="1" Path="./ClassEmpire" Priority="-2" TooltipOverride="%GovernmentDemocracyUsesDemocracyLawsDiversityTooltipEffect"/>
+    <Modifier TargetProperty="DemocracyLawsCostBonus" Operation="Addition" Value="$(DemocracyLawsDiversityHasIndustrialist)" Path="./ClassEmpire" SearchValueFromPath="true" Priority="3" TooltipHidden="true"/>
+    <Modifier TargetProperty="DemocracyLawsCostBonus" Operation="Addition" Value="$(DemocracyLawsDiversityHasScientist)" Path="./ClassEmpire" SearchValueFromPath="true" Priority="3" TooltipHidden="true"/>
+    <Modifier TargetProperty="DemocracyLawsCostBonus" Operation="Addition" Value="$(DemocracyLawsDiversityHasPacifist)" Path="./ClassEmpire" SearchValueFromPath="true" Priority="3" TooltipHidden="true"/>
+    <Modifier TargetProperty="DemocracyLawsCostBonus" Operation="Addition" Value="$(DemocracyLawsDiversityHasEcologist)" Path="./ClassEmpire" SearchValueFromPath="true" Priority="3" TooltipHidden="true"/>
+    <Modifier TargetProperty="DemocracyLawsCostBonus" Operation="Addition" Value="$(DemocracyLawsDiversityHasReligious)" Path="./ClassEmpire" SearchValueFromPath="true" Priority="3" TooltipHidden="true"/>
+    <Modifier TargetProperty="DemocracyLawsCostBonus" Operation="Addition" Value="$(DemocracyLawsDiversityHasMilitarist)" Path="./ClassEmpire" SearchValueFromPath="true" Priority="3" TooltipHidden="true"/>
+    <Modifier TargetProperty="DemocracyLawsCostBonus" Operation="Addition" Value="$(DemocracyLawsDiversityHasNeutral)" Path="./ClassEmpire" SearchValueFromPath="true" Priority="3" TooltipHidden="true"/>
+    <Modifier TargetProperty="DemocracyLawsCostBonus" Operation="Division" Value="6" Path="./ClassEmpire" SearchValueFromPath="true" Priority="4" TooltipHidden="true"/>
+    <Modifier TargetProperty="DemocracyLawsCostBonus" Operation="Multiplication" Value="-1" Path="./ClassEmpire" SearchValueFromPath="true" Priority="5" TooltipHidden="true"/>
+    <Modifier TargetProperty="LawUpkeep" Operation="Percent" Value="$(DemocracyLawsCostBonus)" Path="./ClassEmpire" SearchValueFromPath="true" Priority="6" TooltipHidden="true"/>
+</SimulationDescriptor>
 
 <!--  DICTATORSHIP  -->
 <SimulationDescriptor Name="GovernmentDictatorshipCommon" Type="GovernmentDictatorshipCommon"/>
@@ -72,6 +91,7 @@
 <SimulationDescriptor Name="GovernmentEmpire" Type="Government">
     <Modifier TargetProperty="NumberOfSenatorSlots" Operation="Force" Value="2" Path="ClassSenate"/>
     <Modifier TargetProperty="RecipeCostMultiplier" Value="-0.25" Operation="Percent" Path="false/../ClassEmpire" Priority="1"/>
+    <Modifier TargetProperty="NumberOfActiveLawSlots" Operation="Addition" Value="1" Path="ClassSenate"/>
     <!-- Feedback -->
     <Modifier TargetProperty="RecipeCostMultiplier" Value="-0.25" Operation="Addition" Path="../ClassEmpire" Priority="1" TooltipHidden="true"/>
     <!-- Actual effect -->
@@ -87,6 +107,13 @@
     <BinaryModifier TargetProperty="OverColonizationThreshold" Operation="Addition" Left="$(HeroCountHeroPolitics04)" BinaryOperation="Multiplication" Right="$(HeroCountSenatorPolitics04)" Path="../ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="OverColonizationThreshold" Operation="Addition" Left="$(HeroCountHeroPolitics05)" BinaryOperation="Multiplication" Right="$(HeroCountSenatorPolitics05)" Path="../ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="OverColonizationThreshold" Operation="Addition" Left="$(HeroCountHeroPolitics06)" BinaryOperation="Multiplication" Right="$(HeroCountSenatorPolitics06)" Path="../ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
+</SimulationDescriptor>
+
+<!--  REPUBLIC  -->
+<SimulationDescriptor Name="GovernmentRepublic" Type="Government">
+    <Modifier TargetProperty="NumberOfSenatorSlots" Operation="Force" Value="2" Path="ClassSenate"/>
+    <Modifier TargetProperty="NumberOfActiveLawSlots" Operation="Addition" Value="1" Path="ClassSenate"/>
+    <Modifier TargetProperty="CandidateCountPerPopulation" Operation="Force" Value="1" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%GovernmentRepublicTooltipEffect"/>
 </SimulationDescriptor>
 
 </Datatable>
