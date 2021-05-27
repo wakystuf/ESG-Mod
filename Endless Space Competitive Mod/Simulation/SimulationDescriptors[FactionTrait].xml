@@ -293,4 +293,28 @@
   <SimulationDescriptor Name="FactionTraitIncreasedMigration" Type="FactionTrait">
     <Modifier TargetProperty="MigrationScore"             Operation="Percent"     Value="0.4"    Priority="10" Path="ClassEmpire/ClassColonizedStarSystem"     TooltipHidden="false"/>
   </SimulationDescriptor>
+
+  <!--Vaulters-->
+  <SimulationDescriptor Name="FactionTraitManualHomeSystem" Type="FactionTrait">
+    <Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Addition" Value="50" Path="ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="HasSuperColonizer" Operation="Force" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="1" Path="ClassEmpire/ClassGarrison/ClassShip,ShipRoleSuperColonizer" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="1" Path="ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipRoleSuperColonizer" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="FactionTraitGoldenAgePrefix" Type="FactionTrait"/>
+    <SimulationDescriptor Name="GoldenAge" Type="GoldenAge">
+    <Modifier TargetProperty="SystemFIDSFlat" Operation="Addition" Value="25" Path="ClassColonizedStarSystem" SearchValueFromPath="true" EnforceContext="true"/>
+    <Modifier TargetProperty="SystemEmpirePoint" Operation="Addition" Value="5" Path="ClassColonizedStarSystem" SearchValueFromPath="true" EnforceContext="true"/>
+    <Modifier TargetProperty="Happiness" Operation="Addition" Value="20" Path="ClassColonizedStarSystem" SearchValueFromPath="true" EnforceContext="true"/>
+    <Modifier TargetProperty="Happiness" Operation="Addition" Value="20" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" EnforceContext="true"/>
+    <Modifier TargetProperty="EmpireManpower" Operation="Addition" Value="25" Path="../ClassEmpire" SearchValueFromPath="true" EnforceContext="true"/>
+    <Modifier TargetProperty="InfluenceConversionRateModifier" Operation="Percent" Value="-0.5" Path="ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="FactionTraitCoreWorlds" Type="FactionTrait">
+    <Modifier TargetProperty="OverColonizationThreshold" Operation="Subtraction" Value="2" Priority="-1" Path="../ClassEmpire"/>
+    <BinaryModifier TargetProperty="SystemFIDSPercent" Operation="Subtraction" Left="0.05" BinaryOperation="Multiplication" Right="$(SystemsAboveOverColonizationCount)" Priority="-1" Path="../ClassEmpire/ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="IsUsingColonizationThresholdHappinessBonus" Operation="Force" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
 </Datatable>
