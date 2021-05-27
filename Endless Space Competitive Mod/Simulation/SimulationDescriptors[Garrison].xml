@@ -2,7 +2,8 @@
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
 	<SimulationDescriptor Name="ClassGarrisonFleet" Type="ClassGarrison">
 		<!-- ESG Changes -->
-		<Property Name ="FleetsBlockadingSpecialNodes"  MinValue="0" MaxValue="1"/>
+		<Property Name="FleetsBlockadingSpecialNodes" MinValue="0" MaxValue="1"/>
+		<Property Name="AdmiralsInFriendlyTerritory"	BaseValue="0" Composition="Sum"/>
 		
 		<!-- for siege -->
 		<Property Name ="SiegePower"  MinValue="0" Composition="Sum" />
@@ -254,5 +255,12 @@
 		<BinaryModifier TargetProperty="MaximumShipManpowerRefillRate" Operation="Addition" Left="$(MaximumShipManpower)" BinaryOperation="Multiplication" Right="0.5" Path="ClassGarrisonFleet/ClassShip" SearchValueFromPath="true"/>
 		<Modifier TargetProperty="MaximumShipManpowerRefillRate"	Operation="Percent"		Value="$(FleetManpowerRefillRateModifier)"		Path="ClassGarrisonFleet/ClassShip"/>
 		<Modifier TargetProperty="HealthRegenerationRatio"          Operation="Addition" Value="0.1" Path="ClassGarrisonFleet/ClassShip"/>
+		<Modifier TargetProperty="AdmiralsInFriendlyTerritory" Operation="Addition" Value="$(AdmiralsInFriendlyTerritory)" Path="../ClassEmpire" TooltipHidden="true"/>
 	</SimulationDescriptor>
+
+    <SimulationDescriptor Name="FleetInfluenceStateOwner" Type="FleetInfluenceState">
+        <Modifier TargetProperty="HealthRegenerationRatio"          Operation="Addition" Value="0.1" Path="ClassGarrisonFleet/ClassShip" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="MaximumShipManpowerRefillRate" Operation="Addition" Left="$(MaximumShipManpower)" BinaryOperation="Multiplication" Right="1" Path="ClassGarrisonFleet/ClassShip" SearchValueFromPath="true" TooltipHidden="true"/>
+				<Modifier TargetProperty="AdmiralsInFriendlyTerritory" Operation="Addition" Value="$(AdmiralsInFriendlyTerritory)" Path="../ClassEmpire" TooltipHidden="true"/>
+    </SimulationDescriptor>
 </Datatable>

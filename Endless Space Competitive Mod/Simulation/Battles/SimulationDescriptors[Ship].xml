@@ -2,8 +2,9 @@
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
   <SimulationDescriptor Name="ClassShip" Type="Class">
 		<!-- ESG -->
-		<Property Name="OpponentRecyclingManpowerPerCP" 	  BaseValue="0"/>
-    <Property Name="TotalIndustryCost" BaseValue="0"/>
+		<Property Name="OpponentRecyclingManpowerPerCP" 	          BaseValue="0"/>
+		<Property Name="OpponentRecyclingManpowerPerCPFlotilla"     BaseValue="0"/>
+    <Property Name="TotalIndustryCost"   BaseValue="0"/>
     <Property Name="TotalStrategic1Cost" BaseValue="0"/>
     <Property Name="TotalStrategic2Cost" BaseValue="0"/>
     <Property Name="TotalStrategic3Cost" BaseValue="0"/>
@@ -568,8 +569,15 @@
     <Modifier TargetProperty="HullWeakness"         Operation="Addition" Value="200"     Path="ClassShip"/>
   </SimulationDescriptor>
 
+	<!-- Roles -->
   <SimulationDescriptor Name="ShipRoleBehemoth" Type="ShipRole"/>
-
+	    <SimulationDescriptor Name="ShipRoleHero"           Type="ShipRole">
+				<Property Name="AdmiralsInFriendlyTerritory" BaseValue="1"/>
+        <Modifier TargetProperty="CommandPoints"                Operation="Force"    Value="0"     Path="ClassShip"/>
+        <Modifier TargetProperty="VisualImportanceScore"        Operation="Addition" Value="200"   Path="ClassShip"/>
+        <Modifier TargetProperty="NetShipProbe"                 Operation="Addition" Value="0.5"   Path="ClassShip"/>
+        <Modifier TargetProperty="ExperienceBonusFromBattle"    Operation="Addition" Value="10"     Path="ClassShip"/>
+    </SimulationDescriptor>
   <!-- ********************* -->
   <!-- ** SHIP BASE INFOS ** -->
   <!-- ********************* -->

@@ -1,10 +1,42 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
-  
+  <!-- Scavenger's Code -->
+  <SimulationDescriptor Name="LawEffectDefensiveEconomyIndustrialists" Type="LawEffect">
+    <Modifier TargetProperty="RepairCost" Operation="Percent" Value="-0.25" Path="../ClassEmpire,FactionTraitDefensiveEconomy" TooltipOverride="%FactionTraitDefensiveEconomyIndustrialists"/>
+    <Modifier TargetProperty="RetrofitCost" Operation="Percent" Value="-0.25" Path="../ClassEmpire,FactionTraitDefensiveEconomy" TooltipHidden="true"/>
+  </SimulationDescriptor>
+	
+  <SimulationDescriptor Name="LawEffectDefensiveEconomyScientists" Type="LawEffect">
+		<Modifier TargetProperty="AdditionalOpponentRecyclingSciencePerCP"        Operation="Addition"     Value="35"  Path="../ClassEmpire,FactionTraitDefensiveEconomy" TooltipHiddenIfPathInvalid="true" TooltipOverride="FactionTraitDefensiveEconomyScientists"/>
+		<Modifier TargetProperty="AdditionalOpponentRecyclingSciencePerCP"        Operation="Addition"     Value="35"  Path="../ClassEmpire,FactionTraitDefensiveEconomy/ClassGarrisonFleet,FleetInfluenceStateOwner/ClassShip" TooltipHidden="true"/>
+		<Modifier TargetProperty="AdditionalOpponentRecyclingSciencePerCP"        Operation="Addition"     Value="35"  Path="../ClassEmpire,FactionTraitDefensiveEconomy/ClassGarrisonFleet,FleetInfluenceStateFriendly/ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
+	
+  <SimulationDescriptor Name="LawEffectDefensiveEconomyPacifists" Type="LawEffect">
+		<Modifier TargetProperty="AdditionalOpponentRecyclingDustPerCP"           Operation="Addition"     Value="35"  Path="../ClassEmpire,FactionTraitDefensiveEconomy" TooltipHiddenIfPathInvalid="true" TooltipOverride="%FactionTraitDefensiveEconomyPacifists"/>
+		<Modifier TargetProperty="AdditionalOpponentRecyclingDustPerCP"           Operation="Addition"     Value="35"  Path="../ClassEmpire,FactionTraitDefensiveEconomy/ClassGarrisonFleet,FleetInfluenceStateOwner/ClassShip" TooltipHidden="true"/>
+		<Modifier TargetProperty="AdditionalOpponentRecyclingDustPerCP"           Operation="Addition"     Value="35"  Path="../ClassEmpire,FactionTraitDefensiveEconomy/ClassGarrisonFleet,FleetInfluenceStateFriendly/ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
+	
+  <SimulationDescriptor Name="LawEffectDefensiveEconomyEcologists" Type="LawEffect">
+		<BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(AdmiralsInFriendlyTerritory)" Path="../ClassEmpire,FactionTraitDefensiveEconomy/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%FactionTraitDefensiveEconomyEcologists"/>
+  </SimulationDescriptor>
+	
+  <SimulationDescriptor Name="LawEffectDefensiveEconomyReligious" Type="LawEffect">
+		<Modifier TargetProperty="AdditionalOpponentRecyclingEmpirePointPerCP"    Operation="Addition"     Value="25"  Path="../ClassEmpire,FactionTraitDefensiveEconomy" TooltipHiddenIfPathInvalid="true" TooltipOverride="%FactionTraitDefensiveEconomyReligious"/>
+		<Modifier TargetProperty="AdditionalOpponentRecyclingEmpirePointPerCP"    Operation="Addition"     Value="25"  Path="../ClassEmpire,FactionTraitDefensiveEconomy/ClassGarrisonFleet,FleetInfluenceStateOwner/ClassShip" TooltipHidden="true"/>
+		<Modifier TargetProperty="AdditionalOpponentRecyclingEmpirePointPerCP"    Operation="Addition"     Value="25"  Path="../ClassEmpire,FactionTraitDefensiveEconomy/ClassGarrisonFleet,FleetInfluenceStateFriendly/ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
+	
+  <SimulationDescriptor Name="LawEffectDefensiveEconomyMilitarists" Type="LawEffect">
+    <Modifier TargetProperty="OpponentRecyclingManpowerPerCPFlotilla"         Operation="Addition"     Value="20"  Path="../ClassEmpire,FactionTraitDefensiveEconomy" TooltipHiddenIfPathInvalid="true" TooltipOverride="%FactionTraitDefensiveEconomyMilitarists"/>
+    <Modifier TargetProperty="OpponentRecyclingManpowerPerCPFlotilla"         Operation="Addition"     Value="20"  Path="../ClassEmpire/ClassGarrisonFleet,FleetInfluenceStateOwner/ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="OpponentRecyclingManpowerPerCPFlotilla"         Operation="Addition"     Value="20"  Path="../ClassEmpire/ClassGarrisonFleet,FleetInfluenceStateFriendly/ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
 
+	
   <!-- DICTATORSHIP SUPER-LAWS -->
-
   <!-- Industrialist -->
   <SimulationDescriptor Name="LawEffectP01L00Dictatorship" Type="LawEffect">
     <Modifier TargetProperty="RatioOfProductionSpentGainedAsMoney" Operation="Addition" Value="0.25" Path="../ClassEmpire" TooltipHidden="true"/>
