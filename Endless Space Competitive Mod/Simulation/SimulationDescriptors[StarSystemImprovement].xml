@@ -651,4 +651,27 @@
     <Modifier TargetProperty="TradingRouteIncomeModifier"   Operation="Percent"  Value="0.5" Path="./ClassColonizedStarSystem"/>
     <Modifier TargetProperty="ResourceBonus"              Operation="Addition"  Value="2"   Path="./ClassColonizedStarSystem/ClassColonizedPlanet/ResourceTypeLuxury"/>
   </SimulationDescriptor>
+
+  <!--Vaulter Portal Stuff--> 
+  <SimulationDescriptor Name="StarSystemImprovementPortal" Type="StarSystemImprovement">
+    <!-- Data tracking -->
+    <Modifier TargetProperty="HasPortal"    Operation="Addition" Value="1" Path="./ColonizedStarSystemStateColony,ClassColonizedStarSystem" TooltipOverride="%StarSystemImprovementPortalEffectOverride" />
+    <Modifier TargetProperty="PortalCount"  Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="true" />
+    <!-- Bonuses -->
+    <Modifier TargetProperty="SystemResearch" Operation="Addition" Value="10" Path="./ColonizedStarSystemStateColony,ClassColonizedStarSystem" />
+
+    <!-- Fake effect for tooltip (shown only if path is valid, has no effect! The property must not exit on the Empire) -->
+    <!-- Real effects are in SimDesc[EmpireImprovements_DLC1] -->
+    <!-- Fake Effects -->
+    <Modifier TargetProperty="NetSystemManpower"                    Operation="Addition"    Value="50"     Path="../ClassEmpire,EmpireImprovementImprovedPortalGrowthFakeEffect"              TooltipHiddenIfPathInvalid="true"/>
+    <Modifier TargetProperty="ShouldApplyOverPopulationPenalties"   Operation="Force"       Value="0"      Path="../ClassEmpire,EmpireImprovementImprovedPortalOverpopulationFakeEffect"      TooltipHiddenIfPathInvalid="true"/>
+    <Modifier TargetProperty="InfluenceConversionRateModifier"      Operation="Percent"     Value="-0.5"    Path="../ClassEmpire,EmpireImprovementImprovedPortalPacificConversionFakeEffect"   TooltipHiddenIfPathInvalid="true"/>
+    <Modifier TargetProperty="SystemEmpirePoint"                Operation="Addition"     Value="50"    Path="../ClassEmpire,EmpireImprovementImprovedPortalPacificConversionFakeEffect"   TooltipHiddenIfPathInvalid="true"/>
+    <BinaryModifier TargetProperty="SystemResearch"               Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(SystemManpowerStock)" Path="../ClassEmpire,EmpireImprovementPortalSciencePerManpowerFakeEffect"   TooltipHiddenIfPathInvalid="true"/>
+    <Modifier TargetProperty="SystemResearch"                     Operation="Percent"     Value="0.2"    Path="../ClassEmpire,EmpireImprovementPortalSciencePercentFakeEffect"   TooltipHiddenIfPathInvalid="true"/>
+    <Modifier TargetProperty="DockedFleetsHealthRegenerationRatio"  Operation="Addition"    Value="0.25"    Path="../ClassEmpire,EmpireImprovementImprovedPortalShipRegenerationFakeEffect"    TooltipHiddenIfPathInvalid="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="EmpireImprovementPortalSciencePerManpowerFakeEffect" Type="EmpireImprovement" />
+  <SimulationDescriptor Name="EmpireImprovementPortalSciencePercentFakeEffect" Type="EmpireImprovement" />
 </Datatable>
