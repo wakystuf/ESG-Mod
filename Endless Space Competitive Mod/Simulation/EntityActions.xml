@@ -130,4 +130,38 @@
 		<PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
 		<TechnologyPrerequisite Flags="Prerequisite,Technology,Discard" UnlockHidden="true">TechnologyPrivateers</TechnologyPrerequisite>
 	</PrivateerFleetAction>
+
+  <!--  Add flat growth on outpost (Lumeris) -->
+  <OutpostActionDefinition Name="OutpostActionIncreaseMigrationRateVenetians" Duration="10" RequiresMigrationFlux="true">
+    <EntityPrerequisites Location="Self">
+      <PathPrerequisite Flags="Prerequisite,SystemIsBeingGuarded" Inverted="true">BlockadedColonizedStarSystem</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,SystemIsBeingDecolonized" Inverted="true">DecolonizedColonizedStarSystem</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">OutpostActionIncreaseMigrationRateVenetians</PathPrerequisite>
+    </EntityPrerequisites>
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="OutpostActionIncreaseMigrationRateVenetians"/>
+    </EntityModifiers>
+    <CustomCost Instant="true" ResourceName="EmpireEmpirePoint">25 + 50 * Property(StockLocation, @../ClassEmpire, SystemCount)</CustomCost>
+    <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard,Faction,AffinityGameplayVenetians">../ClassEmpire,AffinityGameplayVenetians</PathPrerequisite>
+    <MigrationFluxSimulationDescriptorReference Name="OutpostActionIncreaseMigrationRateVenetians"/>
+  </OutpostActionDefinition>
+
+  <!--  Remove Lumeris from regular outpost boosting action -->
+  <OutpostActionDefinition Name="OutpostActionIncreaseMigrationRate" Duration="10" RequiresMigrationFlux="true">
+    <EntityPrerequisites Location="Self">
+      <PathPrerequisite Flags="Prerequisite,SystemIsBeingGuarded" Inverted="true">BlockadedColonizedStarSystem</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,SystemIsBeingDecolonized" Inverted="true">DecolonizedColonizedStarSystem</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">OutpostActionIncreaseMigrationRate</PathPrerequisite>
+    </EntityPrerequisites>
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="OutpostActionIncreaseMigrationRate"/>
+    </EntityModifiers>
+    <CustomCost Instant="true" ResourceName="EmpireEmpirePoint">25 + 50 * Property(StockLocation, @../ClassEmpire, SystemCount)</CustomCost>
+    <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">../ClassEmpire/PopulationMajor,ClassPopulationEmpireAffinityTimeLords</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">../ClassEmpire,AffinityGameplayVenetians</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard,Faction,AffinityGameplayVenetians">../ClassEmpire,AffinityGameplayVenetians</PathPrerequisite>
+    <MigrationFluxSimulationDescriptorReference Name="OutpostActionIncreaseMigrationRateEffect"/>
+  </OutpostActionDefinition>
+
 </Datatable>
