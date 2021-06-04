@@ -31,6 +31,26 @@
     <Modifier TargetProperty="EmpireEmpirePoint" Operation="Percent" Value="1" Path="ClassEmpire"/>
   </SimulationDescriptor>
 
+  <SimulationDescriptor Name="AffinityGameplayVampirilis" Type="AffinityGameplay">
+    <Property Name="temp" BaseValue="0"/>
+    
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeForest" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeTerran" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeMonsoon" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeOcean" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeAtoll" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeBoreal" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeJungle" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="LawUpkeep"             Operation="Percent" Value="1"   Path="ClassEmpire" TooltipOverride="%EmpireImprovementLawUpkeepIncrease"/>
+    <Modifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Value="400"     Path="ClassEmpire,AffinityGameplayVampirilis" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Left="$(MothershipCount)" BinaryOperation="Multiplication" Right="400" Path="ClassEmpire,AffinityGameplayVampirilis" SearchValueFromPath="true" TooltipHidden="true"/>
+    <Modifier TargetProperty="temp" Operation="Force" Value="$(MothershipCount)" Path="ClassEmpire,AffinityGameplayVampirilis" SearchValueFromPath="true" Priority="1" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="temp" Operation="Multiplication" Left="$(MothershipCount)" BinaryOperation="Subtraction" Right="1" Path="ClassEmpire,AffinityGameplayVampirilis" SearchValueFromPath="true" Priority="2" TooltipHidden="true"/>
+    <Modifier TargetProperty="temp" Operation="Division" Value="2" Priority="3" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Left="$(temp)" BinaryOperation="Multiplication" Right="200" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
   <!-- Pilgrims Assimilation Trait -->
   <SimulationDescriptor Name="FactionTraitMinorExplorers01" Type="FactionTraitMinor">
     <Modifier TargetProperty="ProbeSpeed" Operation="Percent" Value="0.5" Path="ClassEmpire"/>
