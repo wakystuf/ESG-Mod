@@ -15,8 +15,12 @@
     <Modifier TargetProperty="HullTypes" Operation="Subtraction" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
     <!--HullType -1 since they only have 1 starting hull instead of 2-->
 
-    <Modifier TargetProperty="BuildingBuyoutReduction" Operation="Addition" Value="0.3" Path="ClassEmpire/ClassColonizedStarSystem" />
-    <Modifier TargetProperty="ShipBuyoutReduction" Operation="Addition" Value="0.3" Path="ClassEmpire/ClassColonizedStarSystem" />
+		<Modifier TargetProperty="BuyoutActivated" Operation="Force" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+
+		<Modifier TargetProperty="SystemOutpostMigrationGrowth" Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/ClassOutpostMigrationFlux"     TooltipOverride="%FactionTraitNoOutPostFoodShippingTooltipOverride" TooltipHidden="true"/>
+
+		<Modifier TargetProperty="BuildingBuyoutReduction" Operation="Addition" Value="0.15" Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true" />
+    <Modifier TargetProperty="ShipBuyoutReduction" Operation="Addition" Value="0.15" Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true" />
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="AffinityGameplayTerrans" Type="AffinityGameplay">
@@ -51,7 +55,36 @@
     <BinaryModifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Left="$(temp)" BinaryOperation="Multiplication" Right="200" TooltipHidden="true"/>
   </SimulationDescriptor>
 
-  <!-- Pilgrims Assimilation Trait -->
+	<SimulationDescriptor Name="AffinityGameplayUnfallen" Type="AffinityGameplay">
+		<Property Name="RootingDecreasePerTurn" />
+		<Property Name="RootingIsolatedRadius" />
+		<Property Name="FriendlyRootLaneCostMultiplier" BaseValue="1" />
+		<Property Name="HostileRootLaneCostMultiplier" 	BaseValue="1" />
+
+		<Modifier TargetProperty="RootingIsolatedRadius"    	Operation="Addition"	Value="23"	 TooltipHidden="true"	/>
+
+		<Modifier TargetProperty="RootingDecreasePerTurn"    	Operation="Addition"	Value="0.10" TooltipHidden="true"	/>
+
+		<Modifier TargetProperty="SystemInfluenceRadius"     	        Operation="Force"		Value="0"		Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true" Priority="10"/>
+		<Modifier TargetProperty="SystemNextInfluenceRadiusEstimation"  Operation="Force"		Value="0"		Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true" Priority="10"/>
+
+		<Modifier TargetProperty="FriendlyRootLaneCostMultiplier"     	Operation="Force"		Value="0.5"		TooltipHidden="true"/>
+		<Modifier TargetProperty="HostileRootLaneCostMultiplier"     	Operation="Force"		Value="2"		TooltipHidden="true"/>
+
+		<Modifier TargetProperty="CanRootSystems"    Operation="Force"   Value="1"   Path="EmpireTypeMajor" TooltipHidden="true"/>
+
+		<Modifier TargetProperty="CivilianBaseIndustry" Operation="Addition" Value="350" Path="ClassEmpire" TooltipHidden="true"/>
+		
+		<Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeForest" TooltipHidden="true"/>
+		<Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeTerran" TooltipHidden="true"/>
+		<Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeMonsoon" TooltipHidden="true"/>
+		<Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeOcean" TooltipHidden="true"/>
+		<Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeAtoll" TooltipHidden="true"/>
+		<Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeBoreal" TooltipHidden="true"/>
+		<Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeJungle" TooltipHidden="true"/>
+	</SimulationDescriptor>
+
+	<!-- Pilgrims Assimilation Trait -->
   <SimulationDescriptor Name="FactionTraitMinorExplorers01" Type="FactionTraitMinor">
     <Modifier TargetProperty="ProbeSpeed" Operation="Percent" Value="0.5" Path="ClassEmpire"/>
     <Modifier TargetProperty="ProbeVisionRange" Operation="Percent" Value="1.0" Path="ClassEmpire"/>
@@ -310,6 +343,13 @@
     <BinaryModifier TargetProperty="NetEmpireManpower" Operation="Addition" Left="$(TraitorsCount)" BinaryOperation="Multiplication" Right="3" Path="../ClassEmpire"/>
   </SimulationDescriptor>  
   
+  <!-- Ghost Crew-->
+  <SimulationDescriptor Name="FactionTraitGhostCrew"    Type="FactionTrait">
+    <Modifier TargetProperty="MaximumShipManpower"	Operation="Percent"		Value="-0.8"		Path="ClassEmpire//ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="ShipManpowerKillAbsorption"	Operation="Addition"		Value="0.95"		Path="ClassEmpire//ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="ManpowerDamageOverTimeDefense"	Operation="Addition"		Value="0.95"		Path="ClassEmpire//ClassGarrison/ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
   <!--Immigration Bonus Test-->
   <SimulationDescriptor Name="FactionTraitIncreasedMigration" Type="FactionTrait">
     <Modifier TargetProperty="MigrationScore"             Operation="Percent"     Value="0.4"    Priority="10" Path="ClassEmpire/ClassColonizedStarSystem"     TooltipHidden="false"/>
