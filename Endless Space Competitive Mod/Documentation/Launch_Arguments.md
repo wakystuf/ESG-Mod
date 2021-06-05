@@ -2,6 +2,8 @@
 
 # How to use launch arguments
 
+On your steam library, right click ES2 and hit "Properties". A window will pop up, at the bottom of the window will be a text box labelled "Launch Options". Input any of the following commands inside of this text box (separated by a space if you are using multiple.
+
 # List of launch arguments
 
 | Command              | Description                                                                |
