@@ -12,6 +12,7 @@
 | --disable-ai         | When a match is started, ALL AI factions will be set to inactive           |
 | --disablediagnostics | Completely disables the output of diagnostic files                         |
 | -novideo             | Disables playback of video cutscenes                                       |
+| -nologo              | Disables amplitude/sega logo when game launches                            |
 | --debug-ui           | ?                                                                          |
 | --execute-test       | ?                                                                          |
 | --s                  | ? Same as --galaxy-seed                                                    |
