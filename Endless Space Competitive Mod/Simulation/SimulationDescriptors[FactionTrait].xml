@@ -35,6 +35,7 @@
     <Modifier TargetProperty="EmpireEmpirePoint" Operation="Percent" Value="1" Path="ClassEmpire"/>
   </SimulationDescriptor>
 
+  <!--Vodyani-->
   <SimulationDescriptor Name="AffinityGameplayVampirilis" Type="AffinityGameplay">
     <Property Name="temp" BaseValue="0"/>
     
@@ -46,15 +47,20 @@
     <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeBoreal" TooltipHidden="true"/>
     <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeJungle" TooltipHidden="true"/>
 
+    <!--Double law upkeep-->
     <Modifier TargetProperty="LawUpkeep"             Operation="Percent" Value="1"   Path="ClassEmpire" TooltipOverride="%EmpireImprovementLawUpkeepIncrease"/>
+
+    <!--Ark essence cost rework (currently busted)-->
     <Modifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Value="400"     Path="ClassEmpire,AffinityGameplayVampirilis" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Left="$(MothershipCount)" BinaryOperation="Multiplication" Right="400" Path="ClassEmpire,AffinityGameplayVampirilis" SearchValueFromPath="true" TooltipHidden="true"/>
     <Modifier TargetProperty="temp" Operation="Force" Value="$(MothershipCount)" Path="ClassEmpire,AffinityGameplayVampirilis" SearchValueFromPath="true" Priority="1" TooltipHidden="true"/>
+    <!--Chaos stinks (Chaos can fix this easily if he bothers to look at this code to fix it)-->
     <BinaryModifier TargetProperty="temp" Operation="Multiplication" Left="$(MothershipCount)" BinaryOperation="Subtraction" Right="1" Path="ClassEmpire,AffinityGameplayVampirilis" SearchValueFromPath="true" Priority="2" TooltipHidden="true"/>
     <Modifier TargetProperty="temp" Operation="Division" Value="2" Priority="3" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Left="$(temp)" BinaryOperation="Multiplication" Right="200" TooltipHidden="true"/>
   </SimulationDescriptor>
 
+  <!--Unfallen-->
 	<SimulationDescriptor Name="AffinityGameplayUnfallen" Type="AffinityGameplay">
 		<Property Name="RootingDecreasePerTurn" />
 		<Property Name="RootingIsolatedRadius" />
