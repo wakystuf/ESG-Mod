@@ -9,7 +9,7 @@ On your steam library, right click ES2 and hit "Properties". A window will pop u
 | Command              | Description                                                                |
 |----------------------|----------------------------------------------------------------------------|
 | --enablemoddingtools | Launches game with the modding debug tools                                 |
-| --enableimagedebug   | ?                                                                          |
+| --enableimagedebug   | Launches game with image debugging tools                                   |
 | --use-xml-save       | Saves game in an xml .zip, allows for save editing. Note large save sizes. |
 | --disable-ai         | When a match is started, ALL AI factions will be set to inactive           |
 | --disablediagnostics | Completely disables the output of diagnostic files                         |
