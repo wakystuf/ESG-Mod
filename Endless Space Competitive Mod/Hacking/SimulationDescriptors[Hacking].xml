@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+
+  <SimulationDescriptor Name="ClassHacking" Type="Class">
+    <Property Name="ProcessingPowerAllocationMultiplier" BaseValue="1"/>
+    <Property Name="BeaconCount" BaseValue="0"/>
+    <Modifier TargetProperty="FinalProcessingPowerAllocation" Operation="Multiplication" Value="$(ProcessingPowerAllocationMultiplier)" Path="ClassHacking/ClassHackingProgram"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassHackingOperation" Type="Class">
+    <Property Name="HackingWarpSpeed" BaseValue="0"/>
+    <Property Name="HackingNonWarpSpeed" BaseValue="0"/>
+    <Property Name="HackingNodeSpeed" BaseValue="0"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassHackingProgram" Type="Class">
+    <Property Name="BaseProcessingPowerAllocation"       BaseValue="0" IsSealed="true"/>
+    <Property Name="FinalProcessingPowerAllocation"      BaseValue="0"/>
+    <Property Name="HackingSpeedMultiplierForSelf"       BaseValue="1"/>
+    <Property Name="HackingSpeedMultiplierForSelfPreview" BaseValue="1"/>
+    <Property Name="HackingSpeedMultiplierForOthers"     BaseValue="1"/>
+    <Property Name="BailiffPriority"                     BaseValue="0"/>
+    <Property Name="IsAllocated"                         BaseValue="1" IsSealed="true"/>
+    <Modifier TargetProperty="FinalProcessingPowerAllocation" Operation="Addition"    Value="$(BaseProcessingPowerAllocation)"/>
+    <BinaryModifier TargetProperty="EmpireProcessingPowerStock"     Operation="Subtraction" Left="$(FinalProcessingPowerAllocation)" BinaryOperation="Multiplication" Right="$(IsAllocated)" Path="../ClassEmpire,EmpireTypeMajor"/>
+    <Modifier TargetProperty="BailiffPriority"                Operation="Addition"    Value="$(FinalProcessingPowerAllocation)"/>
+  </SimulationDescriptor>
+
+  <!-- ESG Empty Effects (to apply tags) -->
+  <SimulationDescriptor Name="HackingProgramEffectBlockSpawnRebels" Type="HackingProgramEffect"></SimulationDescriptor>
+  <SimulationDescriptor Name="HackingProgramEffectBlockAnarchy" Type="HackingProgramEffect"></SimulationDescriptor>
+  <SimulationDescriptor Name="HackingProgramEffectBlockPreventFleetsMovement" Type="HackingProgramEffect"></SimulationDescriptor>
+  <SimulationDescriptor Name="HackingProgramEffectBlockStealTechnology" Type="HackingProgramEffect"></SimulationDescriptor>
+  <SimulationDescriptor Name="HackingProgramEffectBlockSeeFleets" Type="HackingProgramEffect"></SimulationDescriptor>
+
+  <SimulationDescriptor Name="HackingProgramEffectInstantIncreasePPAllocation" Type="HackingProgramEffect">
+    <Modifier TargetProperty="FinalProcessingPowerAllocation" Operation="Percent" Value="0.4" Path="../ClassEmpire/ClassHacking/ClassHackingProgram" TooltipOverride="%HackingOffensiveProgramIncreasedPPAllocationEffectOverride"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="HackingProgramEffectHackingDefense" Type="HackingProgramEffect">
+    <Modifier TargetProperty="HackingOperationOutcomeDefenseLevel" Operation="Addition" Value="1" TooltipOverride="%HackingProgramEffectHackingDefenseEffectOverride"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="HackingProgramEffectSpeedupHacking" Type="HackingProgramEffect">
+    <Modifier TargetProperty="HackingSpeedMultiplierForSelf" Operation="Addition" Value="0.3"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="HackingProgramEffectSpeedupHackingOperation" Type="HackingProgramEffect">
+    <Modifier TargetProperty="HackingNodeSpeed"     Operation="Percent" Value="0.3"/>
+    <Modifier TargetProperty="HackingWarpSpeed"     Operation="Percent" Value="0.3" TooltipHidden="true"/>
+    <Modifier TargetProperty="HackingNonWarpSpeed"  Operation="Percent" Value="0.3" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="HackingProgramEffectSlowDownHacking" Type="HackingProgramEffect">
+    <Modifier TargetProperty="HackingSpeedMultiplierForOthers" Operation="Subtraction" Value="0.5" TooltipOverride="%HackingProgramEffectSlowDownHackingEffectOverride"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="HackingProgramEffectSlowndownTrace" Type="HackingProgramEffect">
+    <Modifier TargetProperty="HackingNodeSpeed" Operation="Percent" Value="-0.25"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassHackingOperationBackdoor" Type="Class">
+    <Property Name="HackingSpeedMultiplierFromBackdoor" BaseValue="1"/>
+    <Property Name="TurnsBeforeDestruction"             BaseValue="5"/>
+    <!-- Affected by GameSpeed -->
+    <Property Name="BackdoorProcessingPowerMultiplier" BaseValue="1"/>
+    <Property Name="ProcessingPowerAllocation" BaseValue="0" MinValue="Negative"/>
+
+    <Modifier TargetProperty="FAKEAllowsStartingOperationsFromHere" Operation="Addition"    Value="1"   TooltipOverride="%HackingOperationBackdoorEffectOverride"/>
+    <!--<BinaryModifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(BackdoorProcessingPowerMultiplier)" Path="../ClassEmpire" SearchValueFromPath="true"/>-->
+    <!--<BinaryModifier TargetProperty="EmpireProcessingPowerStock"     Operation="Subtraction" Left="5" BinaryOperation="Multiplication" Right="$(BackdoorProcessingPowerMultiplier)" Path="../ClassEmpire" SearchValueFromPath="true"/>-->
+    <BinaryModifier TargetProperty="ProcessingPowerAllocation"      Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(BackdoorProcessingPowerMultiplier)" TooltipHidden="true"/>
+    <Modifier TargetProperty="EmpireProcessingPowerStock"           Operation="Subtraction" Value="$(ProcessingPowerAllocation)" Path="../ClassEmpire"/>
+    <Modifier TargetProperty="HackingSpeedMultiplierFromBackdoor"   Operation="Percent"     Value="0.05"/>
+    <Modifier TargetProperty="BackdoorCount"                        Operation="Addition"    Value="1"   Path="../ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="HackingProgramEffectDecreaseHackerPPAllocation" Type="HackingProgramEffect">
+    <Modifier TargetProperty="FinalProcessingPowerAllocation" Operation="Percent" Value="-0.5" Path="ClassEmpire/ClassHacking/!CostCannotBeBoostedByPrograms,ClassHackingProgram"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="HackingProgramEffectIncreaseHackerPPAllocation" Type="HackingProgramEffect">
+    <Modifier TargetProperty="FinalProcessingPowerAllocation" Operation="Percent" Value="0.3" Path="ClassEmpire/ClassHacking/!CostCannotBeBoostedByPrograms,ClassHackingProgram"/>
+    <Modifier TargetProperty="EmpireMoney" Operation="Addition" Value="1" Path="FAKE" TooltipOverride="%HackingProgramEffectIncreaseHackerPPAllocationEffectOverride"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="RerouteOffenseHackingProgramEffect" Type="RerouteOffenseHackingProgramEffect">
+    <Modifier TargetProperty="BailiffPriority" Operation="Subtraction" Value="100" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="PlaceViewerOffenseHackingProgramEffect" Type="PlaceViewerOffenseHackingProgramEffect"/>
+  <SimulationDescriptor Name="PlaceViewerDefenseHackingProgramEffect" Type="PlaceViewerDefenseHackingProgramEffect"/>
+  <SimulationDescriptor Name="CostCannotBeBoostedByPrograms" Type="CostCannotBeBoostedByPrograms"/>
+  <SimulationDescriptor Name="BackdoorPreventionDefenseHackingProgramEffect" Type="BackdoorPreventionDefenseHackingProgramEffect">
+    <Modifier TargetProperty="EmpireMoney" Operation="Addition" Value="1" Path="FAKE" TooltipOverride="%BackdoorPreventionDefenseHackingProgramEffectOverride2"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="DefenseHackingProgramBackdoorRemovalEffect" Type="DefenseHackingProgramBackdoorRemovalEffect">
+    <Modifier TargetProperty="EmpireMoney" Operation="Addition" Value="1" Path="FAKE" TooltipOverride="%HackingDefensiveProgramsBackdoorRemovalEffectOverride"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="SpeedupHackingOffenseHackingProgramMinorUnlocked" Type="SpeedupHackingOffenseHackingProgramMinorUnlocked"/>
+  <SimulationDescriptor Name="IncreaseHackerPPAllocationDefenseHackingProgramMinorUnlocked" Type="IncreaseHackerPPAllocationDefenseHackingProgramMinorUnlocked"/>
+  <SimulationDescriptor Name="IncreasePPAllocationOffenseHackingProgramMinorUnlocked" Type="IncreasePPAllocationOffenseHackingProgramMinorUnlocked"/>
+  <SimulationDescriptor Name="SlowDownHackingDefenseHackingProgramMinorUnlocked" Type="SlowDownHackingDefenseHackingProgramMinorUnlocked"/>
+
+  <SimulationDescriptor Name="SpeedupHackingOffenseHackingProgramPirateUnlocked" Type="SpeedupHackingOffenseHackingProgramPirateUnlocked"/>
+  <SimulationDescriptor Name="IncreaseHackerPPAllocationDefenseHackingProgramPirateUnlocked" Type="IncreaseHackerPPAllocationDefenseHackingProgramPirateUnlocked"/>
+  <SimulationDescriptor Name="IncreasePPAllocationOffenseHackingProgramPirateUnlocked" Type="IncreasePPAllocationOffenseHackingProgramPirateUnlocked"/>
+  <SimulationDescriptor Name="SlowDownHackingDefenseHackingProgramPirateUnlocked" Type="SlowDownHackingDefenseHackingProgramPirateUnlocked"/>
+
+  <SimulationDescriptor Name="TemporaryEffectScienceAndExplorationResearchMalus" Type="TemporaryEffect">
+    <Modifier TargetProperty="TechnologyCostQuadrantScienceAndExplorationMultiplier"    Operation="Addition" Value="0.15"   Path="ClassEmpire/ClassResearch"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="TemporaryEffectEconomyAndTradeResearchMalus" Type="TemporaryEffect">
+    <Modifier TargetProperty="TechnologyCostQuadrantEconomyAndTradeMultiplier"    Operation="Addition" Value="0.15"   Path="ClassEmpire/ClassResearch"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="TemporaryEffectMilitaryResearchMalus" Type="TemporaryEffect">
+    <Modifier TargetProperty="TechnologyCostQuadrantMilitaryMultiplier"    Operation="Addition" Value="0.15"   Path="ClassEmpire/ClassResearch"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="TemporaryEffectEmpireDevelopmentResearchMalus" Type="TemporaryEffect">
+    <Modifier TargetProperty="TechnologyCostQuadrantEmpireDevelopmentMultiplier"    Operation="Addition" Value="0.15"   Path="ClassEmpire/ClassResearch"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="TemporaryEffectLawCostMalus" Type="TemporaryEffect">
+    <Modifier TargetProperty="LawUpkeepMultiplier"      Operation="Percent" Value="0.5" Path="EmpireTypeMajor"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="SSIConstructionRateMalus" Type="SSIConstructionRateMalus">
+    <Modifier TargetProperty="BuildingProductionCostReduction"      Operation="Percent" Value="0.1" Path="ClassEmpire/ClassColonizedStarSystem"      Priority="-5"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassHackingBeacon" Type="Class">
+    <Property Name="BaseProcessingPowerAllocation"      BaseValue="0" IsSealed="true"/>
+    <Property Name="FinalProcessingPowerAllocation"      BaseValue="0"/>
+    <Property Name="MaxChargeTime"      BaseValue="10"/>
+
+    <Modifier TargetProperty="FinalProcessingPowerAllocation" Operation="Addition" Value="$(BaseProcessingPowerAllocation)"/>
+    <Modifier TargetProperty="EmpireProcessingPowerStock" Operation="Subtraction" Value="$(FinalProcessingPowerAllocation)" Path="../ClassEmpire,EmpireTypeMajor"/>
+
+    <Modifier TargetProperty="BeaconCount"      Operation="Addition" Value="1" Path="./ClassHacking"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="DisplacementEffectProcessingPowerMalus" Type="DisplacementEffect">
+    <Modifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Percent" Value="-0.1"/>
+  </SimulationDescriptor>
+</Datatable>
