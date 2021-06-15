@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/HackingProgramDefinition.xsd">
+
+    <!-- - Descriptors are applied on the program sim object, as soon as the program is created.
+         - SelfDescriptors are applied on the program sim object, only when it is active (when not preallocated, and at least one turn after being placed).
+         - TargetDescriptors are applied on the target sim object, only when the program is active
+         - TargetHackerDescriptors are applied on the hacker empire sim object, and only when the program is active AND the target node is being hacked.
+         - OperationEffects are applied on hacking operations passing through the node of the program, and only when the program is active. -->
+
+    <!-- OFFENSIVE -->
+    <!-- Accelerator -->
+    <!-- DEPRECATED -->
+    <OffenseHackingProgramDefinition Name="SpeedupHackingOffenseHackingProgram" ProcessingPowerAllocation="15" OnlyOnePerTarget="true" Deprecated="true">
+        <DownloadableContentPrerequisite Flags="Prerequisite,Discard,UnlockAvailability">DLCUC</DownloadableContentPrerequisite>
+        <TechnologyPrerequisite Flags="Technology,Discard">TechnologyOffensiveProgram1</TechnologyPrerequisite>
+        <InterpreterPrerequisite Flags="Prerequisite,Discard,UnlockAvailability">false</InterpreterPrerequisite> 
+        <SelfDescriptors>
+            <SimulationDescriptorReference Name="HackingProgramEffectSpeedupHacking"/>
+        </SelfDescriptors>
+    </OffenseHackingProgramDefinition>
+
+    <!-- Accelerator v2 -->
+    <OffenseHackingProgramDefinition Name="SpeedupHackingOffenseHackingProgramV2" ProcessingPowerAllocation="15" OnlyOnePerTarget="true" InstantActivation="true">
+        <DownloadableContentPrerequisite Flags="Prerequisite,Discard,UnlockAvailability">DLCUC</DownloadableContentPrerequisite>
+        <TechnologyPrerequisite Flags="Technology,Discard">TechnologyOffensiveProgram1</TechnologyPrerequisite>
+        <OperationEffect OperationOwner="OnlyMe" OperationType="OnlyOperation">
+            <SimulationDescriptorReference Name="HackingProgramEffectSpeedupHackingOperation"/>
+        </OperationEffect>
+    </OffenseHackingProgramDefinition>
+
+    <!-- Piggyback -->
+    <OffenseHackingProgramDefinition Name="DecreaseHackerPPAllocationOffenseHackingProgram" ProcessingPowerAllocation="15" TargetHackerDescriptorApplicationRule="OnlyMe" OnlyOnePerTarget="true">
+        <DownloadableContentPrerequisite Flags="Prerequisite,Discard,UnlockAvailability">DLCUC</DownloadableContentPrerequisite>
+        <TechnologyPrerequisite Flags="Technology,Discard">TechnologyOffensiveProgram2</TechnologyPrerequisite>
+        <TargetHackerDescriptors>
+            <SimulationDescriptorReference Name="HackingProgramEffectDecreaseHackerPPAllocation"/>
+        </TargetHackerDescriptors>
+    </OffenseHackingProgramDefinition>
+
+    <!-- Divert -->
+    <RerouteOffenseHackingProgramDefinition Name="RerouteOffenseHackingProgram" ProcessingPowerAllocation="20" OnlyOnePerTarget="true">
+        <DownloadableContentPrerequisite Flags="Prerequisite,Discard,UnlockAvailability">DLCUC</DownloadableContentPrerequisite>
+        <TechnologyPrerequisite Flags="Technology,Discard">TechnologyOffensiveProgram3</TechnologyPrerequisite>
+        <SimulationDescriptorReference Name="RerouteOffenseHackingProgramEffect"/>
+    </RerouteOffenseHackingProgramDefinition>
+    
+    <!-- Overload -->
+    <OffenseHackingProgramDefinition Name="IncreasePPAllocationOffenseHackingProgram" ProcessingPowerAllocation="20" OnlyOnePerTarget="true">
+        <DownloadableContentPrerequisite Flags="Prerequisite,Discard,UnlockAvailability">DLCUC</DownloadableContentPrerequisite>
+        <TechnologyPrerequisite Flags="Technology,Discard">TechnologyOffensiveProgram4</TechnologyPrerequisite>        
+        <TargetDescriptors>
+            <SimulationDescriptorReference Name="HackingProgramEffectInstantIncreasePPAllocation"/>
+        </TargetDescriptors>
+    </OffenseHackingProgramDefinition>
+
+    <!-- DEFENSIVE -->
+    <!-- Lockdown -->
+    <BackdoorProtectionDefenseHackingProgramDefinition Name="BackdoorPreventionDefenseHackingProgram" ProcessingPowerAllocation="20" OnlyOnePerTarget="true" TriggerHackingEffectsOnlyWhenReached="true">
+        <DownloadableContentPrerequisite Flags="Prerequisite,Discard,UnlockAvailability">DLCUC</DownloadableContentPrerequisite>
+        <TechnologyPrerequisite Flags="Technology,Discard">TechnologyDefensiveProgram1</TechnologyPrerequisite>
+        <SimulationDescriptorReference Name="BackdoorPreventionDefenseHackingProgramEffect"/>
+        <TargetDescriptors>
+            <SimulationDescriptorReference Name="DefenseHackingProgramBackdoorRemovalEffect"/>
+            <SimulationDescriptorReference Name="HackingProgramEffectBlockAnarchy"/>
+        </TargetDescriptors>
+        <OperationEffect OperationOwner="OnlyOthers" OperationType="OnlyTrace">
+            <SimulationDescriptorReference Name="HackingProgramEffectSlowndownTrace"/>
+        </OperationEffect>
+    </BackdoorProtectionDefenseHackingProgramDefinition>
+
+    <!-- Encrypt-->
+    <DefenseHackingProgramDefinition Name="SlowDownHackingDefenseHackingProgram" ProcessingPowerAllocation="15" OnlyOnePerTarget="true">
+        <DownloadableContentPrerequisite Flags="Prerequisite,Discard,UnlockAvailability">DLCUC</DownloadableContentPrerequisite>
+        <TargetDescriptors>
+            <SimulationDescriptorReference Name="HackingProgramEffectSlowDownHacking"/>
+            <SimulationDescriptorReference Name="DefenseHackingProgramBackdoorRemovalEffect"/>
+            <SimulationDescriptorReference Name="HackingProgramEffectBlockSpawnRebels"/>
+        </TargetDescriptors>
+    </DefenseHackingProgramDefinition>
+
+    <!-- Interrogate-->
+    <DefenseHackingProgramDefinition Name="IncreaseHackerPPAllocationDefenseHackingProgram" ProcessingPowerAllocation="20" TargetHackerDescriptorApplicationRule="OnlyOthers" OnlyOnePerTarget="true">
+        <DownloadableContentPrerequisite Flags="Prerequisite,Discard,UnlockAvailability">DLCUC</DownloadableContentPrerequisite>
+        <TechnologyPrerequisite Flags="Technology,Discard">TechnologyDefensiveProgram2</TechnologyPrerequisite>
+        <TargetHackerDescriptors>
+            <SimulationDescriptorReference Name="HackingProgramEffectIncreaseHackerPPAllocation"/>
+        </TargetHackerDescriptors>
+        <TargetDescriptors>
+            <SimulationDescriptorReference Name="DefenseHackingProgramBackdoorRemovalEffect"/>
+            <SimulationDescriptorReference Name="HackingProgramEffectBlockPreventFleetsMovement"/>
+        </TargetDescriptors>        
+    </DefenseHackingProgramDefinition>
+
+    <!-- Firewall -->
+    <DefenseHackingProgramDefinition Name="HackingDefenseDefenseHackingProgram" ProcessingPowerAllocation="30" OnlyOnePerTarget="true">
+        <DownloadableContentPrerequisite Flags="Prerequisite,Discard,UnlockAvailability">DLCUC</DownloadableContentPrerequisite>
+        <TechnologyPrerequisite Flags="Technology,Discard">TechnologyDefensiveProgram3</TechnologyPrerequisite>
+        <TargetDescriptors>
+            <SimulationDescriptorReference Name="HackingProgramEffectHackingDefense"/>
+            <SimulationDescriptorReference Name="DefenseHackingProgramBackdoorRemovalEffect"/>
+            <SimulationDescriptorReference Name="HackingProgramEffectBlockSeeFleets"/>
+        </TargetDescriptors>
+    </DefenseHackingProgramDefinition>
+
+    <!-- Track -->
+    <PlaceViewerDefenseHackingProgramDefinition Name="PlaceViewerDefenseHackingProgram" ProcessingPowerAllocation="15" OnlyOnePerTarget="true">
+        <DownloadableContentPrerequisite Flags="Prerequisite,Discard,UnlockAvailability">DLCUC</DownloadableContentPrerequisite>
+        <TechnologyPrerequisite Flags="Technology,Discard">TechnologyDefensiveProgram4</TechnologyPrerequisite>
+        <SimulationDescriptorReference Name="PlaceViewerDefenseHackingProgramEffect"/>
+        <TargetDescriptors>
+            <SimulationDescriptorReference Name="DefenseHackingProgramBackdoorRemovalEffect"/>
+            <SimulationDescriptorReference Name="HackingProgramEffectBlockStealTechnology"/>
+        </TargetDescriptors>
+    </PlaceViewerDefenseHackingProgramDefinition>
+
+    <!-- Cancellation malus -->
+    <TimedHackingProgramDefinition Name="OperationCancellationMalusProgram" ProcessingPowerAllocation="30" Duration="5" Hidden="true">
+        <SimulationDescriptorReference Name="CostCannotBeBoostedByPrograms"/>
+    </TimedHackingProgramDefinition>
+
+
+</Datatable>

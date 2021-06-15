@@ -18,76 +18,98 @@ Example:
 
 ## Simulation property
 
-| Attribute name     | Default value     | Description
-|--------------------|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------
-| Name               | `<Required>`      | The name of the property. It must be unique.
-| BaseValue          | `0`               | The start value of the property (before the computing of modifiers)
-| MinValue           | `0`               | Minimum value of the property. Set it to "Negative" to set it to float.MinValue.
-| MaxValue           | `float.MaxValue`  | Maximum value of the property.
-| Composition        | `None`            | Define if the property must be computed from the simulation object children property values (by name). Available composition methods: Maximum, Minimum, Sum. 
-| RoundingFunction   | `None`            | Define the rounding method of the property. Available rounding methods: Ceil, Floor, Round.
-| IsSealed           | `false`           | If a property is sealed, its value can't be modified by any modifier (generaly its value is set by code).
-| IsSerializable     | `false`           | Define if a property value must be serialized in game saves (generaly used for sealed property).
+| Attribute name             | Default value     | Description
+|----------------------------|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------
+| Name                       | `<Required>`      | The name of the property. It must be unique.
+| BaseValue                  | `0`               | The start value of the property (before the computing of modifiers)
+| MinValue                   | `0`               | Minimum value of the property. Set it to "Negative" to set it to float.MinValue.
+| MaxValue                   | `float.MaxValue`  | Maximum value of the property.
+| Composition                | `None`            | Define if the property must be computed from the simulation object children property values (by name). Available composition methods: Maximum, Minimum, Sum. 
+| RoundingFunction           | `None`            | Define the rounding method of the property. Available rounding methods: None, Ceil, Floor, Round.
+| IsSealed                   | `false`           | If a property is sealed, its value can't be modified by any modifier (generaly its value is set by code).
+| IsSerializable             | `false`           | Define if a property value must be serialized in game saves (generaly used for sealed property).
+| ValueMustBePositive        | `false`           | If the result of the binary operation ends up being negative, the math instead returns 0.
 
 Example:
 ```xml
-<Property Name="Money" Value="0" Composition="Sum" MinValue="Negative"/>
+<Property Name="EmpireMoney" Value="0" Composition="Sum" MinValue="Negative"/>
 ```
 
 ## Simulation modifiers - Simple modifier
 
-| Attribute name      | Default value     | Description
-|---------------------|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------
-| TargetProperty      | `<Required>`      | The name of the property which will receives the result.
-| Operation           | `<Required>`      | The modifier's operation. Available operations: Force, Addition, Subtraction, Multiplication, Division, Power, Percent.
-| Value               | `<Required>`      | The value needed to compute the operation. (It can be a float value or another property value using $(PropertyName) syntax)
-| Path                | `""`              | Dertermine where to find the target property (By default the source object).
-| Priority            | `0`               | The computation priority value of the modifier (used to change the default operation order).
-| SearchValueFromPath | `false`           | If the value attribute reference a property, it will be retrieved from the same path as the target property.
+| Attribute name             | Default value     | Description
+|----------------------------|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------
+| TargetProperty             | `<Required>`      | The name of the property which will receives the result.
+| Operation                  | `<Required>`      | The modifier's operation. Available operations: Force, Addition, Subtraction, Multiplication, Division, Power, Percent.
+| Value                      | `<Required>`      | The value needed to compute the operation. (It can be a float value or another property value using $(PropertyName) syntax)
+| Path                       | `""`              | Dertermine where to find the target property (By default the source object).
+| Priority                   | `0`               | The computation priority value of the modifier (used to change the default operation order).
+| SearchValueFromPath        | `false`           | If the value attribute reference a property, it will be retrieved from the same path as the target property.
+| TooltipHiddenIfPathInvalid | `false`           | The modifier's tooltip will be hidden if the path is not found.
+| TooltipHidden              | `false`           | If this is enabled, no tooltip will be shown, even if the tooltip is overriden.
+| TooltipOverride            | `N/A`             | This manually replaces the tooltip of a modifier with a defined localization pair.
+| ValueMustBePositive        | `false`           | If the result of the binary operation ends up being negative, the math instead returns 0.
+| UseIfInsteadOfWhere        | `false`           | The modifier is only applied if the path is found, and will be applied on the source object, rather than the path.
+| ForceFrom                  | `false`           | Sets the source path to be whatever the path is set to (unconfirmed)
+| EnforceContext             | `false`           | Immediately stops the modifier as soon as its source tag is removed (unconfirmed)
 
 Example:
 ```xml
-<!-- Money += NetDust -->
-<Modifier TargetProperty="Money" Operation="Addition" Value="$(NetDust)"/>
+<!-- Money += Population -->
+<Modifier TargetProperty="EmpireMoney" Operation="Addition" Value="$(EmpirePopulation)"/>
 ```
 
 ## Simulation modifiers - Binary modifier
 
-| Attribute name      | Default value     | Description
-|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-| TargetProperty      | `<Required>`      | The name of the property which will receives the result.
-| Operation           | `<Required>`      | The modifier's operation. Available operations: Force, Addition, Subtraction, Multiplication, Division, Power, Percent.
-| Left                | `<Required>`      | The left value of the binary operation. (It can be a float value or another property value using $(PropertyName) syntax)
-| BinaryOperation     | `<Required>`      | The operation to apply with left and right values. Available operations: Force, Addition, Subtraction, Multiplication, Division, Power, Percent.
-| Right               | `<Required>`      | The right value of the binary operation. (It can be a float value or another property value using $(PropertyName) syntax)
-| Path                | `""`              | Dertermine where to find the target property (By default the source object).
-| Priority            | `0`               | The computation priority value of the modifier (used to change the default operation order).
-| SearchValueFromPath | `false`           | If the left and/or right attribute reference a property, it will be retrieved from the same path as the target property.
+| Attribute name             | Default value     | Description
+|----------------------------|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------
+| TargetProperty             | `<Required>`      | The name of the property which will receives the result.
+| Operation                  | `<Required>`      | The modifier's operation. Available operations: Force, Addition, Subtraction, Multiplication, Division, Power, Percent.
+| Left                       | `<Required>`      | The left value of the binary operation. (It can be a float value or another property value using $(PropertyName) syntax)
+| BinaryOperation            | `<Required>`      | The operation to apply with left and right values. Available operations: Force, Addition, Subtraction, Multiplication, Division, Power, Percent.
+| Right                      | `<Required>`      | The right value of the binary operation. (It can be a float value or another property value using $(PropertyName) syntax)
+| Path                       | `""`              | Dertermine where to find the target property (By default the source object).
+| Priority                   | `0`               | The computation priority value of the modifier (used to change the default operation order).
+| SearchValueFromPath        | `false`           | If the left and/or right attribute reference a property, it will be retrieved from the same path as the target property.
+| TooltipHiddenIfPathInvalid | `false`           | The modifier's tooltip will be hidden if the path is not found.
+| TooltipHidden              | `false`           | If this is enabled, no tooltip will be shown, even if the tooltip is overriden.
+| TooltipOverride            | `N/A`             | This manually replaces the tooltip of a modifier with a defined localization pair.
+| ValueMustBePositive        | `false`           | If the result of the binary operation ends up being negative, the math instead returns 0.
+| UseIfInsteadOfWhere        | `false`           | The modifier is only applied if the path is found, and will be applied on the source object, rather than the path.
+| ForceFrom                  | `false`           | Sets the source path to be whatever the path is set to (unconfirmed)
+| EnforceContext             | `false`           | Immediately stops the modifier as soon as its source tag is removed (unconfirmed)
 
 Example:
 ```xml
-<!-- Money += Population * NetDust -->
-<BinaryModifier TargetProperty="Money" Operation="Addition" Left="$(Population)" BinaryOperation="Multiplication" Right="$(NetDust)" />
+<!-- Money += Population * 25 -->
+<BinaryModifier TargetProperty="EmpireMoney" Operation="Addition" Left="$(EmpirePopulation)" BinaryOperation="Multiplication" Right="25"/>
 ```
 
 ## Simulation modifiers - Count modifier
 
 **WARNING! Cost a lot of resources to be computed**
 
-| Attribute name      | Default value     | Description
-|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-| TargetProperty      | `<Required>`      | The name of the property which will receives the result.
-| Operation           | `<Required>`      | The modifier's operation. Available operations: Force, Addition, Subtraction, Multiplication, Division, Power, Percent.
-| Multiplier          | `1`               | An optional multiplier of the count value. (It can be a float value or another property value using $(PropertyName) syntax)
-| CountPath           | `<Required>`      | The path who describe the type/location of objects you want to count (this path start to the target object, be aware of that when you change the Path attribute).
-| Path                | `""`              | Dertermine where to find the target property (By default the source object).
-| Priority            | `0`               | The computation priority value of the modifier (used to change the default operation order).
-| SearchValueFromPath | `false`           | If the multiplier attribute reference a property, it will be retrieved from the same path as the target property.
+| Attribute name             | Default value     | Description
+|----------------------------|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------
+| TargetProperty             | `<Required>`      | The name of the property which will receives the result.
+| Operation                  | `<Required>`      | The modifier's operation. Available operations: Force, Addition, Subtraction, Multiplication, Division, Power, Percent.
+| Multiplier                 | `1`               | An optional multiplier of the count value. (It can be a float value or another property value using $(PropertyName) syntax)
+| CountPath                  | `<Required>`      | The path who describe the type/location of objects you want to count (this path start to the target object, be aware of that when you change the Path attribute).
+| Path                       | `""`              | Dertermine where to find the target property (By default the source object).
+| Priority                   | `0`               | The computation priority value of the modifier (used to change the default operation order).
+| SearchValueFromPath        | `false`           | If the multiplier attribute reference a property, it will be retrieved from the same path as the target property.
+| TooltipHiddenIfPathInvalid | `false`           | The modifier's tooltip will be hidden if the path is not found.
+| TooltipHidden              | `false`           | If this is enabled, no tooltip will be shown, even if the tooltip is overriden.
+| TooltipOverride            | `N/A`             | This manually replaces the tooltip of a modifier with a defined localization pair.
+| ValueMustBePositive        | `false`           | If the result of the binary operation ends up being negative, the math instead returns 0.
+| UseIfInsteadOfWhere        | `false`           | The modifier is only applied if the path is found, and will be applied on the source object, rather than the path.
+| ForceFrom                  | `false`           | Sets the source path to be whatever the path is set to (unconfirmed)
+| EnforceContext             | `false`           | Immediately stops the modifier as soon as its source tag is removed (unconfirmed)
 
 Example:
 ```xml
-<!-- Money += 2 * CityCount-->
-<CountModifier TargetProperty="Money" Operation="Addition" Multiplier= "2" CountPath="ClassEmpire/ClassCity" />
+<!-- Money += 2 * SystemCount-->
+<CountModifier TargetProperty="EmpireMoney" Operation="Addition" Multiplier= "2" CountPath="ClassEmpire/ClassColonizedStarSystem" />
 ```
 
 ## Operations precedence

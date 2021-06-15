@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/EntityActionDefinition.xsd">
-  <!-- Succ -->
+  <!-- Vodyani Succ -->
   <EmpireDiplomacyGiveResourcesAction Name="EmpireDiplomaticEssenceAction" PopulationToDestroyCount="1">
     <PathPrerequisite Flags="Prerequisite,Discard">ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
     <InterpreterPrerequisite Flags="Disable">Property(Context,@ClassEmpire,EmpireLifeforceStock) lt Property(Context,@ClassEmpire,MaximumEmpireLifeforceStock)</InterpreterPrerequisite>
@@ -49,7 +49,7 @@
       <PathPrerequisite Inverted="true"  Flags="FleetIsBusy">FleetActionLogistics</PathPrerequisite>
       <PathPrerequisite Inverted="true"  Flags="FleetIsBusy">FleetActionRooting</PathPrerequisite>
       <PathPrerequisite Inverted="true"  Flags="IsCollectingRelics">FleetActionCollectingRelics</PathPrerequisite>
-      <PathPrerequisite Inverted="true"  Flags="Prerequisite,CannotCloakPlanetCracker">ClassGarrisonFleet/ClassShip/ClassSection/ClassModuleDestruction</PathPrerequisite>
+      <PathPrerequisite Inverted="true"  Flags="Prerequisite,CannotCloakPlanetCracker,CheckedOnFleetModification">ClassGarrisonFleet//ClassModuleDestruction</PathPrerequisite>
     </EntityPrerequisites>
 
     <EntityModifiers Location="Self">
@@ -79,4 +79,88 @@
     <CancelActions Flags="CancelOnAnything" SameContext="false" SameInitiator="true"/>
 
   </CollectRelicsFleetAction>
+	
+	<!-- Privateering -->
+	<PrivateerFleetAction Name="PrivateerFleetAction">
+
+		<!-- Prerequisites with Flag 'CheckOnFleetCreation' are checked when ships from a privateers fleet are moved to a new fleet. -->
+		<EntityPrerequisites Location="Self">
+			<!-- Hide when the fleet contains no mercenary -->
+			<PathPrerequisite Inverted="false" Flags="Prerequisite,Discard,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,MercenaryShip</PathPrerequisite>
+			<!-- Disable when the fleet has a hero -->
+			<PathPrerequisite Inverted="true" Flags="Prerequisite,NoHeroesForPrivateers,CheckOnFleetCreation">ClassGarrisonFleet/ClassHero</PathPrerequisite>
+			<!-- Disable when the fleet doesn't contain 100% mercenaries or contains a civilian ship -->
+			<PathPrerequisite Inverted="true" Flags="Prerequisite,NotAllShipsAreMercenaries,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,!MercenaryShip</PathPrerequisite>
+			<PathPrerequisite Inverted="true" Flags="Prerequisite,CivilianShipsCannotCamouflage,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,ShipRoleColonizer</PathPrerequisite>
+			<!-- Disable when not in owner influence -->
+			<PathPrerequisite Inverted="false" Flags="Prerequisite,FleetNotInFriendlyOrbit">FleetInfluenceStateOwner</PathPrerequisite>
+		</EntityPrerequisites>
+
+		<EntityModifiers Location="Self">
+			<SimulationAlteration DescriptorReference="FleetActionPrivateer" />
+			<SimulationAlteration DescriptorReference="FleetActionPrivateerUpkeep" />
+		</EntityModifiers>
+
+		<PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,FactionTraitCorsairs</PathPrerequisite>
+		<PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
+		<TechnologyPrerequisite Flags="Prerequisite,Technology,Discard" UnlockHidden="true">TechnologyPrivateers</TechnologyPrerequisite>
+	</PrivateerFleetAction>
+
+	<PrivateerFleetAction Name="PrivateerQuestFleetAction">
+
+		<!-- Prerequisites with Flag 'CheckOnFleetCreation' are checked when ships from a privateers fleet are moved to a new fleet. -->
+		<EntityPrerequisites Location="Self">
+			<!-- Hide when the fleet contains no mercenary -->
+			<PathPrerequisite Inverted="false" Flags="Prerequisite,Discard,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,CanPrivateer</PathPrerequisite>
+			<!-- Disable when the fleet has a hero -->
+			<PathPrerequisite Inverted="true" Flags="Prerequisite,NoHeroesForPrivateers,CheckOnFleetCreation">ClassGarrisonFleet/ClassHero</PathPrerequisite>
+			<!-- Disable when the fleet doesn't contain 100% mercenaries or contains a civilian ship -->
+			<PathPrerequisite Inverted="true" Flags="Prerequisite,NotAllShipsAreMercenaries,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,!CanPrivateer</PathPrerequisite>
+			<PathPrerequisite Inverted="true" Flags="Prerequisite,CivilianShipsCannotCamouflage,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,ShipRoleColonizer</PathPrerequisite>
+			<!-- Disable when not in owner influence -->
+			<PathPrerequisite Inverted="false" Flags="Prerequisite,FleetNotInFriendlyOrbit">FleetInfluenceStateOwner</PathPrerequisite>
+		</EntityPrerequisites>
+
+		<EntityModifiers Location="Self">
+			<SimulationAlteration DescriptorReference="FleetActionPrivateer" />
+			<SimulationAlteration DescriptorReference="FleetActionPrivateerUpkeep" />
+		</EntityModifiers>
+
+		<PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,FactionTraitCorsairs</PathPrerequisite>
+		<PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
+		<TechnologyPrerequisite Flags="Prerequisite,Technology,Discard" UnlockHidden="true">TechnologyPrivateers</TechnologyPrerequisite>
+	</PrivateerFleetAction>
+
+  <!--  Add flat growth on outpost (Lumeris) -->
+  <OutpostActionDefinition Name="OutpostActionIncreaseMigrationRateVenetians" Duration="10">
+    <EntityPrerequisites Location="Self">
+      <PathPrerequisite Flags="Prerequisite,SystemIsBeingGuarded" Inverted="true">BlockadedColonizedStarSystem</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,SystemIsBeingDecolonized" Inverted="true">DecolonizedColonizedStarSystem</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">OutpostActionIncreaseMigrationRateVenetians</PathPrerequisite>
+    </EntityPrerequisites>
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="OutpostActionIncreaseMigrationRateVenetiansEffect"/>
+    </EntityModifiers>
+    <CustomCost Instant="true" ResourceName="EmpireEmpirePoint">25 + 25 * (Property(StockLocation, @../ClassEmpire, SystemCount) - 1)</CustomCost>
+    <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard,Faction,AffinityGameplayVenetians">../ClassEmpire,AffinityGameplayVenetians</PathPrerequisite>
+  </OutpostActionDefinition>
+
+  <!--  Remove Lumeris from regular outpost boosting action -->
+  <OutpostActionDefinition Name="OutpostActionIncreaseMigrationRate" Duration="10" RequiresMigrationFlux="true">
+    <EntityPrerequisites Location="Self">
+      <PathPrerequisite Flags="Prerequisite,SystemIsBeingGuarded" Inverted="true">BlockadedColonizedStarSystem</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,SystemIsBeingDecolonized" Inverted="true">DecolonizedColonizedStarSystem</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">OutpostActionIncreaseMigrationRate</PathPrerequisite>
+    </EntityPrerequisites>
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="OutpostActionIncreaseMigrationRate"/>
+    </EntityModifiers>
+    <CustomCost Instant="true" ResourceName="EmpireEmpirePoint">25 + 50 * Property(StockLocation, @../ClassEmpire, SystemCount)</CustomCost>
+    <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">../ClassEmpire/PopulationMajor,ClassPopulationEmpireAffinityTimeLords</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">../ClassEmpire,AffinityGameplayVenetians</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard,Faction,AffinityGameplayVenetians">../ClassEmpire,AffinityGameplayVenetians</PathPrerequisite>
+    <MigrationFluxSimulationDescriptorReference Name="OutpostActionIncreaseMigrationRateEffect"/>
+  </OutpostActionDefinition>
+
 </Datatable>

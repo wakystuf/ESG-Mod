@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+  <!-- ============================================
+     ======== DEEDS: SCIENCE & EXPLORATION ==========
+     ================================================ -->
+  <QuestDefinition Name="Deeds_Regular_ScienceAndExploration_Stage2_A" Category="Deeds" SubCategory="Regular">
+
+    <!--============ TAGS ============-->
+
+    <Tags>BeginTurn,Hidden,TechnologyStageDefinitionScienceAndExploration2</Tags>
+
+
+    <!--============ CONTEXT ============-->
+    <QuestContextMulti>
+      <Distribution Type="FreeForAll"/>
+    </QuestContextMulti>
+
+    <!--============ OCCURRENCE RULES ============-->
+    <RepetitionRules  NumberOfOccurrencesPerGame="1"/>
+
+    <!--============ VARIABLES ============-->
+    <Vars>
+
+      <Var VarName="$AllEmpires">
+        <From Source="$Empires"/>
+      </Var>
+
+      <Var VarName="$CuriositiesToSearchObjective" IntValue="16"/>
+
+      <LocalizationVar LocalizationKey="$CuriosityAmount" Source="$CuriositiesToSearchObjective"/>
+
+      <Var VarName="$Path" StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageScienceAndExploration2"/>
+
+    </Vars>
+
+    <!--============ PREREQUISITES ============-->
+    <Prerequisites Target="$(Empires)" AnyTarget="true">
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_ScienceAndExploration_Stage2_B" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_ScienceAndExploration_Stage2_B" QuestState="Completed"/>
+
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_ScienceAndExploration_Stage2_B" QuestState="NotStarted"/>
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_ScienceAndExploration_Stage2_C" QuestState="NotStarted"/>
+
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_ScienceAndExploration_Stage2_C" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_ScienceAndExploration_Stage2_C" QuestState="Completed"/>
+    </Prerequisites>
+
+    <!--============ STEPS ============-->
+    <Steps>
+      <!--============ Step 1 ============-->
+      <Step Name="Step1">
+        <ObjectiveSet>
+
+          <!--Teams are created here, that's why setting the empire in a variable can only be made from here-->
+          <Vars>
+            <Var VarName="$CurrentEmpire">
+              <From Source="$Team"/>
+            </Var>
+          </Vars>
+
+          <Objective Name="Deeds_Regular_ScienceAndExploration_Stage2_A-Objective" StartValue="0" EndValue="$CuriositiesToSearchObjective">
+            <Parallel CompletionPolicy="All">
+
+              <Loop>
+                <!--Discover X Curiosities of any kind-->
+                <Decorator_CuriosityDiscovered Initiator="Empire" ProgressionIncrement="1"/>
+                <Input_Count VarName="$CuriositiesToSearchObjective"/>
+              </Loop>
+
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckPath>
+                    <Input_SimulationObject VarName="$CurrentEmpire"/>
+                    <Input_Path VarName="$Path"/>
+                  </Condition_CheckPath>
+                </Decorator_BeginTurn>
+              </Sequence>
+
+            </Parallel>
+          </Objective>
+          <Reward Droplist="DroplistRegularDeedsStage2Quadrant3Bis" Picks="1"/>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+
+  </QuestDefinition>
+
+
+  <!-- ============================================
+     ======== DEEDS: SCIENCE & EXPLORATION ==========
+     ================================================ -->
+  <QuestDefinition Name="Deeds_Regular_ScienceAndExploration_Stage2_B" Category="Deeds" SubCategory="Regular">
+
+    <!--============ TAGS ============-->
+    <Tags>BeginTurn,Hidden,TechnologyStageDefinitionScienceAndExploration2</Tags>
+
+    <!--============ CONTEXT ============-->
+    <QuestContextMulti>
+      <Distribution Type="FreeForAll"/>
+    </QuestContextMulti>
+
+    <!--============ OCCURRENCE RULES ============-->
+    <RepetitionRules  NumberOfOccurrencesPerGame="1"/>
+
+    <!--============ VARIABLES ============-->
+    <Vars>
+
+      <Var VarName="$AllEmpires">
+        <From Source="$Empires"/>
+      </Var>
+
+      <Var VarName="$PlanetObjective" IntValue="10"/>
+
+      <Var VarName="$Expression" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateColony/ClassColonizedPlanet') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateGhost/ClassColonizedPlanet')"/>
+
+      <LocalizationVar LocalizationKey="$PlanetAmount" Source="$PlanetObjective"/>
+
+      <Var VarName="$Path" StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageScienceAndExploration2"/>
+
+    </Vars>
+
+    <!--============ PREREQUISITES ============-->
+    <Prerequisites Target="$(Empires)" AnyTarget="true">
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_ScienceAndExploration_Stage2_A" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_ScienceAndExploration_Stage2_A" QuestState="Completed"/>
+
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_ScienceAndExploration_Stage2_A" QuestState="NotStarted"/>
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_ScienceAndExploration_Stage2_C" QuestState="NotStarted"/>
+
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_ScienceAndExploration_Stage2_C" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_ScienceAndExploration_Stage2_C" QuestState="Completed"/>
+    </Prerequisites>
+
+    <!--============ STEPS ============-->
+    <Steps>
+      <!--============ Step 1 ============-->
+      <Step Name="Step1">
+        <ObjectiveSet>
+
+          <!--Teams are created here, that's why setting the empire in a variable can only be made from here-->
+          <Vars>
+            <Var VarName="$CurrentEmpire">
+              <From Source="$Team"/>
+            </Var>
+          </Vars>
+
+          <Objective Name="Deeds_Regular_ScienceAndExploration_Stage2_B-Objective" StartValue="1" EndValue="$PlanetObjective">
+            <Parallel CompletionPolicy="All">
+
+              <Parallel CompletionPolicy="Any">
+
+                <Sequence>
+                  <Decorator_ColonizedPlanet>
+                    <Condition_IsProgressionComplete>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression"/>
+                    </Condition_IsProgressionComplete>
+                  </Decorator_ColonizedPlanet>
+                </Sequence>
+
+                <Sequence>
+                  <Decorator_BeginTurn>
+                    <Condition_IsProgressionComplete>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression"/>
+                    </Condition_IsProgressionComplete>
+                  </Decorator_BeginTurn>
+                </Sequence>
+
+              </Parallel>
+
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckPath>
+                    <Input_SimulationObject VarName="$CurrentEmpire"/>
+                    <Input_Path VarName="$Path"/>
+                  </Condition_CheckPath>
+                </Decorator_BeginTurn>
+              </Sequence>
+
+            </Parallel>
+          </Objective>
+
+          <Reward Droplist="DroplistRegularDeedsStage2Quadrant3Bis" Picks="1"/>
+
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+
+  </QuestDefinition>
+
+  <!-- ============================================
+     ============ DEEDS: ECONOMY & TRADE ============
+     ================================================ -->
+  <QuestDefinition Name="Deeds_Regular_EconomyAndTrade_Stage2_B" Category="Deeds" SubCategory="Regular">
+
+    <!--============ TAGS ============-->
+    <Tags>BeginTurn,Hidden,TechnologyStageDefinitionEconomyAndTrade2</Tags>
+
+    <!--============ CONTEXT ============-->
+    <QuestContextMulti>
+      <Distribution Type="FreeForAll"/>
+    </QuestContextMulti>
+
+    <!--============ OCCURRENCE RULES ============-->
+    <RepetitionRules  NumberOfOccurrencesPerGame="1"/>
+
+    <!--============ VARIABLES ============-->
+    <Vars>
+
+      <Var VarName="$AllEmpires">
+        <From Source="$Empires"/>
+      </Var>
+
+      <Var VarName="$DustObjective" IntValue="125"/>
+      <Var VarName="$Expression" StringValue="MaxProperty(Context, @'EmpireTypeMajor/ClassColonizedStarSystem',NetSystemMoney)"/>
+
+      <LocalizationVar LocalizationKey="$DustAmount" Source="$DustObjective"/>
+
+      <Var VarName="$Path" StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageEconomyAndTrade2"/>
+
+    </Vars>
+
+    <!--============ PREREQUISITES ============-->
+    <Prerequisites Target="$(Empires)" AnyTarget="true">
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EconomyAndTrade_Stage2_A" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EconomyAndTrade_Stage2_A" QuestState="Completed"/>
+
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_EconomyAndTrade_Stage2_A" QuestState="NotStarted"/>
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_EconomyAndTrade_Stage2_C" QuestState="NotStarted"/>
+
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EconomyAndTrade_Stage2_C" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EconomyAndTrade_Stage2_C" QuestState="Completed"/>
+    </Prerequisites>
+
+    <!--============ STEPS ============-->
+    <Steps>
+      <!--============ Step 1 ============-->
+      <Step Name="Step1">
+        <ObjectiveSet>
+
+          <!--Teams are created here that's why the following variable must be set here-->
+          <Vars>
+            <Var VarName="$CurrentEmpire">
+              <From Source="$Team"/>
+            </Var>
+          </Vars>
+
+          <Objective Name="Deeds_Regular_EconomyAndTrade_Stage2_B-Objective" StartValue="0" EndValue="$DustObjective">
+            <Parallel CompletionPolicy="All">
+
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_IsProgressionComplete>
+                    <Input_Context VarName="$CurrentEmpire"/>
+                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                    <Input_Expression VarName="$Expression"/>
+                  </Condition_IsProgressionComplete>
+                </Decorator_BeginTurn>
+              </Sequence>
+
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckPath>
+                    <Input_SimulationObject VarName="$CurrentEmpire"/>
+                    <Input_Path VarName="$Path"/>
+                  </Condition_CheckPath>
+                </Decorator_BeginTurn>
+              </Sequence>
+
+            </Parallel>
+          </Objective>
+          <Reward Droplist="DroplistRegularDeedsStage2Quadrant2Bis" Picks="1"/>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+
+  </QuestDefinition>
+
+  <!-- ============================================
+     ============ DEEDS: ECONOMY & TRADE ============
+     ================================================ -->
+  <QuestDefinition Name="Deeds_Regular_EconomyAndTrade_Stage3_A" Category="Deeds" SubCategory="Regular">
+
+    <!--============ TAGS ============-->
+    <Tags>BeginTurn,Hidden,TechnologyStageDefinitionEconomyAndTrade3</Tags>
+
+    <!--============ CONTEXT ============-->
+    <QuestContextMulti>
+      <Distribution Type="FreeForAll"/>
+    </QuestContextMulti>
+
+    <!--============ OCCURRENCE RULES ============-->
+    <RepetitionRules  NumberOfOccurrencesPerGame="1"/>
+
+    <!--============ VARIABLES ============-->
+    <Vars>
+
+      <Var VarName="$AllEmpires">
+        <From Source="$Empires"/>
+      </Var>
+
+      <Var VarName="$MinNumberOfSystemsInSameConstellation" IntValue="2"/>
+      <Var VarName="$ConstellationSystemsObjective" IntValue="5"/>
+      <Var VarName="$Count"/>
+      <Var VarName="$Expression" StringValue="$(Count)"/>
+
+      <LocalizationVar LocalizationKey="$SystemAmount" Source="$ConstellationSystemsObjective"/>
+
+      <Var VarName="$Path" StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageEconomyAndTrade3"/>
+
+    </Vars>
+
+    <!--============ PREREQUISITES ============-->
+    <Prerequisites Target="$(Empires)" AnyTarget="true">
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EconomyAndTrade_Stage3_B" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EconomyAndTrade_Stage3_B" QuestState="Completed"/>
+
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_EconomyAndTrade_Stage3_B" QuestState="NotStarted"/>
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_EconomyAndTrade_Stage3_C" QuestState="NotStarted"/>
+
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EconomyAndTrade_Stage3_C" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EconomyAndTrade_Stage3_C" QuestState="Completed"/>
+    </Prerequisites>
+
+    <!--============ STEPS ============-->
+    <Steps>
+      <!--============ Step 1 ============-->
+      <Step Name="Step1">
+        <ObjectiveSet>
+
+          <!--Teams are created here that's why the following variable must be set here-->
+          <Vars>
+            <Var VarName="$CurrentEmpire">
+              <From Source="$Team"/>
+            </Var>
+          </Vars>
+
+          <Objective Name="Deeds_Regular_EconomyAndTrade_Stage3_A-Objective" StartValue="0" EndValue="$ConstellationSystemsObjective">
+            <Parallel CompletionPolicy="All">
+
+              <Sequence>
+                <Decorator_BeginTurn>
+
+                  <!-- InSameConstellation allows to take into account only the systems in a specific constellation (the one with the most counted systems in it) -->
+                  <Condition_HasSystems InSameConstellation="true" >
+                    <Input_Empires VarName="$CurrentEmpire"/>
+                    <Input_MinimumAmount VarName="$MinNumberOfSystemsInSameConstellation"/>
+                    <!-- Retrieve the number of systems that was counted. -->
+                    <Output_Count VarName="$Count"/>
+                  </Condition_HasSystems>
+
+                  <Condition_IsProgressionComplete>
+                    <Input_Context VarName="$CurrentEmpire"/>
+                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                    <Input_Expression VarName="$Expression"/>
+                  </Condition_IsProgressionComplete>
+
+                </Decorator_BeginTurn>
+              </Sequence>
+
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckPath>
+                    <Input_SimulationObject VarName="$CurrentEmpire"/>
+                    <Input_Path VarName="$Path"/>
+                  </Condition_CheckPath>
+                </Decorator_BeginTurn>
+              </Sequence>
+
+            </Parallel>
+          </Objective>
+          <Reward Droplist="DroplistRegularDeedsStage3Quadrant2Bis" Picks="1"/>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+
+  </QuestDefinition>
+</Datatable>

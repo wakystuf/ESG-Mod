@@ -45,6 +45,7 @@
 | `Log(number, base)`                                    | Return the logarithm of number in the given base
 | `Logn(number)`                                         | Return the natural logarithm of number (base e)
 | `Exp(number)`                                          | Return the Exponential of number.
+| `Pow(number, exponent)								 | Return number raised to the exponent
 | `$(ContextKey)`                                        | Return the object assotiated to ContextKey in the interpreter context 
 | `Registry(RegistryPath)`                               | Return the value stored in game registry at path RegistryPath
 | `Format(expression, arg1, arg2, ...)`                  | Format the string expression with arguments
