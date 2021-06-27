@@ -221,4 +221,27 @@
         <ScoreProviderEventOnSelf>MinorEmpireAssimilated</ScoreProviderEventOnSelf>
     </AssimilateEmpireAction>
 
+    <!-- Minor empire actions. -->
+    <GhostifyEmpireAction Name="GhostifyEmpireAction" HidePanelOnClick="true">
+        <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * 200 * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Property(StockLocation,@ClassEmpire,SystemCount)</CustomCost>
+
+        <PathPrerequisite Flags="Prerequisite,Disable,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
+
+        <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
+
+        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
+        <StatePrerequisite Inverted="true" Flags="Prerequisite,Disable,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
+
+        <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 100</RelationInterpreterPrerequisite>
+
+        <MinorEmpireInterpreterPrerequisite Flags="Disable,OwnershipType">$(OwnershipType) lt 2 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
+        <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpirePurge</PopulationEventOnSelf>
+        <ScoreProviderEventOnSelf>MinorEmpireAssimilated</ScoreProviderEventOnSelf>
+    </GhostifyEmpireAction>
+
+    <GhostifyEmpireAction Name="GhostifyEmpireActionViaQuest" HidePanelOnClick="true">
+        <InterpreterPrerequisite Flags="PrerequisiteWhichCanOnlyFailExceptIfStartedViaTheQuestsSpecialOrder">false</InterpreterPrerequisite>
+    </GhostifyEmpireAction>
+
 </Datatable>
