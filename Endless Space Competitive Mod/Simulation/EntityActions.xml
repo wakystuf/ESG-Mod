@@ -257,4 +257,45 @@
         <PopulationEventOnSelf>PopulationPoliticalEventMinorRecruitShips</PopulationEventOnSelf>
     </EmpireDiplomaticGivePopulationAsShipAction>
 
+    <!-- Praise -->
+    <EmpireDiplomaticActionDynamicCost Name="ComplimentEmpireAction">
+        <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">((20 + Max(0, $(Trend)) * 30) * Property(Relation,MinorPraiseCostMultiplier) * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction)) * Property(StockLocation,@ClassEmpire,MinorFactionCostReduction)</CustomCost>
+        
+        <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">ClassEmpire,AffinityGameplayVenetians</PathPrerequisite>
+        <PathPrerequisite Flags="Prerequisite,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
+        <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
+        
+        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
+        <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
+        
+        <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) lt 100 </RelationInterpreterPrerequisite>
+        <RelationPathPrerequisite Inverted="true" Flags="IsLeeched">ClassMinorRelationWithMajor,MinorRelationLeeched</RelationPathPrerequisite>
+        
+        <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpirePraised</PopulationEventOnSelf>
+        <ScoreProviderEventOnSelf>MinorEmpireBribed</ScoreProviderEventOnSelf>
+        <TemporaryEffect>MinorRelationWithMajorPraise</TemporaryEffect>
+    </EmpireDiplomaticActionDynamicCost>
+
+    <!-- Lumeris Bribe -->
+    <EmpireDiplomaticActionDynamicCost Name="BribeEmpireAction">
+        <CustomCost ResourceName="EmpireMoney" Instant="true">((50 + Max(0, $(Trend)) * 50) * Property(Relation,MinorPraiseCostMultiplier) * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction)) * Property(StockLocation,@ClassEmpire,MinorFactionCostReduction)</CustomCost>
+        
+        <PathPrerequisite Flags="Prerequisite,Discard" >ClassEmpire,AffinityGameplayVenetians</PathPrerequisite>
+        <PathPrerequisite Flags="Prerequisite,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
+        <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
+        
+        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+        <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
+        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
+        
+        <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) lt 100 </RelationInterpreterPrerequisite>
+        <RelationPathPrerequisite Inverted="true" Flags="IsLeeched">ClassMinorRelationWithMajor,MinorRelationLeeched</RelationPathPrerequisite>
+        
+        <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpireBribed</PopulationEventOnSelf>
+        <ScoreProviderEventOnSelf>MinorEmpireBribed</ScoreProviderEventOnSelf>
+
+        <TemporaryEffect>MinorRelationWithMajorBribe</TemporaryEffect>
+    </EmpireDiplomaticActionDynamicCost>
+
 </Datatable>
