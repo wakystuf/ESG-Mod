@@ -244,4 +244,17 @@
         <InterpreterPrerequisite Flags="PrerequisiteWhichCanOnlyFailExceptIfStartedViaTheQuestsSpecialOrder">false</InterpreterPrerequisite>
     </GhostifyEmpireAction>
 
+    <!--Fleet spawning minor-->
+    <EmpireDiplomaticGivePopulationAsShipAction Name="EmpireDiplomaticGivePopulationAsShipAction" HidePanelOnClick="true" PopulationCount="3" FleetCount="1">
+        <MinorLuxuryCost Instant="true">25 * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction)</MinorLuxuryCost>
+        
+        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+        <RelationPathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ClassMinorRelationWithMajor,RelationIdeologyMinorWarmonger</RelationPathPrerequisite>
+        
+        <MinorEmpireInterpreterPrerequisite Flags="Prerequisite,RequiredBestRelation">$(OwnershipType) ge 1 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
+        <MinorEmpireInterpreterPrerequisite Flags="NoPopulationOnSystem">Property(Context, @'ClassEmpire/ClassColonizedStarSystem,MinorHomeSystem',Population,true) gt 3</MinorEmpireInterpreterPrerequisite>
+        
+        <PopulationEventOnSelf>PopulationPoliticalEventMinorRecruitShips</PopulationEventOnSelf>
+    </EmpireDiplomaticGivePopulationAsShipAction>
+
 </Datatable>
