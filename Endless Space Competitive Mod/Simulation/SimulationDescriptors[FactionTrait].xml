@@ -37,6 +37,13 @@
 
   <!--Vodyani-->
   <SimulationDescriptor Name="AffinityGameplayVampirilis" Type="AffinityGameplay">
+    <!--  Composition Sum cannot be used as GameNodes are not in the empire's simulation  -->
+    <Property Name="MaximumTimeBubblesCount" BaseValue="3"/>
+    <!--  Can go up to 6  -->
+    <Property Name="TimeBubblesCount" IsSealed="true"/>
+    <Property Name="TotalTimeBubblesBeingBuiltCount" IsSealed="false"/>
+    <Property Name="TotalTimeBubblesBuiltCount" IsSealed="true"/>
+    
     <Property Name="temp" BaseValue="0"/>
     
     <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeForest" TooltipHidden="true"/>
@@ -58,6 +65,7 @@
     <BinaryModifier TargetProperty="temp" Operation="Multiplication" Left="$(MothershipCount)" BinaryOperation="Subtraction" Right="1" Path="ClassEmpire,AffinityGameplayVampirilis" SearchValueFromPath="true" Priority="2" TooltipHidden="true"/>
     <Modifier TargetProperty="temp" Operation="Division" Value="2" Priority="3" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Left="$(temp)" BinaryOperation="Multiplication" Right="200" TooltipHidden="true"/>
+
   </SimulationDescriptor>
 
   <!--Unfallen-->
