@@ -340,6 +340,9 @@
             <!--Amout of systems to discover-->
             <Var VarName="$SystemObjectiveAmount" IntValue="10"/>
 
+            <!--Quest requirement lowered to only require cordial relations, not assimilation-->
+            <Var VarName="$RelationState" StringValue="DiplomaticRelationStateMinorCordial"/>  
+
             <!--LOCALIZATION VARIABLE-->
             <LocalizationVar  LocalizationKey="$SystemObjectiveAmountName" Source="$SystemObjectiveAmount"/>
 
@@ -376,6 +379,13 @@
                     <Objective Name="Objective0">
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
                         <!--Assimilate a minor faction-->
+                        <Sequence>
+                            <!--Become Cordial-->
+                            <Decorator_DiplomaticRelationChanged Initiator="Empire">                                  
+                                <Input_DiplomaticRelationState VarName="$RelationState"/>
+                            </Decorator_DiplomaticRelationChanged>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
                         <Sequence>
                             <Decorator_MinorEmpireIntegrated Initiator="Empire"/>
                             <Action_ChooseOutcome Name="Outcome0"/>
