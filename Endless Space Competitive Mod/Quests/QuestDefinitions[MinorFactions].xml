@@ -26,7 +26,7 @@
                 <Expression>SumProperty(Context, @'ClassEmpire/ClassPopulation,PopulationNonMajor', PopulationCount)</Expression>
             </InterpretedVar>
              <InterpretedVar VarName="$TargetAmount" Target="$(Empire)">
-                <Expression>$(PopulationAmount)+3</Expression>
+                <Expression>$(PopulationAmount)+5</Expression>
             </InterpretedVar>
             <Var VarName="$Expression01" StringValue="SumProperty(Context, @'ClassEmpire/ClassPopulation,PopulationNonMajor', PopulationCount)"/>
             <Var VarName="$ByAtWarWithMinor" StringValue="DiplomaticRelationStateMinorAdvancedWar"/>
@@ -307,7 +307,7 @@
             <Var VarName="$DiplomaticRelationStateName" StringValue="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
             <Var VarName="$Timer"/>
             <InterpretedVar VarName="$Amount01" Target="$(Empire)">
-                <Expression>MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem',NetSystemResearch)+50</Expression>
+                <Expression>MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem',NetSystemResearch)+100</Expression>
             </InterpretedVar>
             <InterpretedVar VarName="$Amount02" Target="$(Empire)">
                 <Expression>Property(Context, @ClassEmpire, GameSpeedMultiplier, true)*14</Expression>
@@ -535,7 +535,7 @@
             <DroplistVar VarName="$CuriosityAmount" Droplist="DroplistRandomNumber"/>
             
             <InterpretedVar VarName="$TurnAmount01" Target="$(Empire)">
-                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*6</Expression>
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*3</Expression>
             </InterpretedVar>  
             
             <Var VarName="$One" IntValue="1"/>
@@ -1352,13 +1352,13 @@
                 </Any>
             </Var>         
             
-            <Var VarName="$Amount01" IntValue="100"/>
+            <Var VarName="$Amount01" IntValue="2000"/>
             <Var VarName="$Curiosity01" StringValue="Curiosity_Quest_MinorFaction10"/>   
             <Var VarName="$Curiosity01GUID"/>
             <Var VarName="$Marker01"/>
             <Var VarName="$ByAtWarWithMinor" StringValue="DiplomaticRelationStateMinorAdvancedWar"/>
             <Var VarName="$DiplomaticRelationStateName" StringValue="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
-            <Var VarName="$Amount02" IntValue="-100"/>
+            <Var VarName="$Amount02" IntValue="-2000"/>
             <Var VarName="$ResourceName" StringValue="EmpireMoney"/>
             
             <LocalizationVar LocalizationKey="$MinorFactionName" Source="$MinorEmpire"/>
@@ -1509,10 +1509,10 @@
             <Var VarName="$QuestCuriosity" StringValue="Curiosity_Quest_MinorFaction11"/>
             <Var VarName="$Marker01"/>
             <Var VarName="$QuestCuriosityGUID"/>
-            <Var VarName="$Amount" IntValue="7"/>
+            <Var VarName="$Amount" IntValue="10"/>
             <Var VarName="$DiplomaticRelationStateName" StringValue="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
-            <Var VarName="$Amount02" IntValue="-7"/>
-            <Var VarName="$ResourceName" StringValue="Strategic1"/>
+            <Var VarName="$Amount02" IntValue="-10"/>
+            <Var VarName="$ResourceName" StringValue="Strategic4"/>
             <LocalizationVar LocalizationKey="$AmountName" Source="$Amount"/>
             <LocalizationVar LocalizationKey="$CloseSystemPlanetName" Source="$CloseSystemPlanet"/>
 
@@ -1631,7 +1631,7 @@
             </Var>
             
             <InterpretedVar VarName="$Amount01" Target="$(Empire)">
-                <Expression>Count(Context, @../ClassEmpire/ColonizedStarSystemStateColony)*3</Expression>                
+                <Expression>Count(Context, @../ClassEmpire/ColonizedStarSystemStateColony)*5</Expression>                
             </InterpretedVar>
 
             <Var VarName="$Timer"/>
@@ -1737,10 +1737,10 @@
        <Tags>MinorFactionQuest</Tags>
         <QuestContextSolo/>
 
-        <RepetitionRules  NumberOfOccurrencesPerGame="2"
-                          NumberOfOccurrencesPerEmpire="1"
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="0"
                           NumberOfConcurrentInstances="0"
-                          Cooldown="5"/>
+                          Cooldown="99"/>
 
         <!--============ VARIABLES ============-->
         <Vars>
@@ -1762,7 +1762,7 @@
             <DroplistVar VarName="$Fleet01" Droplist="ShipToProtect"/>
             <Var VarName="$Fleet01GUID"/>
             <InterpretedVar VarName="$Amount01" Target="$(Empire)">
-                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*16</Expression>
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*8</Expression>
             </InterpretedVar>
             
             <Var VarName="$Path" StringValue="ClassEmpire/ClassGarrison"/>
@@ -1779,6 +1779,12 @@
        <!--============ PREREQUISITES ============-->
         <Prerequisites Target="$(Context)" AnyPrerequisite="true">
             <PathPrerequisite Flags="Prerequisite">EmpireTypeMinor, FamilyInsectoids</PathPrerequisite>
+        </Prerequisites>
+
+        <!--It is impossible for both of these conditions to be true, effectively removing this stupid quest (as it is entirely trivialized by free moving the ship and waiting X turns)-->
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire/ClassPopulationEmpireAffinityUmbralChoir</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite" Inverted="false">ClassEmpire/ClassPopulationEmpireAffinityUmbralChoir</PathPrerequisite>
         </Prerequisites>
 
         <!--============ STEPS ============-->
@@ -1896,8 +1902,8 @@
             <Var VarName="$ByAtWarWithMinor" StringValue="DiplomaticRelationStateMinorAdvancedWar"/>
             <Var VarName="$DiplomaticRelationStateName" StringValue="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
             <Var VarName="$Marker01"/>
-            <Var VarName="$Amount00" IntValue="54"/>
-            <Var VarName="$Amount01" IntValue="55"/>
+            <Var VarName="$Amount00" IntValue="499"/>
+            <Var VarName="$Amount01" IntValue="500"/>
             <Var VarName="$Amount02" IntValue="1"/>
 
             <Var VarName="$OneFleet"/>
@@ -2172,10 +2178,10 @@
 
             <!--Military Politic-->
             <Var VarName="$PoliticsName" StringValue="Politics06"/>
-            <!--Percentage = 30% -->
-            <Var VarName="$MinimumPercentage" IntValue="30"/>
+            <!--Percentage = 20% -->
+            <Var VarName="$MinimumPercentage" IntValue="20"/>
             <!--In X Systems -->
-            <Var VarName="$MinimumSystemAmount" IntValue="2"/>
+            <Var VarName="$MinimumSystemAmount" IntValue="1"/>
             
             <LocalizationVar LocalizationKey="$MinorFactionName" Source="$MinorEmpire"/>
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
@@ -2276,11 +2282,11 @@
             <Var VarName="$DiplomaticRelationStateName" StringValue="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
           
             <InterpretedVar VarName="$Amount01" Target="$(Empire)">
-                <Expression>Min(70, Property(Context, @../ClassEmpire, Happiness)+10)</Expression>
+                <Expression>Min(95, Property(Context, @../ClassEmpire, Happiness)+5)</Expression>
             </InterpretedVar>
 
             <InterpretedVar VarName="$Amount02" Target="$(Empire)">
-                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*10</Expression>
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*4</Expression>
             </InterpretedVar>
             
             <LocalizationVar LocalizationKey="$MinorFactionName" Source="$MinorEmpire"/>
