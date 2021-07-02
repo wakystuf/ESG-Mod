@@ -1,0 +1,1882 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+    
+    <!-- ####################################### -->
+    <!--               VAMPIRILIS QUEST            -->
+    <!-- ####################################### -->
+  
+    <!-- ##### VAMPIRILIS QUEST 00 #####-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter0" Category="MajorQuest" SubCategory="" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>Hidden,BeginTurn</Tags>
+
+        <QuestContextMulti ParticipantsVarName="$Players"/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$Players">
+                <From Source="$Empires">
+                    <Where>
+                        <PathPrerequisite Flags="Prerequisite">ClassEmpire,EmpireTypeMajor</PathPrerequisite>
+                        <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityVampirilis,PopulationMajor') ge 1</InterpreterPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+            <Var VarName="$TabernacleSystem" AutoLockTargets="true">
+                <Any>
+                    <From Source="$Constellations.$StarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+           
+            <Var VarName="$DefinitionName" StringValue="QuestNodeRebel"/>
+            <Var VarName="$TabernacleDescriptor" StringValue="TabernacleSystem"/>            
+            <Var VarName="$AllEmpires">
+                <From Source="$Empires"/>
+            </Var>
+          
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_ApplyStarSystemDefinition>
+                                <Input_DefinitionName VarName="$DefinitionName"/>
+                                <Input_StarSystemNode VarName="$TabernacleSystem"/>
+                        </Action_ApplyStarSystemDefinition>
+                        <Action_ApplyDescriptor>
+                            <Input_DescriptorName VarName="$TabernacleDescriptor"/>
+                            <Input_Targets VarName="$TabernacleSystem"/>
+                        </Action_ApplyDescriptor>                      
+                        <Action_SetInvisibility Invisible="false">
+                            <Input_Empires VarName="$AllEmpires"/>
+                            <Input_TargetEntities VarName="$TabernacleSystem"/>
+                        </Action_SetInvisibility>                     
+                    </StartActions>
+                    <Objective Name="Step1_Objective1">                        
+                        <Sequence>
+                            <Decorator_BeginTurn></Decorator_BeginTurn>
+                           
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <QuestDefinition Name="VampirilisQuest-Chapter1" Category="MajorQuest" SubCategory="Vampirilis" MinimumTurn="5">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn,VampirilisQuest-Chapter1</Tags>
+
+        <QuestContextSolo/>
+        
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <Vars>
+            <!--Define Location where we spwan Pirate fleet-->
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$HomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>          
+         
+            <!--The pirate location shouldn't be on isolated node-->
+            <Var VarName="$ConstellationStarSystems">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>                                   
+                        <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                        <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>                     
+                    </Where>                 
+                </From>
+             </Var>
+            <!--Take several System where we spawn fleet, avoiding puting on the same node-->
+            <Var VarName="$StarSystemToChoose">                
+                    <From Source="$ConstellationStarSystems">
+                        <OrderBy>
+                            <SortSystemByDistance OriginVarName="$HomeSystem" SortBy="Farthest" MinimumDistance="10" MaximumDistance="40" MinimumCandidateCount="2"/>
+                        </OrderBy>
+                    </From>  
+            </Var>
+            <!--Take 2 Systems-->
+            <Var VarName="$StarSystem01" IgnoreLockedTargets="true">
+                <First>
+                    <From Source="$StarSystemToChoose"/>
+                </First>
+            </Var>
+            <Var VarName="$StarSystem02" IgnoreLockedTargets="true">
+                <First>
+                    <From Source="$StarSystemToChoose">
+                        <Where>
+                            <IsNot EntityVarName="$StarSystem01"/>
+                        </Where>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$TabernacleSystem" IgnoreLockedTargets="true">
+                <Any>
+                    <From Source="$Constellations.$StarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassStarSystem,TabernacleSystem</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$TabernaclePlanet">
+                <Any>
+                    <From Source="$TabernacleSystem.$Planets">
+                    </From>
+                </Any>
+            </Var>
+
+            <!--Define the Fleets we want to spawn-->
+            <DroplistVar VarName="$FleetToSpawn01" Droplist="PirateFleet01"/>
+            <Var VarName="$PirateShipDesign" StringValue="ShipDesignSmallAttackerPirate01"/>
+            <Var VarName="$GUID01"/>
+            <DroplistVar VarName="$FleetToSpawn02" Droplist="PirateFleet01"/>
+            <Var VarName="$GUID02"/>            
+            <!--Define the Lesser Empire-->
+            <Var VarName="$OtherEmpire">
+                <Any>
+                    <From Source="$LesserEmpire">
+                    </From>
+                </Any>
+            </Var>
+            <!--Fleet Behaviours-->
+            <Var VarName="$FleetMissionDefinitionName01" StringValue="DefendSystem"/>
+            <Var VarName="$FleetMissionDefinitionName02" StringValue="DefendSystem"/>
+            <Var VarName="$MissionGUID1"/>
+            <Var VarName="$MissionGUID2"/>
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Marker02"/>         
+            <!--Localization given-->
+            <LocalizationVar VarName="$SystemName01" Source="$StarSystem01"/>
+            <LocalizationVar VarName="$SystemName02" Source="$StarSystem02"/>
+
+            <!--POLITICAL EFFECT LAUNCHED FROM THE BEGINNING-->
+            <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventVampirilis01Religious"/>
+            <Var VarName="$Descriptor02" StringValue="CannotBeDestroyed"/>
+        </Vars>
+        
+        <!--============ PREREQUISITE ============-->
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityVampirilis,PopulationMajor</PathPrerequisite>      
+        </Prerequisites>
+        
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                        <!--Spawn the First Fleet-->
+                        <Action_SpawnFleets>
+                            <Input_Empire VarName="$OtherEmpire"/>
+                            <Input_Locations VarName="$StarSystem01"/>
+                            <Input_DroppableFleet VarName="$FleetToSpawn01"/>
+                            <Output_FleetGUIDs VarName="$GUID01"/>
+                        </Action_SpawnFleets>
+                        <!--Assign a behavior to it-->
+                        <Action_CreateFleetMissions>
+                            <Input_MissionDefinitionName VarName="$FleetMissionDefinitionName01"/>
+                            <Input_FleetGUIDs VarName="$GUID01"/>
+                            <Input_TargetEmpires VarName="$CurrentEmpire"/>
+                            <Output_MissionGUIDs VarName="$MissionGUID1"/>
+                        </Action_CreateFleetMissions>
+                        <!--Spawn the Second Fleet-->
+                        <Action_SpawnFleets>
+                            <Input_Empire VarName="$OtherEmpire"/>
+                            <Input_Locations VarName="$StarSystem02"/>
+                            <Input_DroppableFleet VarName="$FleetToSpawn02"/>
+                            <Output_FleetGUIDs VarName="$GUID02"/>
+                        </Action_SpawnFleets>
+                        <!--Assign a behavior to it-->
+                        <Action_CreateFleetMissions>
+                            <Input_MissionDefinitionName VarName="$FleetMissionDefinitionName02"/>
+                            <Input_FleetGUIDs VarName="$GUID02"/>
+                            <Input_TargetEmpires VarName="$CurrentEmpire"/>
+                            <Output_MissionGUIDs VarName="$MissionGUID2"/>
+                        </Action_CreateFleetMissions>
+                        <!--Add a Quest Marker for the first Fleet-->
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$StarSystem01"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                        <!--Add a Quest Marker for the second Fleet-->
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$StarSystem02"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker02"/>
+                        </Action_AddQuestMarkers>
+                        <Action_ApplyDescriptor>
+                            <Input_DescriptorName VarName="$Descriptor02"/>
+                            <Input_Targets VarName="$TabernaclePlanet"/>
+                        </Action_ApplyDescriptor>
+                    </StartActions>
+                    <Objective Name="Step1_Objective1" StartValue="0" EndValue="2">
+						<AIHint Category="DestroyFleet" Motivation="0.7">
+							<Input_Var VarName="$GUID01"/>
+							<Input_Var VarName="$GUID02"/>
+						</AIHint>
+                        <Sequence>
+                            <!--Destroy all the Pirate fleets-->
+                            <!--No matter which one first-->
+                        <Parallel CompletionPolicy="All">
+                            <Sequence>
+                                <!--All battles increase the progression Increment in Objective-->
+                                <!--Be aware that all Empires can defeat those fleet including Minor Factions-->
+                                <Decorator_BattleEnded Status="Won" ProgressionIncrement="1">
+                                    <Condition_BattleEnded_FleetDestroyed>                                        
+                                        <Input_FleetGUIDs VarName="$GUID01"/>                                        
+                                    </Condition_BattleEnded_FleetDestroyed>                                    
+                                </Decorator_BattleEnded>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                            </Sequence>                            
+                            <Sequence>
+                            <Decorator_BattleEnded Status="Won" ProgressionIncrement="1">
+                                <Condition_BattleEnded_FleetDestroyed>
+                                    <Input_FleetGUIDs VarName="$GUID02"/>                                    
+                                </Condition_BattleEnded_FleetDestroyed>                                   
+                            </Decorator_BattleEnded>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker02"/>
+                                </Action_RemoveQuestMarkers>
+                            </Sequence>                                                    
+                        </Parallel>
+                            <!--Take the corresponding outcome: drive to the right chapter-->
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuestChapter1.2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                </ObjectiveSet>
+                <Reward Droplist="DroplistStrategicsEra2" Picks="1"/>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!--         VAMPIRILIS QUEST Chapter1 - STEP2   -->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter1-Step2" Category="MajorQuest" SubCategory="Vampirilis">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuestChapter1.2</Tags>
+
+        <QuestContextSolo/>
+        
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            
+            <Var VarName="$MyHomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+            <!--Define at least 4 Systems: they should correspond to the defined distance.-->
+            <!--But the "Mimimum Candidate Count" provide at least 4 "near" systems  -->
+            <Var VarName="$StarSystemToChoose">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>
+                        <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                    </Where>
+                    <OrderBy>                        
+                        <SortSystemByDistance OriginVarName="$MyHomeSystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="60" MinimumCandidateCount="4"/>
+                    </OrderBy>
+                </From>
+            </Var>
+        <!--Define Where to spawn the Curiosities: be sure this objective will not take to many time-->
+            <Var VarName="$FirstSystem">
+                <First>
+                    <From Source="$StarSystemToChoose"/>                    
+                </First>
+            </Var>
+            <Var VarName="$FirstSystemPlanet">
+                <Any>
+                    <From Source="$FirstSystem.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$SecondSystem">
+                <First>
+                    <From Source="$StarSystemToChoose">
+                        <Where>
+                            <IsNot EntityVarName="$FirstSystem"/>
+                        </Where>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$SecondSystemPlanet">
+                <Any>
+                    <From Source="$SecondSystem.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$ThirdSystem">
+                <First>
+                    <From Source="$StarSystemToChoose">
+                        <Where>
+                            <IsNot EntityVarName="$FirstSystem"/>
+                            <IsNot EntityVarName="$SecondSystem"/>
+                        </Where>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$ThirdSystemPlanet">
+                <Any>
+                    <From Source="$ThirdSystem.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$FourthSystem">
+                <First>
+                    <From Source="$StarSystemToChoose">
+                        <Where>
+                            <IsNot EntityVarName="$FirstSystem"/>
+                            <IsNot EntityVarName="$SecondSystem"/>
+                            <IsNot EntityVarName="$ThirdSystem"/>
+                        </Where>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$FourthSystemPlanet">
+                <Any>
+                    <From Source="$FourthSystem.$Planets"/>
+                </Any>
+            </Var>
+            <!--Will be visible only for the Current Empire-->
+            <Var VarName="$CuriosityName" StringValue="Curiosity_Loot_Ruins_Era1"/>
+            <Var VarName="$CuriosityType" StringValue="CuriosityTypeRuins"/>
+            <!--How many time the Curiosities will be spawned. Min, the loop will be used once-->         
+            <InterpretedVar VarName="$CuriositySpawnLoop" Target="$(Empire)">
+                <Expression>Min(1,(Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*1))</Expression>
+            </InterpretedVar>
+            <!--How many curiosities the player has to search depending on the game speed-->
+            <InterpretedVar VarName="$CuriosityAmount" Target="$(Empire)">
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true) *4</Expression>
+            </InterpretedVar>
+            <!--Partner no longer exist. It still has the same name but it is "Brainwashed" status now-->
+            <Var VarName="$RelationState" StringValue="DiplomaticRelationStateMinorAdvancedBrainwashed"/>           
+            <!--POLITICAL EFFECT LAUNCHED FROM THE BEGINNING-->
+            <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventVampirilis01.2Religious"/>
+            
+            <LocalizationVar Source="$CuriosityAmount" LocalizationKey="$CuriosityAmountName"/>
+            
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+                <!--============ STEP 1 - Industry ============-->
+                <ObjectiveSet>
+                    <Objective Name="Step2_1_Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Parallel CompletionPolicy="Any">
+                            <Sequence>
+                                <!--Become "Brainwashed"-->
+                                <Decorator_DiplomaticRelationChanged Initiator="Empire">                                  
+                                    <Input_DiplomaticRelationState VarName="$RelationState"/>
+                                </Decorator_DiplomaticRelationChanged>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_MinorEmpireIntegrated Initiator="Empire">                               
+                                </Decorator_MinorEmpireIntegrated>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                        </Parallel>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistPacifistChapter1" Picks="1"/>
+                </ObjectiveSet>
+                <!--============ STEP 2 - RELIGIOUS ============-->
+                <ObjectiveSet>                    
+                    <StartActions>
+                        <!--Increase Religion-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>                        
+                    </StartActions>                    
+                    <Objective Name="Step2_2_Objective1" StartValue="0" EndValue="$CuriosityAmount">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Loop>
+                                <!--Spawn Curiosities: just to be sure that the quest is possible/Not too difficult-->
+                                <!--Spawned Curiosities: Visible only be the "CurrentEmpire"-->
+                                <Action_SpawnCuriosity>
+                                    <Input_Empires VarName="$CurrentEmpire"/>
+                                    <Input_Planets VarName="$FirstSystemPlanet"/>                                    
+                                    <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                                </Action_SpawnCuriosity>
+                                <Action_SpawnCuriosity>
+                                    <Input_Empires VarName="$CurrentEmpire"/>
+                                    <Input_Planets VarName="$SecondSystemPlanet"/>
+                                    <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                                </Action_SpawnCuriosity>
+                                <Action_SpawnCuriosity>
+                                    <Input_Empires VarName="$CurrentEmpire"/>
+                                    <Input_Planets VarName="$ThirdSystemPlanet"/>
+                                    <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                                </Action_SpawnCuriosity>
+                                <Action_SpawnCuriosity>
+                                    <Input_Empires VarName="$CurrentEmpire"/>
+                                    <Input_Planets VarName="$FourthSystemPlanet"/>
+                                    <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                                </Action_SpawnCuriosity>
+                                <!--The Loop duration depends on the Game Speed-->
+                                <Input_Count VarName="$CuriositySpawnLoop"/>
+                            </Loop>
+                            <Loop>
+                                <!--Discover X Curiosities-->
+                                <Decorator_CuriosityDiscovered Initiator="Empire" ProgressionIncrement="1">
+                                    <Input_DisplayedType VarName="$CuriosityType"/>
+                                </Decorator_CuriosityDiscovered>                               
+                                <Input_Count VarName="$CuriosityAmount"/>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome2"/>
+                        </Sequence>
+                        <Outcome Name="Outcome2">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistScienceChapter1" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+            
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!--           VAMPIRILIS QUEST Chapter 2         -->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter2" Category="MajorQuest" SubCategory="Vampirilis" AlternateVersion="VampirilisQuest-Chapter2Ter">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuest-Chapter2</Tags> 
+
+        <QuestContextSolo/>
+        
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$AllEmpires">
+                <From Source="$MajorEmpires"/>
+            </Var>
+            
+            <Var VarName="$VampirilisEmpire">
+                <From Source="$Empires">
+                    <Where>
+                        <IsNot EntityVarName="$CurrentEmpire"/>
+                        <PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassPopulationEmpireAffinityVampirilis</PathPrerequisite>                   
+                    </Where>
+                </From>
+            </Var>
+            
+            <Var VarName="$HomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+            <Var VarName="$HomeConstellation">
+                <From Source="$HomeSystem.$Constellation"/>
+            </Var>          
+            <Var VarName="$TabernacleSystem" IgnoreLockedTargets="true">
+                <Any>
+                    <From Source="$Constellations.$StarSystems">                    
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassStarSystem,TabernacleSystem</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+             </Var>
+            <Var VarName="$TabernaclePlanet">
+                <Any>
+                    <From Source="$TabernacleSystem.$Planets">                        
+                    </From>
+                </Any>
+            </Var>            
+            <Var VarName="$Expression01" StringValue="ClassEmpire/ClassColonizedStarSystem,TabernacleSystem"/>
+            <Var VarName="$CuriosityToSpawn" StringValue="Curiosity_Quest_Vampirilis"/>
+            <Var VarName="$GUID01"/>
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Marker02"/>
+            <Var VarName="$Descriptor01" StringValue="TabernacleSystem"/>
+            <Var VarName="$Descriptor02" StringValue="CannotBeDestroyed"/>
+            <Var VarName="$NewSystemName" StringValue="TabernacleName"/>
+            <LocalizationVar Source="$TabernacleSystem" LocalizationKey="$TabernacleSystemName"/>
+            <!--POLITICAL EFFECT LAUNCHED FROM THE BEGINNING-->
+            <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventVampirilis02Religious"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+     
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0">
+                        <Prerequisites Target="$(Empire)">
+                            <GameSettingPrerequisite Flags="NoSuperWeaponsAllowedQuestPrerequisite,Disable">AllowSuperWeapons,True</GameSettingPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+                <!--============ STEP 1 - Industry ============-->
+                <ObjectiveSet>
+                    <StartActions>                        
+                        <!--REBELLION politic is Neutral-->
+                        <Action_AddQuestMarkers RevealsLocation="true">
+                            <Input_Targets VarName="$TabernacleSystem"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$TabernaclePlanet"/>
+                            <Input_CuriosityDefinition VarName="$CuriosityToSpawn"/>
+                            <Output_CuriosityGUIDs VarName="$GUID01"/>
+                        </Action_SpawnCuriosity>                       
+                    </StartActions>
+                    <Objective Name="Step2_1_Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <!--Reveal the Curiosity-->
+                            <!--Notice that Hero prerequisite are in the Curiosity Definition itself-->
+                            <Decorator_CuriosityDiscovered>
+                                <Input_CuriosityGUIDs VarName="$GUID01"/>
+                            </Decorator_CuriosityDiscovered>                            
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter3-Rebellious-Step1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward02" Picks="1"/>
+                </ObjectiveSet>
+                <!--============ STEP 2 - RELIGIOUS ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Religious Objective-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_AddQuestMarkers RevealsLocation="true">
+                            <Input_Targets VarName="$TabernacleSystem"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker02"/>
+                        </Action_AddQuestMarkers>
+                        
+                    </StartActions>
+                    <Objective Name="Step2_2_Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />                        
+                            <Parallel CompletionPolicy="First">                                
+                                <Sequence>   
+                                    <Decorator_BeginTurn>
+                                        <Condition_CheckPath>
+                                            <Input_SimulationObject VarName="$CurrentEmpire"/>
+                                            <Input_Path VarName="$Expression01"/>
+                                        </Condition_CheckPath>
+                                    </Decorator_BeginTurn>  
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker02"/>
+                                    </Action_RemoveQuestMarkers>                                   
+                                    <Action_ChooseOutcome Name="Outcome1"/>
+                                </Sequence>
+                                
+                                <Sequence>                                   
+                                    <Decorator_BeginTurn>
+                                        <Condition_CheckPath Composition="Any">
+                                            <Input_SimulationObject VarName="$VampirilisEmpire"/>
+                                            <Input_Path VarName="$Expression01"/>
+                                        </Condition_CheckPath>
+                                    </Decorator_BeginTurn>  
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker02"/>
+                                    </Action_RemoveQuestMarkers>                                    
+                                    <Action_ChooseOutcome Name="Outcome2"/>                                    
+                                </Sequence>
+                            
+                            </Parallel> 
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter3-Religious</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>                       
+                        <Outcome Name="Outcome2">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter2Alt</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                        
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward01" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!--           VAMPIRILIS QUEST Chapter 2         -->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter2Ter" Category="MajorQuest" SubCategory="Vampirilis">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuest-Chapter2</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>          
+
+            <Var VarName="$HomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+            <Var VarName="$HomeConstellation">
+                <From Source="$HomeSystem.$Constellation"/>
+            </Var>        
+            <!--Define a System where spawn the Tabernacle -->
+            <!--Could be a Minor Home System (because of Tiny map) -->
+            
+            <Var VarName="$TabernacleSystem" IgnoreLockedTargets="true">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>
+                        <PathPrerequisite Flags="Prerequisite">ClassStarSystem,TabernacleSystem</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+            <Var VarName="$TabernaclePlanet">
+                <Any>
+                    <From Source="$TabernacleSystem.$Planets">
+                    </From>
+                </Any>
+            </Var>
+
+            <Var VarName="$CuriosityToSpawn" StringValue="Curiosity_Quest_Vampirilis"/>
+            <Var VarName="$GUID01"/>
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Marker02"/>
+            <Var VarName="$Descriptor01" StringValue="TabernacleSystem"/>           
+            <LocalizationVar Source="$TabernacleSystem" LocalizationKey="$TabernacleSystemName"/>
+            <!--POLITICAL EFFECT LAUNCHED FROM THE BEGINNING-->
+            <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventVampirilis02Religious"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0">
+                        <Prerequisites Target="$(Empire)">
+                            <GameSettingPrerequisite Flags="NoSuperWeaponsAllowedQuestPrerequisite,Disable">AllowSuperWeapons,True</GameSettingPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+                <!--============ STEP 1 - Industry ============-->
+                <ObjectiveSet>
+                    <StartActions>                      
+                        <!--REBELLION politic is Neutral-->
+                        <Action_AddQuestMarkers RevealsLocation="true">
+                            <Input_Targets VarName="$TabernacleSystem"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$TabernaclePlanet"/>
+                            <Input_CuriosityDefinition VarName="$CuriosityToSpawn"/>
+                            <Output_CuriosityGUIDs VarName="$GUID01"/>
+                        </Action_SpawnCuriosity>                      
+                    </StartActions>
+                    <Objective Name="Step2_1_Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <!--Reveal the Curiosity-->
+                            <!--Notice that Hero prerequisite are in the Curiosity Definition itself-->
+                            <Decorator_CuriosityDiscovered>
+                                <Input_CuriosityGUIDs VarName="$GUID01"/>
+                            </Decorator_CuriosityDiscovered>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>                            
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter3-Rebellious-Step1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward02" Picks="1"/>
+                </ObjectiveSet>
+                <!--============ STEP 2 - RELIGIOUS ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Religious Objective-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_AddQuestMarkers RevealsLocation="true">
+                            <Input_Targets VarName="$TabernacleSystem"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker02"/>
+                        </Action_AddQuestMarkers>
+                        <Action_ApplyDescriptor>
+                            <Input_DescriptorName VarName="$Descriptor01"/>
+                            <Input_Targets VarName="$TabernacleSystem"/>
+                        </Action_ApplyDescriptor>                        
+                    </StartActions>
+                    <Objective Name="Step2_2_Objective1">   
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />                   
+                                <Parallel CompletionPolicy="First">
+                                    <Sequence>
+                                        <!--Why not only use the Mothership Decorator ?-->
+                                        <!--Because this Quest could be launch without MotherShip Affinity-->
+                                        <Decorator_ColonizedSystem Initiator="Empire">
+                                            <Input_System VarName="$TabernacleSystem"/>
+                                        </Decorator_ColonizedSystem>
+                                        <Action_RemoveQuestMarkers>
+                                            <Input_Markers VarName="$Marker02"/>
+                                        </Action_RemoveQuestMarkers>                                        
+                                        <Action_ChooseOutcome Name="Outcome1"/>
+                                    </Sequence>
+                                    <Sequence>
+                                        <Decorator_BeginTurn>
+                                            <Condition_IsSystemOwnedBy>
+                                                <Input_Empire VarName="$CurrentEmpire"/>
+                                                <Input_System VarName="$TabernacleSystem"/>
+                                            </Condition_IsSystemOwnedBy>
+                                        </Decorator_BeginTurn>
+                                        <Action_RemoveQuestMarkers>
+                                            <Input_Markers VarName="$Marker02"/>
+                                        </Action_RemoveQuestMarkers>                                       
+                                        <Action_ChooseOutcome Name="Outcome1"/>
+                                    </Sequence>
+                                    <Sequence>
+                                        <Decorator_MothershipAttached Initiator="Empire">
+                                            <Input_System VarName="$TabernacleSystem"/>
+                                        </Decorator_MothershipAttached>
+                                        <Action_RemoveQuestMarkers>
+                                            <Input_Markers VarName="$Marker02"/>
+                                        </Action_RemoveQuestMarkers>                                        
+                                        <Action_ChooseOutcome Name="Outcome1"/>
+                                    </Sequence> 
+                        </Parallel>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter3-Religious</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>                       
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward01" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!--           VAMPIRILIS QUEST Chapter 2         -->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter2Alt" Category="MajorQuest" SubCategory="Vampirilis">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuest-Chapter2Alt</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var IsGlobal="true" VarName="$TabernacleSystem"/>
+            <Var VarName="$FriendlyVampirilis">
+                <From Source="$Empires">
+                    <Where>
+                        <IsNot EntityVarName="$CurrentEmpire"/>
+                        <PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassColonizedStarSystem,TabernacleSystem</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+            <Var VarName="$DiplomaticRelationStateName" StringValue="DiplomaticRelationStatePeace"/>
+
+           
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->        
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <ObjectiveSet>                    
+                    <Objective Name="Step2_2_Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Parallel CompletionPolicy="Any">
+                                <Sequence>
+                                    <Decorator_DiplomaticRelationChanged>
+                                        <Condition_CheckDiplomaticRelation>
+                                            <Input_Empire VarName="$CurrentEmpire"/>
+                                            <Input_OtherEmpire VarName="$FriendlyVampirilis"/>
+                                            <Input_DiplomaticRelationState VarName="$DiplomaticRelationStateName"/>
+                                        </Condition_CheckDiplomaticRelation>                                       
+                                    </Decorator_DiplomaticRelationChanged>
+                                </Sequence>
+                                <Sequence>
+                                    <Decorator_BeginTurn>
+                                        <Condition_CheckDiplomaticRelation>                                         
+                                                <Input_Empire VarName="$CurrentEmpire"/>
+                                                <Input_OtherEmpire VarName="$FriendlyVampirilis"/>
+                                                <Input_DiplomaticRelationState VarName="$DiplomaticRelationStateName"/>
+                                            </Condition_CheckDiplomaticRelation>                                       
+                                    </Decorator_BeginTurn>
+                                </Sequence>
+                            </Parallel>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>                        
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter3-Religious</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward01" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!--           VAMPIRILIS QUEST Chapter 3         -->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter3-Religious" Category="MajorQuest" SubCategory="Vampirilis">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuest-Chapter3-Religious</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+          
+            <Var VarName="$HomeSystems">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>
+                        <PathPrerequisite Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Min(5, (Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HomeSystem') + 2))</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>Min(5,Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HomeSystem'))</Expression>
+            </InterpretedVar>
+
+            <Var VarName="$Expression01"      StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HomeSystem')"/>
+            
+            <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventVampirilis03Religious"/>
+            
+            <Var VarName="$HappinessStatusSetEmpireName" StringValue="HappinessStatusSetEmpireQuestVampirilis02"/>
+            <Var VarName="$HappinessStatusSetSystemName" StringValue="HappinessStatusSetStarSystemQuestVampirilis02"/>
+            
+            <LocalizationVar LocalizationKey="$MinAmountName" Source="$Amount01"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->     
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+                
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Step1_Objective1" StartValue="$Amount02" EndValue="$Amount01">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                             <Action_SetHappinessStatusSet>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_HappinessStatusSetDefinitionName VarName="$HappinessStatusSetEmpireName"/>
+                            </Action_SetHappinessStatusSet>
+                            <Action_SetHappinessStatusSet>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_HappinessStatusSetDefinitionName VarName="$HappinessStatusSetSystemName"/>
+                            </Action_SetHappinessStatusSet>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter4-Religious-Step1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward06" Picks="1"/>
+                </ObjectiveSet>
+                
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Step1_Objective2" StartValue="$Amount02" EndValue="$Amount01">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>                         
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter4-Religious-Step1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistLuxuriesEra5" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- #############################################-->
+    <!--           VAMPIRILIS QUEST Chapter 3         -->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter3-Rebellious-Step1" Category="MajorQuest" SubCategory="Vampirilis">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuest-Chapter3-Rebellious-Step1</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$MinAmount01" IntValue="600"/>
+            <Var VarName="$ResourceName" StringValue="EmpireEmpirePoint"/>
+            <LocalizationVar LocalizationKey="$MinAmount01Name" Source="$MinAmount01"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step1_Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_HasResource>
+                                    <Input_Location VarName="$CurrentEmpire"/>
+                                    <Input_ResourceName VarName="$ResourceName"/>
+                                    <Input_Minimum VarName="$MinAmount01"/>
+                                </Condition_HasResource>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter3-Rebellious-Step2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>                    
+                    <Reward Droplist="DroplistMoneyEra4" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!--           VAMPIRILIS QUEST Chapter 3         -->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter3-Rebellious-Step2" Category="MajorQuest" SubCategory="Vampirilis">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuest-Chapter3-Rebellious-Step2</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>    
+            
+            <Var VarName="$Expression01" StringValue="Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,!LawPolitics05,!LawPolitics00') ge 2"/>          
+
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*14</Expression>
+            </InterpretedVar>
+            <Var VarName="$Amount02" IntValue="2"/> 
+
+            <Var VarName="$HappinessStatusSetEmpireName" StringValue="HappinessStatusSetEmpireQuestVampirilis01"/>   
+            <Var VarName="$HappinessStatusSetSystemName" StringValue="HappinessStatusSetStarSystemQuestVampirilis01"/>
+
+            <LocalizationVar Source="$Amount01" LocalizationKey="$Amount01Name"/>
+            <LocalizationVar Source="$Amount02" LocalizationKey="$Amount02Name"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->       
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+                
+                <ObjectiveSet>
+                    <Objective Name="Step2_Objective1" StartValue="0" EndValue="$Amount01">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Loop>
+                                <Decorator_BeginTurn ProgressionIncrement="1">
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression01"/>
+                                    </Condition_CheckInterpreter>                           
+                                </Decorator_BeginTurn>
+                            <Input_Count VarName="$Amount01"/>
+                            </Loop>
+                            <Action_SetHappinessStatusSet>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_HappinessStatusSetDefinitionName VarName="$HappinessStatusSetEmpireName"/>
+                            </Action_SetHappinessStatusSet>
+                            <Action_SetHappinessStatusSet>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_HappinessStatusSetDefinitionName VarName="$HappinessStatusSetSystemName"/>
+                            </Action_SetHappinessStatusSet>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter4-Rebellious-Step1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward05" Picks="1"/>
+                </ObjectiveSet>
+
+                <ObjectiveSet>
+                    <Objective Name="Step2_Objective2" StartValue="0" EndValue="$Amount01">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Loop>
+                                <Decorator_BeginTurn ProgressionIncrement="1">
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression01"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Input_Count VarName="$Amount01"/>
+                            </Loop>                          
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter4-Rebellious-Step1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistTechnologyEmpireDevelopment" EvaluationMethod="Dynamic" Picks="1" PreviewLocalizationKey="%RandomTechnologyTitle"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!--      VAMPIRILIS QUEST Chapter 4 REBELLIOUS    -->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter4-Rebellious-Step1" Category="MajorQuest" SubCategory="Vampirilis">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuest-Chapter4-Rebellious-Step1</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+          <!--System-->
+          <Var VarName="$OneGasSystem">
+            <From Source="$Constellations.$StarSystems">
+              <Where>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet,PlanetGameplayTypeHot') eq 1 and Count(Context, @'ClassStarSystem/ClassPlanet,PlanetGameplayTypeHot') lt 2</InterpreterPrerequisite>                
+              </Where>
+            </From>
+          </Var>
+
+          <Var VarName="$TwoGasSystem">
+            <From Source="$Constellations.$StarSystems">
+              <Where>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet,PlanetGameplayTypeHot') ge 2</InterpreterPrerequisite>
+              </Where>
+            </From>
+          </Var>
+          
+          
+            <Var VarName="$GameplayTypeHot" StringValue="PlanetGameplayTypeHot"/>
+          
+            <Var VarName="$Amount01" IntValue="2"/>
+          
+            <LocalizationVar Source="$Amount01" LocalizationKey="$Amount01Name"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step2_Objective1" StartValue="0" EndValue="$Amount01">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                      <Sequence>
+                        <Parallel CompletionPolicy="First">
+                      
+                        <Sequence>
+                            <Loop Count="2">
+                                <Decorator_PlanetDestroyed ProgressionIncrement="1">
+                                    <Input_GameplayType VarName="$GameplayTypeHot"/>
+                                </Decorator_PlanetDestroyed>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                      
+                        
+                        <Sequence>
+                            <Loop Count="2">
+                                <Decorator_SystemDestroyed ProgressionIncrement="1">
+                                    <Input_Nodes VarName="$OneGasSystem"/>
+                                </Decorator_SystemDestroyed>
+                            </Loop>
+                          <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                          
+                        <Sequence>
+                            <Parallel CompletionPolicy="All">
+                              <Sequence>
+                                <Decorator_PlanetDestroyed>
+                                    <Input_GameplayType VarName="$GameplayTypeHot"/>
+                                </Decorator_PlanetDestroyed>
+                             </Sequence>
+                             <Sequence>
+                               <Decorator_SystemDestroyed>
+                                    <Input_Nodes VarName="$OneGasSystem"/>
+                                </Decorator_SystemDestroyed>
+                             </Sequence>
+                            </Parallel>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        
+                        <Sequence>
+                            <Decorator_SystemDestroyed>
+                               <Input_Nodes VarName="$TwoGasSystem"/>                            
+                            </Decorator_SystemDestroyed>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        
+                        </Parallel>
+                      </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter4-Rebellious-Step2</Tags>
+                                        <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward03" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+    
+    <!-- #############################################-->
+    <!--      VAMPIRILIS QUEST Chapter 4 RELIGIOUS    -->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter4-Religious-Step1" Category="MajorQuest" SubCategory="Vampirilis">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuest-Chapter4-Religious-Step1</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$OtherEmpires">
+                <From Source="$Empires"/>
+            </Var>
+            <Var VarName="$MinimumAmount"   IntValue="1"/>
+            
+            <InterpretedVar VarName="$CurrentPressure" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire/ClassDiplomacy/ClassDiplomaticEmpire', PressureValue)</Expression>
+            </InterpretedVar>
+            
+            <InterpretedVar VarName="$MinimumPressure" Target="$(Empire)">
+                <Expression>Max(5,(Min(100,(MaxProperty(Context, @'ClassEmpire/ClassDiplomacy/ClassDiplomaticEmpire', PressureValue) + 15))))</Expression>
+            </InterpretedVar>
+            <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventVampirilis04Religious"/>
+            <Var VarName="$Expression01" StringValue="MaxProperty(Context, @'ClassEmpire/ClassDiplomacy/ClassDiplomaticEmpire', PressureValue)"/>
+            <LocalizationVar LocalizationKey="$MinimumPressureName" Source="$MinimumPressure"/>
+            <LocalizationVar LocalizationKey="$MinimumAmountName" Source="$MinimumAmount"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Step2_Objective1" StartValue="$CurrentPressure"  EndValue="$MinimumPressure">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter4-Religious-Step2</Tags>
+                                        <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward04" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!--      VAMPIRILIS QUEST Chapter 4 REBELLIOUS    -->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter4-Rebellious-Step2" Category="MajorQuest" SubCategory="Vampirilis" AlternateVersion="VampirilisQuest-Chapter4-Rebellious-Step2Bis">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuest-Chapter4-Rebellious-Step2, FactionFinalQuest,FactionQuestVampirilis</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>    
+            <Var VarName="$MyAcademySystem">
+                <Any>
+                    <From Source="$CurrentEmpire.$ColonizedStarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassColonizedStarSystem,WorldAcademy</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+          <Var VarName="$MyAcademySystemLocation">
+            <From Source="$MyAcademySystem.$StarSystem"/> 
+          </Var>
+            <Var VarName="$MinimumAmount" IntValue="1"/>
+            <Var VarName="$MinimumLevel"  IntValue="20"/>
+                    
+            <LocalizationVar LocalizationKey="$MinimumLevelName" Source="$MinimumLevel"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step2_Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        
+                          <Parallel CompletionPolicy="First">
+                            <!--Should Detroy Planet-->
+                            <Sequence>
+                              <Decorator_HeroAssigned> 
+                                  <Condition_HasHeroes HeroAssignationFilter="System">
+                                      <Input_Empire VarName="$CurrentEmpire"/>
+                                      <Input_MinimumAmount VarName="$MinimumAmount"/>
+                                      <Input_MinimumLevel VarName="$MinimumLevel"/>
+                                  </Condition_HasHeroes>
+                                  <Input_Locations VarName="$MyAcademySystem"/>
+                              </Decorator_HeroAssigned>
+                            </Sequence>
+                            <Sequence>
+                              <Decorator_SystemDestroyed>
+                                <Input_Nodes VarName="$MyAcademySystemLocation"/>
+                                <Input_Victim VarName="$CurrentEmpire"/>
+                              </Decorator_SystemDestroyed>                            
+                              <Action_ChooseOutcome Name="Outcome1"/>
+                              <Action_Fail/>
+                            </Sequence>
+                          </Parallel>
+                      
+                          <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                              <QuestTrigger>
+                                <Tags>VampirilisQuest-Chapter4-Rebellious-Step2Ter</Tags>
+                                <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                              </QuestTrigger>
+                            </Triggers>
+                          </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward11" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!--      VAMPIRILIS QUEST Chapter 4 REBELLIOUS    -->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter4-Rebellious-Step2Bis" Category="MajorQuest" SubCategory="Vampirilis" AlternateVersion="VampirilisQuest-Chapter4-Rebellious-Step2Ter">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuest-Chapter4-Rebellious-Step2, FactionFinalQuest,FactionQuestVampirilis</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+           
+            <Var VarName="$AcademySystem">
+                <Any>
+                    <From Source="$Constellations.$StarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassStarSystem,WorldAcademy</PathPrerequisite>
+                            <FilterSystemByStatus NonOwnerVarName="$CurrentEmpire"/>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$AcademyPlanet">
+                <Any>
+                    <From Source="$AcademySystem.$Planets">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassPlanet,!PlanetTypeDestroyed</PathPrerequisite>
+                            <PathPrerequisite Flags="Prerequisite">ClassPlanet,!PlanetTypeDestroyedGas</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$Expression01" StringValue="(Count(Context, @'ClassStarSystem/ClassPlanet') - (Count(Context, @'ClassStarSystem/ClassPlanet,PlanetTypeDestroyed') + Count(Context, @'ClassStarSystem/ClassPlanet,PlanetTypeDestroyedGas'))) le 0"/>
+
+
+          <InterpretedVar VarName="$AmountRep01" Target="$(Empire)">
+            <Expression>2 * Property(Context, @'ClassEmpire', ReparationPoints) * Property(Context, @'ClassEmpire', DustInflation)</Expression>
+          </InterpretedVar>
+          <InterpretedVar VarName="$AmountRep02" Target="$(Empire)">
+            <Expression>2 * (Property(Context, @'ClassEmpire', ReparationPoints) + 2000) * Property(Context, @'ClassEmpire', DustInflation)</Expression>
+          </InterpretedVar>
+          <!--Check the Current Empire Manpower Max Stock-->
+          <Var VarName="$Expression02" StringValue="2 * Property(Context, @'ClassEmpire', ReparationPoints) * Property(Context, @'ClassEmpire', DustInflation)"/>
+          <Var VarName="$Marker01"/>
+          <Var VarName="$Amount01" IntValue="1"/>
+          <LocalizationVar Source="$AcademySystem" LocalizationKey="$AcademySystemName"/>
+          <LocalizationVar Source="$AmountRep02" LocalizationKey="$ReparationsRequired"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+              <!--============ STEP 0 - Choose ============-->
+              <Choice DefaultChoiceIndex="0">
+                <ChoiceItem ObjectiveSetIndex="0">
+                <Prerequisites Target="$(Empire)">
+                  <DownloadableContentPrerequisite Inverted="true" Flags="Prerequisite,Discard">DLCTemplars</DownloadableContentPrerequisite>
+                </Prerequisites>
+              </ChoiceItem>
+                <ChoiceItem ObjectiveSetIndex="1">
+                <Prerequisites Target="$(Empire)">
+                  <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCTemplars</DownloadableContentPrerequisite>
+                </Prerequisites>
+              </ChoiceItem>
+              </Choice>
+              
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$AcademySystem"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Step2_Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Parallel CompletionPolicy="First">
+                                <Sequence>                            
+                                    <Decorator_BeginTurn>
+                                        <Condition_HasSystems>
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                            <Input_MinimumAmount VarName="$Amount01"/>
+                                            <Input_Systems VarName="$AcademySystem"/>                                   
+                                        </Condition_HasSystems>
+                                    </Decorator_BeginTurn>
+                                </Sequence>
+                                <Sequence>
+                                    <Decorator_MothershipAttached Initiator="Empire">
+                                        <Input_System VarName="$AcademySystem"/>
+                                    </Decorator_MothershipAttached>
+                                </Sequence>
+                                <Sequence>
+                                    <Decorator_BeginTurn>
+                                        <Condition_CheckInterpreter>
+                                            <Input_Context VarName="$AcademySystem"/>
+                                            <Input_Expression VarName="$Expression01"/>
+                                        </Condition_CheckInterpreter>
+                                    </Decorator_BeginTurn>
+                                    <Action_ChooseOutcome Name="Outcome1"/>
+                                    <Action_Fail/>
+                                </Sequence>
+                            </Parallel>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter4-Rebellious-Step2Ter</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward11" Picks="1"/>
+                </ObjectiveSet>
+
+              <!--============ Choice Index 1: if using DLC4 you cant take control of academy system ============-->
+              <ObjectiveSet>
+                <StartActions>
+                </StartActions>
+                <Objective Name="Step2_Objective2" StartValue="$AmountRep01" EndValue="$AmountRep02">
+                  <!-- TODO -->
+                  <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                  <Sequence>
+                    <Parallel CompletionPolicy="First">
+                      <Sequence>
+                        <Decorator_EmpirePropertyChanged PropertyName="ReparationPoints" Initiator="Empire">
+                          <Condition_IsProgressionComplete>
+                            <Input_Context VarName="$CurrentEmpire"/>
+                            <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                            <Input_Expression VarName="$Expression02"/>
+                          </Condition_IsProgressionComplete>
+                        </Decorator_EmpirePropertyChanged>
+                        <Action_ChooseOutcome Name="Outcome1"/>
+                      </Sequence>
+                    </Parallel>
+                  </Sequence>
+                  <Outcome Name="Outcome1">
+                    <Triggers Weight="1">
+                      <QuestTrigger>
+                        <Tags>VampirilisQuest-Chapter4-Rebellious-Step2Ter</Tags>
+                        <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                      </QuestTrigger>
+                    </Triggers>
+                  </Outcome>
+                </Objective>
+                <Reward Droplist="DroplistVampirilisReward11" Picks="1"/>
+              </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!--      VAMPIRILIS QUEST Chapter 4 REBELLIOUS    -->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter4-Rebellious-Step2Ter" Category="MajorQuest" SubCategory="Vampirilis">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuest-Chapter4-Rebellious-Step2Ter,VampirilisQuest-Chapter4-Rebellious-Step2,FactionFinalQuest,FactionQuestVampirilis</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$AcademySystem">
+                <Any>
+                    <From Source="$Constellations.$StarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassStarSystem,WorldAcademy</PathPrerequisite>
+                            <FilterSystemByStatus NonOwnerVarName="$CurrentEmpire"/>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$Constructible" StringValue="StarSystemImprovementQuestVampirilis08"/>
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Amount01" IntValue="1"/>
+            
+            <Var VarName="$Technology" StringValue="TechnologyDefinitionQuestVampirilis08"/>          
+            
+            <LocalizationVar Source="$AcademySystem" LocalizationKey="$AcademySystemName"/>          
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_UnlockTechnology>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_TechnologyName VarName="$Technology"/>
+                        </Action_UnlockTechnology>
+                    </StartActions>
+                    <Objective Name="Step2_Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_ConstructionCompleted>
+                                <Input_ConstructionName VarName="$Constructible"/>
+                            </Decorator_ConstructionCompleted>
+                        </Sequence>
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward11" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!--      VAMPIRILIS QUEST Chapter 4 RELIGIOUS    -->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="VampirilisQuest-Chapter4-Religious-Step2" Category="MajorQuest" SubCategory="Vampirilis">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuest-Chapter4-Religious-Step2, FactionFinalQuest,FactionQuestVampirilis</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$VampirilisUnique" StringValue="StarSystemImprovementQuestVampirilis07"/>
+            <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventVampirilis05Religious"/>
+            <Var VarName="$Path01" StringValue="ClassEmpire/ClassStarSystem/ClassImprovement,StarSystemImprovementQuestVampirilis07"/>
+
+            <Var VarName="$ConstructibleAcademy" StringValue="StarSystemImprovementQuestVampirilis07"/>
+            <LocalizationVar LocalizationKey="$ConstructibleAcademyName" Source="$ConstructibleAcademy"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>                      
+                    </StartActions>
+                    <Objective Name="Step2_Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_CheckPath>
+                                    <Input_SimulationObject VarName="$CurrentEmpire"/>
+                                    <Input_Path VarName="$Path01"/>                                    
+                                </Condition_CheckPath>
+                            </Decorator_BeginTurn>           
+                        </Sequence>                        
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward10" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+</Datatable>
