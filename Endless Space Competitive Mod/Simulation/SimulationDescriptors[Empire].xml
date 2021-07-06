@@ -1460,6 +1460,10 @@
 		<Modifier TargetProperty="AdmiralsInFriendlyTerritory"	Operation="Force" Value="$(AdmiralsInFriendlyTerritory)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 	</SimulationDescriptor>
 
+	<SimulationDescriptor Name="EmpireTypeMajor" Type="EmpireType">
+		<Property Name="TaxRateBuyoutMultiplier" BaseValue="1" MinValue="0"/>
+		<Property Name="TaxRateSelloutMultiplier" BaseValue="1" MinValue="0"/>
+	</SimulationDescriptor>
 
 	<!--Used for Craver Influence and Science ESG-->
 	<SimulationDescriptor Name="EmpireHasHuntingGround" Type="EmpireHasHuntingGround" IsSerializable="false">
@@ -1522,4 +1526,113 @@
 
 		<Modifier TargetProperty="MaximumHackingOperationsCount" Operation="Force" Value="100"/>
 	</SimulationDescriptor>
+	
+	<SimulationDescriptor Name="EmpireTypeMinor" Type="EmpireType">
+        <Property Name="Stress"                 BaseValue="0" IsSealed="true"/>
+        <Property Name="NetMinorStress"         BaseValue="0" MinValue="Negative"/>
+
+        <Property Name="NetMinorEmpireMoney" BaseValue="0"/>
+
+        <Property Name="NetMinorEmpireShipMoney"            BaseValue="0"/>
+        <Property Name="MinorEmpireShipMoneyStock"          IsSealed="true"/>
+        <Property Name="MinimumMinorEmpireShipMoneyStock"   BaseValue="0"/>
+
+        <Property Name="NetMinorEmpireImprovementMoney"            BaseValue="0"/>
+        <Property Name="MinorEmpireImprovementMoneyStock"          IsSealed="true"/>
+        <Property Name="MinimumMinorEmpireImprovementMoneyStock"   BaseValue="0"/>
+
+        <Property Name="MinorFleetUpkeep"/>
+
+        <Property Name="MaximumFleetCount"                  BaseValue="3"/>
+        <Property Name="NeighbouringMajorEmpiresCount"      BaseValue="0" MinValue="1"/>
+        <Property Name="NeighbouringMinorEmpiresCount"      BaseValue="0" MinValue="1"/>
+
+        <Property Name="BaseMinorFleetSpawnCooldown"        BaseValue="2"/>
+        <Property Name="MinorFleetSpawnCooldownStock"       BaseValue="0"       IsSealed="true"/>
+        <Property Name="NetMinorFleetSpawnCooldown"         BaseValue="-1"      MinValue="Negative"/>
+
+        <Modifier       TargetProperty="MaximumEmpireManpowerStock"     Operation="Addition"    Value="10000" />
+        <Modifier       TargetProperty="EmpireManpower"                 Operation="Addition"    Value="$(EmpireManpower)" Path="EmpireTypeMinor/ClassMinorRelationWithMajor"    Priority="0"/>
+
+        <Modifier TargetProperty="Trend" Operation="Multiplication" Value="$(GameSpeedTrendMultiplier)" Priority="1"  Path="ClassEmpire/ClassMinorRelationWithMajor"/>
+
+        <Modifier TargetProperty="Happiness"            Operation="Force" Value="50" Priority="1000"  Path="ClassEmpire/ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="NetEmpireMoney"       Operation="Force" Value="50" Priority="1000"/>
+        <Modifier TargetProperty="BuyoutActivated"      Operation="Force" Value="1"/>
+        <Modifier TargetProperty="NetMinorEmpireMoney"  Operation="Addition" Value="$(Stress)" Priority="1"/>
+        <Modifier TargetProperty="NetMinorEmpireMoney"  Operation="Subtraction" Value="$(MinorFleetUpkeep)" Priority="1"/>
+        <Modifier TargetProperty="NetSystemGrowth"      Operation="Force" Value="50" Priority="1" Path="ClassEmpire/ClassColonizedStarSystem"  />
+		
+        <Modifier TargetProperty="MigrationScore"       Operation="Force" Value="25" Priority="100"  Path="ClassEmpire/ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="VisionRange"          Operation="Force" Value="0.001" Priority="100"  Path="ClassEmpire/ClassColonizedStarSystem"/>
+
+        <!-- 3 x MAJ / (1 + (MIN / 2)) = MAJ x 6 / (MIN + 2) -->
+        <!--<Modifier TargetProperty="MaximumFleetCount"            Operation="Addition" Value="$(NeighbouringMajorEmpiresCount)"/>-->
+        <!--<Modifier TargetProperty="MaximumFleetCount"            Operation="Multiplication" Value="3"/>-->
+        <!--<BinaryModifier TargetProperty="MaximumFleetCount"      Operation="Division" Left="$(NeighbouringMinorEmpiresCount)" BinaryOperation="Addition" Right="0"/>-->
+    </SimulationDescriptor>
+
+	    <!-- Resource distribution -->
+
+    <SimulationDescriptor Name="MinorResourceDistributionInactive" Type="MinorResourceDistribution">
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="1"    Path="MinorFactionDifficultyEasy"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2"      Path="MinorFactionDifficultyNormal"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="3"      Path="MinorFactionDifficultyHard"  />
+        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="35"/>
+    </SimulationDescriptor>
+
+
+    <SimulationDescriptor Name="MinorResourceDistributionPassive" Type="MinorResourceDistribution">
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="1"    Path="MinorFactionDifficultyEasy"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2"      Path="MinorFactionDifficultyNormal"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="3"      Path="MinorFactionDifficultyHard"  />
+        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="60"/>
+        <BinaryModifier TargetProperty="NetMinorEmpireShipMoney"        Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.8"/>
+        <BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.5"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="MinorResourceDistributionEarlyAggression" Type="MinorResourceDistribution">
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="1"    Path="MinorFactionDifficultyEasy"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2"      Path="MinorFactionDifficultyNormal"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="4"      Path="MinorFactionDifficultyHard"  />
+        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="60"/>
+        <BinaryModifier TargetProperty="NetMinorEmpireShipMoney"        Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.7"/>
+        <BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.5"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="MinorResourceDistributionEarlyPirating" Type="MinorResourceDistribution">
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="1.5"    Path="MinorFactionDifficultyEasy"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2.5"      Path="MinorFactionDifficultyNormal"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="3.5"      Path="MinorFactionDifficultyHard"  />
+        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="60"/>
+        <BinaryModifier TargetProperty="NetMinorEmpireShipMoney"        Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.5"/>
+        <BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.6"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="MinorResourceDistributionEarlyDevelopment" Type="MinorResourceDistribution">
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2"    Path="MinorFactionDifficultyEasy"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="3"      Path="MinorFactionDifficultyNormal"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="4"      Path="MinorFactionDifficultyHard"  />
+        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="140"/>
+        <BinaryModifier TargetProperty="NetMinorEmpireShipMoney"        Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.5"/>
+        <BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.7"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="MinorResourceDistributionMidGame" Type="MinorResourceDistribution">
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2"    Path="MinorFactionDifficultyEasy"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="3"      Path="MinorFactionDifficultyNormal"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="4"      Path="MinorFactionDifficultyHard"  />
+        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="250"/>
+        <BinaryModifier TargetProperty="NetMinorEmpireShipMoney"        Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.7"/>
+        <BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.7"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="MinorResourceDistributionLateGame" Type="MinorResourceDistribution">
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2"    Path="MinorFactionDifficultyEasy"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="3"      Path="MinorFactionDifficultyNormal"/>
+        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="4"      Path="MinorFactionDifficultyHard"  />
+        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="300"/>
+        <BinaryModifier TargetProperty="NetMinorEmpireShipMoney"        Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.8"/>
+        <BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.8"/>
+    </SimulationDescriptor>
 </Datatable>
