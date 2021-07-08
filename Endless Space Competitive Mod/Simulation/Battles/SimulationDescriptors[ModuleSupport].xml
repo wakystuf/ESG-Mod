@@ -194,6 +194,36 @@
   </SimulationDescriptor>
 
   <!-- Vodyani Leech -->
+  <SimulationDescriptor Name="ModuleLogistics" Type="ModuleLogistics">
+    <Property Name="SystemGrowthTransferredPerTurn" BaseValue="0"/>
+    <Property Name="EmpireMoneyTransferredPerTurn" BaseValue="0"/>
+    <Property Name="EmpireEmpirePointTransferredPerTurn" BaseValue="0"/>
+    <Property Name="OpponentRecyclingEssencePerCP" BaseValue="0"/>
+    <!--  For tooltip  -->
+    <Property Name="LifeforceLeechedPerTurn" BaseValue="0"/>
+    <Modifier TargetProperty="SystemGrowthTransferredPerTurn" Operation="Multiplication" Value="$(Multiplier)" Priority="2"/>
+    <BinaryModifier TargetProperty="LifeforceLeechedPerTurn" Operation="Addition" Left="$(SystemGrowthTransferredPerTurn)" BinaryOperation="Multiplication" Right="2.5"/>
+    <Modifier TargetProperty="LifeforceLeechedPerTurn" Operation="Addition" Value="$(EmpireMoneyTransferredPerTurn)"/>
+    <Modifier TargetProperty="LifeforceLeechedPerTurn" Operation="Addition" Value="$(EmpireEmpirePointTransferredPerTurn)"/>
+    <Modifier TargetProperty="OpponentRecyclingEssencePerCP" Operation="Multiplication" Value="$(Multiplier)" Priority="2"/>
+    <Modifier TargetProperty="OpponentRecyclingEssencePerCP" Operation="Addition" Value="$(OpponentRecyclingEssencePerCP)" Path="../ClassShip" Priority="2"/>
+  </SimulationDescriptor>
+
+  <!-- Vodyani Arks -->
+  <SimulationDescriptor Name="ModuleStarSystemEffectFromMothership" Type="ModuleStarSystemEffectFromMothership">
+    <Property Name="SystemLifeforceFlat" BaseValue="0"/>
+    <Property Name="SystemProductionFlat" BaseValue="0"/>
+    <Property Name="SystemProductionPercent" BaseValue="0"/>
+    <Property Name="SystemMoneyFlat" BaseValue="0"/>
+    <Property Name="SystemMoneyPercent" BaseValue="0"/>
+    <Property Name="SystemResearchFlat" BaseValue="0"/>
+    <Property Name="SystemResearchPercent" BaseValue="0"/>
+    <Property Name="SystemEmpirePointFlat" BaseValue="0"/>
+    <Property Name="SystemEmpirePointPercent" BaseValue="0"/>
+    <Property Name="ResourceBonus" BaseValue="0"/>
+    <Property Name="PlanetRawFIDS" BaseValue="0"/>    
+  </SimulationDescriptor>
+
   <!--Leech Growth-->
   <SimulationDescriptor Name="ModuleLogisticsGrowth1"             Type="ModuleLogistics">
     <Modifier TargetProperty="SystemGrowthTransferredPerTurn"       Operation="Addition"    Value="5"   Priority="1"/>
