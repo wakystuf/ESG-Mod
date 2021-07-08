@@ -18,6 +18,34 @@
     <ResourceReward ResourceName="EmpireLifeforce">300</ResourceReward>
   </EmpireDiplomacyGiveResourcesAction>
 
+  <!-- Vodyani Leech -->
+  <TransferResourcesFleetAction Name="TransferResourcesInFleetAction" Flags="CancelOnMovement,CancelOnTransfer">
+    <EntityPrerequisites Location="Self">
+      <PathPrerequisite Flags="Discard">../ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
+      <PathPrerequisite Flags="Discard" Inverted="false">ClassGarrison/ClassShip/ClassSection/ClassModule,ModuleLogistics</PathPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="FleetIsBusy">FleetActionExpedition</PathPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="FleetIsBusy">FleetActionColonize</PathPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="FleetIsBusy">FleetActionReclaimMothership</PathPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="FleetIsBusy">FleetActionGroundBattle</PathPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="Prerequisite,FleetInvisibleGeneral">InvisibilityFleetAction</PathPrerequisite>
+    </EntityPrerequisites>
+    <EntityPrerequisites Filter="OtherEmpire" Location="OrbitEntities">
+      <InterpreterPrerequisite Flags="Prerequisite,SystemResourcesEmpty">Path(Context, @'ClassColonizedStarSystem,ColonizedStarSystemStateOutpost') or Path(Context, @'ClassColonizedStarSystem,ColonizedStarSystemStateLost') or Property(Context, @'ClassColonizedStarSystem', Population, true) ge 1 </InterpreterPrerequisite>
+    </EntityPrerequisites>
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="FleetActionLogistics"/>
+      <SimulationAlteration DescriptorReference="FleetActionBusy"/>
+      <SimulationAlteration DescriptorReference="FleetActionHeroLocked"/>
+    </EntityModifiers>
+    <CancelActions Flags="CancelOnAnything" SameContext="false" SameInitiator="true"/>
+    <CancelActions Flags="CancelOnTransfer" SameContext="false" SameInitiator="true"/>
+    <StartEventName>NotificationAbductionStarted</StartEventName>
+    <StockEmptyEventName>NotificationAbductionStockEmpty</StockEmptyEventName>
+    <FleetPopulationEventName>PopulationPoliticalEventFleetAbducting</FleetPopulationEventName>
+    <SystemPopulationEventName>PopulationPoliticalEventPopulationAbducted</SystemPopulationEventName>
+  </TransferResourcesFleetAction>
+
   <!-- Juggernaut Ion Wave -->
   <FireIonWaveFleetAction Name="FireIonWaveFleetAction" DamageRatio="1" Duration="3" Cooldown="15">
     <EntityPrerequisites Location="Self">
