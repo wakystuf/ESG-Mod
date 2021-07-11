@@ -29,6 +29,11 @@
             <Var VarName="$HomeSystem">
                 <From Source="$CurrentEmpire.$StartingNode"/>
             </Var>
+            <Var VarName="$HomePlanet">
+                <Any>
+                    <From Source="$HomeSystem.$Planets"/>
+                </Any>
+            </Var>
             <Var VarName="$AllStarSystems">
                 <From Source="$Constellations.$StarSystems">
                     <Where>
@@ -45,7 +50,11 @@
                     </From>
                 </First>
             </Var>
-            <Var VarName="$DefinitionName" StringValue="QuestNodeHoratio"/>          
+            <Var VarName="$DefinitionName" StringValue="QuestNodeHoratio"/>   
+            <Var VarName="$DefinitionName1" StringValue="BalancedStartHoratio"/>   
+            <Var VarName="$Amount01" IntValue="2"/>  
+            <Var VarName="$PopulationAffinity" StringValue="AffinityHoratio"/>  
+            <Var VarName="$SystemControllerName" StringValue="%HoratioQuest-LesserEmpireName01"/> 
         </Vars>
 
         <!--============ PREREQUISITES ============-->
@@ -61,18 +70,30 @@
                     <Objective Name="Objective_Fake">
                         <Sequence>
                             <Action_ApplyStarSystemDefinition>
-                                <Input_DefinitionName VarName="$DefinitionName"/>
-                                <Input_StarSystemNode VarName="$QuestSystem"/>
+                                <Input_DefinitionName VarName="$DefinitionName1"/>
+                                <Input_StarSystemNode VarName="$HomeSystem"/>
                             </Action_ApplyStarSystemDefinition>                           
                         </Sequence>
-                        <Outcome Name="Outcome1">
-                            <Triggers Weight="1">
-                                <QuestTrigger>
-                                    <Tags>HoratioQuest-Chapter1.Part1-Summary</Tags>
-                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
-                                </QuestTrigger>
-                            </Triggers>
-                        </Outcome>
+                        <Vars>
+                            <Var VarName="$HomePlanet">
+                                <Any>
+                                    <From Source="$HomeSystem.$Planets"/>
+                                </Any>
+                            </Var>
+                        </Vars>
+                        <Sequence>
+                            <Action_Colonize>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_Planet VarName="$HomePlanet"/>
+                                <Output_ColonizedStarSystemGUID VarName="$ColonizedStarSystemGUID"/>
+                            </Action_Colonize>                           
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_System VarName="$HomeSystem"/>
+                                <Input_Amount VarName="$Amount01"/>
+                                <Input_PopulationAffinity VarName="$PopulationAffinity"/>
+                            </Action_SpawnPopulation>
+                        </Sequence>
                     </Objective>
                 </ObjectiveSet>
             </Step>
