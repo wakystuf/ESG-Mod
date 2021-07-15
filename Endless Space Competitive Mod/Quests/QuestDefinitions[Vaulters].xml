@@ -6,7 +6,6 @@
     <!--      VAULTERS QUEST Chapter0      -->
     <!-- ####################################### -->
 
-
     <QuestDefinition Name="VaultersQuest-Chapter0" Category="MajorQuest" SubCategory="Vaulters">
 
         <!--============ TAGS ============-->
@@ -47,7 +46,30 @@
                     </From>
                 </First>
             </Var>
+            <Var VarName="$TargetSystem">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>
+                        <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                        <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 3</InterpreterPrerequisite>
+                        <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/PlanetGameplayTypeTeeming') ge 1</InterpreterPrerequisite>                    
+                    </Where>
+                    <OrderBy>                        
+                        <SortSystemByDistance OriginVarName="$HomeSystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="1" MinimumCandidateCount="1"/>
+                    </OrderBy>
+                </From>
+            </Var>
+            <Var VarName="$TargetPlanet">
+                <Any>
+                    <From Source="$TargetSystem.$Planets">
+                        <Where>
+                            <PathPrerequisite Inverted="false" Flags="Prerequisite">ClassPlanet,PlanetGameplayTypeTeeming</PathPrerequisite>
+                            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassPlanet/ClassResourceDeposit,ResourceStrategic1</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
             <Var VarName="$DefinitionName" StringValue="QuestNodeVaulters"/>
+            <Var VarName="$CuriosityName" StringValue="Curiosity_Quest_Vaulters0"/>
         </Vars>
 
         <!--============ PREREQUISITES ============-->
@@ -61,6 +83,13 @@
             <!--============ STEP 1 ============-->
             <Step Name="Step1">
                 <ObjectiveSet>
+                    <StartActions>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$TargetPlanet"/>                                    
+                            <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                        </Action_SpawnCuriosity>
+                    </StartActions>
                     <Objective Name="Objective_Fake">
                         <Sequence>
                             <Action_ApplyStarSystemDefinition>
