@@ -180,6 +180,173 @@
     </Steps>
   </QuestDefinition>
   
+  <!--  ############################################# -->
+  <!--           CRAVERS QUEST Chapter2 - Religious    -->
+  <!--  ############################################# -->
+  <QuestDefinition Name="CraversQuest-Chapter2-Religious" Category="MajorQuest" SubCategory="Cravers">
+    <!-- ============ TAGS ============ -->
+    <Tags>CraversChapter2-Religious</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0"/>
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$HomeSystemLocation">
+        <From Source="$CurrentEmpire.$HomeStarSystem"/>
+      </Var>
+      <Var VarName="$MinorEmpireList">
+        <From Source="$MinorEmpires"/>
+      </Var>
+      <Var VarName="$MinorHomeSystems">
+        <From Source="$MinorEmpireList.$HomeStarSystem"> </From>
+      </Var>
+      <Var VarName="$MinorHomeSystem">
+        <First>
+          <From Source="$MinorHomeSystems">
+            <OrderBy>
+              <SortSystemByDistance OriginVarName="$HomeSystemLocation" SortBy="Nearest"/>
+            </OrderBy>
+          </From>
+        </First>
+      </Var>
+      <Var VarName="$OtherMinorHome">
+        <First>
+          <From Source="$MinorHomeSystems">
+            <OrderBy>
+              <SortSystemByDistance OriginVarName="$MinorHomeSystem" SortBy="Nearest"/>
+            </OrderBy>
+          </From>
+        </First>
+      </Var>
+      <Var VarName="$Marker01"/>
+      <Var VarName="$Marker02"/>
+      <!-- STEP 2 - RELIGIOUS -->
+      <Var VarName="$VirtualBodyTechno" StringValue="TechnologyDefinitionQuestCravers04"/>
+      <Var VarName="$VirtualBody" StringValue="StarSystemImprovementHeroCravers"/>
+      <Var VarName="$EffectName1" StringValue="DefinitionQuestEffectHappiness"/>
+      <!-- POLITICAL EFFECT LAUNCHED FROM THE BEGINNING -->
+      <Var VarName="$PoliticalEffectIndustry" StringValue="PopulationEventCravers02.2Industry"/>
+      <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventCravers02.2Religious"/>
+      <!-- VIRTUAL HERO -->
+      <Var VarName="$Hero" StringValue="QuestHeroEndless01"/>
+      <Var VarName="$HeroLevel" IntValue="2"/>
+      <DroplistVar VarName="$DroppableHero" Droplist="DroplistCraversQuestHero01"/>
+    </Vars>
+    <!-- ============ PREREQUISITES ============ -->
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <Step Name="Step1">
+      <!-- ============ STEP 0 - Choose ============ -->
+      <Choice DefaultChoiceIndex="0">
+        <ChoiceItem ObjectiveSetIndex="0"/>
+        <ChoiceItem ObjectiveSetIndex="1"/>
+      </Choice>
+      <!-- ============ STEP 1 - Industry ============ -->
+      <ObjectiveSet ObjectiveComposition="All">
+        <StartActions>
+          <Action_TriggerPopulationEvent>
+            <Input_Empire VarName="$CurrentEmpire"/>
+            <Input_Target VarName="$CurrentEmpire"/>
+            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustry"/>
+          </Action_TriggerPopulationEvent>
+          <Action_AddQuestMarkers>
+            <Input_Targets VarName="$MinorHomeSystem"/>
+            <Input_Empires VarName="$CurrentEmpire"/>
+            <Output_Markers VarName="$Marker01"/>
+          </Action_AddQuestMarkers>
+          <Action_AddQuestMarkers>
+            <Input_Targets VarName="$OtherMinorHome"/>
+            <Input_Empires VarName="$CurrentEmpire"/>
+            <Output_Markers VarName="$Marker02"/>
+          </Action_AddQuestMarkers>
+        </StartActions>
+        <Objective Name="Step2_1_Objective1" StartValue="0" EndValue="2">
+          <!--  Build the "Virtual Body" Wonder  -->
+          <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1"/>
+          <Sequence>
+            <Parallel CompletionPolicy="All">
+              <Sequence>
+                <Decorator_BeginTurn ProgressionIncrement="1">
+                  <!-- Own this first System -->
+                  <Condition_IsSystemOwnedBy>
+                    <Input_Empire VarName="$CurrentEmpire"/>
+                    <Input_System VarName="$MinorHomeSystem"/>
+                  </Condition_IsSystemOwnedBy>
+                </Decorator_BeginTurn>
+              </Sequence>
+              <Sequence>
+              <Decorator_BeginTurn ProgressionIncrement="1">
+                <!-- Own this second System -->
+                <Condition_IsSystemOwnedBy>
+                  <Input_Empire VarName="$CurrentEmpire"/>
+                  <Input_System VarName="$OtherMinorHome"/>
+                </Condition_IsSystemOwnedBy>
+              </Decorator_BeginTurn>
+              </Sequence>
+            </Parallel>
+            <Action_RemoveQuestMarkers>
+              <Input_Markers VarName="$Marker01"/>
+            </Action_RemoveQuestMarkers>
+            <Action_RemoveQuestMarkers>
+              <Input_Markers VarName="$Marker02"/>
+            </Action_RemoveQuestMarkers>
+            <Action_ChooseOutcome Name="Outcome1"/>
+          </Sequence>
+          <Outcome Name="Outcome1">
+            <Triggers Weight="1">
+            <QuestTrigger>
+              <Tags>CraversQuest-Chapter3-Industry</Tags>
+              <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+            </QuestTrigger>
+            </Triggers>
+          </Outcome>
+        </Objective>
+        <Reward Droplist="DroplistCraversReward03" Picks="1"/>
+      </ObjectiveSet>
+      <!-- ============ STEP 2 - RELIGIOUS ============ -->
+      <ObjectiveSet>
+        <StartActions>
+        <Action_TriggerPopulationEvent>
+        <Input_Empire VarName="$CurrentEmpire"/>
+        <Input_Target VarName="$CurrentEmpire"/>
+        <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+        </Action_TriggerPopulationEvent>
+        <Action_UnlockTechnology>
+        <Input_Empire VarName="$CurrentEmpire"/>
+        <Input_TechnologyName VarName="$VirtualBodyTechno"/>
+        </Action_UnlockTechnology>
+        </StartActions>
+        <Objective Name="Step2_2_Objective1">
+          <!--  Obtain 2 Minor Faction home systems  -->
+          <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1"/>
+          <Sequence>
+            <Decorator_ConstructionCompleted Initiator="Empire">
+              <Input_ConstructionName VarName="$VirtualBody"/>
+            </Decorator_ConstructionCompleted>
+            <Action_ChooseOutcome Name="Outcome1"/>
+            <Action_SpawnHero>
+              <Input_Empire VarName="$CurrentEmpire"/>
+              <Input_HeroDefinition VarName="$Hero"/>
+              <Input_HeroLevel VarName="$HeroLevel"/>
+            </Action_SpawnHero>
+          </Sequence>
+          <Outcome Name="Outcome1">
+            <Triggers Weight="1">
+              <QuestTrigger>
+                <Tags>CraversQuest-Chapter3-Religious</Tags>
+                <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+              </QuestTrigger>
+            </Triggers>
+          </Outcome>
+        </Objective>
+        <Reward DropVar="$DroppableHero"/>
+      </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
   <!-- ####################################### -->
   <!--    CRAVERS QUEST Chapter3 Industry      -->
   <!-- ####################################### -->
