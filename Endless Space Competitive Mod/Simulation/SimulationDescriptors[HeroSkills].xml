@@ -35,12 +35,12 @@
     <BinaryModifier TargetProperty="BonusHeroSystemIndustry"  Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="HeroSkillSenator75_Industry_PerAnomaly_4" Type="HeroSkillSenator" IsSerializable="false">
-    <Property Name="DictatorshipBonus" BaseValue="-1" MinValue="Negative"/>
+    <Property Name="BonusHeroSystemProduction_Temp" BaseValue="0"/>
     <!--Base Effect-->
-    <BinaryModifier TargetProperty="SystemProduction"   Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%HeroSkill75_SenateIndustry_PerAnomaly_EffectOverride"/>
+    <BinaryModifier TargetProperty="BonusHeroSystemProduction_Temp"   Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%HeroSkill75_SenateIndustry_PerAnomaly_EffectOverride"/>
     <!--Dictatorship Bonus-->
-    <Modifier TargetProperty="DictatorshipBonus"        Operation="Addition" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="SystemProduction"   Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(SenatorSkillEffectDictatorshipMultiplier)" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="BonusHeroSystemProduction_Temp"        Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <Modifier TargetProperty="SystemProduction"   Operation="Addition" Value="$(BonusHeroSystemProduction_Temp)" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
     <!-- FEEDBACK FOR SCAN VIEW -->
     <BinaryModifier TargetProperty="BonusHeroSystemIndustry"  Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true"    Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="BonusHeroSystemIndustry"  Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(SenatorSkillEffectDictatorshipMultiplier)"   Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
@@ -69,7 +69,7 @@
   <!-- Papers Please -->
   <SimulationDescriptor Name="HeroSkillSenator14_Diplomacy_Percent" Type="HeroSkillSenator" IsSerializable="false">
     <Property Name="Diplomacy_Percent" BaseValue="0.5"/>
-    <Modifier TargetProperty="Diplomacy_Percent" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <Modifier TargetProperty="Diplomacy_Percent" Operation="Division" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
     <Modifier TargetProperty="PeacefulTreatyCostReduction"      Operation="Multiplication" Value="$(Diplomacy_Percent)" Path="../ClassEmpire"/>
     <Modifier TargetProperty="AggressiveTreatyCostReduction"    Operation="Multiplication" Value="$(Diplomacy_Percent)" Path="../ClassEmpire"/>
   </SimulationDescriptor>
@@ -145,14 +145,26 @@
     <Property Name="EmpireManpower_Percent" BaseValue="0.25"/>
     <Modifier TargetProperty="EmpireManpower_Percent" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
     <Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Percent" Value="$(EmpireManpower_Percent)" Path="../ClassEmpire"/>
-    <Modifier TargetProperty="MaximumSystemManpower" Operation="Addition" Value="50" Path="../ClassEmpire/ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="SystemManpowerGenericHeroSkill" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(SenatorSkillEffectDictatorshipMultiplier)" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="$(SystemManpowerGenericHeroSkill)" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%HeroSkillSenator4_EmpireManpower_Percent1"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="HeroSkillSenator4_EmpireManpower_2Percent" Type="HeroSkillSenator" IsSerializable="false">
     <Property Name="EmpireManpower_Percent" BaseValue="0.25"/>
+    <Property Name="SystemManpower_Temp" BaseValue="0"/>
     <Modifier TargetProperty="EmpireManpower_Percent" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
     <Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Percent" Value="$(EmpireManpower_Percent)" Path="../ClassEmpire"/>
-    <Modifier TargetProperty="MaximumSystemManpower" Operation="Addition" Value="100" Path="../ClassEmpire/ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="SystemManpowerGenericHeroSkill" Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(SenatorSkillEffectDictatorshipMultiplier)" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="$(SystemManpowerGenericHeroSkill)" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%HeroSkillSenator4_EmpireManpower_Percent1"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="HeroSkillSystem5_SystemManpower_Flat_2" Type="HeroSkillSystem" IsSerializable="false">
+    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(Population)"/>
+    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="HeroSkillSystem5_SystemManpower_Flat_3" Type="HeroSkillSystem" IsSerializable="false">
+    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Population)"/>
+    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
   </SimulationDescriptor>
 
   <!-- Person of Means -->
