@@ -378,4 +378,108 @@
     </Steps>
 
   </QuestDefinition>
+
+
+  <!--  ============================================
+     ========== DEEDS: EMPIRE DEVELOPMENT ===========
+     ================================================  -->
+  <QuestDefinition Name="Deeds_Regular_EmpireDevelopment_Stage4_A" Category="Deeds" SubCategory="Regular">
+    <!-- ============ TAGS ============ -->
+    <Tags>BeginTurn,Hidden,TechnologyStageDefinitionEmpireDevelopment4</Tags>
+    <!-- ============ CONTEXT ============ -->
+    <QuestContextMulti>
+      <Distribution Type="FreeForAll"/>
+    </QuestContextMulti>
+    <!-- ============ OCCURRENCE RULES ============ -->
+    <RepetitionRules NumberOfOccurrencesPerGame="1"/>
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <Var VarName="$AllEmpires">
+        <From Source="$Empires"/>
+      </Var>
+      <Var VarName="$IndustrialistPolitics" StringValue="Politics01"/>
+      <Var VarName="$ScientistPolitics" StringValue="Politics02"/>
+      <Var VarName="$PacifistPolitics" StringValue="Politics03"/>
+      <Var VarName="$EcologistPolitics" StringValue="Politics04"/>
+      <Var VarName="$ReligiousPolitics" StringValue="Politics05"/>
+      <Var VarName="$MilitaristPolitics" StringValue="Politics06"/>
+      <Var VarName="$MinimumAmount" IntValue="1"/>
+      <Var VarName="$LawsObjective" IntValue="6"/>
+      <LocalizationVar LocalizationKey="$LawAmount" Source="$LawsObjective"/>
+      <Var VarName="$Path" StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageEmpireDevelopment4"/>
+      <Var VarName="$PathPolitics01" StringValue="EmpireTypeMajor/ClassSenate/ClassLaw,LawPolitics01"/>
+      <Var VarName="$PathPolitics02" StringValue="EmpireTypeMajor/ClassSenate/ClassLaw,LawPolitics02"/>
+      <Var VarName="$PathPolitics03" StringValue="EmpireTypeMajor/ClassSenate/ClassLaw,LawPolitics03"/>
+      <Var VarName="$PathPolitics04" StringValue="EmpireTypeMajor/ClassSenate/ClassLaw,LawPolitics04"/>
+      <Var VarName="$PathPolitics05" StringValue="EmpireTypeMajor/ClassSenate/ClassLaw,LawPolitics05"/>
+      <Var VarName="$PathPolitics06" StringValue="EmpireTypeMajor/ClassSenate/ClassLaw,LawPolitics06"/>
+    </Vars>
+    <!-- ============ PREREQUISITES ============ -->
+    <Prerequisites Target="$(Empires)" AnyTarget="true">
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_B" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_B" QuestState="Completed"/>
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_B" QuestState="NotStarted"/>
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_C" QuestState="NotStarted"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_C" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_C" QuestState="Completed"/>
+    </Prerequisites>
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <!-- ============ Step 1 ============ -->
+      <Step Name="Step1">
+        <ObjectiveSet>
+        <!-- Teams are created here that's why the following variable must be set here. And the context here is the team -->
+        <Vars>
+          <Var VarName="$CurrentEmpire">
+            <From Source="$Team"/>
+          </Var>
+        </Vars>
+        <Objective Name="Deeds_Regular_EmpireDevelopment_Stage4_A-Objective" StartValue="0" EndValue="$LawsObjective">
+          <Parallel CompletionPolicy="All">
+            <Sequence>
+              <Decorator_LawActivated Initiator="Empire" ProgressionIncrement="1">
+                <Input_Politics VarName="$IndustrialistPolitics"/>
+              </Decorator_LawActivated>
+            </Sequence>
+            <Sequence>
+              <Decorator_LawActivated Initiator="Empire" ProgressionIncrement="1">
+                <Input_Politics VarName="$ScientistPolitics"/>
+              </Decorator_LawActivated>
+            </Sequence>
+            <Sequence>
+              <Decorator_LawActivated Initiator="Empire" ProgressionIncrement="1">
+                <Input_Politics VarName="$PacifistPolitics"/>
+              </Decorator_LawActivated>
+            </Sequence>
+            <Sequence>
+              <Decorator_LawActivated Initiator="Empire" ProgressionIncrement="1">
+                <Input_Politics VarName="$EcologistPolitics"/>
+              </Decorator_LawActivated>
+            </Sequence>
+            <Sequence>
+              <Decorator_LawActivated Initiator="Empire" ProgressionIncrement="1">
+                <Input_Politics VarName="$ReligiousPolitics"/>
+              </Decorator_LawActivated>
+            </Sequence>
+              <Sequence>
+              <Decorator_LawActivated Initiator="Empire" ProgressionIncrement="1">
+                <Input_Politics VarName="$MilitaristPolitics"/>
+              </Decorator_LawActivated>
+            </Sequence>
+            <Sequence>
+              <Decorator_BeginTurn>
+                <Condition_CheckPath>
+                  <Input_SimulationObject VarName="$CurrentEmpire"/>
+                  <Input_Path VarName="$Path"/>
+                </Condition_CheckPath>
+              </Decorator_BeginTurn>
+            </Sequence>
+          </Parallel>
+          </Objective>
+        <Reward Droplist="DroplistRegularDeedsStage4Quadrant4Bis" Picks="1"/>
+        </ObjectiveSet>
+      </Step>
+      </Steps>
+    </QuestDefinition>
+
 </Datatable>
