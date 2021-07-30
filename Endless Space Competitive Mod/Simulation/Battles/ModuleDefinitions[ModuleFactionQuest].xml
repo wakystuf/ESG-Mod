@@ -325,6 +325,54 @@
     </CategorizedSimulationDescriptors>
   </SupportModule>
 
+  <!--  Sainted Speed  -->
+  <SupportModule Name="ModuleExplorationQuestVampirilis" Family="QuestExplorationVampirilisBase">
+    <Cost ResourceName="SystemProduction">30</Cost>
+    <PathPrerequisite Flags="Edition" Inverted="false">../ClassEmpire/ClassQuests,VampirilisQuest-Chapter1-Step2Religious-Reward</PathPrerequisite>
+    <SimulationDescriptorReference Name="ClassModuleSupport"/>
+    <CategorizedSimulationDescriptors Category="CategoryExploration">
+      <SimulationDescriptorReference Name="ModuleSupportExploration"/>
+      <SimulationDescriptorReference Name="ModuleLogistics"/>
+      <SimulationDescriptorReference Name="ClassModuleSupportExplorationQuestVampirilis"/>
+    </CategorizedSimulationDescriptors>
+  </SupportModule>
+
+  <!-- Vodyani Quest Resource Module. The AI doesn't like creating a new family, so grouped with essence -->
+  <MothershipModule Name="ModuleSupportMothershipResourceFactory" Family="SystemSupportFIDS" Level="3">
+    <Cost ResourceName="SystemProduction">100</Cost>
+    <!-- I have no idea why this needs to refer to the Lumeris quest, but it's not my fault -->
+    <PathPrerequisite Flags="Edition" Inverted="false">../ClassEmpire/ClassQuests,CompletedQuestVenetians10</PathPrerequisite>
+    <PathPrerequisite Flags="NoMoreThanOneModuleOfThisType,Edition,Disable" Inverted="true">ClassShip,ShipRoleMothership/ClassSection/ClassModule,ModuleSupportMothershipResourceFactoryEffect</PathPrerequisite>
+    <PathPrerequisite Flags="Edition">../ClassShip,ShipRoleMothership</PathPrerequisite>
+    <SimulationDescriptorReference Name="ClassModuleSupport"/>
+    <SimulationDescriptorReference Name="ModuleStarSystemEffectFromMothership"/>
+    <!--This strategic tag isn't really true, but it will ensure that it's always displayed in the GUI (and doesn't hide other modules as obsolete) -->
+    <SimulationDescriptorReference Name="ModuleTypeStrategic"/>
+    <!--I don't think this master category does much but placing it an existing one probably helps avoid confusing the AI -->
+    <CategorizedSimulationDescriptors Category="CategoryFIDSILifeforce">
+      <SimulationDescriptorReference Name="ModuleSupportMothershipResourceFactoryEffect"/>
+    </CategorizedSimulationDescriptors>
+    <SystemDescriptor Name="StarSystemEffectFromMothershipResourceFactory"/>
+  </MothershipModule>
+
+  <!-- Vodyani Quest FIDS Per Pop Module. The AI doesn't like creating a new family, so grouped with essence -->
+  <MothershipModule Name="ModuleSupportMothershipFIDSPerPop" Family="SystemSupportFIDS" Level="3">
+    <Cost ResourceName="SystemProduction">100</Cost>
+    <!-- I have no idea why this needs to refer to the Lumeris quest, but it's not my fault -->
+    <PathPrerequisite Flags="Edition" Inverted="false">../ClassEmpire/ClassQuests,CompletedQuestVenetians11</PathPrerequisite>
+    <PathPrerequisite Flags="NoMoreThanOneModuleOfThisType,Edition,Disable" Inverted="true">ClassShip,ShipRoleMothership/ClassSection/ClassModule,ModuleSupportMothershipFIDSPerPopEffect</PathPrerequisite>
+    <PathPrerequisite Flags="Edition">../ClassShip,ShipRoleMothership</PathPrerequisite>
+    <SimulationDescriptorReference Name="ClassModuleSupport"/>
+    <SimulationDescriptorReference Name="ModuleStarSystemEffectFromMothership"/>
+     <!--This strategic tag isn't really true, but it will ensure that it's always displayed in the GUI (and doesn't hide other modules as obsolete) -->
+     <SimulationDescriptorReference Name="ModuleTypeStrategic"/>
+    <!--I don't think this master category does much but placing it an existing one probably helps avoid confusing the AI -->
+    <CategorizedSimulationDescriptors Category="CategoryFIDSILifeforce">
+      <SimulationDescriptorReference Name="ModuleSupportMothershipFIDSPerPopEffect"/>
+    </CategorizedSimulationDescriptors>
+    <SystemDescriptor Name="StarSystemEffectFromMothershipFIDSPerPop"/>
+  </MothershipModule>
+
   <!--Vaulters Hero only ship health module-->
   <DefenseModule Name="ModuleDefenseHullQuest01" Family="HullPlatingBase" Level="5">
     <Cost ResourceName="SystemProduction">50</Cost>

@@ -215,6 +215,7 @@
         <xs:element minOccurs="0" maxOccurs="1" name="From" type="XmlQuery" />
         <xs:element minOccurs="0" maxOccurs="1" name="First" type="XmlQueryFirst" />
         <xs:element minOccurs="0" maxOccurs="1" name="Any" type="XmlQueryAny" />
+		<xs:element minOccurs="0" maxOccurs="1" name="Select" type="XmlQuerySelect" />
       </xs:choice>
     </xs:sequence>
     <xs:attribute name="VarName" type="xs:string" />
@@ -340,9 +341,24 @@
     <xs:attribute default="" name="TraitorOwnerVarName" type="xs:string" />
   </xs:complexType>
   <xs:complexType name="XmlQuerySorter">
-    <xs:sequence>
-      <xs:element minOccurs="0" maxOccurs="1" name="SortSystemByDistance" type="QuestSorterSystemByDistance" />
-    </xs:sequence>
+    <xs:choice minOccurs="1">
+      <xs:sequence>
+        <xs:element minOccurs="0" name="SortSystemByDistance" type="QuestSorterSystemByDistance" />
+      </xs:sequence>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="SortRemovePlanetsOfSameSystem" type="xs:string"/>
+      </xs:sequence>
+      <xs:sequence>
+        <xs:element minOccurs="0" name="SortSystemByQuestNodeRank" type="QuestSorterSystemByQuestNodeRank"/>
+      </xs:sequence>
+      <xs:sequence>
+      <xs:element minOccurs="0" name="SortConstellationByDistance" type="QuestSorterConstellationByDistance"/>
+      </xs:sequence>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="QuestSorterConstellationByDistance">
+    <xs:attribute name="OriginVarName" type="xs:string" />
+    <xs:attribute default="Nearest" name="SortBy" type="SortingType" />
   </xs:complexType>
   <xs:complexType name="QuestSorterSystemByDistance">
     <xs:attribute name="OriginVarName" type="xs:string" />
@@ -351,6 +367,9 @@
     <xs:attribute default="3.40282347E+38" name="MaximumDistance" type="xs:float" />
     <xs:attribute default="0" name="MinimumCandidateCount" type="xs:int" />
     <xs:attribute default="false" name="ConsiderFreeMovement" type="xs:boolean" />
+  </xs:complexType>
+  <xs:complexType name="QuestSorterSystemByQuestNodeRank">
+    <xs:attribute name="SortBy" type="QuestProgressionType" use="required"/>
   </xs:complexType>
   <xs:simpleType name="SortingType">
     <xs:restriction base="xs:string">
@@ -363,6 +382,7 @@
       <xs:element minOccurs="0" maxOccurs="1" name="From" type="XmlQuery" />
     </xs:sequence>
   </xs:complexType>
+  
   <xs:complexType name="XmlQueryLimit">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="1" name="From" type="XmlQuery" />
@@ -372,6 +392,14 @@
     <xs:attribute name="LimitMax" type="xs:int" use="required" />
     <xs:attribute name="Clamp" type="xs:boolean" use="required" />
   </xs:complexType>
+  
+  <xs:complexType name="XmlQuerySelect">
+    <xs:sequence>
+      <xs:element minOccurs="0" maxOccurs="1" name="From" type="XmlQuery" />
+    </xs:sequence>
+    <xs:attribute name="Index" type="xs:int" use="required" />
+  </xs:complexType>
+  
   <xs:simpleType name="Extremities">
     <xs:restriction base="xs:string">
       <xs:enumeration value="First" />
@@ -1091,6 +1119,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Input_Fleets" type="QuestInputArgument" />
           <xs:element minOccurs="0" maxOccurs="1" name="Input_FleetGUIDs" type="QuestInputArgument" />
         </xs:sequence>
+		<xs:attribute default="false" name="IgnoreFleetExistence" type="xs:boolean" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -2611,6 +2640,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Input_Nodes" type="QuestInputArgument" />
           <xs:element minOccurs="0" maxOccurs="1" name="Input_Victim" type="QuestInputArgument" />
           <xs:element minOccurs="0" maxOccurs="1" name="Input_Attacker" type="QuestInputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Output_Node" type="QuestOutputArgument" />
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -4768,6 +4798,7 @@
       <xs:extension base="QuestExecutionTreeDecorator_EmpireEventOfEventLawAbrogated">
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="1" name="Input_LawName" type="QuestInputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Input_Politics" type="QuestInputArgument" />
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -5083,6 +5114,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
+  
   <xs:complexType name="QuestExecutionTreeDecorator_HeroAssigned">
     <xs:complexContent mixed="false">
       <xs:extension base="QuestExecutionTreeDecorator_EmpireEventOfEventHeroAssigned">
@@ -5100,6 +5132,95 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
+
+  <xs:complexType name="QuestExecutionTreeDecoratorOfEventHeroInjured">
+    <xs:complexContent mixed="false">
+      <xs:extension base="QuestExecutionTreeNode">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_EmpireOwesReparations" type="QuestExecutionTreeCondition_EmpireOwesReparations" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_AcademyRolePhaseComplete" type="QuestExecutionTreeCondition_AcademyRolePhaseComplete" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasTraitors" type="QuestExecutionTreeCondition_HasTraitors" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_FleetStatsOnNode" type="QuestExecutionTreeCondition_FleetStatsOnNode" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_ExplorationProgress" type="QuestExecutionTreeCondition_ExplorationProgress" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_IsVariableNotEmpty" type="QuestExecutionTreeCondition_IsVariableNotEmpty" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_CountSimulationObjectsWithTag" type="QuestExecutionTreeCondition_CountSimulationObjectsWithTag" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_TimerEnded" type="QuestExecutionTreeCondition_TimerEnded" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_CheckInterpreter" type="QuestExecutionTreeCondition_CheckInterpreter" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_CheckPath" type="QuestExecutionTreeCondition_CheckPath" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_IsProgressionComplete" type="QuestExecutionTreeCondition_IsProgressionComplete" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasDeposits" type="QuestExecutionTreeCondition_HasDeposits" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasTradeRoutes" type="QuestExecutionTreeCondition_HasTradeRoutes" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasTradeIncome" type="QuestExecutionTreeCondition_HasTradeIncome" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_ShipHasResource" type="QuestExecutionTreeCondition_ShipHasResourceCost" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_FleetShipStatsOnNode" type="QuestExecutionTreeCondition_FleetShipStatsOnNode" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_FleetShipStats" type="QuestExecutionTreeCondition_FleetShipStats" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_AreEqual" type="QuestExecutionTreeCondition_AreVariablesEqual" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasManpower" type="QuestExecutionTreeCondition_HasManpower" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_ManpowerDistribution" type="QuestExecutionTreeCondition_ManpowerDistribution" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_DiplomaticContracts" type="QuestExecutionTreeCondition_DiplomaticContracts" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_Pressure" type="QuestExecutionTreeCondition_Pressure" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_CheckDiplomaticAbility" type="QuestExecutionTreeCondition_CheckDiplomaticAbility" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasHeroes" type="QuestExecutionTreeCondition_HasHeroes" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_ShipStats" type="QuestExecutionTreeCondition_ShipStats" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_CheckDiplomaticRelation" type="QuestExecutionTreeCondition_CheckDiplomaticRelation" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_CheckSenateComposition" type="QuestExecutionTreeCondition_CheckSenateComposition" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasLaws" type="QuestExecutionTreeCondition_HasLaws" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_GovernmentType" type="QuestExecutionTreeCondition_GovernmentType" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_MinorFactionRelationship" type="QuestExecutionTreeCondition_MinorFactionRelationship" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_IsFleetDockedOnNode" type="QuestExecutionTreeCondition_IsFleetDockedOnNode" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_BattleEnded_FleetDestroyed" type="QuestExecutionTreeCondition_BattleEnded_FleetDestroyed" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasFleets" type="QuestExecutionTreeCondition_HasFleets" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasResource" type="QuestExecutionTreeCondition_HasResource" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_FleetHasHero" type="QuestExecutionTreeCondition_FleetHasHero" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasGarrisonComposition" type="QuestExecutionTreeCondition_HasGarrisonComposition" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasPoliticsScore" type="QuestExecutionTreeCondition_HasPoliticsScore" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasSystemDefense" type="QuestExecutionTreeCondition_HasSystemDefense" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasHappiness" type="QuestExecutionTreeCondition_HasHappiness" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasPopulationSlots" type="QuestExecutionTreeCondition_HasPopulationSlots" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasPopulationDiversity" type="QuestExecutionTreeCondition_HasPopulationDiversity" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasPopulationAmount" type="QuestExecutionTreeCondition_HasPopulationAmount" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_IsSystemOwnedBy" type="QuestExecutionTreeCondition_IsSystemOwnedBy" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_BattleEndedWithShips" type="QuestExecutionTreeCondition_BattleEndedWithShips" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_SystemsHaveFidsi" type="QuestExecutionTreeCondition_SystemsHaveFidsi" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasFidsi" type="QuestExecutionTreeCondition_HasFidsi" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasPlanets" type="QuestExecutionTreeCondition_HasPlanets" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasSystems" type="QuestExecutionTreeCondition_HasSystems" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasSpecialNodes" type="QuestExecutionTreeCondition_HasSpecialNodes" />
+          </xs:choice>
+        </xs:sequence>
+        <xs:attribute default="0" name="ProgressionIncrement" type="xs:int" />
+        <xs:attribute default="false" name="StopAtFirstFailedCondition" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="QuestExecutionTreeDecorator_EmpireEventOfEventHeroInjured">
+    <xs:complexContent mixed="false">
+      <xs:extension base="QuestExecutionTreeDecoratorOfEventHeroInjured">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Output_Empire" type="QuestOutputArgument" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="QuestExecutionTreeDecorator_HeroInjured">
+    <xs:complexContent mixed="false">
+      <xs:extension base="QuestExecutionTreeDecorator_EmpireEventOfEventHeroInjured">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Input_AttackerEmpire" type="QuestInputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Input_Hero" type="QuestInputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Input_HeroName" type="QuestInputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Input_MinimumLevel" type="QuestInputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Output_Hero" type="QuestOutputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Output_HeroGUID" type="QuestOutputArgument" />
+        </xs:sequence>
+        <xs:attribute default="DontCare" name="HeroAssignationFilter" type="HeroAssignationFilter" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+   
   <xs:complexType name="QuestExecutionTreeDecoratorOfEventConstructionQueued">
     <xs:complexContent mixed="false">
       <xs:extension base="QuestExecutionTreeNode">
@@ -5789,6 +5910,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
+  
   <xs:complexType name="QuestExecutionTreeDecoratorOfEventGroundBattleOutcomeApplied">
     <xs:complexContent mixed="false">
       <xs:extension base="QuestExecutionTreeNode">
@@ -5851,6 +5973,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
+  
   <xs:complexType name="QuestExecutionTreeDecorator_InvadeSystem">
     <xs:complexContent mixed="false">
       <xs:extension base="QuestExecutionTreeDecoratorOfEventGroundBattleOutcomeApplied">
@@ -5876,6 +5999,100 @@
       <xs:enumeration value="Pillage" />
     </xs:restriction>
   </xs:simpleType>
+  
+  <xs:complexType name="QuestExecutionTreeDecoratorOfEventGroundBattleFinished">
+    <xs:complexContent mixed="false">
+      <xs:extension base="QuestExecutionTreeNode">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_EmpireOwesReparations" type="QuestExecutionTreeCondition_EmpireOwesReparations" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_AcademyRolePhaseComplete" type="QuestExecutionTreeCondition_AcademyRolePhaseComplete" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasTraitors" type="QuestExecutionTreeCondition_HasTraitors" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_FleetStatsOnNode" type="QuestExecutionTreeCondition_FleetStatsOnNode" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_ExplorationProgress" type="QuestExecutionTreeCondition_ExplorationProgress" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_IsVariableNotEmpty" type="QuestExecutionTreeCondition_IsVariableNotEmpty" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_CountSimulationObjectsWithTag" type="QuestExecutionTreeCondition_CountSimulationObjectsWithTag" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_TimerEnded" type="QuestExecutionTreeCondition_TimerEnded" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_CheckInterpreter" type="QuestExecutionTreeCondition_CheckInterpreter" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_CheckPath" type="QuestExecutionTreeCondition_CheckPath" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_IsProgressionComplete" type="QuestExecutionTreeCondition_IsProgressionComplete" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasDeposits" type="QuestExecutionTreeCondition_HasDeposits" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasTradeRoutes" type="QuestExecutionTreeCondition_HasTradeRoutes" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasTradeIncome" type="QuestExecutionTreeCondition_HasTradeIncome" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_ShipHasResource" type="QuestExecutionTreeCondition_ShipHasResourceCost" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_FleetShipStatsOnNode" type="QuestExecutionTreeCondition_FleetShipStatsOnNode" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_FleetShipStats" type="QuestExecutionTreeCondition_FleetShipStats" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_AreEqual" type="QuestExecutionTreeCondition_AreVariablesEqual" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasManpower" type="QuestExecutionTreeCondition_HasManpower" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_ManpowerDistribution" type="QuestExecutionTreeCondition_ManpowerDistribution" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_DiplomaticContracts" type="QuestExecutionTreeCondition_DiplomaticContracts" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_Pressure" type="QuestExecutionTreeCondition_Pressure" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_CheckDiplomaticAbility" type="QuestExecutionTreeCondition_CheckDiplomaticAbility" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasHeroes" type="QuestExecutionTreeCondition_HasHeroes" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_ShipStats" type="QuestExecutionTreeCondition_ShipStats" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_CheckDiplomaticRelation" type="QuestExecutionTreeCondition_CheckDiplomaticRelation" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_CheckSenateComposition" type="QuestExecutionTreeCondition_CheckSenateComposition" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasLaws" type="QuestExecutionTreeCondition_HasLaws" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_GovernmentType" type="QuestExecutionTreeCondition_GovernmentType" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_MinorFactionRelationship" type="QuestExecutionTreeCondition_MinorFactionRelationship" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_IsFleetDockedOnNode" type="QuestExecutionTreeCondition_IsFleetDockedOnNode" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_BattleEnded_FleetDestroyed" type="QuestExecutionTreeCondition_BattleEnded_FleetDestroyed" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasFleets" type="QuestExecutionTreeCondition_HasFleets" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasResource" type="QuestExecutionTreeCondition_HasResource" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_FleetHasHero" type="QuestExecutionTreeCondition_FleetHasHero" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasGarrisonComposition" type="QuestExecutionTreeCondition_HasGarrisonComposition" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasPoliticsScore" type="QuestExecutionTreeCondition_HasPoliticsScore" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasSystemDefense" type="QuestExecutionTreeCondition_HasSystemDefense" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasHappiness" type="QuestExecutionTreeCondition_HasHappiness" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasPopulationSlots" type="QuestExecutionTreeCondition_HasPopulationSlots" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasPopulationDiversity" type="QuestExecutionTreeCondition_HasPopulationDiversity" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasPopulationAmount" type="QuestExecutionTreeCondition_HasPopulationAmount" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_IsSystemOwnedBy" type="QuestExecutionTreeCondition_IsSystemOwnedBy" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_BattleEndedWithShips" type="QuestExecutionTreeCondition_BattleEndedWithShips" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_SystemsHaveFidsi" type="QuestExecutionTreeCondition_SystemsHaveFidsi" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasFidsi" type="QuestExecutionTreeCondition_HasFidsi" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasPlanets" type="QuestExecutionTreeCondition_HasPlanets" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasSystems" type="QuestExecutionTreeCondition_HasSystems" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Condition_HasSpecialNodes" type="QuestExecutionTreeCondition_HasSpecialNodes" />
+          </xs:choice>
+        </xs:sequence>
+        <xs:attribute default="AllEmpires" name="Initiator" type="QuestInitiatorFilter" />
+        <xs:attribute default="0" name="ProgressionIncrement" type="xs:int" />
+        <xs:attribute default="false" name="StopAtFirstFailedCondition" type="xs:boolean" />
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+    
+  <xs:complexType name="QuestExecutionTreeDecorator_GroundBattleFinished">
+    <xs:complexContent mixed="false">
+      <xs:extension base="QuestExecutionTreeDecoratorOfEventGroundBattleFinished">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="Input_System" type="QuestInputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Input_SystemGUID" type="QuestInputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Input_NodeType" type="QuestInputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Input_AttackerEmpire" type="QuestInputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Input_DefenderEmpire" type="QuestInputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" default="Any" name="Input_Result" type="GroundBattleResultType" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Output_StarSystem" type="QuestOutputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Output_DefenderEmpire" type="QuestOutputArgument" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="GroundBattleResultType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Any" />
+      <xs:enumeration value="Ongoing" />
+      <xs:enumeration value="Aborted_ColonizedStarSystemNotExistingAnymore" />
+      <xs:enumeration value="Aborted_DiplomaticRelationChange" />
+      <xs:enumeration value="Aborted_AttackerEliminated" />
+      <xs:enumeration value="Standy" />
+      <xs:enumeration value="AttackerVictory" />
+      <xs:enumeration value="DefenderVictory" />	  
+    </xs:restriction>
+  </xs:simpleType>
+    
+  
   <xs:complexType name="QuestExecutionTreeDecoratorOfEventPopulationGained">
     <xs:complexContent mixed="false">
       <xs:extension base="QuestExecutionTreeNode">
@@ -6628,6 +6845,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Input_RoleName" type="QuestInputArgument" />
           <xs:element minOccurs="0" maxOccurs="1" name="Output_Node" type="QuestOutputArgument" />
         </xs:sequence>
+		<xs:attribute default="false" name="CheckShipHadHero" type="xs:boolean" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -6955,8 +7173,10 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Input_Hero" type="QuestInputArgument" />
           <xs:element minOccurs="0" maxOccurs="1" name="Input_Empire" type="QuestInputArgument" />
           <xs:element minOccurs="0" maxOccurs="1" name="Output_Node" type="QuestOutputArgument" />
+		  <xs:element minOccurs="0" maxOccurs="1" name="Output_EnemyDestroyedShipsCount" type="QuestOutputArgument" />
         </xs:sequence>
         <xs:attribute default="DontCare" name="Status" type="BattleState" />
+		<xs:attribute default="false" name="CheckFleetHadHero" type="xs:boolean" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -7304,6 +7524,7 @@
           <xs:element minOccurs="0" maxOccurs="1" name="Input_System" type="QuestInputArgument" />
           <xs:element minOccurs="0" maxOccurs="unbounded" name="Input_ValidType" type="ConstructibleType" />
           <xs:element minOccurs="0" maxOccurs="1" name="Output_System" type="QuestOutputArgument" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Output_Node" type="QuestOutputArgument" />
         </xs:sequence>
         <xs:attribute default="false" name="IsFailure" type="xs:boolean" />
       </xs:extension>
@@ -8025,6 +8246,7 @@
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_ProbeLaunched" type="QuestExecutionTreeDecorator_ProbeLaunched" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_FleetMoved" type="QuestExecutionTreeDecorator_FleetMoved" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_HeroAssigned" type="QuestExecutionTreeDecorator_HeroAssigned" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Decorator_HeroInjured" type="QuestExecutionTreeDecorator_HeroInjured" />			
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_ConstructionQueued" type="QuestExecutionTreeDecorator_ConstructionQueued" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_ResearchQueued" type="QuestExecutionTreeDecorator_ResearchQueued" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_HasTutorialKeys" type="QuestExecutionTreeDecorator_HasTutorialKeys" />
@@ -8035,6 +8257,7 @@
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_GovernmentChanged" type="QuestExecutionTreeDecorator_GovernmentChanged" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_QuestEffectFinished" type="QuestExecutionTreeDecorator_QuestEffectFinished" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_InvadeSystem" type="QuestExecutionTreeDecorator_InvadeSystem" />
+            <xs:element minOccurs="0" maxOccurs="1" name="Decorator_GroundBattleFinished" type="QuestExecutionTreeDecorator_GroundBattleFinished" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_PopulationGained" type="QuestExecutionTreeDecorator_PopulationGained" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_Intercept" type="QuestExecutionTreeDecorator_Intercept" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_GuardNode" type="QuestExecutionTreeDecorator_GuardNode" />

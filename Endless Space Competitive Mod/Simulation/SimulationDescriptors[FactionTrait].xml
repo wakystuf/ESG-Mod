@@ -50,14 +50,20 @@
     <!--Double law upkeep-->
     <Modifier TargetProperty="LawUpkeep"             Operation="Percent" Value="1"   Path="ClassEmpire" TooltipOverride="%EmpireImprovementLawUpkeepIncrease"/>
 
-    <!--Ark essence cost rework (currently busted)-->
+    <!--Ark essence cost rework-->
     <Modifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Value="400"     Path="ClassEmpire,AffinityGameplayVampirilis" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Left="$(MothershipCount)" BinaryOperation="Multiplication" Right="400" Path="ClassEmpire,AffinityGameplayVampirilis" SearchValueFromPath="true" TooltipHidden="true"/>
     <Modifier TargetProperty="temp" Operation="Force" Value="$(MothershipCount)" Path="ClassEmpire,AffinityGameplayVampirilis" SearchValueFromPath="true" Priority="1" TooltipHidden="true"/>
-    <!--Chaos stinks (Chaos can fix this easily if he bothers to look at this code to fix it)-->
     <BinaryModifier TargetProperty="temp" Operation="Multiplication" Left="$(MothershipCount)" BinaryOperation="Subtraction" Right="1" Path="ClassEmpire,AffinityGameplayVampirilis" SearchValueFromPath="true" Priority="2" TooltipHidden="true"/>
     <Modifier TargetProperty="temp" Operation="Division" Value="2" Priority="3" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Left="$(temp)" BinaryOperation="Multiplication" Right="200" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!--Utopian Infrastructure-->
+  <SimulationDescriptor Name="FactionTraitUtopianInfrastructure" Type="FactionTrait">
+    <BinaryModifier TargetProperty="UtopianUnhappyReduction" Operation="Addition" Left="-0.25" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%FactionTraitUtopianInfrastructureTooltipOverride"/>
+    <Modifier TargetProperty="UtopianUnhappyReduction" Operation="Addition" Value="0.25" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="UtopianUnhappyReductionPerPop" Operation="Addition" Left="$(UtopianUnhappyReduction)" BinaryOperation="Multiplication" Right="$(HappinessRaw)" Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet" SearchValueFromPath="true" Priority="10" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <!--Unfallen-->
