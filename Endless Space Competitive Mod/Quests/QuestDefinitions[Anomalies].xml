@@ -6,7 +6,7 @@
   <QuestDefinition Name="SpawnNormalPlanetAnomaly10-2x" Category="Test" SubCategory="Test" IsInstant="true">
 
     <!--============ TAGS ============-->
-    <Tags>Hidden, SpawnNormalPlanetAnomaly10-2x</Tags>
+    <Tags>Hidden, BeginTurn</Tags>
 
     <QuestContextMulti/>
 
@@ -16,11 +16,26 @@
 
     <!--============ VARIABLES ============-->
     <Vars>
-      <Var VarName="$LivingEmpires" IsGlobal="true"/>
+      <Var VarName="$LivingEmpires">
+        <From Source="$Empires">
+          <Where>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor,!EmpireEliminated</PathPrerequisite>
+          </Where>
+        </From>
+      </Var>
 
       <Var VarName="$AnomalyDefinitionNameString1" StringValue="PlanetAnomaly10"/>
 
-      <Var VarName="$AllCuriosityPlanetsAtmospheric" IsGlobal="true"/>
+      <Var VarName="$AtmosphericType" StringValue="CuriosityTypeAtmospheric"/>
+
+      <Var VarName="$AllCuriosityPlanetsAtmospheric" IsGlobal="true">
+        <From Source="$Constellations.$StarSystems.$Planets">
+          <Where>
+            <FilterPlanetByCuriosity DisplayedTypeVarName="$AtmosphericType"/>
+            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassPlanet', CuriositiesLevel1Count) gt 0</InterpreterPrerequisite>
+          </Where>
+        </From>
+      </Var>
 
       <Var VarName="$AllPlanets1">
         <Randomize>
@@ -39,20 +54,18 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count">
-        <Count>
-          <From Source="$Constellations.$StarSystems.$Planets"/>
-        </Count>
-      </Var>
+      <InterpretedVar VarName="$AnomalySum" Target="$(LivingEmpires)">
+        <Expression>SumProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet', AnomalyCount)</Expression>
+      </InterpretedVar>
 
-      <InterpretedVar VarName="$Count1" IsGlobal="true">
-        <Expression>Ceil($(Count)*0.008)</Expression>
+      <InterpretedVar VarName="$Count2x" IsGlobal="true">
+        <Expression>Ceil($(AnomalySum)*0.018)</Expression>
       </InterpretedVar>
 
     </Vars>
 
     <!--============ PREREQUISITES ============-->
-    <Prerequisites Target="$(Participants)">
+    <Prerequisites Target="$(Participants)" AnyTarget="true">
       <GameSettingPrerequisite>AnomaliesQuantity,2</GameSettingPrerequisite>
     </Prerequisites>
     <!--============ STEPS ============-->
@@ -65,7 +78,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -119,7 +132,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -133,7 +146,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -187,7 +200,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -201,7 +214,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -254,7 +267,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -268,7 +281,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -322,7 +335,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -336,7 +349,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -390,7 +403,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -404,7 +417,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -457,7 +470,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -471,7 +484,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -524,7 +537,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -538,7 +551,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -600,7 +613,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -614,7 +627,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -668,7 +681,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -682,7 +695,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -735,7 +748,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -749,7 +762,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -811,7 +824,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -825,7 +838,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -879,7 +892,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -893,7 +906,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -946,7 +959,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -960,7 +973,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1013,7 +1026,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1027,7 +1040,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1080,7 +1093,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1094,7 +1107,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1148,7 +1161,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1162,7 +1175,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1216,7 +1229,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1230,7 +1243,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1286,7 +1299,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1300,7 +1313,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1354,7 +1367,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1368,7 +1381,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1421,7 +1434,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1435,7 +1448,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1489,7 +1502,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1503,7 +1516,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1556,7 +1569,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1570,7 +1583,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1629,7 +1642,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1643,7 +1656,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1706,7 +1719,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1720,7 +1733,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1774,7 +1787,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1788,7 +1801,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1841,7 +1854,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1855,7 +1868,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1910,7 +1923,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1924,7 +1937,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1976,7 +1989,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -1990,7 +2003,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2043,7 +2056,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -2057,7 +2070,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2110,7 +2123,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -2124,7 +2137,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2177,7 +2190,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -2191,7 +2204,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2244,7 +2257,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -2258,7 +2271,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2311,7 +2324,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -2325,7 +2338,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2378,7 +2391,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -2392,7 +2405,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2446,7 +2459,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -2460,7 +2473,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2513,7 +2526,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -2527,7 +2540,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2580,7 +2593,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -2594,7 +2607,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2647,7 +2660,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -2661,7 +2674,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2714,7 +2727,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -2728,7 +2741,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2781,7 +2794,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -2795,7 +2808,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2854,7 +2867,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
 
     </Vars>
 
@@ -2869,7 +2882,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2928,7 +2941,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -2942,7 +2955,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -3001,7 +3014,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -3015,7 +3028,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -3069,7 +3082,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -3083,7 +3096,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -3136,7 +3149,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$Count1" IsGlobal="true"/>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -3150,14 +3163,14 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
             <Outcome Name="Outcome1">
               <Triggers Weight="1">
                 <QuestTrigger>
-                  <Tags>SpawnMoonAnomalyStart-2x</Tags>
+                  <Tags>SpawnMoonAnomaly0-2x</Tags>
                   <QuestContextMulti ParticipantsVarName="$LivingEmpires"/>
                 </QuestTrigger>
               </Triggers>
@@ -3169,10 +3182,10 @@
   </QuestDefinition>
 
   <!-- Moons -->
-  <QuestDefinition Name="SpawnMoonAnomalyStart-2x" Category="Test" SubCategory="Test" IsInstant="true">
+  <QuestDefinition Name="SpawnMoonAnomaly0-2x" Category="Test" SubCategory="Test" IsInstant="true">
 
     <!--============ TAGS ============-->
-    <Tags>Hidden, BeginTurn-2x</Tags>
+    <Tags>Hidden, SpawnMoonAnomaly0-2x</Tags>
 
     <QuestContextMulti/>
 
@@ -3183,21 +3196,11 @@
     <!--============ VARIABLES ============-->
     <Vars>
 
-      <Var VarName="$LivingEmpires" IsGlobal="true">
-        <From Source="$Participants"/>
-      </Var>
+      <Var VarName="$LivingEmpires" IsGlobal="true"/>
 
       <Var VarName="$AnomalyDefinitionNameString1" StringValue="PlanetAnomaly27Alt"/>
-      <Var VarName="$AtmosphericType" StringValue="CuriosityTypeAtmospheric"/>
 
-      <Var VarName="$AllCuriosityPlanetsAtmospheric" IsGlobal="true">
-        <From Source="$Constellations.$StarSystems.$Planets">
-          <Where>
-            <FilterPlanetByCuriosity DisplayedTypeVarName="$AtmosphericType"/>
-            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassPlanet', CuriositiesLevel1Count) gt 0</InterpreterPrerequisite>
-          </Where>
-        </From>
-      </Var>
+      <Var VarName="$AllCuriosityPlanetsAtmospheric" IsGlobal="true"/>
 
       <Var VarName="$AllPlanets1">
         <Randomize>
@@ -3225,9 +3228,7 @@
         </Count>
       </Var>
 
-      <InterpretedVar VarName="$Count1" IsGlobal="true">
-        <Expression>Ceil($(Count)*0.008)</Expression>
-      </InterpretedVar>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -3241,7 +3242,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -3304,7 +3305,7 @@
         </Count>
       </Var>
 
-      <InterpretedVar VarName="$Count1" IsGlobal="true">
+      <InterpretedVar VarName="$Count2x" IsGlobal="true">
         <Expression>Ceil($(Count)*0.008)</Expression>
       </InterpretedVar>
     </Vars>
@@ -3320,7 +3321,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -3383,9 +3384,7 @@
         </Count>
       </Var>
 
-      <InterpretedVar VarName="$Count1" IsGlobal="true">
-        <Expression>Ceil($(Count)*0.008)</Expression>
-      </InterpretedVar>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -3399,7 +3398,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -3462,9 +3461,7 @@
         </Count>
       </Var>
 
-      <InterpretedVar VarName="$Count1" IsGlobal="true">
-        <Expression>Ceil($(Count)*0.008)</Expression>
-      </InterpretedVar>
+      <Var VarName="$Count2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -3478,7 +3475,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$AllPlanets1"/>
                 <Input_AnomalyDefinition VarName="$AnomalyDefinitionNameString1"/>
-                <Input_Count VarName="$Count1"/>
+                <Input_Count VarName="$Count2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -3500,7 +3497,7 @@
   <QuestDefinition Name="SpawnUCPlanetAnomaly50-2x" Category="Test" SubCategory="Test" IsInstant="true">
 
     <!--============ TAGS ============-->
-    <Tags>Hidden, BeginTurn-2x</Tags>
+    <Tags>Hidden, SpawnUCPlanetAnomaly50-2x</Tags>
 
     <QuestContextSolo/>
 
@@ -3533,8 +3530,13 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$CountOne" IntValue="1"/>
+      <InterpretedVar VarName="$AnomalySum" Target="$(LivingEmpires)">
+        <Expression>SumProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet', AnomalyCount)</Expression>
+      </InterpretedVar>
 
+      <InterpretedVar VarName="$CountUC2x" IsGlobal="true">
+        <Expression>Ceil($(AnomalySum)*0.002)</Expression>
+      </InterpretedVar>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -3552,7 +3554,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$Anomaly50Planets"/>
                 <Input_AnomalyDefinition VarName="$Anomaly50DefinitionNameString"/>
-                <Input_Count VarName="$CountOne"/>
+                <Input_Count VarName="$CountUC2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -3616,8 +3618,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$CountOne" IntValue="1"/>
-
+      <Var VarName="$CountUC2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -3631,7 +3632,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$Anomaly51Planets"/>
                 <Input_AnomalyDefinition VarName="$Anomaly51DefinitionNameString"/>
-                <Input_Count VarName="$CountOne"/>
+                <Input_Count VarName="$CountUC2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -3695,8 +3696,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$CountOne" IntValue="1"/>
-
+      <Var VarName="$CountUC2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -3710,7 +3710,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$Anomaly52Planets"/>
                 <Input_AnomalyDefinition VarName="$Anomaly52DefinitionNameString"/>
-                <Input_Count VarName="$CountOne"/>
+                <Input_Count VarName="$CountUC2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -3774,8 +3774,7 @@
         </Randomize>
       </Var>
 
-      <Var VarName="$CountOne" IntValue="1"/>
-
+      <Var VarName="$CountUC2x" IsGlobal="true"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -3789,7 +3788,7 @@
               <Action_SpawnAnomaly>
                 <Input_Planets VarName="$Anomaly53Planets"/>
                 <Input_AnomalyDefinition VarName="$Anomaly53DefinitionNameString"/>
-                <Input_Count VarName="$CountOne"/>
+                <Input_Count VarName="$CountUC2x"/>
               </Action_SpawnAnomaly>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
