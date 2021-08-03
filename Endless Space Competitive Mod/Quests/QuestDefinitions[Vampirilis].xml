@@ -893,13 +893,18 @@
             <Var VarName="$CurrentEmpire">
                 <From Source="$Empire"/>
             </Var>
-            <!--<Var VarName="$HomeArk">
-                <From Source="$CurrentEmpire">
+            
+            <!-- Attempt #1: Target the Ark to apply the "Attached" tag-->
+            <Var VarName="$HomeArk">
+                <From Source="$CurrentEmpire.$Fleets.$Ships">
                     <Where>                                   
-                        <PathPrerequisite Inverted="false" Flags="Prerequisite">ClassEmpire//ClassShip,ClassMothership</PathPrerequisite>
+                        <PathPrerequisite Flags="Prerequisite">ClassShip,ClassMothership</PathPrerequisite>
                     </Where>                 
                 </From>
-            </Var>-->
+            </Var>
+            <Var VarName="$DockArk" StringValue="AttachedMothership"/>
+
+            <!-- Attempt #2: Directly colonize the home system-->
             <Var VarName="$HomeSystem">
                 <From Source="$CurrentEmpire.$StartingNode"/>
             </Var>
@@ -911,19 +916,26 @@
                         </Where>
                     </From>
                 </Any>
-                <!--<From Source="$HomeSystem.$UniquePlanetVampirilis"/>-->
             </Var>
-            <!-- <Var VarName="$DockArk" StringValue="FleetActionMothershipAttached"/> -->
         </Vars>
         <!--============ STEPS ============-->
         <Steps>
             <Step Name="Step1">
                 <ObjectiveSet>
-                    <StartActions> <!--
+                    <StartActions>
+                        <!-- Attempt #1: Target the Ark to apply the "Attached" tag-->
                         <Action_ApplyDescriptor>
                             <Input_DescriptorName VarName="$DockArk"/>
                             <Input_Targets VarName="$HomeArk"/>
-                        </Action_ApplyDescriptor>-->
+                        </Action_ApplyDescriptor>
+
+                        <!-- A couple other useful actions that probably would enable RNG-reduction for other factions too
+                        <Action_SpawnImprovement></Action_SpawnImprovement>
+                        <Action_SpawnPopulation></Action_SpawnPopulation>
+                        -->
+
+                        <Action_ApplyQuestEffect></Action_ApplyQuestEffect>
+                        <!-- Attempt #2: Directly colonize the home system-->
                         <Action_Colonize>
                             <Input_Empire VarName="$CurrentEmpire"/>
                             <Input_Planet VarName="$HomePlanet"/>
