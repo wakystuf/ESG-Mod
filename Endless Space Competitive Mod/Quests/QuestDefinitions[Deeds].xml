@@ -499,9 +499,14 @@
       <Var VarName="$AllEmpires">
         <From Source="$Empires"/>
       </Var>
-      <Var VarName="$SystemObjective" IntValue="3"/>
-      <LocalizationVar LocalizationKey="$SystemAmount" Source="$SystemObjective"/>
       <Var VarName="$Path" StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageEmpireDevelopment4"/>
+      <Var VarName="$Expression01" StringValue="Property(Context, @'EmpireTypeMajor',HeroCountHeroPolitics01) ge 1"/>
+      <Var VarName="$Expression02" StringValue="Property(Context, @'EmpireTypeMajor',HeroCountHeroPolitics02) ge 1"/>
+      <Var VarName="$Expression03" StringValue="Property(Context, @'EmpireTypeMajor',HeroCountHeroPolitics03) ge 1"/>
+      <Var VarName="$Expression04" StringValue="Property(Context, @'EmpireTypeMajor',HeroCountHeroPolitics04) ge 1"/>
+      <Var VarName="$Expression05" StringValue="Property(Context, @'EmpireTypeMajor',HeroCountHeroPolitics05) ge 1"/>
+      <Var VarName="$Expression06" StringValue="Property(Context, @'EmpireTypeMajor',HeroCountHeroPolitics06) ge 1"/>
+
     </Vars>
     <!-- ============ PREREQUISITES ============ -->
     <Prerequisites Target="$(Empires)" AnyTarget="true">
@@ -525,16 +530,52 @@
           </Vars>
           <Objective Name="Deeds_Regular_EmpireDevelopment_Stage4_B-Objective" StartValue="0" EndValue="$SystemObjective">
             <Parallel CompletionPolicy="All">
-              <Loop>
-                <Decorator_SystemGainedFromInfluence Initiator="Empire" ProgressionIncrement="1"> </Decorator_SystemGainedFromInfluence>
-                <Input_Count VarName="$SystemObjective"/>
-              </Loop>
               <Sequence>
                 <Decorator_BeginTurn>
-                  <Condition_CheckPath>
-                    <Input_SimulationObject VarName="$CurrentEmpire"/>
-                    <Input_Path VarName="$Path"/>
-                  </Condition_CheckPath>
+                  <Condition_CheckInterpreter>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression01"/>
+                  </Condition_CheckInterpreter>
+                </Decorator_BeginTurn>
+              </Sequence>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckInterpreter>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression02"/>
+                  </Condition_CheckInterpreter>
+                </Decorator_BeginTurn>
+              </Sequence>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckInterpreter>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression03"/>
+                  </Condition_CheckInterpreter>
+                </Decorator_BeginTurn>
+              </Sequence>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckInterpreter>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression04"/>
+                  </Condition_CheckInterpreter>
+                </Decorator_BeginTurn>
+              </Sequence>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckInterpreter>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression05"/>
+                  </Condition_CheckInterpreter>
+                </Decorator_BeginTurn>
+              </Sequence>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckInterpreter>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression06"/>
+                  </Condition_CheckInterpreter>
                 </Decorator_BeginTurn>
               </Sequence>
             </Parallel>
