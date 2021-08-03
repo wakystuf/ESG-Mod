@@ -910,12 +910,10 @@
 		<Modifier TargetProperty="TechnologyTotalStageUnlocked" Operation="Addition" Value="$(EmpireMilitaryStage)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 		<BinaryModifier TargetProperty="IsAtPeace" Operation="Force" Left="1" BinaryOperation="Subtraction" Right="$(IsAtWar)"/>
-
-
 		<Modifier TargetProperty="IsAtPeace" Operation="Force" Value="$(IsAtPeace)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="IsAtWar" Operation="Force" Value="$(IsAtWar)" Path="ClassEmpire/ClassColonizedStarSystem"/>
-
 		<Modifier TargetProperty="HeroCount" Operation="Force" Value="$(HeroCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="LuxuryDepositCount" Operation="Force" Value="$(LuxuryDepositCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 		<!-- Religious T1 law -->
 		<BinaryModifier TargetProperty="SpecialNodesLaw_Boolean1" Operation="Addition" Left="$(FleetsBlockadingSpecialNodes)" BinaryOperation="Subtraction" Right="$(HeroCount)"/>
@@ -1226,7 +1224,7 @@
 		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Subtraction" Value="$(GameSpeedMultiplier)" Priority="5" />
 		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Division" Value="$(SuperColonizationSystemCount)" Priority="6" />
 		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="7" />
-    <Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Addition" Value="0.5" Priority="8" />
+    	<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Addition" Value="0.5" Priority="8" />
 
 		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationMaxed" Operation="Addition" Value="$(SuperColonizationGoldenAgeDurationIncrement)" Priority="1" />
 		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationMaxed" Operation="Division" Value="$(GameSpeedMultiplier)" Priority="2" />
@@ -1461,11 +1459,6 @@
 		<Modifier TargetProperty="AdmiralsInFriendlyTerritory"	Operation="Force" Value="$(AdmiralsInFriendlyTerritory)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 	</SimulationDescriptor>
 
-	<SimulationDescriptor Name="EmpireTypeMajor" Type="EmpireType">
-		<Property Name="TaxRateBuyoutMultiplier" BaseValue="1" MinValue="0"/>
-		<Property Name="TaxRateSelloutMultiplier" BaseValue="1" MinValue="0"/>
-	</SimulationDescriptor>
-
 	<!--Used for Craver Influence and Science ESG-->
 	<SimulationDescriptor Name="EmpireHasHuntingGround" Type="EmpireHasHuntingGround" IsSerializable="false">
 		<Modifier TargetProperty="EmpireLifeforceFromHuntingGrounds" Operation="Addition" Value="100" Path="AffinityGameplayVampirilis"/>
@@ -1478,6 +1471,10 @@
 		<BinaryModifier TargetProperty="NetRelicsResearch" Operation="Addition" Left="0" BinaryOperation="Multiplication" Right="$(ResearchRelics)" Path="ClassEmpire" Priority="10" TooltipHidden="true"/>
 	</SimulationDescriptor>
 
+	<!--United Empire influence buyout without circularity ESG-->
+	<SimulationDescriptor Name="ProductionToInfluence" Type="ProductionToInfluence">
+		<BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(SystemProduction)" SearchValueFromPath="true" Path="ClassEmpire/ClassColonizedStarSystem" Priority="9999" TooltipOverride="%ProductionToInfluenceTooltipEffects"/>
+	</SimulationDescriptor>
 
 	<SimulationDescriptor Name="EmpireTypePirate" Type="EmpireType">
 
@@ -1525,7 +1522,7 @@
 		<Modifier TargetProperty="CannotUsePortals" Operation="Addition" Value="1" Path="ClassEmpire" />
 		<Modifier TargetProperty="HasPortal" Operation="Addition" Value="1" Path="ClassEmpire/ClassColonizedStarSystem" />
 
-		<Modifier TargetProperty="MaximumHackingOperationsCount" Operation="Force" Value="100"/>
+		<Modifier TargetProperty="MaximumHackingOperationsCount" Operation="Force" Value="0" Priority="1000"/>
 	</SimulationDescriptor>
 	
 	<SimulationDescriptor Name="EmpireTypeMinor" Type="EmpireType">
@@ -1556,6 +1553,7 @@
         <Modifier       TargetProperty="EmpireManpower"                 Operation="Addition"    Value="$(EmpireManpower)" Path="EmpireTypeMinor/ClassMinorRelationWithMajor"    Priority="0"/>
 
         <Modifier TargetProperty="Trend" Operation="Multiplication" Value="$(GameSpeedTrendMultiplier)" Priority="1"  Path="ClassEmpire/ClassMinorRelationWithMajor"/>
+		<Modifier TargetProperty="MaximumHackingOperationsCount" Operation="Force" Value="0" Priority="1000"/>
 
         <Modifier TargetProperty="Happiness"            Operation="Force" Value="50" Priority="1000"  Path="ClassEmpire/ClassColonizedStarSystem"/>
         <Modifier TargetProperty="NetEmpireMoney"       Operation="Force" Value="50" Priority="1000"/>
