@@ -51,6 +51,7 @@
   <!--  Colonize Option A: Nobody is Guarding  -->
   <ColonizeFleetAction Name="ColonizeFleetAction" FeedbackDuration="1.5" DelayAfterFeedback="1">
     <EntityPrerequisites Location="Self">
+      <PathPrerequisite Inverted="true" Flags="Prerequisite,SystemIsBeingBlockaded,Discard">ClassGarrisonFleet,FleetActionGuarding</PathPrerequisite>
       <PathPrerequisite Flags="Prerequisite,NeedColonizationModule,Discard">ClassGarrisonFleet/ClassShip/ClassSection/ClassModule,ModuleSupportColonization</PathPrerequisite>
       <InterpreterPrerequisite Flags="Prerequisite,Disable,CannotColonizeUnderEnemyInfluence">not(Path(Context, @'FleetInfluenceStateHostile')) or Path(Context, @'./ClassEmpire/ClassSenate/LawP05L05Effect')</InterpreterPrerequisite>
       <PathPrerequisite Inverted="true" Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
@@ -82,13 +83,17 @@
       <SimulationAlteration DescriptorReference="FleetActionBusy"/>
       <SimulationAlteration DescriptorReference="FleetActionHeroLocked"/>
     </EntityModifiers>
+    <EntityPrerequisites Location="OrbitEntities">
+      <PathPrerequisite Inverted="false" Flags="Prerequisite,Disable,SystemIsBeingBlockaded">GuardedGameNode</PathPrerequisite>
+      <PathPrerequisite Inverted="false" Flags="Prerequisite,Disable,SystemIsBeingBlockaded">BlockadedColonizedStarSystem</PathPrerequisite>
+    </EntityPrerequisites>
     <CancelActions Flags="CancelOnAnything,CancelOnGuard" SameContext="true" SameInitiator="false" SameNodeAndOnAllEmpires="true"/>
   </ColonizeFleetAction>
 
   <!--  Colonize Option C: Blockade Breaker  -->
   <ColonizeFleetAction Name="ColonizeFleetAction3" FeedbackDuration="1.5" DelayAfterFeedback="1">
     <EntityPrerequisites Location="Self">
-      <PathPrerequisite Flags="Prerequisite,SystemIsBeingBlockaded,Discard">../ClassEmpire,BlockadeBreaker</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,SystemIsBeingBlockaded,Discard">../ClassEmpire,FactionTraitBlockadeBreakers</PathPrerequisite>
       <PathPrerequisite Flags="Prerequisite,NeedColonizationModule,Discard">ClassGarrisonFleet/ClassShip/ClassSection/ClassModule,ModuleSupportColonization</PathPrerequisite>
       <InterpreterPrerequisite Flags="Prerequisite,Disable,CannotColonizeUnderEnemyInfluence">not(Path(Context, @'FleetInfluenceStateHostile')) or Path(Context, @'./ClassEmpire/ClassSenate/LawP05L05Effect')</InterpreterPrerequisite>
       <PathPrerequisite Inverted="true" Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
@@ -148,7 +153,7 @@
   <!--  Colonize as Vaulters C: Blockade Breaker -->
   <SuperColonizeFleetAction Name="SuperColonizeFleetAction3" FeedbackDuration="1.5" DelayAfterFeedback="1" PropertyToReset="TurnsSinceSuperColonization">
     <EntityPrerequisites Location="Self">
-      <PathPrerequisite Flags="Prerequisite,SystemIsBeingBlockaded,Discard">../ClassEmpire,BlockadeBreaker</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,SystemIsBeingBlockaded,Discard">../ClassEmpire,FactionTraitBlockadeBreakers</PathPrerequisite>
       <PathPrerequisite Flags="Prerequisite,Discard">ClassGarrisonFleet/ClassShip,ShipRoleSuperColonizer</PathPrerequisite>
       <InterpreterPrerequisite Flags="CannotColonizeUnderEnemyInfluence">not(Path(Context, @'FleetInfluenceStateHostile')) or Path(Context, @'./ClassEmpire/ClassSenate/LawP05L05Effect')</InterpreterPrerequisite>
       <PathPrerequisite Inverted="true" Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
