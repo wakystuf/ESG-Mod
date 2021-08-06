@@ -32,7 +32,7 @@
   <SimulationDescriptor Name="EmpireImprovementQuestUnitedEmpire08" Type="EmpireImprovement" >
         <!--<Modifier TargetProperty="DiplomacyCostReduction" Operation="Percent" Value="-0.2" Path="ClassEmpire"/>-->
         <Modifier TargetProperty="SystemProduction" Operation="Percent" Value="0.15" Path="ClassEmpire/ClassColonizedStarSystem" Priority="10"/>
-        <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Left="0.2" BinaryOperation="Multiplication" Right="$(SystemProduction)" SearchValueFromPath="true" Path="ClassEmpire/ClassColonizedStarSystem" Priority="99" TooltipOverride="%EmpireImprovementQuestUnitedEmpire08TooltipEffects"/>
+        <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Left="0.2" BinaryOperation="Multiplication" Right="$(SystemProduction)" SearchValueFromPath="true" Path="ClassEmpire/ClassColonizedStarSystem" Priority="9999" TooltipOverride="%EmpireImprovementQuestUnitedEmpire08TooltipEffects"/>
   </SimulationDescriptor>
 
 
@@ -242,6 +242,11 @@
     <Modifier TargetProperty="ShipBuyoutReduction" Operation="Addition" Value="0.1" Path="../ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
 
+  <!--Lumeris Quest Reward (shorter Anarchy crashes game on Fast, so new empire-themed reward instead)-->
+  <SimulationDescriptor Name="EmpireImprovementQuestVenetians06" Type="EmpireImprovement">
+    <BinaryModifier TargetProperty="SystemEmpirePointVenetians" Operation="Addition" Left="$(SystemMoney)" BinaryOperation="Multiplication" Right="0.1" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" Priority="200" TooltipOverride="%EmpireImprovementDescriptorQuestVenetians06TooltipEffect"/>
+  </SimulationDescriptor>
+
   <!--Innate Explorer Cloaking-->
   <SimulationDescriptor Name="EmpireImprovementExplorerInvisibility" Type="EmpireImprovement">
     <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="1" Path="ClassEmpire/ClassGarrisonFleet/ClassShip, ShipRoleExploration" Priority="-1"/>
@@ -330,17 +335,35 @@
   </SimulationDescriptor>
 
   <!--Deed Effects-->
+  <SimulationDescriptor Name="EmpireImprovementDeeds02" Type="EmpireImprovement">
+    <Modifier TargetProperty="DiplomacyCostReduction" Operation="Percent" Value="-0.5" Path="../ClassEmpire"/>
+    <Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="1" Path="../ClassEmpire"/>
+  </SimulationDescriptor>
+
   <SimulationDescriptor Name="EmpireImprovementDeeds05" Type="EmpireImprovement">
-    <BinaryModifier TargetProperty="EmpireMoney" Operation="Addition" Left="15" BinaryOperation="Multiplication" Right="$(ScienceBuildingCount)" Path="ClassEmpire" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="EmpireMoney" Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(ScienceBuildingCount)" Path="ClassEmpire" SearchValueFromPath="true"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="EmpireImprovementDeeds06" Type="EmpireImprovement">
-    <BinaryModifier TargetProperty="EmpireEmpirePoint" Operation="Addition" Left="15" BinaryOperation="Multiplication" Right="$(ScienceBuildingCount)" Path="ClassEmpire" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="EmpireEmpirePoint" Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(ScienceBuildingCount)" Path="ClassEmpire" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="EmpireImprovementDeeds07" Type="EmpireImprovement">
+    <Modifier TargetProperty="TerraformationModifier" Operation="Addition" Value="-0.5" Path="ClassEmpire"/>
+    <Modifier TargetProperty="MaximumMovement"	Operation="Addition"		Value="1"		Path="../ClassEmpire//ClassGarrisonFleet/ClassShip"/>
   </SimulationDescriptor>
 
   <!-- Propaganda-->
   <SimulationDescriptor Name="EmpireImprovementConditionalPropaganda" Type="EmpireImprovement"/>
 
   <SimulationDescriptor Name="EmpireImprovementUnconditionalPropaganda" Type="EmpireImprovement"/>
+
+
+  <!--Lumeris traits-->
+  <SimulationDescriptor Name="EmpireImprovementTradingScienceYields" Type="EmpireImprovement">
+    <BinaryModifier TargetProperty="TradingRouteSystemBaseIncome_EmpireResearch" Operation="Percent" Left="0.15" BinaryOperation="Multiplication" Right="$(TradingRouteSystemBaseIncome)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" Priority="999"/>
+    <Modifier TargetProperty="TradingRoutesBonus_Growth"		Operation="Percent"					Value="5"		Path="ClassEmpire/ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="TradingRoutesBonus_Production"	Operation="Percent"					Value="5"		Path="ClassEmpire/ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
 
 </Datatable>
