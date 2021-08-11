@@ -407,6 +407,19 @@
         <PopulationEventOnSelf>PopulationPoliticalEventMinorRecruitShips</PopulationEventOnSelf>
     </EmpireDiplomaticGivePopulationAsShipAction>
 
+    <!--Selective Migration-->
+    <EmpireDiplomaticMigrationAction Name="EmpireDiplomaticMigrationAction" HidePanelOnClick="true" PopulationCount="1">
+      <PathPrerequisite Flags="Prerequisite,Discard">ClassEmpire,!AffinityVampirilis</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,Discard">ClassEmpire,!AffinityUmbralChoir</PathPrerequisite>
+      <InterpreterPrerequisite Flags="NoValidDestination">(SumProperty(Context, @'ClassEmpire/ClassColonizedStarSystem',MaximumPopulation) - Property(Context,@ClassEmpire,Population)) gt 0</InterpreterPrerequisite>
+      <MinorLuxuryCost Instant="true">15 * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction)</MinorLuxuryCost>
+      <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+      <RelationPathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ClassMinorRelationWithMajor,RelationIdeologyMinorPacifist</RelationPathPrerequisite>
+      <MinorEmpireInterpreterPrerequisite Flags="Prerequisite,RequiredBestRelation">$(OwnershipType) ge 1 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
+      <MinorEmpireInterpreterPrerequisite Flags="NoPopulationOnSystem">Property(Context, @'ClassEmpire/ClassColonizedStarSystem,MinorHomeSystem',Population,true) gt 1</MinorEmpireInterpreterPrerequisite>
+      <PopulationEventOnSelf>PopulationPoliticalEventMinorMigrationAction</PopulationEventOnSelf>
+    </EmpireDiplomaticMigrationAction>
+
     <!-- Praise -->
     <EmpireDiplomaticActionDynamicCost Name="ComplimentEmpireAction">
         <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">((10 + Max(0, $(Trend)) * 30) * Property(Relation,MinorPraiseCostMultiplier) * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction)) * Property(StockLocation,@ClassEmpire,MinorFactionCostReduction)</CustomCost>
