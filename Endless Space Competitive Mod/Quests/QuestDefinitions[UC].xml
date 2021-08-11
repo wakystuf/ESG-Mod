@@ -379,17 +379,19 @@
                     <Objective Name="Objective0">
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
                         <!--Assimilate a minor faction-->
-                        <Sequence>
-                            <!--Become Cordial-->
-                            <Decorator_DiplomaticRelationChanged Initiator="Empire">                                  
-                                <Input_DiplomaticRelationState VarName="$RelationState"/>
-                            </Decorator_DiplomaticRelationChanged>
-                            <Action_ChooseOutcome Name="Outcome1"/>
-                        </Sequence>
-                        <Sequence>
-                            <Decorator_MinorEmpireIntegrated Initiator="Empire"/>
-                            <Action_ChooseOutcome Name="Outcome0"/>
-                        </Sequence>
+                        <Parallel CompletionPolicy="Any">
+                            <Sequence>
+                                <!--Become Cordial-->
+                                <Decorator_DiplomaticRelationChanged Initiator="Empire">                                  
+                                    <Input_DiplomaticRelationState VarName="$RelationState"/>
+                                </Decorator_DiplomaticRelationChanged>
+                                <Action_ChooseOutcome Name="Outcome0"/>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_MinorEmpireIntegrated Initiator="Empire"/>
+                                <Action_ChooseOutcome Name="Outcome0"/>
+                            </Sequence>
+                        </Parallel>
                         <Outcome Name="Outcome0">
                             <Triggers Weight="1">
                                 <QuestTrigger>
