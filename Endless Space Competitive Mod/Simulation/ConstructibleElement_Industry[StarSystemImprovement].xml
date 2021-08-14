@@ -342,6 +342,19 @@
     <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionIndustry1"/>
   </StarSystemImprovementDefinition>
 
+    <!-- Holy Proliferation -->
+	<StarSystemResourceImprovementDefinition Name="StarSystemImprovementGrowthFromLifeforce" SubCategory="SubCategoryVampirilis" ScoreProvider="StarSystemImprovementBuilt">
+		<AIGain RessourceName="LifeForceGain" Inverted="true"/>
+		<AIGain RessourceName="FoodGain"/>
+
+		<Tags>NoBuyout</Tags>
+		<Cost ResourceName="SystemTurnBased">1</Cost>
+		<CustomCost ResourceName="EmpireLifeforce"      Instant="true">250 * Max(1,Property(StockLocation, @ClassExploitedStarSystem, PopulationOnMothership, true)) * Property(StockLocation, @../ClassEmpire,GameSpeedMultiplier)</CustomCost>
+		<PathPrerequisite Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
+		<InterpreterPrerequisite Flags="Prerequisite,Disable">Property(Context, Population) lt Property(Context, MaximumPopulation)</InterpreterPrerequisite>
+		<Resource Name="SystemGrowth">2440 * Property(Empire, GameSpeedMultiplier)</Resource>
+	</StarSystemResourceImprovementDefinition>
+
   <!--*************************-->
   <!--***CURIOSITY BUILDINGS***-->
   <!--*************************-->
@@ -395,19 +408,6 @@
     <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage3Normal"/>
     <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionIndustry1"/>
   </StarSystemImprovementDefinition>
-
-  <!-- Holy Proliferation -->
-	<StarSystemResourceImprovementDefinition Name="StarSystemImprovementGrowthFromLifeforce" SubCategory="SubCategoryVampirilis" ScoreProvider="StarSystemImprovementBuilt">
-		<AIGain RessourceName="LifeForceGain" Inverted="true"/>
-		<AIGain RessourceName="FoodGain"/>
-
-		<Tags>NoBuyout</Tags>
-		<Cost ResourceName="SystemTurnBased">1</Cost>
-		<CustomCost ResourceName="EmpireLifeforce"      Instant="true">250 * Max(1,Property(StockLocation, @ClassExploitedStarSystem, PopulationOnMothership, true)) * Property(StockLocation, @../ClassEmpire,GameSpeedMultiplier)</CustomCost>
-		<PathPrerequisite Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
-		<InterpreterPrerequisite Flags="Prerequisite,Disable">Property(Context, Population) lt Property(Context, MaximumPopulation)</InterpreterPrerequisite>
-		<Resource Name="SystemGrowth">1220 * Property(Empire, GameSpeedMultiplier)</Resource>
-	</StarSystemResourceImprovementDefinition>
   
   <!--**********************-->
   <!--***TIER 1 BUILDINGS***-->
