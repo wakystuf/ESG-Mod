@@ -17,18 +17,57 @@
     <Property Name="SystemGrowthJuggernautFlat" BaseValue="0"/>
     <Property Name="SystemProductionJuggernautFlat" BaseValue="0"/>
     <Property Name="BuildingProductionCostReduction" BaseValue="0"/>
-
     <Modifier TargetProperty="JuggernautSystemSupportModulesCount" Operation="Addition" Value="1" Path="../ClassEmpire"/>
   </SimulationDescriptor>
 
-  <!-- Visual Only
-       Grants Bureau -->
+  <!-- Analyzer Module Class-->
+  <SimulationDescriptor Name="ModuleSupportJuggernautAnalyzer" Type="ModuleSupportJuggernautAnalyzer">
+    <Property Name="NetEmpireMoneyOnSpecialNodes"/>
+    <Property Name="NetEmpireResearchOnSpecialNodes"/>
+    <Property Name="NetEmpireEmpirePointOnSpecialNodes"/>
+    <Property Name="NetEmpireLifeForceOnSpecialNodes"/>
+    <Property Name="NetStrategic1FromSpecialNodes"/>
+    <Property Name="NetStrategic2FromSpecialNodes"/>
+    <Property Name="NetStrategic3FromSpecialNodes"/>
+    <Property Name="NetStrategic4FromSpecialNodes"/>
+    <Property Name="NetStrategic5FromSpecialNodes"/>
+    <Property Name="NetStrategic6FromSpecialNodes"/>
+    <Property Name="SpecialNodeEffectMultiplier"/>
+    <!--  "I receive bonuses here".  -->
+    <Modifier TargetProperty="HasBonusesFromOrbit" Operation="Addition" Value="1" Path="../ClassGarrisonFleet"/>
+    <!--  Bonus science, dust & influence (on any node)  -->
+    <Modifier TargetProperty="NetEmpireMoneyOnSpecialNodes" Operation="Addition" Value="$(NetEmpireMoneyOnSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNode"/>
+    <Modifier TargetProperty="NetEmpireResearchOnSpecialNodes" Operation="Addition" Value="$(NetEmpireResearchOnSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNode"/>
+    <Modifier TargetProperty="NetEmpireEmpirePointOnSpecialNodes" Operation="Addition" Value="$(NetEmpireEmpirePointOnSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNode"/>
+    <Modifier TargetProperty="NetEmpireLifeForceOnSpecialNodes" Operation="Addition" Value="$(NetEmpireLifeForceOnSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNode"/>
+    <!--  More potent special node effect on system, if owned.  -->
+    <Modifier TargetProperty="SpecialNodeEffectMultiplier" Operation="Addition" Value="$(SpecialNodeEffectMultiplier)" Path="../ClassGarrisonFleet"/>
+    <!--  Strat generation depending on special node type  -->
+    <!--  Black hole & Solar Nebula  -->
+    <Modifier TargetProperty="NetStrategic1FromSpecialNodes" Operation="Addition" Value="$(NetStrategic1FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeBlackHole"/>
+    <Modifier TargetProperty="NetStrategic1FromSpecialNodes" Operation="Addition" Value="$(NetStrategic1FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeSolarNebula"/>
+    <Modifier TargetProperty="NetStrategic2FromSpecialNodes" Operation="Addition" Value="$(NetStrategic2FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeBlackHole"/>
+    <Modifier TargetProperty="NetStrategic2FromSpecialNodes" Operation="Addition" Value="$(NetStrategic2FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeSolarNebula"/>
+    <!--  Asteroid fields & Collapsing Star  -->
+    <Modifier TargetProperty="NetStrategic3FromSpecialNodes" Operation="Addition" Value="$(NetStrategic3FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeAsteroidField"/>
+    <Modifier TargetProperty="NetStrategic3FromSpecialNodes" Operation="Addition" Value="$(NetStrategic3FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeCollapsingStar"/>
+    <Modifier TargetProperty="NetStrategic4FromSpecialNodes" Operation="Addition" Value="$(NetStrategic4FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeAsteroidField"/>
+    <Modifier TargetProperty="NetStrategic4FromSpecialNodes" Operation="Addition" Value="$(NetStrategic4FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeCollapsingStar"/>
+    <!--  Space Clouds & Neutron Star  -->
+    <Modifier TargetProperty="NetStrategic5FromSpecialNodes" Operation="Addition" Value="$(NetStrategic5FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeNeutronStar"/>
+    <Modifier TargetProperty="NetStrategic5FromSpecialNodes" Operation="Addition" Value="$(NetStrategic5FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeSpaceClouds"/>
+    <Modifier TargetProperty="NetStrategic6FromSpecialNodes" Operation="Addition" Value="$(NetStrategic6FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeNeutronStar"/>
+    <Modifier TargetProperty="NetStrategic6FromSpecialNodes" Operation="Addition" Value="$(NetStrategic6FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeSpaceClouds"/>
+    <Modifier TargetProperty="JuggernautSpecialNodeModulesCount" Operation="Addition" Value="1" Path="../ClassEmpire"/>
+  </SimulationDescriptor>
+
+  <!-- Econ Module: Grants Bureau (Visual Only)-->
   <SimulationDescriptor Name="ModuleSupportJuggernautSystemSupportFIDSFlat" Type="ModuleSupportJuggernautSystemSupport">
     <Modifier TargetProperty="SystemGrowthJuggernautFlat"           Operation="Addition" Value="15"/>
     <Modifier TargetProperty="SystemProductionJuggernautFlat"       Operation="Addition" Value="15"/>
   </SimulationDescriptor>
 
-  <!-- Local Government Bureau -->
+  <!-- Econ Module: Local Government Bureau -->
   <SimulationDescriptor Name="ModuleSupportJuggernautSystemSupportFIDSDynamic" Type="ModuleSupportJuggernautSystemSupport">
     <Modifier TargetProperty="SystemGrowthJuggernautFlat"        Operation="Addition" Value="5"/>
     <Modifier TargetProperty="SystemProductionJuggernautFlat"    Operation="Addition" Value="5"/>
@@ -43,7 +82,6 @@
   </SimulationDescriptor>
   <SimulationDescriptor Name="ModuleSupportJuggernautAnalyzer2" Type="ModuleSupportJuggernautAnalyzer">
     <Modifier TargetProperty="SpecialNodeEffectMultiplier"          Operation="Addition"    Value="0.25"/>
-
     <Modifier TargetProperty="NetStrategic1FromSpecialNodes"        Operation="Addition"    Value="1.5"/>
     <Modifier TargetProperty="NetStrategic2FromSpecialNodes"        Operation="Addition"    Value="1.5"/>
     <Modifier TargetProperty="NetStrategic3FromSpecialNodes"        Operation="Addition"    Value="1.5"/>
@@ -52,22 +90,19 @@
     <Modifier TargetProperty="NetStrategic6FromSpecialNodes"        Operation="Addition"    Value="1.5"/>
   </SimulationDescriptor>
 
+  <!--Research Modules-->
   <SimulationDescriptor Name="ModuleSupportJuggernautResearchStarting" Type="ModuleSupportJuggernautResearch">
     <Modifier TargetProperty="NetEmpireResearchOnSpecialNodes"  Operation="Addition"    Value="30"/>
   </SimulationDescriptor>
-
   <SimulationDescriptor Name="ModuleSupportJuggernautResearch1" Type="ModuleSupportJuggernautResearch">
     <Modifier TargetProperty="NetEmpireResearchOnSpecialNodes"  Operation="Addition"    Value="50"/>
-
     <Modifier TargetProperty="TechnologyCostQuadrantScienceAndExplorationMultiplierFromSpecialNodes"     Operation="Addition"    Value="0.01"/>
     <Modifier TargetProperty="TechnologyCostQuadrantEconomyAndTradeMultiplierFromSpecialNodes"           Operation="Addition"    Value="0.01"/>
     <Modifier TargetProperty="TechnologyCostQuadrantEmpireDevelopmentMultiplierFromSpecialNodes"         Operation="Addition"    Value="0.01"/>
     <Modifier TargetProperty="TechnologyCostQuadrantMilitaryMultiplierFromSpecialNodes"                  Operation="Addition"    Value="0.01"/>
   </SimulationDescriptor>
-
   <SimulationDescriptor Name="ModuleSupportJuggernautResearch2" Type="ModuleSupportJuggernautResearch">
     <Modifier TargetProperty="NetEmpireResearchOnSpecialNodes"  Operation="Addition"    Value="200"/>
-
     <Modifier TargetProperty="TechnologyCostQuadrantScienceAndExplorationMultiplierFromSpecialNodes"     Operation="Addition"    Value="0.02"/>
     <Modifier TargetProperty="TechnologyCostQuadrantEconomyAndTradeMultiplierFromSpecialNodes"           Operation="Addition"    Value="0.02"/>
     <Modifier TargetProperty="TechnologyCostQuadrantEmpireDevelopmentMultiplierFromSpecialNodes"         Operation="Addition"    Value="0.02"/>
