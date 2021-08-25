@@ -21,12 +21,12 @@
             <Var VarName="$CurrentEmpire">
                 <From Source="$Empire"/>
             </Var>
-            <!--Step2_2: MinNumber of Minor I want to see assimilated-->
+            <!--Step2_2: MinNumber of Minor I want to see Cordial-->
             <Var VarName="$NumberOfMinors" IntValue="1"/>
             <!--Step2_2: Minors should be Assimilated by the Major-->
             <Var VarName="$RelationStateAlly" StringValue="DiplomaticRelationStateMinorCordial"/>
 
-            <Var VarName="$PercentageAmount" IntValue="50"/>
+            <Var VarName="$SystemAmount" IntValue="10"/>
             <Var VarName="$Five" IntValue="4"/>
             <InterpretedVar VarName="$StartCount" Target="$(Empire)">
                 <Expression>Count(Context, @ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet)</Expression>
@@ -36,7 +36,7 @@
             <Var VarName="$OutpostAmount" IntValue="3"/>
             <LocalizationVar LocalizationKey="$Amount01" Source="$Five"/>
             <LocalizationVar LocalizationKey="$Amount02" Source="$NumberOfMinors"/>
-            <LocalizationVar LocalizationKey="$Percentage" Source="$PercentageAmount"/>
+            <LocalizationVar LocalizationKey="$SystemAmount" Source="$SystemAmount"/>
             
         </Vars>
         
@@ -120,12 +120,10 @@
                             </Sequence>
                         
                             <Sequence>
-                                <Decorator_BeginTurn>
-                                    <Condition_ExplorationProgress MinimumState="Revealed">
-                                        <Input_Empire VarName="$CurrentEmpire"/>
-                                        <Input_Percentage VarName="$PercentageAmount"/>
-                                    </Condition_ExplorationProgress>
-                                </Decorator_BeginTurn>
+                                <Loop>
+                                    <Decorator_ExploredNode Initiator="Empire" MinimumState="Revealed" ProgressionIncrement="1"/>
+                                    <Input_Count VarName="$SystemAmount"/>
+                                </Loop>
                                 <Action_ChooseOutcome Name="Outcome1"/>
                             </Sequence>
                             
