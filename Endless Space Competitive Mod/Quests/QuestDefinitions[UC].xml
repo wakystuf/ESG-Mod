@@ -639,7 +639,7 @@
             <Var VarName="$CurrentEmpire">
                 <From Source="$Empire"/>
             </Var>
-            <Var VarName="$MyHomeSystem">
+            <Var VarName="$HomeSystem">
                 <From Source="$CurrentEmpire.$HomeColonizedStarSystem"/>
             </Var>
 
@@ -660,15 +660,12 @@
             <Var VarName="$MySystems">
                 <From Source="$CurrentEmpire.$ColonizedStarSystems.$StarSystem"/>
             </Var>
-            <!--Special node I have to hack-->
+            <!--Special node I have to hack -->
             <Var VarName="$TargetSpecialNode">
                 <First>
                     <From Source="$Constellations.$SpecialNodes">
-                        <Where>
-                            <IsNot EntityVarName="$MySystems"/>
-                        </Where>
                         <OrderBy>
-                            <SortSystemByDistance OriginVarName="$Academy" SortBy="Nearest" MinimumCandidateCount="1" ConsiderFreeMovement="true"/>
+                            <SortSystemByDistance OriginVarName="$HomeSystem" SortBy="Farthest" MinimumDistance="10" MaximumDistance="35" MinimumCandidateCount="1"/>
                         </OrderBy>
                     </From>
                 </First>
