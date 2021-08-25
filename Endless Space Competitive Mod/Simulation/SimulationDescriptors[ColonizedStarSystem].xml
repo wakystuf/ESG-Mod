@@ -17,8 +17,8 @@
 		<Property Name="HomeSystemPopulationHomeSystem"			BaseValue="0"/>
 		<Property Name="HomeSystemPopulationSystem"					BaseValue="0"/>
 		<Property Name="MaximumEmpireProcessingPowerStock"	BaseValue="0"/>
-    <Property Name="DeploymentLimitRatio"							  BaseValue="1" MaxValue="1.5" MinValue="0.01"/>
-    <Property Name="ManpowerCapacityWithGhosts"					BaseValue="0"/>
+		<Property Name="DeploymentLimitRatio"							  BaseValue="1" MaxValue="1.5" MinValue="0.01"/>
+		<Property Name="ManpowerCapacityWithGhosts"					BaseValue="0"/>
 		<Property Name="EmpirePointFromIndustryConversion"	BaseValue="0"/>
 
 		<!-- Law Rework -->
@@ -27,13 +27,13 @@
 		<Property Name="IsAtWar"						 BaseValue="0" MinValue="0" MaxValue="1"/>
 		<Property Name="IsAtPeace"						 BaseValue="1" MinValue="0" MaxValue="1"/>
 		<Property Name="LocalFIDSBonusfromMP"            BaseValue="0" MinValue="0" MaxValue="0.25"/>
-	  <Property Name="LocalFIDSBonusfromMP_Republic"   BaseValue="0" MinValue="0" MaxValue="0.3"/>
+		<Property Name="LocalFIDSBonusfromMP_Republic"   BaseValue="0" MinValue="0" MaxValue="0.3"/>
 		<Property Name="UnlockedTechnologyCount"		 BaseValue="0"/>
 		<Property Name="LuxuryDepositCount"				 BaseValue="0"/>
 		<Property Name="TradeRouteBoolean"				 BaseValue="0" MinValue="0" MaxValue="1"/>
 		<Property Name="SystemManpowerGenericHeroSkill"  BaseValue="0"/>
     
-    <!-- Update this once a week until Chaos does what he promised -->
+		<!-- Update this once a week until Chaos does what he promised -->
 		<Property Name="WeeksChaosHasDelayed"  BaseValue="1"/>
 
 		<!-- Luxury Rework -->
@@ -266,6 +266,8 @@
 		<Property Name="HappinessPerWar"             				BaseValue="0" MinValue="Negative"    />
 		<Property Name="HappinessPerMinorWar"             			BaseValue="0" MinValue="Negative"    />
 		<Property Name="HappinessPerHomeSystem"             		BaseValue="0" MinValue="Negative"    />
+		<Property Name="HappinessFromTraitors"						BaseValue="0" MinValue="0"/>
+		<Property Name="HappinessFromMinors"						BaseValue="0" MinValue="0"/>
 
 		<Property Name="HappinessMalusFromPoliticsSupport"  		BaseValue="0" MinValue="0" MaxValue="100" IsSealed="true" IsSerializable="true"/>
 		<Property Name="AppliedHappinessMalusFromPoliticsSupport"   BaseValue="0" MinValue="Negative"   />
@@ -1010,14 +1012,15 @@
 		<Modifier           TargetProperty="HappinessPerMinorWar"           Operation="Multiplication" Value="$(MinorWarCount)"/>
 		<Modifier           TargetProperty="HappinessPerHomeSystem"         Operation="Multiplication" Value="$(ColonizedMajorHomeSystemCount)"/>
 
-
-
 		<BinaryModifier     TargetProperty="Happiness" Operation="Addition" Left="$(HappinessBonusFromFleetPresence)" BinaryOperation="Multiplication" Right="$(HasOwnedDockedFleets)" />
 		<Modifier           TargetProperty="Happiness" Operation="Addition" Value="$(HappinessPerPeace)"/>
 		<Modifier           TargetProperty="Happiness" Operation="Addition" Value="$(HappinessPerAlliance)"/>
 		<Modifier           TargetProperty="Happiness" Operation="Addition" Value="$(HappinessPerWar)"/>
 		<Modifier           TargetProperty="Happiness" Operation="Addition" Value="$(HappinessPerMinorWar)"/>
 		<Modifier           TargetProperty="Happiness" Operation="Addition" Value="$(HappinessPerHomeSystem)"/>
+		<Modifier           TargetProperty="Happiness" Operation="Addition" Value="$(HappinessFromTraitors)"/>
+		<Modifier           TargetProperty="Happiness" Operation="Addition" Value="$(HappinessFromMinors)"/>
+
 		<BinaryModifier     TargetProperty="Happiness" Operation="Addition" Left="$(RepresentativeWithPartyInSenateCount)" BinaryOperation="Multiplication" Right="$(HappinessBonusPerRepresentative)" />
 		<BinaryModifier     TargetProperty="Happiness" Operation="Subtraction" Left="$(RepresentativeWithoutPartyInSenateCount)" BinaryOperation="Multiplication" Right="$(HappinessPenaltyPerRepresentative)" />
 		<Modifier           TargetProperty="Happiness" Operation="Multiplication" Value="$(Ownership)" Path="ColonizedStarSystemStateColony"/>
