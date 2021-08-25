@@ -107,27 +107,16 @@
                     <Reward Droplist="DroplistMoneyEra3" Picks="1"/>
                 </ObjectiveSet>
                 <ObjectiveSet>
-                    <Objective Name="Step2_3_Objective1">
+                    <Objective Name="Step2_3_Objective1" StartValue="0" EndValue="$SystemAmount">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" /> 
-                        <Parallel CompletionPolicy="First">
-                            
-                            <Sequence>
-                                    <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
-                                        <Input_MinimumPercentage VarName="$PercentageAmount"/>                                  
-                                    </Decorator_ExploredNode>
-                                <Action_ChooseOutcome Name="Outcome1"/>
-                            </Sequence>
-                        
-                            <Sequence>
-                                <Loop>
-                                    <Decorator_ExploredNode Initiator="Empire" MinimumState="Revealed" ProgressionIncrement="1"/>
-                                    <Input_Count VarName="$SystemAmount"/>
-                                </Loop>
-                                <Action_ChooseOutcome Name="Outcome1"/>
-                            </Sequence>
-                            
-                        </Parallel>
+                        <Sequence>
+                            <Loop>
+                                <Decorator_ExploredNode Initiator="Empire" MinimumState="Revealed" ProgressionIncrement="1"/>
+                                <Input_Count VarName="$SystemAmount"/>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
                         <Outcome Name="Outcome1">
                             <Triggers Weight="1">
                                 <QuestTrigger>
@@ -993,7 +982,7 @@
             <Var VarName="$CurrentEmpire">
                 <From Source="$Empire"/>
             </Var>
-            <Var VarName="$TradeRouteAmount" IntValue="3"/>
+            <Var VarName="$TradeRouteAmount" IntValue="4"/>
             <LocalizationVar LocalizationKey="$TradeRouteAmountName" Source="$TradeRouteAmount"/>
             
             <Var VarName="$Expression2" StringValue="Property(Context, @'ClassEmpire//ClassTradingCompany', Level,true)+1"/>
