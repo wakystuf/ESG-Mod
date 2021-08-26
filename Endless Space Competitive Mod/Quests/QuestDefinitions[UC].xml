@@ -339,12 +339,15 @@
             <!--OBJECTIVE 2-->
             <!--Amout of systems to discover-->
             <Var VarName="$SystemObjectiveAmount" IntValue="10"/>
+            <Var VarName="$PercentageAmount" IntValue="50"/>
+
 
             <!--Quest requirement lowered to only require cordial relations, not assimilation-->
             <Var VarName="$RelationState" StringValue="DiplomaticRelationStateMinorCordial"/>  
 
             <!--LOCALIZATION VARIABLE-->
-            <LocalizationVar  LocalizationKey="$SystemObjectiveAmountName" Source="$SystemObjectiveAmount"/>
+            <LocalizationVar  LocalizationKey="$SystemObjectiveAmountName"  Source="$SystemObjectiveAmount"/>
+            <LocalizationVar  LocalizationKey="$Percentage"                 Source="$PercentageAmount"/>
 
             <!--POLITICAL EFFECT-->
             <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventUmbralChoir1-1Pacifist"/>
@@ -417,13 +420,30 @@
                     <Objective Name="Objective1" StartValue="0" EndValue="$SystemObjectiveAmount">
                         <AIHint Category="MaximizeExploration" Motivation="0.6"/>
                         <!--Discover $SystemObjectiveAmount nodes-->
-                        <Sequence>
-                            <Loop>
-                                <Decorator_ExploredNode Initiator="Empire" MinimumState="Revealed" ProgressionIncrement="1"/>
-                                <Input_Count VarName="$SystemObjectiveAmount"/>
-                            </Loop>
-                            <Action_ChooseOutcome Name="Outcome1"/>
-                        </Sequence>
+                        <Parallel CompletionPolicy="First">
+                            <Sequence>
+                                <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
+                                    <Input_MinimumPercentage VarName="$PercentageAmount"/>
+                                </Decorator_ExploredNode>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_ExplorationProgress MinimumState="Revealed">
+                                        <Input_Empire VarName="$CurrentEmpire"/>
+                                        <Input_Percentage VarName="$PercentageAmount"/>
+                                    </Condition_ExplorationProgress>
+                                </Decorator_BeginTurn>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                            <Sequence>
+                                <Loop>
+                                    <Decorator_ExploredNode Initiator="Empire" MinimumState="Revealed" ProgressionIncrement="1"/>
+                                    <Input_Count VarName="$SystemObjectiveAmount"/>
+                                </Loop>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                        </Parallel>
                         <Outcome Name="Outcome1">
                             <Triggers Weight="1">
                                 <QuestTrigger>
