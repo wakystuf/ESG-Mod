@@ -27,6 +27,7 @@
             <Var VarName="$RelationStateAlly" StringValue="DiplomaticRelationStateMinorCordial"/>
 
             <Var VarName="$SystemAmount" IntValue="10"/>
+            <Var VarName="$PercentageAmount" IntValue="50"/>
             <Var VarName="$Five" IntValue="4"/>
             <InterpretedVar VarName="$StartCount" Target="$(Empire)">
                 <Expression>Count(Context, @ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet)</Expression>
@@ -37,6 +38,7 @@
             <LocalizationVar LocalizationKey="$Amount01" Source="$Five"/>
             <LocalizationVar LocalizationKey="$Amount02" Source="$NumberOfMinors"/>
             <LocalizationVar LocalizationKey="$SystemAmount" Source="$SystemAmount"/>
+            <LocalizationVar LocalizationKey="$Percentage" Source="$PercentageAmount"/>
             
         </Vars>
         
@@ -104,19 +106,36 @@
                             </Triggers>
                         </Outcome>
                     </Objective>
-                    <Reward Droplist="DroplistMoneyEra3" Picks="1"/>
+                    <Reward Droplist="DroplistMoneyEra4" Picks="1"/>
                 </ObjectiveSet>
                 <ObjectiveSet>
                     <Objective Name="Step2_3_Objective1" StartValue="0" EndValue="$SystemAmount">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" /> 
-                        <Sequence>
-                            <Loop>
-                                <Decorator_ExploredNode Initiator="Empire" MinimumState="Revealed" ProgressionIncrement="1"/>
-                                <Input_Count VarName="$SystemAmount"/>
-                            </Loop>
-                            <Action_ChooseOutcome Name="Outcome1"/>
-                        </Sequence>
+                        <Parallel CompletionPolicy="First">
+                            <Sequence>
+                                <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
+                                    <Input_MinimumPercentage VarName="$PercentageAmount"/>
+                                </Decorator_ExploredNode>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_ExplorationProgress MinimumState="Revealed">
+                                        <Input_Empire VarName="$CurrentEmpire"/>
+                                        <Input_Percentage VarName="$PercentageAmount"/>
+                                    </Condition_ExplorationProgress>
+                                </Decorator_BeginTurn>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                            <Sequence>
+                                <Loop>
+                                    <Decorator_ExploredNode Initiator="Empire" MinimumState="Revealed" ProgressionIncrement="1"/>
+                                    <Input_Count VarName="$SystemAmount"/>
+                                </Loop>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                        </Parallel>
                         <Outcome Name="Outcome1">
                             <Triggers Weight="1">
                                 <QuestTrigger>
