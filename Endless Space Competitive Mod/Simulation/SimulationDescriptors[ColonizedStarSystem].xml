@@ -684,7 +684,8 @@
 		<Modifier TargetProperty="UtopianUnhappyReduction"        Operation="Force" Value="$(UtopianUnhappyReduction)" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
 		<BinaryModifier TargetProperty="TradeRouteBoolean" Operation="Addition" Left="$(TradingRoutesCumulatedLengthModifiers)" BinaryOperation="Multiplication" Right="1000000000000000"/>
 		<Modifier TargetProperty="SystemEmpirePoint"        Operation="Addition" Value="$(SystemEmpirePointVenetians)" Priority="201"/>
-    <Modifier TargetProperty="BackdoorCount" Operation="Addition" Value="$(BackdoorCount)" Path="ClassColonizedStarSystem/ClassPlanet/ClassPopulation"/>
+		<Modifier TargetProperty="BackdoorCount" Operation="Addition" Value="$(BackdoorCount)" Path="ClassColonizedStarSystem/ClassPlanet/ClassPopulation"/>
+		<Modifier TargetProperty="GarrisonMoneyUpkeep"        Operation="Percent" Value="-0.5" Path="ClassColonizedStarSystem/ClassGarrison"/>
     
     <!-- Ground Combat Manpower Cap -->
     <!-- Deployment Limit = DeploymentRatio * (System Manpower Capacity + System Manpower Capacity from Sanctuaries), Deployment Ratio is set to 1, but can be modified
@@ -1712,6 +1713,49 @@
 
 		<!-- Gui Empire Happiness-->
 		<Modifier TargetProperty="GUIStarSystemsPopulationSum" Operation="Addition" Value="$(Population)" Path="../EmpireTypeMajor"/>
+	</SimulationDescriptor>
+
+	<SimulationDescriptor Name="ColonizedStarSystemStateColony" Type="ColonizedStarSystemState">
+		<!--  ##########################################################  -->
+		<!--  ######################## PROPERTY ########################  -->
+		<!--  ##########################################################  -->
+		<Property Name="ParasitedPopulation" BaseValue="0" Composition="Sum"/>
+		<Property Name="ColonizedStarSystemStateColonyCount" BaseValue="1"/>
+		<Property Name="SystemCount" BaseValue="1"/>
+		<Property Name="OwnedSystemCountCheck" BaseValue="-1" MinValue="-1"/>
+		<Property Name="NonMajorPopulationCount" BaseValue="0" Composition="Sum"/>
+		<Property Name="OwnedSystems" BaseValue="1"/>
+		<Property Name="AvailablePopulationSlotsOnGhostSystems"/>
+		<Property Name="UmbralChoirHomeSystemPower"/>
+		<Property Name="ColonizedStarSystemStateGhostCountOnSystem" BaseValue="0"/>
+		<!--  ##########################################################  -->
+		<!--  ######################## MODIFIER ########################  -->
+		<!--  ##########################################################  -->
+		<Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Addition" Value="100" Path="!ClassExploitedStarSystem/./ClassEmpire"/>
+		<BinaryModifier TargetProperty="OwnedSystemPopulationIsMaxed" Operation="Addition" Left="$(AvailablePopulationSlotsOnGhostSystems)" BinaryOperation="Addition" Right="$(SystemPopulationIsMaxed)" Path="ColonizedStarSystemStateColony"/>
+		<Modifier TargetProperty="ExperienceAtShipCreation" Operation="Addition" Value="$(ExperienceAtShipCreation)" Path="ClassColonizedStarSystem/ClassGarrison"/>
+		<BinaryModifier TargetProperty="MaximumShipManpowerRefillRate" Operation="Addition" Left="$(MaximumShipManpower)" BinaryOperation="Multiplication" Right="1" Path="ClassColonizedStarSystem/ClassGarrison/ClassShip" SearchValueFromPath="true"/>
+		<Modifier TargetProperty="HealthRegenerationRatio" Operation="Addition" Value="0.3" Path="ClassColonizedStarSystem/ClassGarrison/ClassShip"/>
+		<Modifier TargetProperty="MaximumSystemManpower" Operation="Addition" Value="200" Priority="-10"/>
+		<Modifier TargetProperty="OwnedSystemCountCheck" Operation="Addition" Value="$(Ownership)"/>
+		<BinaryModifier TargetProperty="SystemCount" Operation="Addition" Left="1000" BinaryOperation="Multiplication" Right="$(OwnedSystemCountCheck)"/>
+		<Modifier TargetProperty="SystemInfluenceRadius" Operation="Multiplication" Value="$(SystemCount)" Priority="2"/>
+		<Modifier TargetProperty="SystemNextInfluenceRadiusEstimation" Operation="Multiplication" Value="$(SystemCount)" Priority="2"/>
+		<Modifier TargetProperty="SystemInfluenceRadius" Operation="Addition" Value="0.00000001" Priority="3"/>
+		<!--  Happiness  -->
+		<!--  #PopulationHappiness  -->
+		<!-- <Modifier       TargetProperty="HappinessStock"      Operation="Division" Value="$(Population)" Path="ClassStarSystem"/> -->
+		<!--  on system  -->
+		<Modifier TargetProperty="HappinessSum" Operation="Addition" Value="$(Population)"/>
+		<BinaryModifier TargetProperty="HappinessSum" Operation="Multiplication" Left="$(Happiness)" BinaryOperation="Multiplication" Right="$(SystemCount)"/>
+		<!--  empire level  -->
+		<Modifier TargetProperty="Happiness" Operation="Addition" Value="$(HappinessSum)" Path="../ClassEmpire,EmpireTypeMajor"/>
+		<BinaryModifier TargetProperty="HappinessSum" Operation="Addition" Left="$(SystemCount)" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire,EmpireTypeMajor"/>
+		<Modifier TargetProperty="OverPopulationPenalties" Operation="Percent" Value="$(OverPopulationPenaltiesReduction)"/>
+		<Modifier TargetProperty="OverPopulationPenalties" Operation="Multiplication" Value="$(ShouldApplyOverPopulationPenalties)" Priority="1"/>
+		<Modifier TargetProperty="Happiness" Operation="Addition" Value="$(OverPopulationPenalties)"/>
+		<Modifier TargetProperty="Happiness" Operation="Addition" Value="$(OverColonizationPenalties)"/>
+		<Modifier TargetProperty="VisionRange" Operation="Addition" Value="$(SystemInfluenceRadius)" Path="!ClassExploitedStarSystem"/>
 	</SimulationDescriptor>
 
 	<SimulationDescriptor Name="ClassExploitedStarSystem" Type="ClassExploitedStarSystem">
