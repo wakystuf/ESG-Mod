@@ -48,9 +48,10 @@
     <SystemPopulationEventName>PopulationPoliticalEventPopulationAbducted</SystemPopulationEventName>
   </TransferResourcesFleetAction>
 
-  <!--  Colonize  -->
+  <!--  Colonize Option A: Nobody is Guarding  -->
   <ColonizeFleetAction Name="ColonizeFleetAction" FeedbackDuration="1.5" DelayAfterFeedback="1">
     <EntityPrerequisites Location="Self">
+      <PathPrerequisite Inverted="true" Flags="Prerequisite,SystemIsBeingBlockaded,Discard">ClassGarrisonFleet,FleetActionGuarding</PathPrerequisite>
       <PathPrerequisite Flags="Prerequisite,NeedColonizationModule,Discard">ClassGarrisonFleet/ClassShip/ClassSection/ClassModule,ModuleSupportColonization</PathPrerequisite>
       <InterpreterPrerequisite Flags="Prerequisite,Disable,CannotColonizeUnderEnemyInfluence">not(Path(Context, @'FleetInfluenceStateHostile')) or Path(Context, @'./ClassEmpire/ClassSenate/LawP05L05Effect')</InterpreterPrerequisite>
       <PathPrerequisite Inverted="true" Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
@@ -68,28 +69,104 @@
     <CancelActions Flags="CancelOnAnything,CancelOnGuard" SameContext="true" SameInitiator="false" SameNodeAndOnAllEmpires="true"/>
   </ColonizeFleetAction>
 
-  <!--  Colonize as Vaulters  -->
+  <!--  Colonize Option B: You are Guarding  -->
+  <!--<ColonizeFleetAction Name="ColonizeFleetAction2" FeedbackDuration="1.5" DelayAfterFeedback="1">
+    <EntityPrerequisites Location="Self">
+      <PathPrerequisite Flags="SystemIsBeingBlockaded,Discard" Inverted="true">../ClassEmpire,FactionTraitBlockadeBreakers</PathPrerequisite>
+      <PathPrerequisite Flags="SystemIsBeingBlockaded,Discard">ClassGarrisonFleet,FleetActionGuarding</PathPrerequisite>
+      <PathPrerequisite Flags="NeedColonizationModule,Discard">ClassGarrisonFleet/ClassShip/ClassSection/ClassModule,ModuleSupportColonization</PathPrerequisite>
+      <InterpreterPrerequisite Flags="CannotColonizeUnderEnemyInfluence">not(Path(Context, @'FleetInfluenceStateHostile')) or Path(Context, @'./ClassEmpire/ClassSenate/LawP05L05Effect')</InterpreterPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="IsCollectingRelics">FleetActionCollectingRelics</PathPrerequisite>
+    </EntityPrerequisites>
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="FleetActionColonize"/>
+      <SimulationAlteration DescriptorReference="FleetActionBusy"/>
+      <SimulationAlteration DescriptorReference="FleetActionHeroLocked"/>
+    </EntityModifiers>
+    <CancelActions Flags="CancelOnAnything,CancelOnGuard" SameContext="true" SameInitiator="true" SameNodeAndOnAllEmpires="false"/>
+  </ColonizeFleetAction>-->
+
+  <!--  Colonize Option C: Blockade Breaker  -->
+  <!--<ColonizeFleetAction Name="ColonizeFleetAction3" FeedbackDuration="1.5" DelayAfterFeedback="1">
+    <EntityPrerequisites Location="Self">
+      <PathPrerequisite Flags="SystemIsBeingBlockaded,Discard">../ClassEmpire,FactionTraitBlockadeBreakers</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,NeedColonizationModule,Discard">ClassGarrisonFleet/ClassShip/ClassSection/ClassModule,ModuleSupportColonization</PathPrerequisite>
+      <InterpreterPrerequisite Flags="Prerequisite,Disable,CannotColonizeUnderEnemyInfluence">not(Path(Context, @'FleetInfluenceStateHostile')) or Path(Context, @'./ClassEmpire/ClassSenate/LawP05L05Effect')</InterpreterPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="IsCollectingRelics">FleetActionCollectingRelics</PathPrerequisite>
+    </EntityPrerequisites>
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="FleetActionColonize"/>
+      <SimulationAlteration DescriptorReference="FleetActionBusy"/>
+      <SimulationAlteration DescriptorReference="FleetActionHeroLocked"/>
+    </EntityModifiers>
+    <CancelActions Flags="CancelOnAnything,CancelOnGuard" SameContext="true" SameInitiator="false" SameNodeAndOnAllEmpires="true"/>
+  </ColonizeFleetAction>-->
+
+  <!--  Colonize as Vaulters Option A: Nobody is Guarding -->
   <SuperColonizeFleetAction Name="SuperColonizeFleetAction" FeedbackDuration="1.5" DelayAfterFeedback="1" PropertyToReset="TurnsSinceSuperColonization">
-  <EntityPrerequisites Location="Self">
-    <PathPrerequisite Flags="Prerequisite,Discard">ClassGarrisonFleet/ClassShip,ShipRoleSuperColonizer</PathPrerequisite>
-    <InterpreterPrerequisite Flags="CannotColonizeUnderEnemyInfluence">not(Path(Context, @'FleetInfluenceStateHostile')) or Path(Context, @'./ClassEmpire/ClassSenate/LawP05L05Effect')</InterpreterPrerequisite>
-    <PathPrerequisite Inverted="true" Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
-  </EntityPrerequisites>
-  <EntityModifiers Location="Self">
-    <SimulationAlteration DescriptorReference="FleetActionColonize"/>
-    <SimulationAlteration DescriptorReference="FleetActionBusy"/>
-    <SimulationAlteration DescriptorReference="FleetActionHeroLocked"/>
-  </EntityModifiers>
-  <EntityPrerequisites Location="OrbitEntities">
-    <PathPrerequisite Inverted="true" Flags="Prerequisite,Disable,SystemIsBeingBlockaded">GuardedGameNode</PathPrerequisite>
-    <PathPrerequisite Inverted="true" Flags="Prerequisite,Disable,SystemIsBeingBlockaded">BlockadedColonizedStarSystem</PathPrerequisite>
-  </EntityPrerequisites>
-  <CustomCost Instant="true" ResourceName="EmpireMoney">Property(Context,@'../ClassEmpire',SuperColonizationCost)</CustomCost>
-  <CustomCost Instant="true" ResourceName="Strategic1">Property(Context,@'../ClassEmpire',SuperColonizationCost) * Property(Context,@'../ClassEmpire',SuperColonizationStrategicCostFraction) / Property(Context,@'../ClassEmpire',DustInflation)</CustomCost>
-  <CustomCost Instant="true" ResourceName="Strategic2">Property(Context,@'../ClassEmpire',SuperColonizationCost) * Property(Context,@'../ClassEmpire',SuperColonizationStrategicCostFraction) / Property(Context,@'../ClassEmpire',DustInflation)</CustomCost>
-  <CancelActions Flags="CancelOnAnything,CancelOnGuard" SameContext="true" SameInitiator="false" SameNodeAndOnAllEmpires="true"/>
-  <TemporaryEffect Name="GoldenAge" DurationProperty="SuperColonizationGoldenAgeDuration"/>
+    <EntityPrerequisites Location="Self">
+      <PathPrerequisite Flags="Prerequisite,Discard">ClassGarrisonFleet/ClassShip,ShipRoleSuperColonizer</PathPrerequisite>
+      <InterpreterPrerequisite Flags="CannotColonizeUnderEnemyInfluence">not(Path(Context, @'FleetInfluenceStateHostile')) or Path(Context, @'./ClassEmpire/ClassSenate/LawP05L05Effect')</InterpreterPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
+    </EntityPrerequisites>
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="FleetActionColonize"/>
+      <SimulationAlteration DescriptorReference="FleetActionBusy"/>
+      <SimulationAlteration DescriptorReference="FleetActionHeroLocked"/>
+    </EntityModifiers>
+    <EntityPrerequisites Location="OrbitEntities">
+      <PathPrerequisite Inverted="true" Flags="Prerequisite,Disable,SystemIsBeingBlockaded">GuardedGameNode</PathPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="Prerequisite,Disable,SystemIsBeingBlockaded">BlockadedColonizedStarSystem</PathPrerequisite>
+    </EntityPrerequisites>
+    <CustomCost Instant="true" ResourceName="EmpireMoney">Property(Context,@'../ClassEmpire',SuperColonizationCost)</CustomCost>
+    <CustomCost Instant="true" ResourceName="Strategic1">Property(Context,@'../ClassEmpire',SuperColonizationCost) * Property(Context,@'../ClassEmpire',SuperColonizationStrategicCostFraction) / Property(Context,@'../ClassEmpire',DustInflation)</CustomCost>
+    <CustomCost Instant="true" ResourceName="Strategic2">Property(Context,@'../ClassEmpire',SuperColonizationCost) * Property(Context,@'../ClassEmpire',SuperColonizationStrategicCostFraction) / Property(Context,@'../ClassEmpire',DustInflation)</CustomCost>
+    <CancelActions Flags="CancelOnAnything,CancelOnGuard" SameContext="true" SameInitiator="false" SameNodeAndOnAllEmpires="true"/>
+    <TemporaryEffect Name="GoldenAge" DurationProperty="SuperColonizationGoldenAgeDuration"/>
   </SuperColonizeFleetAction>
+
+  <!--  Colonize as Vaulters B: You are Guarding -->
+  <!--<SuperColonizeFleetAction Name="SuperColonizeFleetAction2" FeedbackDuration="1.5" DelayAfterFeedback="1" PropertyToReset="TurnsSinceSuperColonization">
+    <EntityPrerequisites Location="Self">
+      <PathPrerequisite Flags="SystemIsBeingBlockaded,Discard" Inverted="true">../ClassEmpire,FactionTraitBlockadeBreakers</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,SystemIsBeingBlockaded,Discard">ClassGarrisonFleet,FleetActionGuarding</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,Discard">ClassGarrisonFleet/ClassShip,ShipRoleSuperColonizer</PathPrerequisite>
+      <InterpreterPrerequisite Flags="CannotColonizeUnderEnemyInfluence">not(Path(Context, @'FleetInfluenceStateHostile')) or Path(Context, @'./ClassEmpire/ClassSenate/LawP05L05Effect')</InterpreterPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
+    </EntityPrerequisites>
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="FleetActionColonize"/>
+      <SimulationAlteration DescriptorReference="FleetActionBusy"/>
+      <SimulationAlteration DescriptorReference="FleetActionHeroLocked"/>
+    </EntityModifiers>
+    <CustomCost Instant="true" ResourceName="EmpireMoney">Property(Context,@'../ClassEmpire',SuperColonizationCost)</CustomCost>
+    <CustomCost Instant="true" ResourceName="Strategic1">Property(Context,@'../ClassEmpire',SuperColonizationCost) * Property(Context,@'../ClassEmpire',SuperColonizationStrategicCostFraction) / Property(Context,@'../ClassEmpire',DustInflation)</CustomCost>
+    <CustomCost Instant="true" ResourceName="Strategic2">Property(Context,@'../ClassEmpire',SuperColonizationCost) * Property(Context,@'../ClassEmpire',SuperColonizationStrategicCostFraction) / Property(Context,@'../ClassEmpire',DustInflation)</CustomCost>
+    <CancelActions Flags="CancelOnAnything,CancelOnGuard" SameContext="true" SameInitiator="false" SameNodeAndOnAllEmpires="true"/>
+    <TemporaryEffect Name="GoldenAge" DurationProperty="SuperColonizationGoldenAgeDuration"/>
+  </SuperColonizeFleetAction>-->
+
+  <!--  Colonize as Vaulters C: Blockade Breaker -->
+  <!--<SuperColonizeFleetAction Name="SuperColonizeFleetAction3" FeedbackDuration="1.5" DelayAfterFeedback="1" PropertyToReset="TurnsSinceSuperColonization">
+    <EntityPrerequisites Location="Self">
+      <PathPrerequisite Flags="Prerequisite,SystemIsBeingBlockaded,Discard">../ClassEmpire,FactionTraitBlockadeBreakers</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,Discard">ClassGarrisonFleet/ClassShip,ShipRoleSuperColonizer</PathPrerequisite>
+      <InterpreterPrerequisite Flags="CannotColonizeUnderEnemyInfluence">not(Path(Context, @'FleetInfluenceStateHostile')) or Path(Context, @'./ClassEmpire/ClassSenate/LawP05L05Effect')</InterpreterPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
+    </EntityPrerequisites>
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="FleetActionColonize"/>
+      <SimulationAlteration DescriptorReference="FleetActionBusy"/>
+      <SimulationAlteration DescriptorReference="FleetActionHeroLocked"/>
+    </EntityModifiers>
+    <CustomCost Instant="true" ResourceName="EmpireMoney">Property(Context,@'../ClassEmpire',SuperColonizationCost)</CustomCost>
+    <CustomCost Instant="true" ResourceName="Strategic1">Property(Context,@'../ClassEmpire',SuperColonizationCost) * Property(Context,@'../ClassEmpire',SuperColonizationStrategicCostFraction) / Property(Context,@'../ClassEmpire',DustInflation)</CustomCost>
+    <CustomCost Instant="true" ResourceName="Strategic2">Property(Context,@'../ClassEmpire',SuperColonizationCost) * Property(Context,@'../ClassEmpire',SuperColonizationStrategicCostFraction) / Property(Context,@'../ClassEmpire',DustInflation)</CustomCost>
+    <CancelActions Flags="CancelOnAnything,CancelOnGuard" SameContext="true" SameInitiator="false" SameNodeAndOnAllEmpires="true"/>
+    <TemporaryEffect Name="GoldenAge" DurationProperty="SuperColonizationGoldenAgeDuration"/>
+  </SuperColonizeFleetAction>-->
 
   <!-- Juggernaut Ion Wave -->
   <FireIonWaveFleetAction Name="FireIonWaveFleetAction" DamageRatio="1" Duration="3" Cooldown="15">
@@ -329,6 +406,19 @@
         
         <PopulationEventOnSelf>PopulationPoliticalEventMinorRecruitShips</PopulationEventOnSelf>
     </EmpireDiplomaticGivePopulationAsShipAction>
+
+    <!--Selective Migration-->
+    <EmpireDiplomaticMigrationAction Name="EmpireDiplomaticMigrationAction" HidePanelOnClick="true" PopulationCount="1">
+      <PathPrerequisite Flags="Prerequisite,Discard">ClassEmpire,!AffinityVampirilis</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,Discard">ClassEmpire,!AffinityUmbralChoir</PathPrerequisite>
+      <InterpreterPrerequisite Flags="NoValidDestination">(SumProperty(Context, @'ClassEmpire/ClassColonizedStarSystem',MaximumPopulation) - Property(Context,@ClassEmpire,Population)) gt 0</InterpreterPrerequisite>
+      <MinorLuxuryCost Instant="true">15 * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction)</MinorLuxuryCost>
+      <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+      <RelationPathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ClassMinorRelationWithMajor,RelationIdeologyMinorPacifist</RelationPathPrerequisite>
+      <MinorEmpireInterpreterPrerequisite Flags="Prerequisite,RequiredBestRelation">$(OwnershipType) ge 1 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
+      <MinorEmpireInterpreterPrerequisite Flags="NoPopulationOnSystem">Property(Context, @'ClassEmpire/ClassColonizedStarSystem,MinorHomeSystem',Population,true) gt 1</MinorEmpireInterpreterPrerequisite>
+      <PopulationEventOnSelf>PopulationPoliticalEventMinorMigrationAction</PopulationEventOnSelf>
+    </EmpireDiplomaticMigrationAction>
 
     <!-- Praise -->
     <EmpireDiplomaticActionDynamicCost Name="ComplimentEmpireAction">

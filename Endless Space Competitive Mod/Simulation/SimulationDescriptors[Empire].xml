@@ -32,6 +32,9 @@
 		<Property Name="EmpireEconomyStage" BaseValue="1"/>
 		<Property Name="EmpireMilitaryStage" BaseValue="1"/>
 
+		<!-- Autonomous Administration Scaling -->
+		<Property Name="AutonomousAdministrationCount"  BaseValue="0"/>
+
 		<!-- Ship Class Base Costs -->
 		<!-- Civilian (Colonizer, Explorer, Leecher, Vineship) -->
 		<Property Name="CivilianBaseIndustry"				BaseValue="50"		MinValue="0"/>
@@ -319,9 +322,9 @@
 		<!-- HACKING -->
 		<Property Name="NetHackingOperationProgress"/>
 		<Property Name="NetTraceOperationProgress"/>
-		<Property Name="HackingWarpSpeed" BaseValue="116"/>
-		<Property Name="HackingNonWarpSpeed" BaseValue="30"/>
-		<Property Name="HackingNodeSpeed" BaseValue="20"/>
+		<Property Name="HackingWarpSpeed" BaseValue="73"/>
+		<Property Name="HackingNonWarpSpeed" BaseValue="19"/>
+		<Property Name="HackingNodeSpeed" BaseValue="13"/>
 		<Property Name="HackingSpeedPercentMultiplier" BaseValue="0" MaxValue="0.95"/>
 		<!-- Uses the same value as the vining range -->
 		<Property Name="MaximumHackingFreeMoveRange" BaseValue="23"/>
@@ -550,7 +553,7 @@
 		<Property Name="OwnedGasPlanets" BaseValue="0" Composition="Sum" />
 
 
-		<Property Name="OverColonizationThreshold" BaseValue="0" RoundingFunction="Floor"/>
+		<Property Name="OverColonizationThreshold" BaseValue="0" MinValue="1" RoundingFunction="Floor"/>
 		<Property Name="OverColonizationThresholdHissho" BaseValue="0" RoundingFunction="Floor"/>
 		<Property Name="OverColonizationMalus" BaseValue="0" MinValue="Negative" MaxValue="0"/>
 		<Property Name="OverColonizationConstant" BaseValue="0"/>
@@ -724,10 +727,10 @@
 
 		<Property Name="TurnsSinceSuperColonization" BaseValue="3" IsSealed="true"/>
 		<Property Name="NetTurnsSinceSuperColonization" BaseValue="1"/>
-		<Property Name="BaseTurnsBeforeNextFreeSuperColonization" BaseValue="20"/>
+		<Property Name="BaseTurnsBeforeNextFreeSuperColonization" BaseValue="14"/>
 		<Property Name="TurnsBeforeNextFreeSuperColonization" BaseValue="0" MinValue="0"/>
 		<!-- This property is GUI only (used to feedback max next golden age duration) -->
-		<Property Name="SuperColonizationGoldenAgeDurationMax" BaseValue="12"/>
+		<Property Name="SuperColonizationGoldenAgeDurationMax" BaseValue="16"/>
 
 		<Property Name="SuperColonizationGoldenAgeDurationIncrement" BaseValue="0" MinValue="0.75"/>
 		<Property Name="SuperColonizationGoldenAgeDuration" BaseValue="0"/>
@@ -736,7 +739,7 @@
 		<Property Name="SuperColonizationSystemCountGameStart" BaseValue="0" MaxValue="1" />
 		<Property Name="SuperColonizationCost"/>
 		<Property Name="SuperColonizationStrategicCostFraction" BaseValue="0.015"/>
-		<Property Name="SuperColonizationCostFromBase" BaseValue="300" MinValue="0"/>
+		<Property Name="SuperColonizationCostFromBase" BaseValue="400" MinValue="0"/>
 		<Property Name="SuperColonizationCostFromTurns" />
 		<Property Name="SuperColonizationCostFromSystems" />
 		<Property Name="MaxColonizationThresholdFIDSBonus"				BaseValue="0" MinValue="0"/>
@@ -822,6 +825,7 @@
 		<Property Name="EmpireProcessingPowerAllocated" BaseValue="0"/>
 		<!-- Maximum Processing Power-->
 		<Property Name="MaximumEmpireProcessingPowerStock" BaseValue="50"/>
+		<Property Name="FIDSperBW" BaseValue="0"/>
 		<Property Name="InitialMaximumEmpireProcessingPowerStock" BaseValue="50"/>
 		<Property Name="ProcessingPowerStockHackingSpeedMultiplier" BaseValue="0" RoundingFunction="Floor" MaxValue="20"/>
 		<Property Name="MaximumEmpireProcessingPowerStockOvercolonizationMultiplier" BaseValue="0" MinValue="-0.9"/>
@@ -830,6 +834,8 @@
 		<Property Name="DetectionProbeVisionStrength" BaseValue="1"/>
 
 		<Property Name="TraitorsCount" IsSealed="true"/>
+		<Property Name="HappinessFromTraitors" BaseValue="0"/>
+		<Property Name="HappinessFromMinors" BaseValue="0"/>
 		<Property Name="ResourcesStolenPercentMultiplier" BaseValue="0" MaxValue="1"/>
 		<Property Name="SuperPopulationCount"/>
 		<Property Name="GameSpeedHackMultiplier"/>
@@ -1128,7 +1134,6 @@
 
 
 		<!-- Happiness -->
-
 		<Modifier TargetProperty="OverColonizationConstant" Operation="Addition" Value="15" />
 		<BinaryModifier TargetProperty="OverColonizationMalus" Operation="Addition" Left="$(OverColonizationThreshold)" BinaryOperation="Subtraction" Right="$(SystemsForOvercolonization)"/>
 		<Modifier TargetProperty="OverColonizationMalus" Operation="Percent" Value="$(OverColonizationPenaltiesReduction)" />
@@ -1141,7 +1146,12 @@
 		<BinaryModifier TargetProperty="ColonizationThresholdHappinessBonus" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(IsUnderColonizationThreshold)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="ColonizationThresholdHappinessBonus" Operation="Multiplication" Value="$(IsUsingColonizationThresholdHappinessBonus)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="Happiness" Operation="Addition" Value="$(ColonizationThresholdHappinessBonus)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" Priority="500"/>
+		<Modifier TargetProperty="HappinessFromTraitors" Operation="Addition" Value="$(HappinessFromTraitors)" Path="ClassEmpire/ClassColonizedStarSystem,!ColonizedStarSystemStateGhost"/>
+		<Modifier TargetProperty="HappinessFromMinors" Operation="Addition" Value="$(HappinessFromMinors)" Path="ClassEmpire/ClassColonizedStarSystem,!ColonizedStarSystemStateGhost"/>
 
+		<!-- UC Quest -->
+		<Modifier TargetProperty="SystemFIDSFlat" Operation="Addition" Value="$(FIDSperBW)" Path="ClassEmpire/ClassColonizedStarSystem,!ColonizedStarSystemStateGhost"/>
+		
 		<!-- Core Worlds FIDS bonus -->
 		<BinaryModifier TargetProperty="ColonizationThresholdFIDSBonus" Operation="Addition" Left="$(MaxColonizationThresholdFIDSBonus)" BinaryOperation="Multiplication" Right="$(IsUnderColonizationThreshold)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="ColonizationThresholdFIDSBonus" Operation="Multiplication" Value="$(IsUsingColonizationThresholdHappinessBonus)" Path="ClassEmpire/ClassColonizedStarSystem"/>
@@ -1457,6 +1467,8 @@
 		<Modifier TargetProperty="OwnedTeemingPlanetsEmpire"		Operation="Force" Value="$(OwnedTeemingPlanets)" />
 		<Modifier TargetProperty="OwnedTeemingPlanetsEmpire"		Operation="Force" Value="$(OwnedTeemingPlanetsEmpire)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="AdmiralsInFriendlyTerritory"	Operation="Force" Value="$(AdmiralsInFriendlyTerritory)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+
+    <Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="$(MinorTraitsAssimilated)" Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet/ClassPopulation"/>
 	</SimulationDescriptor>
 
 	<!--Used for Craver Influence and Science ESG-->
@@ -1473,7 +1485,7 @@
 
 	<!--United Empire influence buyout without circularity ESG-->
 	<SimulationDescriptor Name="ProductionToInfluence" Type="ProductionToInfluence">
-		<BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(SystemProduction)" SearchValueFromPath="true" Path="ClassEmpire/ClassColonizedStarSystem" Priority="9999" TooltipOverride="%ProductionToInfluenceTooltipEffects"/>
+		<BinaryModifier TargetProperty="EmpirePointFromIndustryConversion" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(SystemProduction)" SearchValueFromPath="true" Path="ClassEmpire/ClassColonizedStarSystem" Priority="9999" TooltipOverride="%ProductionToInfluenceTooltipEffects"/>
 	</SimulationDescriptor>
 
 	<SimulationDescriptor Name="EmpireTypePirate" Type="EmpireType">

@@ -381,8 +381,8 @@
 
 
   <!--  ============================================
-     ========== DEEDS: EMPIRE DEVELOPMENT ===========
-     ================================================  -->
+    ========== DEEDS: EMPIRE DEVELOPMENT ===========
+    ================================================  -->
   <QuestDefinition Name="Deeds_Regular_EmpireDevelopment_Stage4_A" Category="Deeds" SubCategory="Regular">
     <!-- ============ TAGS ============ -->
     <Tags>BeginTurn,Hidden,TechnologyStageDefinitionEmpireDevelopment4</Tags>
@@ -480,8 +480,111 @@
         </ObjectiveSet>
       </Step>
       </Steps>
-    </QuestDefinition>
+  </QuestDefinition>
 
+  <!--  ============================================
+  ========== DEEDS: EMPIRE DEVELOPMENT ===========
+  ================================================  -->
+  <QuestDefinition Name="Deeds_Regular_EmpireDevelopment_Stage4_B" Category="Deeds" SubCategory="Regular">
+    <!-- ============ TAGS ============ -->
+    <Tags>BeginTurn,Hidden,TechnologyStageDefinitionEmpireDevelopment4</Tags>
+    <!-- ============ CONTEXT ============ -->
+    <QuestContextMulti>
+      <Distribution Type="FreeForAll"/>
+    </QuestContextMulti>
+    <!-- ============ OCCURRENCE RULES ============ -->
+    <RepetitionRules NumberOfOccurrencesPerGame="1"/>
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <Var VarName="$AllEmpires">
+        <From Source="$Empires"/>
+      </Var>
+      <Var VarName="$Path" StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageEmpireDevelopment4"/>
+      <Var VarName="$Expression01" StringValue="Property(Context, @'EmpireTypeMajor',HeroCountHeroPolitics01) ge 1"/>
+      <Var VarName="$Expression02" StringValue="Property(Context, @'EmpireTypeMajor',HeroCountHeroPolitics02) ge 1"/>
+      <Var VarName="$Expression03" StringValue="Property(Context, @'EmpireTypeMajor',HeroCountHeroPolitics03) ge 1"/>
+      <Var VarName="$Expression04" StringValue="Property(Context, @'EmpireTypeMajor',HeroCountHeroPolitics04) ge 1"/>
+      <Var VarName="$Expression05" StringValue="Property(Context, @'EmpireTypeMajor',HeroCountHeroPolitics05) ge 1"/>
+      <Var VarName="$Expression06" StringValue="Property(Context, @'EmpireTypeMajor',HeroCountHeroPolitics06) ge 1"/>
+
+    </Vars>
+    <!-- ============ PREREQUISITES ============ -->
+    <Prerequisites Target="$(Empires)" AnyTarget="true">
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_A" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_A" QuestState="Completed"/>
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_A" QuestState="NotStarted"/>
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_C" QuestState="NotStarted"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_C" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_C" QuestState="Completed"/>
+    </Prerequisites>
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <!-- ============ Step 1 ============ -->
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <!-- Teams are created here that's why the following variable must be set here. And the context here is the team -->
+          <Vars>
+            <Var VarName="$CurrentEmpire">
+              <From Source="$Team"/>
+            </Var>
+          </Vars>
+          <Objective Name="Deeds_Regular_EmpireDevelopment_Stage4_B-Objective">
+            <Parallel CompletionPolicy="All">
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckInterpreter>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression01"/>
+                  </Condition_CheckInterpreter>
+                </Decorator_BeginTurn>
+              </Sequence>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckInterpreter>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression02"/>
+                  </Condition_CheckInterpreter>
+                </Decorator_BeginTurn>
+              </Sequence>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckInterpreter>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression03"/>
+                  </Condition_CheckInterpreter>
+                </Decorator_BeginTurn>
+              </Sequence>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckInterpreter>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression04"/>
+                  </Condition_CheckInterpreter>
+                </Decorator_BeginTurn>
+              </Sequence>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckInterpreter>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression05"/>
+                  </Condition_CheckInterpreter>
+                </Decorator_BeginTurn>
+              </Sequence>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckInterpreter>
+                      <Input_Context VarName="$CurrentEmpire"/>
+                      <Input_Expression VarName="$Expression06"/>
+                  </Condition_CheckInterpreter>
+                </Decorator_BeginTurn>
+              </Sequence>
+            </Parallel>
+          </Objective>
+          <Reward Droplist="DroplistRegularDeedsStage4Quadrant4Bis" Picks="1"/>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
 
     <!--  ============================================
      ======== DEEDS: SCIENCE & EXPLORATION ==========

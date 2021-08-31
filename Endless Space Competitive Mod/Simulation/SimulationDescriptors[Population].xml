@@ -3,6 +3,9 @@
   <SimulationDescriptor Name="ClassPopulationPlanet" Type="ClassPopulation">
     <!-- ESG -->
     <Property Name="PopulationSystemLevel" BaseValue="1"/>
+    <Property Name="PopulationPercentModifier" BaseValue="1"/>
+    <Property Name="MinorTraitsAssimilated" BaseValue="0"/>
+    <Property Name="BackdoorCount" BaseValue="0"/>
 	<!-- Changes from Mavros Mod -->
 
     <Property Name="PlanetIsMonsoon"               BaseValue="0" MaxValue="1"/>
@@ -132,10 +135,7 @@
     <Property Name="RepletionPerTurn" BaseValue="0"/>
 
     <Property Name="PlanetHasTemple" BaseValue="0" MaxValue="1"/>
-
-
     
-
     <!-- #### ECONOMY PROCESS ##### -->
     <!-- Common trunk -->
     <BinaryModifier   TargetProperty="BonusPopulationFood"        Operation="Addition"     Left="$(BonusPopulationFoodHissho)"     BinaryOperation="Multiplication" Right="$(HasObedience)"   />
@@ -158,6 +158,14 @@
     <Modifier   TargetProperty="BonusPopulationProcessingPower"             Operation="Addition"     Value="$(BonusPopulationProcessingPowerFromSuperPopulation)"   />
     <BinaryModifier   TargetProperty="MaximumEmpireProcessingPowerStock"    Operation="Addition" Left="$(BonusPopulationProcessingPower)" BinaryOperation="Multiplication" Right="$(PopulationCount)" Path="../ClassEmpire"/>
 
+    <!-- ESG Changes -->
+    <Modifier TargetProperty="BonusPopulationFood"      Operation="Multiplication" Value="$(PopulationPercentModifier)"/>
+    <Modifier TargetProperty="BonusPopulationIndustry"  Operation="Multiplication" Value="$(PopulationPercentModifier)"/>
+    <Modifier TargetProperty="BonusPopulationDust"      Operation="Multiplication" Value="$(PopulationPercentModifier)"/>
+    <Modifier TargetProperty="BonusPopulationScience"   Operation="Multiplication" Value="$(PopulationPercentModifier)"/>
+    <Modifier TargetProperty="BonusPopulationHappiness" Operation="Multiplication" Value="$(PopulationPercentModifier)"/>
+    <!-- End of Changes -->
+    
     <Modifier   TargetProperty="PopulationIndustry"          Operation="Addition"    Value="$(RawPopulationIndustry)"   Priority="-3" />
     <Modifier   TargetProperty="PopulationDust"              Operation="Addition"    Value="$(RawPopulationDust)"       Priority="-3" />
     <Modifier   TargetProperty="PopulationScience"           Operation="Addition"    Value="$(RawPopulationScience)"    Priority="-3" />
