@@ -214,7 +214,7 @@
   <!-- ### UNFALLEN ###     -->
   <!-- #################### -->
 
-  <!--Smoke Guardian as non-UF-->
+  <!--Sacrifice Guardian as non-UF non-Hissho-->
   <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementSacrificeGuardian2" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt" PopulationSource="AffinityGuardians" IgnoreInvinciblePopulation="true">
     <Tags>NoBuyout</Tags>
     <QueuedSimulationDescriptorReference Name="StarSystemImprovementSacrificeGuardianQueued"/>
@@ -226,6 +226,20 @@
     <InterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context,@'ClassColonizedStarSystem/ClassPopulationStarSystemAffinityGuardians', PopulationCount) ge 1</InterpreterPrerequisite>
     <SimulationDescriptorReference Name="StarSystemImprovementSacrificeGuardian"/>
     <TemporaryEffect>SacrificeGuardianHappiness</TemporaryEffect>
+  </StarSystemPopulationTransformImprovementDefinition>
+
+  <!--Sacrifice Guardian as Hissho-->
+  <StarSystemPopulationTransformImprovementDefinition Name="StarSystemImprovementSacrificeGuardian2MajorHisshos" SubCategory="SubCategoryApproval" ScoreProvider="StarSystemImprovementBuilt" PopulationSource="AffinityGuardians" IgnoreInvinciblePopulation="true">
+    <Tags>NoBuyout</Tags>
+    <QueuedSimulationDescriptorReference Name="StarSystemImprovementSacrificeGuardian2MajorHisshosQueued"/>
+    <Cost ResourceName="SystemTurnBased">10</Cost>
+    <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard">../ClassEmpire,!FactionTraitGuardians</PathPrerequisite>
+    <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
+    <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ClassColonizedStarSystem/ClassPopulationStarSystemAffinityGuardians</PathPrerequisite>
+    <InterpreterPrerequisite Inverted="false" Flags="NotEnoughPopulation,Enqueue">Property(Context,@'ClassColonizedStarSystem/ClassPopulationStarSystemAffinityGuardians', PopulationCount) - Property(Context, @ClassColonizedStarSystem, OnGoingSacrifice) gt 0</InterpreterPrerequisite>
+    <InterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context,@'ClassColonizedStarSystem/ClassPopulationStarSystemAffinityGuardians', PopulationCount) ge 1</InterpreterPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementSacrificeGuardian2MajorHisshos"/>
+    <TemporaryEffect>SacrificeGuardianHonorMajorHisshos</TemporaryEffect>
   </StarSystemPopulationTransformImprovementDefinition>
 
   <!-- T4 Empire Unique Building -->
