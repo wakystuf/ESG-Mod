@@ -6,6 +6,9 @@
     <Property Name="PopulationPercentModifier" BaseValue="1"/>
     <Property Name="MinorTraitsAssimilated" BaseValue="0"/>
     <Property Name="BackdoorCount" BaseValue="0"/>
+    <Property Name="PlanetDepletionFIDSPenalty" BaseValue="0"/>
+    <Property Name="PlanetDepletionFIDSRemaining" BaseValue="0"/>
+
 	<!-- Changes from Mavros Mod -->
 
     <Property Name="PlanetIsMonsoon"               BaseValue="0" MaxValue="1"/>
@@ -147,7 +150,6 @@
     <Modifier   TargetProperty="BonusPopulationIndustry"          Operation="Addition"     Value="$(BonusPopulationFIDSI)"   />
     <Modifier   TargetProperty="BonusPopulationDust"              Operation="Addition"     Value="$(BonusPopulationFIDSI)"   />
     <Modifier   TargetProperty="BonusPopulationScience"           Operation="Addition"     Value="$(BonusPopulationFIDSI)"   />
-
     <Modifier   TargetProperty="BonusPopulationPrestige"          Operation="Addition"     Value="$(BonusPopulationFIDSI)"   />
 
     <Modifier   TargetProperty="BonusPopulationFood"              Operation="Addition"     Value="$(BonusPopulationFIDS)"   />
@@ -164,25 +166,40 @@
     <Modifier TargetProperty="BonusPopulationDust"      Operation="Multiplication" Value="$(PopulationPercentModifier)"/>
     <Modifier TargetProperty="BonusPopulationScience"   Operation="Multiplication" Value="$(PopulationPercentModifier)"/>
     <Modifier TargetProperty="BonusPopulationHappiness" Operation="Multiplication" Value="$(PopulationPercentModifier)"/>
-    <!-- End of Changes -->
     
+    <Modifier   TargetProperty="PopulationFood"              Operation="Addition"    Value="$(RawPopulationFood)"       Priority="-3" />
     <Modifier   TargetProperty="PopulationIndustry"          Operation="Addition"    Value="$(RawPopulationIndustry)"   Priority="-3" />
     <Modifier   TargetProperty="PopulationDust"              Operation="Addition"    Value="$(RawPopulationDust)"       Priority="-3" />
     <Modifier   TargetProperty="PopulationScience"           Operation="Addition"    Value="$(RawPopulationScience)"    Priority="-3" />
     <Modifier   TargetProperty="PopulationPrestige"          Operation="Addition"    Value="$(RawPopulationPrestige)"   Priority="-3" />
-    <Modifier   TargetProperty="PopulationFood"              Operation="Addition"    Value="$(RawPopulationFood)"       Priority="-3" />
 
-    <Modifier   TargetProperty="DepletingPopulationIndustry"          Operation="Addition"    Value="$(RawPopulationIndustry)"   Priority="-3" />
-    <Modifier   TargetProperty="DepletingPopulationDust"              Operation="Addition"    Value="$(RawPopulationDust)"       Priority="-3" />
-    <Modifier   TargetProperty="DepletingPopulationScience"           Operation="Addition"    Value="$(RawPopulationScience)"    Priority="-3" />
-    <Modifier   TargetProperty="DepletingPopulationPrestige"          Operation="Addition"    Value="$(RawPopulationPrestige)"   Priority="-3" />
-    <Modifier   TargetProperty="DepletingPopulationFood"              Operation="Addition"    Value="$(RawPopulationFood)"       Priority="-3" />
+    <!-- Divide by the FIDS remaining to offset the fact that there is depletion for the bonus 150% -->
+    <BinaryModifier   TargetProperty="DepletingPopulationFood"     Operation="Addition"    Left="$(RawPopulationFood)"      BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"    Priority="-3" />
+    <BinaryModifier   TargetProperty="DepletingPopulationIndustry" Operation="Addition"    Left="$(RawPopulationIndustry)"  BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"    Priority="-3" />
+    <BinaryModifier   TargetProperty="DepletingPopulationDust"     Operation="Addition"    Left="$(RawPopulationDust)"      BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"    Priority="-3" />
+    <BinaryModifier   TargetProperty="DepletingPopulationScience"  Operation="Addition"    Left="$(RawPopulationScience)"   BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"    Priority="-3" />
+    <BinaryModifier   TargetProperty="DepletingPopulationPrestige" Operation="Addition"    Left="$(RawPopulationPrestige)"  BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"    Priority="-3" />
 
-    <Modifier   TargetProperty="ParasitedPopulationIndustry"          Operation="Addition"    Value="$(RawPopulationIndustry)"   Priority="-3" />
-    <Modifier   TargetProperty="ParasitedPopulationDust"              Operation="Addition"    Value="$(RawPopulationDust)"       Priority="-3" />
-    <Modifier   TargetProperty="ParasitedPopulationScience"           Operation="Addition"    Value="$(RawPopulationScience)"    Priority="-3" />
-    <Modifier   TargetProperty="ParasitedPopulationPrestige"          Operation="Addition"    Value="$(RawPopulationPrestige)"   Priority="-3" />
-    <Modifier   TargetProperty="ParasitedPopulationFood"              Operation="Addition"    Value="$(RawPopulationFood)"       Priority="-3" />
+    <BinaryModifier   TargetProperty="ParasitedPopulationFood"          Operation="Addition"    Left="$(RawPopulationFood)"     BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"  Priority="-3" />
+    <BinaryModifier   TargetProperty="ParasitedPopulationIndustry"      Operation="Addition"    Left="$(RawPopulationIndustry)" BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"  Priority="-3" />
+    <BinaryModifier   TargetProperty="ParasitedPopulationDust"          Operation="Addition"    Left="$(RawPopulationDust)"     BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"  Priority="-3" />
+    <BinaryModifier   TargetProperty="ParasitedPopulationScience"       Operation="Addition"    Left="$(RawPopulationScience)"  BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"  Priority="-3" />
+    <BinaryModifier   TargetProperty="ParasitedPopulationPrestige"      Operation="Addition"    Left="$(RawPopulationPrestige)" BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"  Priority="-3" />
+
+    <!-- Give back the FIDS lost from the partial depletion -->
+    <BinaryModifier   TargetProperty="DepletingPopulationFood"     Operation="Addition"    Left="$(RawPopulationFood)"      BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"    Priority="-3" />
+    <BinaryModifier   TargetProperty="DepletingPopulationIndustry" Operation="Addition"    Left="$(RawPopulationIndustry)"  BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"    Priority="-3" />
+    <BinaryModifier   TargetProperty="DepletingPopulationDust"     Operation="Addition"    Left="$(RawPopulationDust)"      BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"    Priority="-3" />
+    <BinaryModifier   TargetProperty="DepletingPopulationScience"  Operation="Addition"    Left="$(RawPopulationScience)"   BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"    Priority="-3" />
+    <BinaryModifier   TargetProperty="DepletingPopulationPrestige" Operation="Addition"    Left="$(RawPopulationPrestige)"  BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"    Priority="-3" />
+
+    <BinaryModifier   TargetProperty="ParasitedPopulationFood"          Operation="Addition"    Left="$(RawPopulationFood)"     BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"  Priority="-3" />
+    <BinaryModifier   TargetProperty="ParasitedPopulationIndustry"      Operation="Addition"    Left="$(RawPopulationIndustry)" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"  Priority="-3" />
+    <BinaryModifier   TargetProperty="ParasitedPopulationDust"          Operation="Addition"    Left="$(RawPopulationDust)"     BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"  Priority="-3" />
+    <BinaryModifier   TargetProperty="ParasitedPopulationScience"       Operation="Addition"    Left="$(RawPopulationScience)"  BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"  Priority="-3" />
+    <BinaryModifier   TargetProperty="ParasitedPopulationPrestige"      Operation="Addition"    Left="$(RawPopulationPrestige)" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"  Priority="-3" />
+
+    <!-- End of Changes -->
 
     <!-- Special trunk -->
     <Modifier   TargetProperty="PopulationFood"                       Operation="Addition"     Value="$(BonusPopulationFood)"         Priority="-2" Path="!PopulationExploitingPlanetWhileDepleting,!PopulationParasited"/>
