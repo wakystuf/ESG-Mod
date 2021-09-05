@@ -9,6 +9,18 @@
     <Property Name="PlanetDepletionFIDSPenalty" BaseValue="0"/>
     <Property Name="PlanetDepletionFIDSRemaining" BaseValue="1"/>
 
+    <Property Name="DepletingPopulationFoodTemp" BaseValue="0"/>
+    <Property Name="DepletingPopulationIndustryTemp" BaseValue="0"/>
+    <Property Name="DepletingPopulationDustTemp" BaseValue="0"/>
+    <Property Name="DepletingPopulationScienceTemp" BaseValue="0"/>
+    <Property Name="DepletingPopulationPrestigeTemp" BaseValue="0"/>    
+    
+    <Property Name="ParasitedPopulationFoodTemp" BaseValue="0"/>
+    <Property Name="ParasitedPopulationIndustryTemp" BaseValue="0"/>
+    <Property Name="ParasitedPopulationDustTemp" BaseValue="0"/>
+    <Property Name="ParasitedPopulationScienceTemp" BaseValue="0"/>
+    <Property Name="ParasitedPopulationPrestigeTemp" BaseValue="0"/>
+
 	<!-- Changes from Mavros Mod -->
 
     <Property Name="PlanetIsMonsoon"               BaseValue="0" MaxValue="1"/>
@@ -186,18 +198,30 @@
     <BinaryModifier   TargetProperty="ParasitedPopulationScience"       Operation="Addition"    Left="$(RawPopulationScience)"  BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"  Priority="-3" />
     <BinaryModifier   TargetProperty="ParasitedPopulationPrestige"      Operation="Addition"    Left="$(RawPopulationPrestige)" BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"  Priority="-3" />
 
-    <!-- Give back the FIDS lost from the partial depletion -->
-    <BinaryModifier   TargetProperty="DepletingPopulationFoodTemp"     Operation="Addition"    Left="$(DepletingPopulationFood)"      BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"    Priority="-2" />
-    <BinaryModifier   TargetProperty="DepletingPopulationIndustryTemp" Operation="Addition"    Left="$(DepletingPopulationIndustry)"  BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"    Priority="-2" />
-    <BinaryModifier   TargetProperty="DepletingPopulationDustTemp"     Operation="Addition"    Left="$(DepletingPopulationDust)"      BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"    Priority="-2" />
-    <BinaryModifier   TargetProperty="DepletingPopulationScienceTemp"  Operation="Addition"    Left="$(DepletingPopulationScience)"   BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"    Priority="-2" />
-    <BinaryModifier   TargetProperty="DepletingPopulationPrestigeTemp" Operation="Addition"    Left="$(DepletingPopulationPrestige)"  BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"    Priority="-2" />
+    <BinaryModifier   TargetProperty="DepletingPopulationFoodTemp"     Operation="Addition"    Left="$(RawPopulationFood)"      BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"    Priority="-3" Path="PopulationExploitingPlanetWhileDepleting"/>
+    <BinaryModifier   TargetProperty="DepletingPopulationIndustryTemp" Operation="Addition"    Left="$(RawPopulationIndustry)"  BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"    Priority="-3" Path="PopulationExploitingPlanetWhileDepleting"/>
+    <BinaryModifier   TargetProperty="DepletingPopulationDustTemp"     Operation="Addition"    Left="$(RawPopulationDust)"      BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"    Priority="-3" Path="PopulationExploitingPlanetWhileDepleting"/>
+    <BinaryModifier   TargetProperty="DepletingPopulationScienceTemp"  Operation="Addition"    Left="$(RawPopulationScience)"   BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"    Priority="-3" Path="PopulationExploitingPlanetWhileDepleting"/>
+    <BinaryModifier   TargetProperty="DepletingPopulationPrestigeTemp" Operation="Addition"    Left="$(RawPopulationPrestige)"  BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"    Priority="-3" Path="PopulationExploitingPlanetWhileDepleting"/>
 
-    <BinaryModifier   TargetProperty="ParasitedPopulationFoodTemp"          Operation="Addition"    Left="$(ParasitedPopulationFood)"     BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"  Priority="-2" />
-    <BinaryModifier   TargetProperty="ParasitedPopulationIndustryTemp"      Operation="Addition"    Left="$(ParasitedPopulationIndustry)" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"  Priority="-2" />
-    <BinaryModifier   TargetProperty="ParasitedPopulationDustTemp"          Operation="Addition"    Left="$(ParasitedPopulationDust)"     BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"  Priority="-2" />
-    <BinaryModifier   TargetProperty="ParasitedPopulationScienceTemp"       Operation="Addition"    Left="$(ParasitedPopulationScience)"  BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"  Priority="-2" />
-    <BinaryModifier   TargetProperty="ParasitedPopulationPrestigeTemp"      Operation="Addition"    Left="$(ParasitedPopulationPrestige)" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"  Priority="-2" />
+    <BinaryModifier   TargetProperty="ParasitedPopulationFoodTemp"          Operation="Addition"    Left="$(RawPopulationFood)"     BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"  Priority="-3" Path="PopulationParasited"/>
+    <BinaryModifier   TargetProperty="ParasitedPopulationIndustryTemp"      Operation="Addition"    Left="$(RawPopulationIndustry)" BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"  Priority="-3" Path="PopulationParasited"/>
+    <BinaryModifier   TargetProperty="ParasitedPopulationDustTemp"          Operation="Addition"    Left="$(RawPopulationDust)"     BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"  Priority="-3" Path="PopulationParasited"/>
+    <BinaryModifier   TargetProperty="ParasitedPopulationScienceTemp"       Operation="Addition"    Left="$(RawPopulationScience)"  BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"  Priority="-3" Path="PopulationParasited"/>
+    <BinaryModifier   TargetProperty="ParasitedPopulationPrestigeTemp"      Operation="Addition"    Left="$(RawPopulationPrestige)" BinaryOperation="Division" Right="$(PlanetDepletionFIDSRemaining)"  Priority="-3" Path="PopulationParasited"/>
+
+    <!-- Give back the FIDS lost from the partial depletion -->
+    <Modifier   TargetProperty="DepletingPopulationFoodTemp"          Operation="Multiplication" Value="$(PlanetDepletionFIDSPenalty)"    Priority="-2" />
+    <Modifier   TargetProperty="DepletingPopulationIndustryTemp"      Operation="Multiplication" Value="$(PlanetDepletionFIDSPenalty)"    Priority="-2" />
+    <Modifier   TargetProperty="DepletingPopulationDustTemp"          Operation="Multiplication" Value="$(PlanetDepletionFIDSPenalty)"    Priority="-2" />
+    <Modifier   TargetProperty="DepletingPopulationScienceTemp"       Operation="Multiplication" Value="$(PlanetDepletionFIDSPenalty)"    Priority="-2" />
+    <Modifier   TargetProperty="DepletingPopulationPrestigeTemp"      Operation="Multiplication" Value="$(PlanetDepletionFIDSPenalty)"    Priority="-2" />
+
+    <Modifier   TargetProperty="ParasitedPopulationFoodTemp"          Operation="Multiplication" Value="$(PlanetDepletionFIDSPenalty)"  Priority="-2" />
+    <Modifier   TargetProperty="ParasitedPopulationIndustryTemp"      Operation="Multiplication" Value="$(PlanetDepletionFIDSPenalty)"  Priority="-2" />
+    <Modifier   TargetProperty="ParasitedPopulationDustTemp"          Operation="Multiplication" Value="$(PlanetDepletionFIDSPenalty)"  Priority="-2" />
+    <Modifier   TargetProperty="ParasitedPopulationScienceTemp"       Operation="Multiplication" Value="$(PlanetDepletionFIDSPenalty)"  Priority="-2" />
+    <Modifier   TargetProperty="ParasitedPopulationPrestigeTemp"      Operation="Multiplication" Value="$(PlanetDepletionFIDSPenalty)"  Priority="-2" />
 
     <!-- Special trunk -->
     <Modifier   TargetProperty="PopulationFood"                       Operation="Addition"     Value="$(BonusPopulationFood)"         Priority="-2" Path="!PopulationExploitingPlanetWhileDepleting,!PopulationParasited"/>
@@ -291,17 +315,17 @@
     <BinaryModifier       TargetProperty="PlanetParasitedPopulationFood"        Operation="Addition"    Left="$(ParasitedPopulationFood)"       BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet"         />
     
     <!-- Offset -->
-    <BinaryModifier       TargetProperty="PlanetDepletingPopulationFood"        Operation="Addition"    Left="$(DepletingPopulationFoodTemp)"       BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet"         />
-    <BinaryModifier       TargetProperty="PlanetDepletingPopulationIndustry"    Operation="Addition"    Left="$(DepletingPopulationIndustryTemp)"   BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet"         />
-    <BinaryModifier       TargetProperty="PlanetDepletingPopulationDust"        Operation="Addition"    Left="$(DepletingPopulationDustTemp)"       BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet"         />
-    <BinaryModifier       TargetProperty="PlanetDepletingPopulationScience"     Operation="Addition"    Left="$(DepletingPopulationScienceTemp)"    BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet"         />
-    <BinaryModifier       TargetProperty="PlanetDepletingPopulationPrestige"    Operation="Addition"    Left="$(DepletingPopulationPrestigeTemp)"   BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet"         />
+    <BinaryModifier       TargetProperty="DefaultPlanetFood"        Operation="Addition"    Left="$(DepletingPopulationFoodTemp)"       BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet" Priority="-1"/>
+    <BinaryModifier       TargetProperty="DefaultPlanetIndustry"    Operation="Addition"    Left="$(DepletingPopulationIndustryTemp)"   BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet" Priority="-1"/>
+    <BinaryModifier       TargetProperty="DefaultPlanetDust"        Operation="Addition"    Left="$(DepletingPopulationDustTemp)"       BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet" Priority="-1"/>
+    <BinaryModifier       TargetProperty="DefaultPlanetScience"     Operation="Addition"    Left="$(DepletingPopulationScienceTemp)"    BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet" Priority="-1"/>
+    <BinaryModifier       TargetProperty="DefaultPlanetPrestige"    Operation="Addition"    Left="$(DepletingPopulationPrestigeTemp)"   BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet" Priority="-1"/>
 
-    <BinaryModifier       TargetProperty="PlanetParasitedPopulationFood"        Operation="Addition"    Left="$(ParasitedPopulationFoodTemp)"       BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet"         />
-    <BinaryModifier       TargetProperty="PlanetParasitedPopulationIndustry"    Operation="Addition"    Left="$(ParasitedPopulationIndustryTemp)"   BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet"         />
-    <BinaryModifier       TargetProperty="PlanetParasitedPopulationDust"        Operation="Addition"    Left="$(ParasitedPopulationDustTemp)"       BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet"         />
-    <BinaryModifier       TargetProperty="PlanetParasitedPopulationScience"     Operation="Addition"    Left="$(ParasitedPopulationScienceTemp)"    BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet"         />
-    <BinaryModifier       TargetProperty="PlanetParasitedPopulationPrestige"    Operation="Addition"    Left="$(ParasitedPopulationPrestigeTemp)"   BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet"         />
+    <BinaryModifier       TargetProperty="DefaultPlanetFood"        Operation="Addition"    Left="$(ParasitedPopulationFoodTemp)"       BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet" Priority="-1"/>
+    <BinaryModifier       TargetProperty="DefaultPlanetIndustry"    Operation="Addition"    Left="$(ParasitedPopulationIndustryTemp)"   BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet" Priority="-1"/>
+    <BinaryModifier       TargetProperty="DefaultPlanetDust"        Operation="Addition"    Left="$(ParasitedPopulationDustTemp)"       BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet" Priority="-1"/>
+    <BinaryModifier       TargetProperty="DefaultPlanetScience"     Operation="Addition"    Left="$(ParasitedPopulationScienceTemp)"    BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet" Priority="-1"/>
+    <BinaryModifier       TargetProperty="DefaultPlanetPrestige"    Operation="Addition"    Left="$(ParasitedPopulationPrestigeTemp)"   BinaryOperation="Multiplication"        Right="$(PopulationCount)"      Path="./ClassPlanet" Priority="-1"/>
     
     <!-- #### END ECONOMY PROCESS ##### -->
 
