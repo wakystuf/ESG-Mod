@@ -259,7 +259,8 @@
 		<Property Name="InfluenceConversionModifier"    BaseValue="0"/>
 
 		<!-- Happiness -->
-		<Property Name="Happiness"                          		BaseValue="0" MinValue="0" MaxValue="100" Composition="Sum"/>
+		<Property Name="Happiness"                          		BaseValue="0" MinValue="0" Composition="Sum"/>
+		<Property Name="HappinessESG"                          		BaseValue="0" MinValue="0" MaxValue="100"/>
 		<Property Name="HappinessSum"             					BaseValue="0" MinValue="Negative"    />
 		<Property Name="HappinessPerPeace"             				BaseValue="0" MinValue="Negative"    />
 		<Property Name="HappinessPerAlliance"             			BaseValue="0" MinValue="Negative"    />
@@ -1747,7 +1748,8 @@
 		<!-- <Modifier       TargetProperty="HappinessStock"      Operation="Division" Value="$(Population)" Path="ClassStarSystem"/> -->
 		<!--  on system  -->
 		<Modifier TargetProperty="HappinessSum" Operation="Addition" Value="$(Population)"/>
-		<BinaryModifier TargetProperty="HappinessSum" Operation="Multiplication" Left="$(Happiness)" BinaryOperation="Multiplication" Right="$(SystemCount)"/>
+		<Modifier TargetProperty="HappinessESG" Operation="Addition" Value="$(Happiness)"/>
+		<BinaryModifier TargetProperty="HappinessSum" Operation="Multiplication" Left="$(HappinessESG)" BinaryOperation="Multiplication" Right="$(SystemCount)"/>
 		<!--  empire level  -->
 		<Modifier TargetProperty="Happiness" Operation="Addition" Value="$(HappinessSum)" Path="../ClassEmpire,EmpireTypeMajor"/>
 		<BinaryModifier TargetProperty="HappinessSum" Operation="Addition" Left="$(SystemCount)" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire,EmpireTypeMajor"/>
