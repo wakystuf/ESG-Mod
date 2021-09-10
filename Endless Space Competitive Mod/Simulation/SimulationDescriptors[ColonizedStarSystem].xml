@@ -60,6 +60,9 @@
 		<!-- Core Worlds FIDS boost -->
 		<Property Name="ColonizationThresholdFIDSBonus"				BaseValue="0" MinValue="0"/>
 
+		<!-- Riftborn hero capstone (bugged in vanilla) -->
+		<Property Name="SystemProductionAnomalyPercentBonus"		BaseValue="0"/>
+		
 		<!-- Doesn't do anything, used for tooltips that can't use GUI elements -->
 		<Property Name="UselessForTooltip"  BaseValue="0" MaxValue="1"/>
 
@@ -792,8 +795,10 @@
 		<Modifier TargetProperty="SD4Flag" Operation="Force" Value="$(SD4Flag)" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ResourceTypeStrategic"/>
 		<Modifier TargetProperty="SystemLevel" Operation="Force" Value="$(SystemLevel)" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ResourceTypeStrategic"/>
 
-	
-		
+		<!-- Riftborn capstone senator hero skill bonus -->
+		<Modifier TargetProperty="SystemProduction" Operation="Percent" Value="$(SystemProductionAnomalyPercentBonus)"/>
+
+
 		<Modifier			TargetProperty="HomeSystemPopulationHomeSystem" 		Operation="Force" 	Value="$(Population)" Path="./ClassEmpire/ClassColonizedStarSystem,BestSystem" SearchValueFromPath="true"/>
 
 		<Modifier           TargetProperty="NetTraceOperationProgress"              Operation="Multiplication" Value="$(TracingSpeedMultiplierForOthers)" Path="./ClassEmpire" />
@@ -1126,7 +1131,7 @@
 
 		<!-- Desired formula:   (exp(level / 2.5) - 1) * lengthModifier -->
 		<!-- Equivalent:        (2.7 ^ (level / 2.5) - 1) * lengthModifier -->
-		<Modifier       TargetProperty="TradingRoutesSystemOutputBonus" Operation="Addition" Value="2.5" Priority="1"/>
+		<Modifier       TargetProperty="TradingRoutesSystemOutputBonus" Operation="Addition" Value="3.5" Priority="1"/>
 		<BinaryModifier TargetProperty="TradingRoutesSystemOutputBonus" Operation="Power" Left="$(SystemLevel)" BinaryOperation="Division" Right="3" Priority="2"/>
 		<Modifier       TargetProperty="TradingRoutesSystemOutputBonus" Operation="Subtraction" Value="1" Priority="3"/>
 		<Modifier       TargetProperty="TradingRoutesSystemOutputBonus" Operation="Multiplication" Value="$(TradingRoutesCumulatedLengthModifiers)" Priority="4"/>
