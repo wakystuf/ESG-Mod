@@ -217,6 +217,7 @@
     <Property Name="ShieldAbsorption"                   BaseValue="0"/>
     <Property Name="ShieldAbsorptionPercent"            BaseValue="1"/>
     <Property Name="ShieldAbsorptionEndMultiplier"      BaseValue="0"/>
+    <Property Name="ShieldVulnerability"                BaseValue="1"/>
 
     <Property Name="ShieldReloadPerPhase"               BaseValue="0"/>
     <Property Name="ShieldRegeneratePerSecond"          BaseValue="0"/>
@@ -226,6 +227,8 @@
     <Property Name="HullPlatingAbsorptionPercent"           BaseValue="1"/>
     <Property Name="HullPlatingAbsorptionEndMultiplier"     BaseValue="0"/>
     <Property Name="HullPlatingAbsorptionDebuffDynamic"     BaseValue="0" MinValue="-1"/>
+    <Property Name="HullPlatingVulnerability"               BaseValue="1"/>
+
 
     <Property Name="ShipHealth"                         BaseValue="0"  MinValue="Negative"      Composition="Sum"/>
     <Property Name="HullWeakness"                       BaseValue="100" MinValue="Negative"/>
@@ -332,14 +335,16 @@
     <Modifier TargetProperty="HullPlatingPenetrationFactor"     Operation="Addition" Value="$(HullPlatingPenetrationFactor)"        Path="ClassShip/ClassSection/ClassModuleSquadron" />
 
     <!-- Military Power -->
-    <Modifier TargetProperty="ShieldAbsorption" Operation="Multiplication" Value="$(ShieldAbsorptionPercent)"/>
     <Modifier TargetProperty="ShieldAbsorptionEndMultiplier" Operation="Addition" Value="$(ShieldAbsorption)"/>
     <BinaryModifier TargetProperty="ShieldAbsorptionEndMultiplier" Operation="Division" Left="$(ShieldAbsorption)" BinaryOperation="Addition" Right="$(HullWeakness)"/>
+    <Modifier TargetProperty="ShieldVulnerability" Operation="Subtraction" Value="$(ShieldAbsorptionEndMultiplier)"/>
+    <BinaryModifier TargetProperty="ShieldAbsorptionEndMultiplier" Operation="Addition" Left="$(ShieldVulnerability)" BinaryOperation="Multiplication" Right="$(ShieldAbsorptionPercent)"/>
 
     <Modifier TargetProperty="HullPlatingAbsorption" Operation="Percent" Value="$(HullPlatingAbsorptionDebuffDynamic)"/>
-    <Modifier TargetProperty="HullPlatingAbsorption" Operation="Multiplication" Value="$(HullPlatingAbsorptionPercent)"/>
     <Modifier TargetProperty="HullPlatingAbsorptionEndMultiplier" Operation="Addition" Value="$(HullPlatingAbsorption)"/>
     <BinaryModifier TargetProperty="HullPlatingAbsorptionEndMultiplier" Operation="Division" Left="$(HullPlatingAbsorption)" BinaryOperation="Addition" Right="$(HullWeakness)"/>
+    <Modifier TargetProperty="HullPlatingVulnerability" Operation="Subtraction" Value="$(HullPlatingAbsorptionEndMultiplier)"/>
+    <BinaryModifier TargetProperty="HullPlatingAbsorptionEndMultiplier" Operation="Addition" Left="$(HullPlatingVulnerability)" BinaryOperation="Multiplication" Right="$(HullPlatingAbsorptionPercent)"/>
     
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(MaximumShield)"                   BinaryOperation="Division" Right="60"/>
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(ShieldReloadPerPhase)"            BinaryOperation="Division" Right="60"/>
