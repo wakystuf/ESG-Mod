@@ -57,7 +57,9 @@
     <Property Name="PlanetDepletionPerTurnFromFleets"       IsSealed="true" MinValue="Negative"/>
     <Property Name="PlanetDepletionPerTurnFromMiningProbe"  IsSealed="true" MinValue="Negative"/>
     <Property Name="PlanetDepletionMultiplier" BaseValue="0" MinValue="Negative"/>
-
+    <Property Name="PlanetDepletionPercent" BaseValue="0"/>
+    <Property Name="PlanetDepletionFIDSPenalty" BaseValue="0"/>
+    <Property Name="PlanetDepletionFIDSRemaining" BaseValue="1"/>
 
     <Property Name="Strategic1"  />
     <Property Name="Strategic2"  />
@@ -125,7 +127,18 @@
     <Modifier TargetProperty="PlanetInitialScience"     Operation="Percent"    Value="$(PlanetInitialFIDSPenalty)"  TooltipHidden="true"  />
     <Modifier TargetProperty="PlanetInitialPrestige"    Operation="Percent"    Value="$(PlanetInitialFIDSPenalty)"  TooltipHidden="true"    />
 
-
+    <!-- Depletion -->
+    <BinaryModifier TargetProperty="PlanetDepletionPercent"     Operation="Addition"   Left="$(PlanetDepletionPoints)" BinaryOperation="Division" Right="$(PlanetDepletionMax)"  TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetDepletionFIDSPenalty" Operation="Addition"   Left="$(PlanetDepletionPercent)" BinaryOperation="Multiplication" Right="0.5"  TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetRawFood" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetRawIndustry" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetRawDust" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetRawScience" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetRawPrestige" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetDepletionFIDSRemaining" Operation="Subtraction" Value="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
+    
+    <Modifier TargetProperty="PlanetDepletionFIDSRemaining"    Operation="Force"    Value="$(PlanetDepletionFIDSRemaining)" Path="ClassColonizedPlanet/ClassPopulationPlanet" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetDepletionFIDSPenalty"      Operation="Force"    Value="$(PlanetDepletionFIDSPenalty)" Path="ClassColonizedPlanet/ClassPopulationPlanet" TooltipHidden="true"/>
 
 
     <!-- Population max -->
@@ -134,7 +147,6 @@
     <Modifier TargetProperty="PlanetRawDust"        Operation="Addition"    Value="$(PlanetInitialDust)"        Priority="-5"   TooltipHidden="true"/>
     <Modifier TargetProperty="PlanetRawScience"     Operation="Addition"    Value="$(PlanetInitialScience)"     Priority="-5"   TooltipHidden="true"/>
     <Modifier TargetProperty="PlanetRawPrestige"    Operation="Addition"    Value="$(PlanetInitialPrestige)"    Priority="-5"   TooltipHidden="true"/>
-
 
     <!-- FOR OUTPOSTS -->
     <Modifier TargetProperty="AdditionalFood"        Operation="Addition"    Value="$(PlanetRawFood)"        Priority="-5"   TooltipHidden="true"   Path="../ClassColonizedStarSystem,ColonizedStarSystemStateOutpost"/>
@@ -212,7 +224,7 @@
     <Modifier TargetProperty="RawMaximumPopulation"     Value="5"       Operation="Addition" Path="PlanetTypeAtoll"     TooltipHidden="true"/>
     <Modifier TargetProperty="RawMaximumPopulation"     Value="2"       Operation="Addition" Path="PlanetTypeFake"      TooltipHidden="true"/>
 
-    <Modifier TargetProperty="PlanetDepletionMax"       Value="200" Operation="Addition" Path="ClassPlanet" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetDepletionMax"       Value="130" Operation="Addition" Path="ClassPlanet" TooltipHidden="true"/>
     <Modifier TargetProperty="PlanetIsHuge"             Operation="Force"     Value="1"   Path="ClassPlanet/ClassPopulationPlanet"    TooltipHidden="true"/>
   </SimulationDescriptor>
 
@@ -240,7 +252,7 @@
     <Modifier TargetProperty="RawMaximumPopulation"     Value="5"       Operation="Addition" Path="PlanetTypeAtoll"     TooltipHidden="true"/>
     <Modifier TargetProperty="RawMaximumPopulation"     Value="2"       Operation="Addition" Path="PlanetTypeFake"      TooltipHidden="true"/>
 
-    <Modifier TargetProperty="PlanetDepletionMax"       Value="180" Operation="Addition" Path="ClassPlanet" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetDepletionMax"       Value="120" Operation="Addition" Path="ClassPlanet" TooltipHidden="true"/>
     <Modifier TargetProperty="PlanetIsLarge"            Operation="Force"     Value="1"   Path="ClassPlanet/ClassPopulationPlanet"    TooltipHidden="true"/>
   </SimulationDescriptor>
 
@@ -266,7 +278,7 @@
     <Modifier TargetProperty="RawMaximumPopulation"     Value="5"       Operation="Addition" Path="PlanetTypeAtoll"     TooltipHidden="true"/>
     <Modifier TargetProperty="RawMaximumPopulation"     Value="2"       Operation="Addition" Path="PlanetTypeFake"      TooltipHidden="true"/>
 
-    <Modifier TargetProperty="PlanetDepletionMax"       Value="150" Operation="Addition" Path="ClassPlanet" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetDepletionMax"       Value="110" Operation="Addition" Path="ClassPlanet" TooltipHidden="true"/>
     <Modifier TargetProperty="PlanetIsMedium"           Operation="Force"     Value="1"   Path="ClassPlanet/ClassPopulationPlanet"    TooltipHidden="true"/>
   </SimulationDescriptor>
 
@@ -292,7 +304,7 @@
     <Modifier TargetProperty="RawMaximumPopulation"     Value="5"       Operation="Addition" Path="PlanetTypeOcean"     TooltipHidden="true"/>
     <Modifier TargetProperty="RawMaximumPopulation"     Value="5"       Operation="Addition" Path="PlanetTypeAtoll"     TooltipHidden="true"/>
 
-    <Modifier TargetProperty="PlanetDepletionMax"       Value="120" Operation="Addition" Path="ClassPlanet" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetDepletionMax"       Value="100" Operation="Addition" Path="ClassPlanet" TooltipHidden="true"/>
     <Modifier TargetProperty="PlanetIsSmall"            Operation="Force"     Value="1"   Path="ClassPlanet/ClassPopulationPlanet"    TooltipHidden="true"/>
   </SimulationDescriptor>
 
@@ -317,7 +329,7 @@
     <Modifier TargetProperty="RawMaximumPopulation"     Value="5"       Operation="Addition" Path="PlanetTypeOcean"     TooltipHidden="true"/>
     <Modifier TargetProperty="RawMaximumPopulation"     Value="5"       Operation="Addition" Path="PlanetTypeAtoll"     TooltipHidden="true"/>
 
-    <Modifier TargetProperty="PlanetDepletionMax"       Value="100" Operation="Addition" Path="ClassPlanet" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetDepletionMax"       Value="90" Operation="Addition" Path="ClassPlanet" TooltipHidden="true"/>
     <Modifier TargetProperty="PlanetIsTiny"             Operation="Force"     Value="1"   Path="ClassPlanet/ClassPopulationPlanet"    TooltipHidden="true"/>
   </SimulationDescriptor>
 
@@ -611,5 +623,21 @@
     <BinaryModifier     TargetProperty="Happiness"          Operation="Addition" Left="-5" BinaryOperation="Multiplication" Right="$(Population)" TooltipHidden="true"     />
     <Modifier           TargetProperty="HappinessRaw"       Operation="Addition" Value="-5"  />
     <Modifier           TargetProperty="PlanetIsGasHot"     Operation="Force"    Value="1" Path="ClassPlanet/ClassPopulationPlanet"    TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="PlanetDepletionMalus" Type="PlanetDepletion">
+    <Property Name="DepletedPlanetCount" BaseValue="1"/>
+    <Modifier TargetProperty="BonusFromDepletion" Operation="Force" Value="0" Path="ClassColonizedPlanet/ClassPopulationPlanetModifiersTraitPrimaryDepletionFIDS" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetRawFIDSI" Operation="Percent" Value="-0.5" Path="FAKEFORGUI,ClassPlanet"/>
+    <Modifier TargetProperty="PlanetRawFood" Operation="Percent" Value="-0.5" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetRawIndustry" Operation="Percent" Value="-0.5" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetRawDust" Operation="Percent" Value="-0.5" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetRawScience" Operation="Percent" Value="-0.5" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetRawPrestige" Operation="Percent" Value="-0.5" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetDepletionPercent"   Operation="Force" Value="0" Path="ClassPlanet" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetDepletionFIDSPenalty"   Operation="Force" Value="0" Path="ClassPlanet" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetDepletionFIDSRemaining" Operation="Force" Value="1" Path="ClassPlanet" TooltipHidden="true"/>
+    <Modifier TargetProperty="DepositValue" Operation="Percent" Value="-0.5" Path="FAKE,ClassPlanet"/>
+    <Modifier TargetProperty="DepositValue" Operation="Percent" Value="-0.5" Path="ClassColonizedPlanet/ClassColonizedResourceDeposit" Priority="999" TooltipHidden="true"/>
   </SimulationDescriptor>
 </Datatable>
