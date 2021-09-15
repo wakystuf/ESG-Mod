@@ -39,6 +39,9 @@
   <!-- Warning -->
   <DiplomaticTermPressureEffectDefinition Name="DiplomaticWarning" PropositionMethod="Declaration" ApplicationMethod="ProviderOnly" Category="CategoryTreaty" Alignment="Bad">
     <DiplomaticRelationStatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Responsible="EmpireWhichReceives">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Inverted="true" Flags="Prerequisite,Discard" Responsible="EmpireWhichProposes">
+      <PathPrerequisite>ClassDiplomaticEmpire,DiplomaticWarning</PathPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
     <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateColdWar</DiplomaticRelationStatePrerequisite>
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStatePeace</DiplomaticRelationStatePrerequisite>
@@ -51,7 +54,10 @@
   <!-- Prepare for War -->
   <DiplomaticTermPressureEffectDefinition Name="PrepareForWar" PropositionMethod="Declaration" ApplicationMethod="ProviderOnly" Category="CategoryTreaty" Alignment="Bad">
     <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Discard" Responsible="RelationOfEmpireWhichProvides">
-      <PathPrerequisite Inverted="true">ClassDiplomaticEmpire,DiplomaticWarning</PathPrerequisite>
+      <PathPrerequisite>ClassDiplomaticEmpire,DiplomaticWarning</PathPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Inverted="true" Flags="Prerequisite,Discard" Responsible="EmpireWhichProposes">
+      <PathPrerequisite>ClassDiplomaticEmpire,PrepareForWar</PathPrerequisite>
     </DiplomaticRelationStateEmpirePrerequisite>
     <DiplomaticRelationStatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Responsible="EmpireWhichReceives">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
     <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
