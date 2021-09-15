@@ -452,6 +452,12 @@
     <Modifier TargetProperty="ShipMaximumMovement" Operation="Addition" Value="3" Path="./ClassGarrisonFleet"/>
   </SimulationDescriptor>
 
+  <!-- Sciecne (replaces lost +3 movement) -->
+  <SimulationDescriptor Name="HeroSkillSystemSciencePerLevel" Type="HeroSkillSystem" IsSerializable="false">
+    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="10"  BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="SystemResearch" Operation="Percent"  Left="0.01" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+
   <!-- HeroSkill49 -->
   <SimulationDescriptor Name="HeroSkillShip49_FleetDefenseFleetDamage_Percent_4" Type="HeroSkillShip" IsSerializable="false">
     <Modifier TargetProperty="FleetMaximumHealth" Operation="Addition" Value="0.25" Path="./ClassGarrisonFleet"/>
@@ -635,11 +641,11 @@
   <!--mp horatio skill-->
   <SimulationDescriptor Name="HeroSkillSystemHoratio_MpAbsorption_CrewDamageBonus_1" Type="HeroSkillShip" IsSerializable="false">
     <Modifier TargetProperty="MaximumDamageBonusFromManpower" Operation="Addition" Value="0.15" Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="ShipManpowerKillAbsorption" Operation="Addition" Value="0.25" Path="./ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="ShipManpowerKillAbsorption" Operation="Percent" Value="0.25" Path="./ClassGarrisonFleet/ClassShip"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="HeroSkillSystemHoratio_MpAbsorption_CrewDamageBonus_2" Type="HeroSkillShip" IsSerializable="false">
     <Modifier TargetProperty="MaximumDamageBonusFromManpower" Operation="Addition" Value="0.3" Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="ShipManpowerKillAbsorption" Operation="Addition" Value="0.5" Path="./ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="ShipManpowerKillAbsorption" Operation="Percent" Value="0.5" Path="./ClassGarrisonFleet/ClassShip"/>
   </SimulationDescriptor>
 
   <!--food to IDSI horatio skill-->
@@ -681,12 +687,6 @@
   <!--Horatio ship cost increase -->
   <SimulationDescriptor Name="HeroSkillSystemHoratio_ShipStats_1" Type="HeroSkillSystem" IsSerializable="false">
     <Modifier TargetProperty="ShipProductionCostReduction" Operation="Addition" Value="0.50" Path="ClassColonizedStarSystem" Priority="-5" TooltipOverride="%HoratioShipStats_1_ToolTipOverride"/>
-  </SimulationDescriptor>
-
-  <!--Horatio Ind to Health and Shield-->
-  <SimulationDescriptor Name="HeroSkillSystemHoratio_IndtoHealth" Type="HeroSkillShip" IsSerializable="false">
-    <BinaryModifier TargetProperty="MaximumHealthFromSkillHoratio" Operation="Addition" Left="3" BinaryOperation="Multiplication" Right="$(IndustryCost)" Path="./ClassGarrisonFleet/ClassShip" SearchValueFromPath="true" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="MaximumShield" Operation="Addition" Left="6" BinaryOperation="Multiplication" Right="$(IndustryCost)" Path="./ClassGarrisonFleet/ClassShip" SearchValueFromPath="true" TooltipOverride="%HoratioIndToHealth_ToolTipOverride_1"/>
   </SimulationDescriptor>
 
   <!-- ****************** -->
