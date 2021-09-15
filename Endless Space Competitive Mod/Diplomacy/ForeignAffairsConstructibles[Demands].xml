@@ -14,7 +14,7 @@
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStatePeace</DiplomaticRelationStatePrerequisite>
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateAlliance</DiplomaticRelationStatePrerequisite>
     </DiplomaticMetaPrerequisite>
-    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">500 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,AggressiveTreatyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,LowerPressureCostReduction) * Property(OtherSideOfRelation,@ClassDiplomaticEmpire,ReceivedAggressiveTreatyCostReduction)</DiplomaticCustomCost>
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">30 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,AggressiveTreatyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,LowerPressureCostReduction) * Property(OtherSideOfRelation,@ClassDiplomaticEmpire,ReceivedAggressiveTreatyCostReduction)</DiplomaticCustomCost>
     <DiplomaticPressureEffectDefinitionReference Name="PressureReductionFromDiplomacy"/>
   </DiplomaticTermPressureEffectDefinition>
 
@@ -32,14 +32,26 @@
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStatePeace</DiplomaticRelationStatePrerequisite>
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateAlliance</DiplomaticRelationStatePrerequisite>
     </DiplomaticMetaPrerequisite>
-    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">500 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,AggressiveTreatyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,LowerPressureCostReduction) * Property(OtherSideOfRelation,@ClassDiplomaticEmpire,ReceivedAggressiveTreatyCostReduction)</DiplomaticCustomCost>
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">30 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,AggressiveTreatyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,LowerPressureCostReduction) * Property(OtherSideOfRelation,@ClassDiplomaticEmpire,ReceivedAggressiveTreatyCostReduction)</DiplomaticCustomCost>
     <DiplomaticPressureEffectDefinitionReference Name="PressureReductionFromDiplomacy"/>
   </DiplomaticTermPressureEffectDefinition>
 
   <!-- Warning -->
-  <DiplomaticTermPressureEffectDefinition Name="GeneratePressure" PropositionMethod="Declaration" ApplicationMethod="ProviderOnly" Category="CategoryTreaty" Alignment="Bad">
+  <DiplomaticTermPressureEffectDefinition Name="DiplomaticWarning" PropositionMethod="Declaration" ApplicationMethod="ProviderOnly" Category="CategoryTreaty" Alignment="Bad">
+    <DiplomaticRelationStatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Responsible="EmpireWhichReceives">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
+    <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
+      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateColdWar</DiplomaticRelationStatePrerequisite>
+      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStatePeace</DiplomaticRelationStatePrerequisite>
+      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateAlliance</DiplomaticRelationStatePrerequisite>
+    </DiplomaticMetaPrerequisite>
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">30 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,AggressiveTreatyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,RaisePressureCostReduction) * Property(OtherSideOfRelation,@ClassDiplomaticEmpire,ReceivedAggressiveTreatyCostReduction)</DiplomaticCustomCost>
+    <DiplomaticPressureEffectDefinitionReference Name="DiplomaticWarning"/>
+  </DiplomaticTermPressureEffectDefinition>
+
+  <!-- Prepare for War -->
+  <DiplomaticTermPressureEffectDefinition Name="PrepareForWar" PropositionMethod="Declaration" ApplicationMethod="ProviderOnly" Category="CategoryTreaty" Alignment="Bad">
     <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Discard" Responsible="RelationOfEmpireWhichProvides">
-      <PathPrerequisite Inverted="true">ClassDiplomaticEmpire,GeneratePressureTermActivate</PathPrerequisite>
+      <PathPrerequisite Inverted="true">ClassDiplomaticEmpire,DiplomaticWarning</PathPrerequisite>
     </DiplomaticRelationStateEmpirePrerequisite>
     <DiplomaticRelationStatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Responsible="EmpireWhichReceives">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
     <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
@@ -47,7 +59,7 @@
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStatePeace</DiplomaticRelationStatePrerequisite>
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateAlliance</DiplomaticRelationStatePrerequisite>
     </DiplomaticMetaPrerequisite>
-    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">500 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,AggressiveTreatyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,RaisePressureCostReduction) * Property(OtherSideOfRelation,@ClassDiplomaticEmpire,ReceivedAggressiveTreatyCostReduction)</DiplomaticCustomCost>
-    <DiplomaticPressureEffectDefinitionReference Name="PressureIncreaseFromDiplomacy"/>
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">0</DiplomaticCustomCost>
+    <DiplomaticPressureEffectDefinitionReference Name="PrepareForWar"/>
   </DiplomaticTermPressureEffectDefinition>
 </Datatable>
