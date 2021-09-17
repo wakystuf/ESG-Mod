@@ -94,4 +94,19 @@
     <DiplomaticAbilityChange Operation="Remove" DiplomaticAbilityReference="ScienceAgreement" />
     <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">(200 - 200*0.25*$(IsAlliance)) * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(EmpireWhichProposes,@ClassEmpire,AggressiveTreatyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,AggressiveTreatyCostReduction) * Property(OtherSideOfRelation,@ClassDiplomaticEmpire,ReceivedAggressiveTreatyCostReduction) * (1 + (Property(EmpireWhichProposes,@ClassEmpire,SystemCount) / 10) * 1.25) * 1.5 * Property(EmpireWhichProposes,@ClassEmpire,TradeAgreementCost)</DiplomaticCustomCost>
   </DiplomaticTermDefinition>
+
+  <!-- Faction Pact -->
+  <DiplomaticTermFactionPactDefinition Name="FactionPact" PropositionMethod="Negotiation" ApplicationMethod="Symmetrical" Category="CategoryTreaty" Alignment="Good" AssociatedPolitics="Politics03">
+    <PathPrerequisite Flags="Prerequisite,Discard,Technology">../ClassEmpire/ClassResearch,TechnologyDiplomacyFactionPact</PathPrerequisite>
+    <DiplomaticContractContainsTermPrerequisite Inverted="true" Flags="Prerequisite,Discard">PressureReductionDemand</DiplomaticContractContainsTermPrerequisite>
+    <DiplomaticAbilityPrerequisite TargetRelation="ProviderToReceiver" Inverted="true" Flags="Prerequisite,Discard">FactionPact</DiplomaticAbilityPrerequisite>
+    <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
+      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStatePeace</DiplomaticRelationStatePrerequisite>
+      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateAlliance</DiplomaticRelationStatePrerequisite>
+      <DiplomaticContractContainsTermPrerequisite>PeaceRelation</DiplomaticContractContainsTermPrerequisite>
+      <DiplomaticContractContainsTermPrerequisite>AskAlliance</DiplomaticContractContainsTermPrerequisite>
+    </DiplomaticMetaPrerequisite>
+    <DiplomaticAbilityChange Operation="Add" DiplomaticAbilityReference="FactionPact" />
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">200</DiplomaticCustomCost>
+  </DiplomaticTermFactionPactDefinition>
 </Datatable>
