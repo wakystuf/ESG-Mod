@@ -137,7 +137,7 @@
   </DiplomaticTermStarSystemColonyExchangeDefinition>
 
   <!-- Star System in Peace -->
-    <DiplomaticTermStarSystemColonyExchangeDefinition Name="ColonizedStarSystemDeal" PropositionMethod="Negotiation" ApplicationMethod="ReceiverOnly" Category="CategoryStarSystem" Alignment="Neutral">
+  <DiplomaticTermStarSystemColonyExchangeDefinition Name="ColonizedStarSystemDeal" PropositionMethod="Negotiation" ApplicationMethod="ReceiverOnly" Category="CategoryStarSystem" Alignment="Neutral">
     <DiplomaticContractContainsTermPrerequisite Inverted="true" Flags="Prerequisite,Discard">PressureReductionDemand</DiplomaticContractContainsTermPrerequisite>
     <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateColdWar</DiplomaticRelationStatePrerequisite>
@@ -155,7 +155,7 @@
     <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard" Inverted="true" Responsible="EmpireWhichReceives">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
     <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">200 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,PeacefulTreatyCostReduction) * (1 + Property(EmpireWhichProposes,@ClassEmpire,SystemCount) * 0.125)</DiplomaticCustomCost>
   </DiplomaticTermStarSystemColonyExchangeDefinition>
-  
+
   <!-- Outpost in Alliance -->
   <DiplomaticTermStarSystemOutpostExchangeDefinition Name="ColonizedStarSystemOutpostDealAlliance" PropositionMethod="Negotiation" ApplicationMethod="ReceiverOnly" Category="CategoryStarSystem" Alignment="Neutral">
     <DiplomaticContractContainsTermPrerequisite Inverted="true" Flags="Prerequisite,Discard">PressureReductionDemand</DiplomaticContractContainsTermPrerequisite>
@@ -173,7 +173,7 @@
     <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard" Inverted="true" Responsible="EmpireWhichReceives">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
     <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">75 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,PeacefulTreatyCostReduction) * (1 + Property(EmpireWhichProposes,@ClassEmpire,SystemCount) * 0.125)</DiplomaticCustomCost>
   </DiplomaticTermStarSystemOutpostExchangeDefinition>
-  
+
   <!-- Outpost in Peace -->
   <DiplomaticTermStarSystemOutpostExchangeDefinition Name="ColonizedStarSystemOutpostDeal" PropositionMethod="Negotiation" ApplicationMethod="ReceiverOnly" Category="CategoryStarSystem" Alignment="Neutral">
     <DiplomaticContractContainsTermPrerequisite Inverted="true" Flags="Prerequisite,Discard">PressureReductionDemand</DiplomaticContractContainsTermPrerequisite>
@@ -193,4 +193,26 @@
     <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard" Inverted="true" Responsible="EmpireWhichReceives">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
     <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">175 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,PeacefulTreatyCostReduction) * (1 + Property(EmpireWhichProposes,@ClassEmpire,SystemCount) * 0.125)</DiplomaticCustomCost>
   </DiplomaticTermStarSystemOutpostExchangeDefinition>
+
+  <!-- Technology Exchange -->
+  <DiplomaticTermTechnologyExchangeDefinition Name="TechnologyDeal" PropositionMethod="Negotiation" ApplicationMethod="ReceiverOnly" Category="CategoryTechnology" Alignment="Neutral">
+    <PathPrerequisite Flags="Prerequisite,Discard,Technology">../ClassEmpire/ClassResearch,TechnologyDiplomacyAlliance</PathPrerequisite>
+    <GameSettingPrerequisite Flags="Prerequisite">AllowTechTrading,True</GameSettingPrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Discard" Responsible="EmpireWhichReceives">
+      <PathPrerequisite Inverted="true">EmpireTypeMajor,FactionTraitScienceReduction</PathPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Discard" Responsible="EmpireWhichProvides">
+      <PathPrerequisite Inverted="true">EmpireTypeMajor,FactionTraitScienceReduction</PathPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
+
+    <DiplomaticContractContainsTermPrerequisite Inverted="true" Flags="Prerequisite,Discard">PressureReductionDemand</DiplomaticContractContainsTermPrerequisite>
+    <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
+      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStatePeace</DiplomaticRelationStatePrerequisite>
+      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateAlliance</DiplomaticRelationStatePrerequisite>
+      <DiplomaticContractContainsTermPrerequisite>PeaceRelation</DiplomaticContractContainsTermPrerequisite>
+      <DiplomaticContractContainsTermPrerequisite>TruceRelation</DiplomaticContractContainsTermPrerequisite>
+      <DiplomaticContractContainsTermPrerequisite>AskAlliance</DiplomaticContractContainsTermPrerequisite>
+    </DiplomaticMetaPrerequisite>
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">(200 - 200*0.25*$(IsAlliance)) * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * (1 + (Property(EmpireWhichProposes,@ClassEmpire,SystemCount) / 10) * 1.25)</DiplomaticCustomCost>
+  </DiplomaticTermTechnologyExchangeDefinition>
 </Datatable>
