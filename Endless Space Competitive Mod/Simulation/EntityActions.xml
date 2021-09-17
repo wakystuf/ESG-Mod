@@ -177,7 +177,7 @@
       <PathPrerequisite Inverted="true" Flags="FleetIsBusy">FleetActionGroundBattle</PathPrerequisite>
       <PathPrerequisite Inverted="true" Flags="IsCollectingRelics">FleetActionCollectingRelics</PathPrerequisite>
     </EntityPrerequisites>
-    
+
     <CustomCost Instant="true" ResourceName="Strategic3">Property(Context,@'ClassGarrison/ClassShip,ShipRoleBattleship',JuggernautShotCost)</CustomCost>
     <CustomCost Instant="true" ResourceName="Strategic4">Property(Context,@'ClassGarrison/ClassShip,ShipRoleBattleship',JuggernautShotCost)</CustomCost>
     <CustomCost Instant="true" ResourceName="Strategic5">Property(Context,@'ClassGarrison/ClassShip,ShipRoleBattleship',JuggernautShotCost)</CustomCost>
@@ -186,7 +186,7 @@
     <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyJuggernautBattleshipAbility</TechnologyPrerequisite>
     <DownloadableContentPrerequisite Flags="Discard">DLCHisshos</DownloadableContentPrerequisite>
     <BattleshipSimulationDescriptorReference Name="ShipWeaponsDeactivated"/>
-    
+
   </FireIonWaveFleetAction>
 
   <!-- Cloaking -->
@@ -229,57 +229,57 @@
     <CancelActions Flags="CancelOnAnything" SameContext="false" SameInitiator="true"/>
 
   </CollectRelicsFleetAction>
-	
-	<!-- Privateering -->
-	<PrivateerFleetAction Name="PrivateerFleetAction">
 
-		<!-- Prerequisites with Flag 'CheckOnFleetCreation' are checked when ships from a privateers fleet are moved to a new fleet. -->
-		<EntityPrerequisites Location="Self">
-			<!-- Hide when the fleet contains no mercenary -->
-			<PathPrerequisite Inverted="false" Flags="Prerequisite,Discard,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,MercenaryShip</PathPrerequisite>
-			<!-- Disable when the fleet has a hero -->
-			<PathPrerequisite Inverted="true" Flags="Prerequisite,NoHeroesForPrivateers,CheckOnFleetCreation">ClassGarrisonFleet/ClassHero</PathPrerequisite>
-			<!-- Disable when the fleet doesn't contain 100% mercenaries or contains a civilian ship -->
-			<PathPrerequisite Inverted="true" Flags="Prerequisite,NotAllShipsAreMercenaries,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,!MercenaryShip</PathPrerequisite>
-			<PathPrerequisite Inverted="true" Flags="Prerequisite,CivilianShipsCannotCamouflage,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,ShipRoleColonizer</PathPrerequisite>
-			<!-- Disable when not in owner influence -->
-			<PathPrerequisite Inverted="false" Flags="Prerequisite,FleetNotInFriendlyOrbit">FleetInfluenceStateOwner</PathPrerequisite>
-		</EntityPrerequisites>
+  <!-- Privateering -->
+  <PrivateerFleetAction Name="PrivateerFleetAction">
 
-		<EntityModifiers Location="Self">
-			<SimulationAlteration DescriptorReference="FleetActionPrivateer" />
-			<SimulationAlteration DescriptorReference="FleetActionPrivateerUpkeep" />
-		</EntityModifiers>
+    <!-- Prerequisites with Flag 'CheckOnFleetCreation' are checked when ships from a privateers fleet are moved to a new fleet. -->
+    <EntityPrerequisites Location="Self">
+      <!-- Hide when the fleet contains no mercenary -->
+      <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,MercenaryShip</PathPrerequisite>
+      <!-- Disable when the fleet has a hero -->
+      <PathPrerequisite Inverted="true" Flags="Prerequisite,NoHeroesForPrivateers,CheckOnFleetCreation">ClassGarrisonFleet/ClassHero</PathPrerequisite>
+      <!-- Disable when the fleet doesn't contain 100% mercenaries or contains a civilian ship -->
+      <PathPrerequisite Inverted="true" Flags="Prerequisite,NotAllShipsAreMercenaries,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,!MercenaryShip</PathPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="Prerequisite,CivilianShipsCannotCamouflage,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,ShipRoleColonizer</PathPrerequisite>
+      <!-- Disable when not in owner influence -->
+      <PathPrerequisite Inverted="false" Flags="Prerequisite,FleetNotInFriendlyOrbit">FleetInfluenceStateOwner</PathPrerequisite>
+    </EntityPrerequisites>
 
-		<PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,FactionTraitCorsairs</PathPrerequisite>
-		<PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
-		<TechnologyPrerequisite Flags="Prerequisite,Technology,Discard" UnlockHidden="true">TechnologyPrivateers</TechnologyPrerequisite>
-	</PrivateerFleetAction>
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="FleetActionPrivateer" />
+      <SimulationAlteration DescriptorReference="FleetActionPrivateerUpkeep" />
+    </EntityModifiers>
 
-	<PrivateerFleetAction Name="PrivateerQuestFleetAction">
+    <PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,FactionTraitCorsairs</PathPrerequisite>
+    <PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Technology,Discard" UnlockHidden="true">TechnologyPrivateers</TechnologyPrerequisite>
+  </PrivateerFleetAction>
 
-		<!-- Prerequisites with Flag 'CheckOnFleetCreation' are checked when ships from a privateers fleet are moved to a new fleet. -->
-		<EntityPrerequisites Location="Self">
-			<!-- Hide when the fleet contains no mercenary -->
-			<PathPrerequisite Inverted="false" Flags="Prerequisite,Discard,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,CanPrivateer</PathPrerequisite>
-			<!-- Disable when the fleet has a hero -->
-			<PathPrerequisite Inverted="true" Flags="Prerequisite,NoHeroesForPrivateers,CheckOnFleetCreation">ClassGarrisonFleet/ClassHero</PathPrerequisite>
-			<!-- Disable when the fleet doesn't contain 100% mercenaries or contains a civilian ship -->
-			<PathPrerequisite Inverted="true" Flags="Prerequisite,NotAllShipsAreMercenaries,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,!CanPrivateer</PathPrerequisite>
-			<PathPrerequisite Inverted="true" Flags="Prerequisite,CivilianShipsCannotCamouflage,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,ShipRoleColonizer</PathPrerequisite>
-			<!-- Disable when not in owner influence -->
-			<PathPrerequisite Inverted="false" Flags="Prerequisite,FleetNotInFriendlyOrbit">FleetInfluenceStateOwner</PathPrerequisite>
-		</EntityPrerequisites>
+  <PrivateerFleetAction Name="PrivateerQuestFleetAction">
 
-		<EntityModifiers Location="Self">
-			<SimulationAlteration DescriptorReference="FleetActionPrivateer" />
-			<SimulationAlteration DescriptorReference="FleetActionPrivateerUpkeep" />
-		</EntityModifiers>
+    <!-- Prerequisites with Flag 'CheckOnFleetCreation' are checked when ships from a privateers fleet are moved to a new fleet. -->
+    <EntityPrerequisites Location="Self">
+      <!-- Hide when the fleet contains no mercenary -->
+      <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,CanPrivateer</PathPrerequisite>
+      <!-- Disable when the fleet has a hero -->
+      <PathPrerequisite Inverted="true" Flags="Prerequisite,NoHeroesForPrivateers,CheckOnFleetCreation">ClassGarrisonFleet/ClassHero</PathPrerequisite>
+      <!-- Disable when the fleet doesn't contain 100% mercenaries or contains a civilian ship -->
+      <PathPrerequisite Inverted="true" Flags="Prerequisite,NotAllShipsAreMercenaries,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,!CanPrivateer</PathPrerequisite>
+      <PathPrerequisite Inverted="true" Flags="Prerequisite,CivilianShipsCannotCamouflage,CheckOnFleetCreation">ClassGarrisonFleet/ClassShip,ShipRoleColonizer</PathPrerequisite>
+      <!-- Disable when not in owner influence -->
+      <PathPrerequisite Inverted="false" Flags="Prerequisite,FleetNotInFriendlyOrbit">FleetInfluenceStateOwner</PathPrerequisite>
+    </EntityPrerequisites>
 
-		<PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,FactionTraitCorsairs</PathPrerequisite>
-		<PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
-		<TechnologyPrerequisite Flags="Prerequisite,Technology,Discard" UnlockHidden="true">TechnologyPrivateers</TechnologyPrerequisite>
-	</PrivateerFleetAction>
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="FleetActionPrivateer" />
+      <SimulationAlteration DescriptorReference="FleetActionPrivateerUpkeep" />
+    </EntityModifiers>
+
+    <PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,FactionTraitCorsairs</PathPrerequisite>
+    <PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Technology,Discard" UnlockHidden="true">TechnologyPrivateers</TechnologyPrerequisite>
+  </PrivateerFleetAction>
 
   <!--  Add flat growth on outpost (Lumeris) -->
   <OutpostActionDefinition Name="OutpostActionIncreaseMigrationRateVenetians" Duration="10">
@@ -314,152 +314,152 @@
   </OutpostActionDefinition>
 
   <!-- Vampirilis Brainwash -->
-    <CreateAllianceEmpireAction Name="CreateAllianceEmpireAction" ResultingDiplomaticRelationState="DiplomaticRelationStateMinorAdvancedBrainwashed">
-        <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * 200 * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Max(Property(StockLocation,@ClassEmpire,SystemCount), 1)</CustomCost>
+  <CreateAllianceEmpireAction Name="CreateAllianceEmpireAction" ResultingDiplomaticRelationState="DiplomaticRelationStateMinorAdvancedBrainwashed">
+    <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * 200 * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Max(Property(StockLocation,@ClassEmpire,SystemCount), 1)</CustomCost>
 
-        <PathPrerequisite Flags="Prerequisite,Discard" >ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
-        <PathPrerequisite Flags="Prerequisite,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
-        <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard" >ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
 
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
 
-        <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 100 </RelationInterpreterPrerequisite>
+    <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 100 </RelationInterpreterPrerequisite>
 
-        <MinorEmpireInterpreterPrerequisite Flags="OwnershipType">$(OwnershipType) lt 2 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
-        <PopulationEventOnSelf>PopulationPoliticalEventMinorBrainWash</PopulationEventOnSelf>
-        <ScoreProviderEventOnSelf>MinorEmpirePeaceDeclared</ScoreProviderEventOnSelf>
-    </CreateAllianceEmpireAction>
+    <MinorEmpireInterpreterPrerequisite Flags="OwnershipType">$(OwnershipType) lt 2 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
+    <PopulationEventOnSelf>PopulationPoliticalEventMinorBrainWash</PopulationEventOnSelf>
+    <ScoreProviderEventOnSelf>MinorEmpirePeaceDeclared</ScoreProviderEventOnSelf>
+  </CreateAllianceEmpireAction>
 
-    <!-- Assimilate -->
-    <AssimilateEmpireAction Name="AssimilateEmpireAction">
-        <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * 200 * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Max(Property(StockLocation,@ClassEmpire,SystemCount), 1)</CustomCost>
+  <!-- Assimilate -->
+  <AssimilateEmpireAction Name="AssimilateEmpireAction">
+    <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * 200 * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Max(Property(StockLocation,@ClassEmpire,SystemCount), 1)</CustomCost>
 
-        <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
-        <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">ClassEmpire,AffinityGameplayUnfallen</PathPrerequisite>
-        <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
-        <PathPrerequisite Flags="Prerequisite,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
-        <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">ClassEmpire,AffinityGameplayUnfallen</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
 
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
 
-        <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 100</RelationInterpreterPrerequisite>
+    <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 100</RelationInterpreterPrerequisite>
 
-        <MinorEmpireInterpreterPrerequisite Flags="OwnershipType">$(OwnershipType) lt 2 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
-        <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpireAssimilated</PopulationEventOnSelf>
-        <ScoreProviderEventOnSelf>MinorEmpireAssimilated</ScoreProviderEventOnSelf>
-    </AssimilateEmpireAction>
+    <MinorEmpireInterpreterPrerequisite Flags="OwnershipType">$(OwnershipType) lt 2 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
+    <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpireAssimilated</PopulationEventOnSelf>
+    <ScoreProviderEventOnSelf>MinorEmpireAssimilated</ScoreProviderEventOnSelf>
+  </AssimilateEmpireAction>
 
-    <AssimilateEmpireAction Name="AssimilateUnfallenEmpireAction">
-        <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * 200 * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Max(Property(StockLocation,@ClassEmpire,SystemCount), 1)</CustomCost>
+  <AssimilateEmpireAction Name="AssimilateUnfallenEmpireAction">
+    <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * 200 * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Max(Property(StockLocation,@ClassEmpire,SystemCount), 1)</CustomCost>
 
-        <PathPrerequisite Flags="Prerequisite,Discard">ClassEmpire,AffinityGameplayUnfallen</PathPrerequisite>
-        <PathPrerequisite Flags="Prerequisite,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
-        <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard">ClassEmpire,AffinityGameplayUnfallen</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
 
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
 
-        <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 100 </RelationInterpreterPrerequisite>
-        <RelationInterpreterPrerequisite Flags="Prerequisite,NotConnectedToRootNetwork">Path(Context,@'ClassMinorRelationWithMajor,MinorRelationUnderInfluence')</RelationInterpreterPrerequisite>
+    <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 100 </RelationInterpreterPrerequisite>
+    <RelationInterpreterPrerequisite Flags="Prerequisite,NotConnectedToRootNetwork">Path(Context,@'ClassMinorRelationWithMajor,MinorRelationUnderInfluence')</RelationInterpreterPrerequisite>
 
-        <MinorEmpireInterpreterPrerequisite Flags="OwnershipType">$(OwnershipType) lt 2 or $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
-        <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpireAssimilated</PopulationEventOnSelf>
-        <ScoreProviderEventOnSelf>MinorEmpireAssimilated</ScoreProviderEventOnSelf>
-    </AssimilateEmpireAction>
+    <MinorEmpireInterpreterPrerequisite Flags="OwnershipType">$(OwnershipType) lt 2 or $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
+    <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpireAssimilated</PopulationEventOnSelf>
+    <ScoreProviderEventOnSelf>MinorEmpireAssimilated</ScoreProviderEventOnSelf>
+  </AssimilateEmpireAction>
 
-    <!-- Minor empire actions. -->
-    <GhostifyEmpireAction Name="GhostifyEmpireAction" HidePanelOnClick="true">
-        <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * 200 * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Property(StockLocation,@ClassEmpire,SystemCount)</CustomCost>
+  <!-- Minor empire actions. -->
+  <GhostifyEmpireAction Name="GhostifyEmpireAction" HidePanelOnClick="true">
+    <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * 200 * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Property(StockLocation,@ClassEmpire,SystemCount)</CustomCost>
 
-        <PathPrerequisite Flags="Prerequisite,Disable,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Disable,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
 
-        <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
+    <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
 
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,Disable,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Disable,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
 
-        <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 100</RelationInterpreterPrerequisite>
+    <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 100</RelationInterpreterPrerequisite>
 
-        <MinorEmpireInterpreterPrerequisite Flags="Disable,OwnershipType">$(OwnershipType) lt 2 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
-        <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpirePurge</PopulationEventOnSelf>
-        <ScoreProviderEventOnSelf>MinorEmpireAssimilated</ScoreProviderEventOnSelf>
-    </GhostifyEmpireAction>
+    <MinorEmpireInterpreterPrerequisite Flags="Disable,OwnershipType">$(OwnershipType) lt 2 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
+    <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpirePurge</PopulationEventOnSelf>
+    <ScoreProviderEventOnSelf>MinorEmpireAssimilated</ScoreProviderEventOnSelf>
+  </GhostifyEmpireAction>
 
-    <GhostifyEmpireAction Name="GhostifyEmpireActionViaQuest" HidePanelOnClick="true">
-        <InterpreterPrerequisite Flags="PrerequisiteWhichCanOnlyFailExceptIfStartedViaTheQuestsSpecialOrder">false</InterpreterPrerequisite>
-    </GhostifyEmpireAction>
+  <GhostifyEmpireAction Name="GhostifyEmpireActionViaQuest" HidePanelOnClick="true">
+    <InterpreterPrerequisite Flags="PrerequisiteWhichCanOnlyFailExceptIfStartedViaTheQuestsSpecialOrder">false</InterpreterPrerequisite>
+  </GhostifyEmpireAction>
 
-    <!--Fleet spawning minor-->
-    <EmpireDiplomaticGivePopulationAsShipAction Name="EmpireDiplomaticGivePopulationAsShipAction" HidePanelOnClick="true" PopulationCount="3" FleetCount="1">
-        <MinorLuxuryCost Instant="true">25 * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction)</MinorLuxuryCost>
-        
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
-        <RelationPathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ClassMinorRelationWithMajor,RelationIdeologyMinorWarmonger</RelationPathPrerequisite>
-        
-        <MinorEmpireInterpreterPrerequisite Flags="Prerequisite,RequiredBestRelation">$(OwnershipType) ge 1 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
-        <MinorEmpireInterpreterPrerequisite Flags="NoPopulationOnSystem">Property(Context, @'ClassEmpire/ClassColonizedStarSystem,MinorHomeSystem',Population,true) gt 3</MinorEmpireInterpreterPrerequisite>
-        
-        <PopulationEventOnSelf>PopulationPoliticalEventMinorRecruitShips</PopulationEventOnSelf>
-    </EmpireDiplomaticGivePopulationAsShipAction>
+  <!--Fleet spawning minor-->
+  <EmpireDiplomaticGivePopulationAsShipAction Name="EmpireDiplomaticGivePopulationAsShipAction" HidePanelOnClick="true" PopulationCount="3" FleetCount="1">
+    <MinorLuxuryCost Instant="true">25 * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction)</MinorLuxuryCost>
 
-    <!--Selective Migration-->
-    <EmpireDiplomaticMigrationAction Name="EmpireDiplomaticMigrationAction" HidePanelOnClick="true" PopulationCount="1">
-      <PathPrerequisite Flags="Prerequisite,Discard">ClassEmpire,!AffinityVampirilis</PathPrerequisite>
-      <PathPrerequisite Flags="Prerequisite,Discard">ClassEmpire,!AffinityUmbralChoir</PathPrerequisite>
-      <InterpreterPrerequisite Flags="NoValidDestination">(SumProperty(Context, @'ClassEmpire/ClassColonizedStarSystem',MaximumPopulation) - Property(Context,@ClassEmpire,Population)) gt 0</InterpreterPrerequisite>
-      <MinorLuxuryCost Instant="true">15 * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction)</MinorLuxuryCost>
-      <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
-      <RelationPathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ClassMinorRelationWithMajor,RelationIdeologyMinorPacifist</RelationPathPrerequisite>
-      <MinorEmpireInterpreterPrerequisite Flags="Prerequisite,RequiredBestRelation">$(OwnershipType) ge 1 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
-      <MinorEmpireInterpreterPrerequisite Flags="NoPopulationOnSystem">Property(Context, @'ClassEmpire/ClassColonizedStarSystem,MinorHomeSystem',Population,true) gt 1</MinorEmpireInterpreterPrerequisite>
-      <PopulationEventOnSelf>PopulationPoliticalEventMinorMigrationAction</PopulationEventOnSelf>
-    </EmpireDiplomaticMigrationAction>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+    <RelationPathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ClassMinorRelationWithMajor,RelationIdeologyMinorWarmonger</RelationPathPrerequisite>
 
-    <!-- Praise -->
-    <EmpireDiplomaticActionDynamicCost Name="ComplimentEmpireAction">
-        <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">((10 + Max(0, $(Trend)) * 30) * Property(Relation,MinorPraiseCostMultiplier) * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction)) * Property(StockLocation,@ClassEmpire,MinorFactionCostReduction)</CustomCost>
-        
-        <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">ClassEmpire,AffinityGameplayVenetians</PathPrerequisite>
-        <PathPrerequisite Flags="Prerequisite,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
-        <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
-        
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
-        
-        <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) lt 100 </RelationInterpreterPrerequisite>
-        <RelationPathPrerequisite Inverted="true" Flags="IsLeeched">ClassMinorRelationWithMajor,MinorRelationLeeched</RelationPathPrerequisite>
-        
-        <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpirePraised</PopulationEventOnSelf>
-        <ScoreProviderEventOnSelf>MinorEmpireBribed</ScoreProviderEventOnSelf>
-        <TemporaryEffect>MinorRelationWithMajorPraise</TemporaryEffect>
-    </EmpireDiplomaticActionDynamicCost>
+    <MinorEmpireInterpreterPrerequisite Flags="Prerequisite,RequiredBestRelation">$(OwnershipType) ge 1 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
+    <MinorEmpireInterpreterPrerequisite Flags="NoPopulationOnSystem">Property(Context, @'ClassEmpire/ClassColonizedStarSystem,MinorHomeSystem',Population,true) gt 3</MinorEmpireInterpreterPrerequisite>
 
-    <!-- Lumeris Bribe -->
-    <EmpireDiplomaticActionDynamicCost Name="BribeEmpireAction">
-        <CustomCost ResourceName="EmpireMoney" Instant="true">((25 + Max(0, $(Trend)) * 50) * Property(Relation,MinorPraiseCostMultiplier) * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction)) * Property(StockLocation,@ClassEmpire,MinorFactionCostReduction)</CustomCost>
-        
-        <PathPrerequisite Flags="Prerequisite,Discard" >ClassEmpire,AffinityGameplayVenetians</PathPrerequisite>
-        <PathPrerequisite Flags="Prerequisite,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
-        <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
-        
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
-        <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
-        
-        <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) lt 100 </RelationInterpreterPrerequisite>
-        <RelationPathPrerequisite Inverted="true" Flags="IsLeeched">ClassMinorRelationWithMajor,MinorRelationLeeched</RelationPathPrerequisite>
-        
-        <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpireBribed</PopulationEventOnSelf>
-        <ScoreProviderEventOnSelf>MinorEmpireBribed</ScoreProviderEventOnSelf>
+    <PopulationEventOnSelf>PopulationPoliticalEventMinorRecruitShips</PopulationEventOnSelf>
+  </EmpireDiplomaticGivePopulationAsShipAction>
 
-        <TemporaryEffect>MinorRelationWithMajorBribe</TemporaryEffect>
-    </EmpireDiplomaticActionDynamicCost>
+  <!--Selective Migration-->
+  <EmpireDiplomaticMigrationAction Name="EmpireDiplomaticMigrationAction" HidePanelOnClick="true" PopulationCount="1">
+    <PathPrerequisite Flags="Prerequisite,Discard">ClassEmpire,!AffinityVampirilis</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard">ClassEmpire,!AffinityUmbralChoir</PathPrerequisite>
+    <InterpreterPrerequisite Flags="NoValidDestination">(SumProperty(Context, @'ClassEmpire/ClassColonizedStarSystem',MaximumPopulation) - Property(Context,@ClassEmpire,Population)) gt 0</InterpreterPrerequisite>
+    <MinorLuxuryCost Instant="true">15 * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction)</MinorLuxuryCost>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+    <RelationPathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ClassMinorRelationWithMajor,RelationIdeologyMinorPacifist</RelationPathPrerequisite>
+    <MinorEmpireInterpreterPrerequisite Flags="Prerequisite,RequiredBestRelation">$(OwnershipType) ge 1 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
+    <MinorEmpireInterpreterPrerequisite Flags="NoPopulationOnSystem">Property(Context, @'ClassEmpire/ClassColonizedStarSystem,MinorHomeSystem',Population,true) gt 1</MinorEmpireInterpreterPrerequisite>
+    <PopulationEventOnSelf>PopulationPoliticalEventMinorMigrationAction</PopulationEventOnSelf>
+  </EmpireDiplomaticMigrationAction>
+
+  <!-- Praise -->
+  <EmpireDiplomaticActionDynamicCost Name="ComplimentEmpireAction">
+    <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">((10 + Max(0, $(Trend)) * 30) * Property(Relation,MinorPraiseCostMultiplier) * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction)) * Property(StockLocation,@ClassEmpire,MinorFactionCostReduction)</CustomCost>
+
+    <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">ClassEmpire,AffinityGameplayVenetians</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
+
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
+
+    <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) lt 100 </RelationInterpreterPrerequisite>
+    <RelationPathPrerequisite Inverted="true" Flags="IsLeeched">ClassMinorRelationWithMajor,MinorRelationLeeched</RelationPathPrerequisite>
+
+    <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpirePraised</PopulationEventOnSelf>
+    <ScoreProviderEventOnSelf>MinorEmpireBribed</ScoreProviderEventOnSelf>
+    <TemporaryEffect>MinorRelationWithMajorPraise</TemporaryEffect>
+  </EmpireDiplomaticActionDynamicCost>
+
+  <!-- Lumeris Bribe -->
+  <EmpireDiplomaticActionDynamicCost Name="BribeEmpireAction">
+    <CustomCost ResourceName="EmpireMoney" Instant="true">((25 + Max(0, $(Trend)) * 50) * Property(Relation,MinorPraiseCostMultiplier) * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction)) * Property(StockLocation,@ClassEmpire,MinorFactionCostReduction)</CustomCost>
+
+    <PathPrerequisite Flags="Prerequisite,Discard" >ClassEmpire,AffinityGameplayVenetians</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,FactionTraitEternalWar" Inverted="true">ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics06</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Technology" UnlockHidden="true">TechnologyMinorFactionsGameplay</TechnologyPrerequisite>
+
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
+
+    <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) lt 100 </RelationInterpreterPrerequisite>
+    <RelationPathPrerequisite Inverted="true" Flags="IsLeeched">ClassMinorRelationWithMajor,MinorRelationLeeched</RelationPathPrerequisite>
+
+    <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpireBribed</PopulationEventOnSelf>
+    <ScoreProviderEventOnSelf>MinorEmpireBribed</ScoreProviderEventOnSelf>
+
+    <TemporaryEffect>MinorRelationWithMajorBribe</TemporaryEffect>
+  </EmpireDiplomaticActionDynamicCost>
 
   <OutpostActionFinishDefinition Name="OutpostActionFinishHisshos" Duration="0">
     <EntityPrerequisites Location="Self">
