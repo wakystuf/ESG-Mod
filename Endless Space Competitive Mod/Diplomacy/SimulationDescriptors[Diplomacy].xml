@@ -14,6 +14,25 @@
     <Modifier TargetProperty="IsInAlliance"					Operation="Addition" Value="1" Path="../ClassEmpire"/>
   </SimulationDescriptor>
 
+  <SimulationDescriptor Name="DiplomaticAbilityEffectScienceAgreement" Type="DiplomaticAbilityEffect">
+    <Property Name="ScienceAgreementDuration" BaseValue="0" IsSealed="true"/>
+    <Property Name="CurrentTurn"/>
+    <Property Name="GameSpeedScienceDiplomacy" BaseValue="1"/>
+    <Property Name="ScienceBonusStep" BaseValue="0"/>
+    <Property Name="ResearchBonusBasedOnDuration" BaseValue="0"/>
+    <!--  10  -->
+    <Property Name="ResearchBonus" BaseValue="50"/>
+    <BinaryModifier TargetProperty="ScienceBonusStep" Operation="Addition" Left="50" BinaryOperation="Division" Right="$(GameSpeedScienceDiplomacy)"/>
+    <!--  + 10 / turn, capped at +100 after 20 turns  -->
+    <BinaryModifier TargetProperty="ResearchBonusBasedOnDuration" Operation="Addition" Left="$(ScienceAgreementDuration)" BinaryOperation="Multiplication" Right="$(ScienceBonusStep)"/>
+    <Modifier TargetProperty="ResearchBonus" Operation="Addition" Value="$(ResearchBonusBasedOnDuration)"/>
+    <!--  x (gameTurn / 5)  -->
+    <BinaryModifier TargetProperty="ResearchBonus" Operation="Addition" Left="$(CurrentTurn)" BinaryOperation="Division" Right="0.5"/>
+    <Modifier TargetProperty="ResearchScienceAgreementBonus" Operation="Addition" Value="$(ResearchBonus)" Path="../ClassEmpire"/>
+    <BinaryModifier TargetProperty="TreatiesUpkeep" Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Population)" SearchValueFromPath="true" Path="../ClassEmpire" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="ScienceAgreementUpkeep" Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Population)" SearchValueFromPath="true" Path="../ClassEmpire" TooltipHidden="false"/>
+  </SimulationDescriptor>
+
   <SimulationDescriptor Name="PressureReductionFromDiplomacyInitiator" Type="Pressure">
     <Modifier TargetProperty="CurrentEffectsBonus" Operation="Addition" Value="-1"/>
     <Modifier TargetProperty="PeacefulTreatyCostReduction" Operation="Multiplication" Value="0.5"/>
