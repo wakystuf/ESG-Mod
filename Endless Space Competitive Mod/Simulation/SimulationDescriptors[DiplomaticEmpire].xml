@@ -107,42 +107,4 @@
     <Modifier TargetProperty="PressureTrend" Operation="Multiplication" Value="$(CurrentRelationMultiplier)"/>
 
   </SimulationDescriptor>
-
-
-  <!-- Science Agreement -->
-  <SimulationDescriptor Name="DiplomaticAbilityEffectScienceAgreement" Type="DiplomaticAbilityEffect">
-    <Property Name="ScienceAgreementDuration" BaseValue="0" IsSealed="true"/>
-    <Property Name="CurrentTurn"/>
-    <Property Name="GameSpeedScienceDiplomacy" BaseValue="1"/>
-    <Property Name="ScienceBonusStep" BaseValue="0"/>
-
-    <Property Name="ResearchBonusBasedOnDuration" BaseValue="0" MaxValue="750"/>
-
-    <!-- 10 -->
-    <Property Name="ResearchBonus" BaseValue="50"/>
-
-    <BinaryModifier TargetProperty="ScienceBonusStep" Operation="Addition" Left="12" BinaryOperation="Division" Right="$(GameSpeedScienceDiplomacy)"/>
-
-    <!-- + 10 / turn, capped at +100 after 20 turns -->
-    <BinaryModifier TargetProperty="ResearchBonusBasedOnDuration" Operation="Addition" Left="$(ScienceAgreementDuration)" BinaryOperation="Multiplication" Right="$(ScienceBonusStep)"/>
-    <Modifier TargetProperty="ResearchBonus" Operation="Addition" Value="$(ResearchBonusBasedOnDuration)" />
-
-    <!-- x (gameTurn / 5) -->
-    <BinaryModifier TargetProperty="ResearchBonus" Operation="Addition" Left="$(CurrentTurn)" BinaryOperation="Division" Right="2"/>
-
-    <Modifier TargetProperty="ResearchScienceAgreementBonus" Operation="Addition" Value="$(ResearchBonus)" Path="../ClassEmpire"/>
-
-    <Modifier TargetProperty="TreatiesUpkeep"         Operation="Addition"       Value="50"                    Path="../ClassEmpire"                            TooltipHidden="true"/>
-    <Modifier TargetProperty="TreatiesUpkeep"         Operation="Multiplication" Value="$(TradeAgreementCost)" Path="../ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
-    <Modifier TargetProperty="ScienceAgreementUpkeep" Operation="Addition"       Value="50"                    Path="../ClassEmpire"                            TooltipHidden="false"/>
-    <Modifier TargetProperty="ScienceAgreementUpkeep" Operation="Multiplication" Value="$(TradeAgreementCost)" Path="../ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
-  <!-- Trade Agreement -->
-  <SimulationDescriptor Name="DiplomaticAbilityEffectTradeAgreement" Type="DiplomaticAbilityEffect">
-    <Modifier TargetProperty="TreatiesUpkeep"         Operation="Addition"       Value="50"                    Path="../ClassEmpire"                            TooltipHidden="true"/>
-    <Modifier TargetProperty="TreatiesUpkeep"         Operation="Multiplication" Value="$(TradeAgreementCost)" Path="../ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
-    <Modifier TargetProperty="TradeAgreementUpkeep"   Operation="Addition"       Value="50"                    Path="../ClassEmpire"                            TooltipHidden="false"/>
-    <Modifier TargetProperty="TradeAgreementUpkeep"   Operation="Multiplication" Value="$(TradeAgreementCost)" Path="../ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
-  </SimulationDescriptor>
 </Datatable>
