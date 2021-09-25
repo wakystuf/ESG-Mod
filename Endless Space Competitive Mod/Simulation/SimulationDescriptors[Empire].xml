@@ -29,7 +29,15 @@
 		<Property Name="IsAIControlled"                     BaseValue="0" MaxValue="1" MinValue="0"/>
 		<Property Name="AINumberOfCoreCrackers"             BaseValue="0" MinValue="0"/>
 		<Property Name="AICoreCrackerMaximum"               BaseValue="5"/>
+    <Property Name="ColonizerCount"							        BaseValue="0" MinValue="0"/>
     
+    <!-- Outposts + Systems + Colonizers -->
+    <Property Name="ColonizeableCount"                  BaseValue="0" MinValue="0"/>
+    <Property Name="PotentiallyOverColonizationThreshold" BaseValue="0" MinValue="0" MaxValue="1" RoundingFunction="Floor"/>
+    
+		<!--Seek the Unique Rework-->
+		<Property Name="OwnedUniquePlanetAndGovernor"           BaseValue="0" MinValue="0" Composition="Sum" />
+
 		<!--Tech Stages-->
 		<Property Name="EmpireEmpireDevelopmentStage" BaseValue="1"/>
 		<Property Name="EmpireScienceStage" BaseValue="1"/>
@@ -1411,6 +1419,12 @@
 		<Modifier TargetProperty="IsntImmuneToSpecialNodes" Operation="Addition" Value="$(IsntImmuneToSpecialNodes)" Path="ClassEmpire//ClassGarrison"/>
 		<Modifier TargetProperty="JuggernautCount" Operation="Addition" Value="$(JuggernautCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
+    <!--  -->
+    <Modifier TargetProperty="ColonizeableCount" Operation="Addition" Value="$(OutpostCount)"/>
+    <Modifier TargetProperty="ColonizeableCount" Operation="Addition" Value="$(SystemCount)"/>
+    <Modifier TargetProperty="ColonizeableCount" Operation="Addition" Value="$(ColonizerCount)"/>
+    <BinaryModifier TargetProperty="PotentiallyOverColonizationThreshold" Operation="Addition" Left="$(OverColonizationThreshold)" BinaryOperation="Division" Right="$(ColonizeableCount)" Priority="0" Path="ClassEmpire"/>
+    
 		<!-- Ship Costs -->
 		<!-- Civilian -->
 		<Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(CivilianBaseIndustry)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>

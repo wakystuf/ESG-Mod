@@ -340,6 +340,35 @@
     <Modifier TargetProperty="SystemProduction" Operation="Percent" Value="0.25" Path="../ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem4"/>
   </SimulationDescriptor>
 
+  <!--Seek the Unique: Approval per Unique with Governor (option 1)-->
+  <SimulationDescriptor Name="EmpireImprovementQuestUniquePlanet04" Type="EmpireImprovement">
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(OwnedUniquePlanetAndGovernor)" Path="!AffinityGameplayMajorHisshos,ClassEmpire/ClassColonizedStarSystem" TooltipHiddenIfPathInvalid="true" TooltipOverride="%EmpireImprovementQuestUniquePlanet04ATooltipEffect"/>
+    <BinaryModifier TargetProperty="EmpireEmpirePoint" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedUniquePlanetAndGovernor)" Path="AffinityGameplayMajorHisshos,ClassEmpire" TooltipHiddenIfPathInvalid="true" TooltipOverride="%EmpireImprovementQuestUniquePlanet04BTooltipEffect"/>
+  </SimulationDescriptor>
+
+  <!--Seek the Unique: Approval per Unique with Governor (option 2)-->
+  <SimulationDescriptor Name="EmpireImprovementQuestUniquePlanet05" Type="EmpireImprovement">
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(OwnedUniquePlanetAndGovernor)" Path="!AffinityGameplayMajorHisshos,ClassEmpire/ClassColonizedStarSystem" TooltipHiddenIfPathInvalid="true" TooltipOverride="%EmpireImprovementQuestUniquePlanet04ATooltipEffect"/>
+    <BinaryModifier TargetProperty="EmpireEmpirePoint" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedUniquePlanetAndGovernor)" Path="AffinityGameplayMajorHisshos,ClassEmpire" TooltipHiddenIfPathInvalid="true" TooltipOverride="%EmpireImprovementQuestUniquePlanet04BTooltipEffect"/>
+  </SimulationDescriptor>
+
+  <!--Seek the Unique: Dust and Food-->
+  <SimulationDescriptor Name="EmpireImprovementQuestUniquePlanet06" Type="EmpireImprovement">
+    <Modifier TargetProperty="BonusPopulationDust" Operation="Addition" Value="1" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation,PopulationMajor"/>
+    <Modifier TargetProperty="BonusPopulationFood" Operation="Addition" Value="1" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation,PopulationMajor"/>
+  </SimulationDescriptor>
+
+  <!--Seek the Unique: Sci and Ind-->
+  <SimulationDescriptor Name="EmpireImprovementQuestUniquePlanet07" Type="EmpireImprovement">
+    <Modifier TargetProperty="BonusPopulationScience" Operation="Addition" Value="1" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation,PopulationMajor"/>
+    <Modifier TargetProperty="BonusPopulationIndustry" Operation="Addition" Value="1" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation,PopulationMajor"/>
+  </SimulationDescriptor>
+
+  <!--Seek the Unique: Dust per Assimilation-->
+  <SimulationDescriptor Name="EmpireImprovementQuestUniquePlanet11" Type="EmpireImprovement">
+    <BinaryModifier TargetProperty="EmpireMoney" Operation="Percent" Left="0.05" BinaryOperation="Multiplication" Right="$(MinorTraitsAssimilated)" Path="ClassEmpire" Priority="1" TooltipOverride="%EmpireImprovementQuestUniquePlanet11TooltipEffect" ValueMustBePositive="true"/>
+  </SimulationDescriptor>
+
   <!--Innate Explorer Cloaking-->
   <SimulationDescriptor Name="EmpireImprovementExplorerInvisibility" Type="EmpireImprovement">
     <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="1" Path="ClassEmpire/ClassGarrisonFleet/ClassShip, ShipRoleExploration" Priority="-1"/>
@@ -424,6 +453,9 @@
   </SimulationDescriptor>
   <SimulationDescriptor Name="EmpireImprovementOutpostActionBoosts_Vaulters" Type="EmpireImprovement">
     <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ClassEmpire//ClassShip,ShipRoleSuperColonizer"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="EmpireImprovementOutpostActionBoosts_Timelords" Type="EmpireImprovement">
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ClassEmpire//ClassShip,ShipRoleColonizer"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="EmpireImprovementOutpostActionBoosts_UmbralChoir" Type="EmpireImprovement">
     <Modifier TargetProperty="FinalProcessingPowerAllocation" Operation="Percent" Value="-0.5" Path="ClassEmpire//ClassHackingBeacon" TooltipOverride="%EmpireImprovementOutpostActionBoosts_UmbralChoirTooltip"/>
@@ -529,20 +561,20 @@
   <!-- Overcolonization-->
   <SimulationDescriptor Name="EmpireImprovementExpansionDisapproval1" Type="EmpireImprovement">
     <Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="1" Path="ClassEmpire" Priority="999"/>
-    <Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="1" Path="ClassEmpire,GovernmentEmpire" Priority="999"/>
+    <Modifier TargetProperty="MaxColonizationThresholdBonus" Operation="Addition" Value="1" Path="ClassEmpire/ClassSenate,GovernmentEmpire" Priority="999" TooltipOverride="%EmpireImprovementExpansionDisapproval1TooltipOverride"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="EmpireImprovementExpansionDisapproval1Terrans" Type="EmpireImprovement">
     <Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="2" Path="ClassEmpire" Priority="999"/>
-    <Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="2" Path="ClassEmpire,GovernmentEmpire" Priority="999"/>
+    <Modifier TargetProperty="MaxColonizationThresholdBonus" Operation="Addition" Value="2" Path="ClassEmpire/ClassSenate,GovernmentEmpire" Priority="999" TooltipOverride="%EmpireImprovementExpansionDisapproval1TerransTooltipOverride"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="EmpireImprovementGovernmentTerrans" Type="EmpireImprovement">
     <Modifier TargetProperty="GovernmentGameplayUnlocked" Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
     <Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="1" Path="ClassEmpire" Priority="999"/>
-    <Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="1" Path="ClassEmpire,GovernmentEmpire" Priority="999"/>
+    <Modifier TargetProperty="MaxColonizationThresholdBonus" Operation="Addition" Value="1" Path="ClassEmpire/ClassSenate,GovernmentEmpire" Priority="999" TooltipOverride="%EmpireImprovementGovernmentTerransTooltipOverride"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="EmpireImprovementExpansionDisapproval2" Type="EmpireImprovement">
     <Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="2" Path="ClassEmpire" Priority="999"/>
-    <Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="2" Path="ClassEmpire,GovernmentEmpire" Priority="999"/>
+    <Modifier TargetProperty="MaxColonizationThresholdBonus" Operation="Addition" Value="2" Path="ClassEmpire/ClassSenate,GovernmentEmpire" Priority="999" TooltipOverride="%EmpireImprovementExpansionDisapproval2TooltipOverride"/>
   </SimulationDescriptor>
 
   <!-- Vaulter Quest Overcolonization-->
