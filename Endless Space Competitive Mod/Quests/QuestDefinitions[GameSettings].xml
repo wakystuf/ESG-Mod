@@ -704,4 +704,35 @@
 			</Step>
 		</Steps>
 	</QuestDefinition>
+
+  <!-- Mercenary Contracting -->
+  <QuestDefinition Name="QuestUnlockMercenaryShips" IsInstant="true" Category="GameSetting" SubCategory="MercenaryContracting" TriggeringProbability="1" MinimumTurn="0">
+    <Tags>Hidden,BeginTurn</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$Trait" StringValue="FactionTraitUnlockMercenaryShips"/>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <GameSettingPrerequisite Flags="Prerequisite,Discard">MercenaryFleets,True</GameSettingPrerequisite>
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,FactionTraitUnlockMercenaryShips</PathPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Add_Trait">
+            <Sequence>
+              <Action_ApplyDescriptor LogAction="false">
+                <Input_DescriptorName VarName="$Trait"/>
+                <Input_Targets VarName="$CurrentEmpire"/>
+              </Action_ApplyDescriptor>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
 </Datatable>
