@@ -735,4 +735,34 @@
       </Step>
     </Steps>
   </QuestDefinition>
+
+  <!-- Diplomacy Rework -->
+  <QuestDefinition Name="QuestDisableDiplomacyRework" IsInstant="true" Category="GameSetting" SubCategory="DiplomacyRework" TriggeringProbability="1" MinimumTurn="0">
+    <Tags>Hidden,BeginTurn</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$Trait" StringValue="FactionTraitDisableDiplomacyRework"/>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <GameSettingPrerequisite Flags="Prerequisite,Discard">DiplomacyRework,False</GameSettingPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Add_Trait">
+            <Sequence>
+              <Action_ApplyDescriptor LogAction="false">
+                <Input_DescriptorName VarName="$Trait"/>
+                <Input_Targets VarName="$CurrentEmpire"/>
+              </Action_ApplyDescriptor>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
 </Datatable>
