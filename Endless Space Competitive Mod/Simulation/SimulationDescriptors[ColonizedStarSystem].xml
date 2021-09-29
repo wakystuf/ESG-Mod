@@ -33,6 +33,9 @@
 		<Property Name="CanConvertWastedFoodtoMP1"		 	 BaseValue="0" MinValue="0" MaxValue="1"/>
 		<Property Name="CanConvertWastedFoodtoMP2"		 	 BaseValue="0" MinValue="0" MaxValue="1"/>
 		<Property Name="CanConvertWastedFoodtoApproval"		 BaseValue="0" MinValue="0" MaxValue="1"/>
+		<Property Name="WastedFoodtoDust"		 			 BaseValue="0" MinValue="0"/>
+		<Property Name="WastedFoodtoMP"		 				 BaseValue="0" MinValue="0"/>
+		<Property Name="WastedFoodtoApproval"		 		 BaseValue="0" MinValue="0" MaxValue="10"/>
 
 		<Property Name="CurrentTurnModuloEndlessCeil"		 BaseValue="0" RoundingFunction="Ceil"/>
 		<Property Name="CurrentTurnModuloEndlessFloor"		 BaseValue="0" RoundingFunction="Floor"/>
@@ -1380,11 +1383,24 @@
 
 		<!-- Calculate amount of food that will be wasted and filter for GameSetting and whether conversion is unlocked -->
 		<BinaryModifier TargetProperty="WastedGrowth"  Operation="Addition" Left="$(SystemGrowthStockNextTurn)" BinaryOperation="Subtraction" Right="$(SystemGrowthStockRequiredForNextPop)" Priority="6"/>
-		<BinaryModifier TargetProperty="WastedGrowth"  Operation="Multiplication" Left="$(CanConvertWastedFood)" BinaryOperation="Multiplication" Right="$(GameSettingFoodReworkEnabled)" Priority="7"/>
+		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(GameSettingFoodReworkEnabled)" Priority="7"/>
 
-		<!-- Convert food to dust as appropriate -->
-		<Modifier 			TargetProperty="NetSystemGrowth" 	   Operation="Subtraction" Value="$(WastedGrowth)" Priority="8"/>
-		<Modifier 			TargetProperty="NetSystemMoney" 	   Operation="Addition"    Value="$(WastedGrowth)" Priority="8"/>
+		<!-- Convert food as appropriate (using separate intermediate variables so that it shows up clearly in the GUI) -->
+		<BinaryModifier TargetProperty="WastedFoodtoDust"  Operation="Addition" Left="$(CanConvertWastedFoodtoDust1)" BinaryOperation="Addition" Right="$(CanConvertWastedFoodtoDust2)" Priority="1"/>
+		<Modifier 		TargetProperty="WastedFoodtoDust"  Operation="Division" Value="4" 																								Priority="2"/>
+		<Modifier 		TargetProperty="WastedFoodtoDust"  Operation="Multiplication" Value="$(WastedGrowth)"																			Priority="8"/>
+
+		<BinaryModifier TargetProperty="WastedFoodtoMP"    Operation="Addition" Left="$(CanConvertWastedFoodtoMP1)" BinaryOperation="Addition" Right="$(CanConvertWastedFoodtoMP2)" 	Priority="1"/>
+		<Modifier 		TargetProperty="WastedFoodtoMP"    Operation="Division" Value="4" 																								Priority="2"/>
+		<Modifier 		TargetProperty="WastedFoodtoMP"    Operation="Multiplication" Value="$(WastedGrowth)"																			Priority="8"/>
+
+		<BinaryModifier TargetProperty="WastedFoodtoApproval" Operation="Addition" Left="$(CanConvertWastedFoodtoApproval)" BinaryOperation="Multiplication" Right="$(WastedGrowth)" 	Priority="8"/>
+		<Modifier 		TargetProperty="WastedFoodtoApproval"    Operation="Multiplication" Value="999"																					Priority="8"/>
+
+		<Modifier 		TargetProperty="NetSystemGrowth"   Operation="Subtraction" Value="$(WastedGrowth)" 	       Priority="8"/>
+		<Modifier 		TargetProperty="NetSystemMoney"    Operation="Addition"    Value="$(WastedFoodtoDust)" 	   Priority="9"/>
+		<Modifier 		TargetProperty="EmpireManpower"    Operation="Addition"    Value="$(WastedFoodtoMP)" 	   Priority="9" Path="../ClassEmpire"/>
+		<Modifier 		TargetProperty="Happiness"    	   Operation="Addition"    Value="$(WastedFoodtoApproval)" Priority="9"/>
 
 		<!-- Determine whether pop is allowed to grow this turn based on turn, presence of trait and gamespeed, and apply adjustment if needed -->
 		<BinaryModifier     TargetProperty="CurrentTurnModuloEndlessCeil"  Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="4" Priority="1"/>
