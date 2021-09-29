@@ -21,6 +21,30 @@
 		<Property Name="ManpowerCapacityWithGhosts"					BaseValue="0"/>
 		<Property Name="EmpirePointFromIndustryConversion"	BaseValue="0"/>
 
+		<!-- Food rework -->
+		<Property Name="SystemGrowthStockNextTurn"			 BaseValue="0" MinValue="0"/>
+		<Property Name="SystemGrowthStockRequiredForNextPop" BaseValue="0" MinValue="0"/>
+		<Property Name="WastedGrowth"				 		 BaseValue="0" MinValue="0"/>
+		<Property Name="CurrentTurn" 						 BaseValue="1"/>
+		<Property Name="GameSettingFoodReworkEnabled"		 BaseValue="1" MinValue="0" MaxValue="1"/>
+		<Property Name="GameSettingFoodReworkScalingEnabled" BaseValue="1" MinValue="0" MaxValue="1"/>
+		<Property Name="CanConvertWastedFood"		 		 BaseValue="0" MinValue="0" MaxValue="1"/>
+
+		<Property Name="CurrentTurnModuloEndlessCeil"	BaseValue="0" RoundingFunction="Ceil"/>
+		<Property Name="CurrentTurnModuloEndlessFloor"	BaseValue="0" RoundingFunction="Floor"/>
+		<Property Name="CurrentTurnModuloEndless"		BaseValue="0" MinValue="0" MaxValue="1"/>
+		<Property Name="GameSettingEndlessBoolean"		BaseValue="0" MinValue="0" MaxValue="1"/>
+
+		<Property Name="CurrentTurnModuloSlowCeil"	BaseValue="0" RoundingFunction="Ceil"/>
+		<Property Name="CurrentTurnModuloSlowFloor"	BaseValue="0" RoundingFunction="Floor"/>
+		<Property Name="CurrentTurnModuloSlow"		BaseValue="0" MinValue="0" MaxValue="1"/>
+		<Property Name="GameSettingSlowBoolean"		BaseValue="0" MinValue="0" MaxValue="1"/>
+
+		<Property Name="CurrentTurnModuloNormalCeil"	BaseValue="0" RoundingFunction="Ceil"/>
+		<Property Name="CurrentTurnModuloNormalFloor"	BaseValue="0" RoundingFunction="Floor"/>
+		<Property Name="CurrentTurnModuloNormal"		BaseValue="0" MinValue="0" MaxValue="1"/>
+		<Property Name="GameSettingNormalBoolean"		BaseValue="0" MinValue="0" MaxValue="1"/>
+
 		<!-- Law Rework -->
 		<Property Name="FlatLuxuryBoost"				 BaseValue="0"/>
 		<Property Name="DynamicLuxuryBoost"				 BaseValue="0"/>
@@ -216,7 +240,7 @@
 
 		<!-- System's stock resources -->
 		<Property Name="ShouldUseGrowth"            BaseValue="1" MaxValue="1"/>
-		<Property Name="SystemGrowthStock"          IsSealed="true" />
+		<Property Name="SystemGrowthStock"          IsSealed="false" />
 		<Property Name="SystemProductionStock"      IsSealed="true" />
 		<Property Name="SystemTurnBasedStock"       IsSealed="true" />
 		<Property Name="SystemInfluenceStock"       IsSealed="true" />
@@ -834,6 +858,12 @@
 		<Modifier TargetProperty="NetSystemGrowth"          Operation="Addition"    Value="$(SystemGrowthFromProduction)"                TooltipHidden="false" />
 		<Modifier TargetProperty="NetSystemGrowth"          Operation="Addition"    Value="$(SystemGrowthBasryxoTrait)"             TooltipHidden="false" />
 		<Modifier TargetProperty="NetSystemGrowth"          Operation="Addition"    Value="$(SystemGrowthFromMoneyConversion)"           TooltipHidden="false" />
+		<Modifier TargetProperty="NetSystemGrowth_ESG"      Operation="Addition"    Value="$(SystemGrowthFromGrowthConversion)"          TooltipHidden="false" />
+		<Modifier TargetProperty="NetSystemGrowth_ESG"      Operation="Addition"    Value="$(SystemGrowthFromProduction)"                TooltipHidden="false" />
+		<Modifier TargetProperty="NetSystemGrowth_ESG"      Operation="Addition"    Value="$(SystemGrowthBasryxoTrait)"             TooltipHidden="false" />
+		<!-- Intentionally omitted to avoid circular loop with dust conversion
+		<Modifier TargetProperty="NetSystemGrowth_ESG"      Operation="Addition"    Value="$(SystemGrowthFromMoneyConversion)"           TooltipHidden="false" />-->
+
 		<Modifier TargetProperty="NetSystemProduction"      Operation="Addition"    Value="$(SystemProductionFromProductionConversion)"  TooltipHidden="false"/>
 		<Modifier TargetProperty="NetSystemProduction"      Operation="Addition"    Value="$(SystemProductionFromGrowth)"                TooltipHidden="false"    Path="!StarSystemImprovementInfinite" />
 
@@ -1145,6 +1175,7 @@
 
 		<!-- LEECH -->
 		<Modifier TargetProperty="NetSystemGrowth" Operation="Subtraction" Value="$(LeechedSystemGrowth)" Path="ClassColonizedStarSystem" Priority="2"/>
+		<Modifier TargetProperty="NetSystemGrowth_ESG" Operation="Subtraction" Value="$(LeechedSystemGrowth)" Path="ClassColonizedStarSystem" Priority="2"/>
 		<Modifier TargetProperty="NetSystemMoney" Operation="Subtraction" Value="$(LeechedEmpireMoney)" Path="ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="NetSystemInfluence" Operation="Subtraction" Value="$(LeechedEmpireEmpirePoint)" Path="ClassColonizedStarSystem"/>
 
@@ -1319,15 +1350,60 @@
 		<Modifier TargetProperty="HomeSystemNetSystemProductionForHisshoImprovement"   Operation="Addition" Value="$(IndustryToTransferInfiniteHissho)"  Path="!BestSystem/../ClassEmpire/ClassColonizedStarSystem,BestSystem"/>
 
 		<Modifier TargetProperty="NetSystemGrowth"       Operation="Addition" Value="$(HomeSystemNetSystemGrowthForHisshoImprovement)"/>
+		<Modifier TargetProperty="NetSystemGrowth_ESG"   Operation="Addition" Value="$(HomeSystemNetSystemGrowthForHisshoImprovement)"/>
 		<Modifier TargetProperty="NetSystemProduction"   Operation="Addition" Value="$(HomeSystemNetSystemProductionForHisshoImprovement)"/>
 
 		<Modifier TargetProperty="BestSystemScore" Operation="Addition" Value="$(SystemGlobalScore)"/>
 
 		<Modifier TargetProperty="RequiredHackingProgress" Operation="Multiplication" Value="2"/>
 
-
 		<!-- Temples -->
 		<BinaryModifier     TargetProperty="NonTemplePopulation" Operation="Addition" Left="$(Population)" BinaryOperation="Subtraction" Right="$(TemplePopulationCount)" />
+
+		<!-- FOOD REWORK -->
+		
+		<!-- Calculate amount of cumulative food stock system will have next turn in absence of any adjustment -->
+		<BinaryModifier TargetProperty="SystemGrowthStockNextTurn"  Operation="Force" Left="$(SystemGrowthStock)" BinaryOperation="Addition" Right="$(NetSystemGrowth_ESG)" Priority="1"/>
+
+		<!-- Calculate amount of cumulative food stock needed to increment TWO more pop (to enable food to roll over into making the next pop), mirroring the formula from the registry but adjusting for how Unity actually applies the formula -->
+		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Value="1" Priority="1"/>
+		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Value="$(PopulationWithGrowth)" Priority="1"/>
+		<BinaryModifier TargetProperty="SystemGrowthStockRequiredForNextPop"  Operation="Multiplication" Left="$(PopulationWithGrowth)" BinaryOperation="Addition" Right="2" Priority="2"/>
+		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Multiplication" Value="5" Priority="3"/> <!-- Note: 5 = 10 more food to increment a pop each time / 2 from formula for triangular number -->
+		<BinaryModifier TargetProperty="SystemGrowthStockRequiredForNextPop"  Operation="Addition" Left="$(PopulationWithGrowth)" BinaryOperation="Multiplication" Right="305" Priority="4"/>
+		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Value="610" Priority="4"/><!-- Note: 2 x 305  -->
+		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="5"/>
+
+		<!-- Calculate amount of food that will be wasted and filter for GameSetting and whether conversion is unlocked -->
+		<BinaryModifier TargetProperty="WastedGrowth"  Operation="Addition" Left="$(SystemGrowthStockNextTurn)" BinaryOperation="Subtraction" Right="$(SystemGrowthStockRequiredForNextPop)" Priority="6"/>
+		<BinaryModifier TargetProperty="WastedGrowth"  Operation="Multiplication" Left="$(CanConvertWastedFood)" BinaryOperation="Multiplication" Right="$(GameSettingFoodReworkEnabled)" Priority="7"/>
+
+		<!-- Convert food to dust as appropriate -->
+		<Modifier 			TargetProperty="NetSystemGrowth" 	   Operation="Subtraction" Value="$(WastedGrowth)" Priority="8"/>
+		<Modifier 			TargetProperty="NetSystemMoney" 	   Operation="Addition"    Value="$(WastedGrowth)" Priority="8"/>
+
+		<!-- Determine whether pop is allowed to grow this turn based on turn, presence of trait and gamespeed, and apply adjustment if needed -->
+		<BinaryModifier     TargetProperty="CurrentTurnModuloEndlessCeil"  Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="4" Priority="1"/>
+		<BinaryModifier     TargetProperty="CurrentTurnModuloEndlessFloor" Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="4" Priority="1"/>
+		<BinaryModifier     TargetProperty="CurrentTurnModuloEndless" 	   Operation="Addition" Left="$(CurrentTurnModuloEndlessCeil)" BinaryOperation="Subtraction" Right="$(CurrentTurnModuloEndlessFloor)" Priority="2"/>
+		<Modifier 			TargetProperty="CurrentTurnModuloEndless" 	   Operation="Multiplication" Value="$(GameSettingEndlessBoolean)" Priority="3"/>
+		<Modifier 			TargetProperty="CurrentTurnModuloEndless" 	   Operation="Multiplication" Value="$(GameSettingFoodReworkScalingEnabled)" Priority="3"/>
+		<!-- Cannot use Force for this, since during the turns when pop IS allowed to increment we don't want to override other effects like the major/minor law growth -->
+		<BinaryModifier 	TargetProperty="ShouldPopulationGrow" 	   	   Operation="Subtraction" Left="$(CurrentTurnModuloEndless)" BinaryOperation="Multiplication" Right="999" Path="ClassColonizedStarSystem,ColonizedStarSystemStateColony/ClassPopulationStarSystem" Priority="999"/>
+ 
+		<BinaryModifier     TargetProperty="CurrentTurnModuloSlowCeil"  Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="3" Priority="1"/>
+		<BinaryModifier     TargetProperty="CurrentTurnModuloSlowFloor" Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="3" Priority="1"/>
+		<BinaryModifier     TargetProperty="CurrentTurnModuloSlow" 	    Operation="Addition" Left="$(CurrentTurnModuloSlowCeil)" BinaryOperation="Subtraction" Right="$(CurrentTurnModuloSlowFloor)" Priority="2"/>
+		<Modifier 			TargetProperty="CurrentTurnModuloSlow" 	    Operation="Multiplication" Value="$(GameSettingSlowBoolean)" Priority="3"/>
+		<Modifier 			TargetProperty="CurrentTurnModuloSlow" 	    Operation="Multiplication" Value="$(GameSettingFoodReworkScalingEnabled)" Priority="3"/>
+		<BinaryModifier 	TargetProperty="ShouldPopulationGrow" 	   	   Operation="Subtraction" Left="$(CurrentTurnModuloSlow)" BinaryOperation="Multiplication" Right="999" Path="ClassColonizedStarSystem,ColonizedStarSystemStateColony/ClassPopulationStarSystem" Priority="999"/>
+
+		<BinaryModifier     TargetProperty="CurrentTurnModuloNormalCeil"   Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="2" Priority="1"/>
+		<BinaryModifier     TargetProperty="CurrentTurnModuloNormalFloor"  Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="2" Priority="1"/>
+		<BinaryModifier     TargetProperty="CurrentTurnModuloNormal" 	   Operation="Addition" Left="$(CurrentTurnModuloNormalCeil)" BinaryOperation="Subtraction" Right="$(CurrentTurnModuloNormalFloor)" Priority="2"/>
+		<Modifier 			TargetProperty="CurrentTurnModuloNormal" 	   Operation="Multiplication" Value="$(GameSettingNormalBoolean)" Priority="3"/>
+		<Modifier 			TargetProperty="CurrentTurnModuloNormal" 	   Operation="Multiplication" Value="$(GameSettingFoodReworkScalingEnabled)" Priority="3"/>
+		<BinaryModifier 	TargetProperty="ShouldPopulationGrow" 	   	   Operation="Subtraction" Left="$(CurrentTurnModuloNormal)" BinaryOperation="Multiplication" Right="999" Path="ClassColonizedStarSystem,ColonizedStarSystemStateColony/ClassPopulationStarSystem" Priority="999"/>
 
 	</SimulationDescriptor>
 
@@ -1404,6 +1480,7 @@
 
 		<!-- System's net resources -->
 		<Property Name="NetSystemGrowth"        MinValue="Negative"/>
+		<Property Name="NetSystemGrowth_ESG" 	BaseValue="0" MinValue="Negative"/>
 		<Property Name="NetSystemProduction" MinValue="Negative"/>
 		<Property Name="NetSystemMoney" MinValue="Negative"/>
 		<Property Name="NetSystemResearch" MinValue="Negative"/>
@@ -1639,8 +1716,8 @@
 
 
 		<!-- Planet refines + system upkeep = system net -->
-		<BinaryModifier TargetProperty="NetSystemGrowth"        Operation="Addition"    Left="$(SystemGrowth)"        BinaryOperation="Subtraction"    Right="$(SystemGrowthUpkeep)" TooltipHidden="true"  />
-
+		<BinaryModifier TargetProperty="NetSystemGrowth"        	Operation="Addition"    Left="$(SystemGrowth)"        	  BinaryOperation="Subtraction"    Right="$(SystemGrowthUpkeep)" 		TooltipHidden="true"  />
+		<BinaryModifier TargetProperty="NetSystemGrowth_ESG"        Operation="Addition"    Left="$(SystemGrowth)"        	  BinaryOperation="Subtraction"    Right="$(SystemGrowthUpkeep)" 		TooltipHidden="true"  />
 		<BinaryModifier TargetProperty="NetSystemProduction"        Operation="Addition"    Left="$(SystemProduction)"        BinaryOperation="Subtraction"    Right="$(SystemProductionUpkeep)"    TooltipHidden="true"    />
 		<BinaryModifier TargetProperty="NetSystemMoney"             Operation="Addition"    Left="$(SystemMoney)"             BinaryOperation="Subtraction"    Right="$(SystemMoneyUpkeep)"         TooltipHidden="true"    />
 		<BinaryModifier TargetProperty="NetSystemResearch"          Operation="Addition"    Left="$(SystemResearch)"          BinaryOperation="Subtraction"    Right="$(SystemResearchUpkeep)"      TooltipHidden="true"    />
