@@ -43,15 +43,6 @@
 		<Property Name="WeaponIndustryTier4"				BaseValue="110"	MinValue="0"/>
 		<Property Name="WeaponIndustryTier5"				BaseValue="140"	MinValue="0"/>
 
-    <!--  Costs to be pushed into ClassShip -->
-    <Property Name="TotalIndustryCost"   BaseValue="0"/>
-    <Property Name="TotalStrategic1Cost" BaseValue="0"/>
-    <Property Name="TotalStrategic2Cost" BaseValue="0"/>
-    <Property Name="TotalStrategic3Cost" BaseValue="0"/>
-    <Property Name="TotalStrategic4Cost" BaseValue="0"/>
-    <Property Name="TotalStrategic5Cost" BaseValue="0"/>
-    <Property Name="TotalStrategic6Cost" BaseValue="0"/>
-
     <!--Cooldown is the only value that affects gameplay directly. 
         The sum of preparation duration (including max factor multiplication) and shooting duration has to be lower than cooldown.-->
     <Property Name="Cooldown"/>
@@ -159,42 +150,7 @@
     <Modifier TargetProperty="HullPlatingPenetrationFactor"  Operation="Addition"       Value="$(HullPlatingPenetrationFactorBonus)"/>
 
     <Modifier TargetProperty="OffensiveMilitaryPowerForSimplifiedBattles" Operation="Addition" Value="$(OffensiveMilitaryPower)" Path="ClassModuleWeapon,!ClassModuleWeaponBoardingPod"/>
-    
-    <!-- Add Value into ClassShip -->
-    <Modifier TargetProperty="TotalIndustryCost"                     Operation="Addition"  Value="$(TotalIndustryCost)"     Path="../ClassShip"/>
-    <Modifier TargetProperty="TotalStrategic1Cost"                   Operation="Addition"  Value="$(TotalStrategic1Cost)"   Path="../ClassShip"/>
-    <Modifier TargetProperty="TotalStrategic2Cost"                   Operation="Addition"  Value="$(TotalStrategic2Cost)"   Path="../ClassShip"/>
-    <Modifier TargetProperty="TotalStrategic3Cost"                   Operation="Addition"  Value="$(TotalStrategic3Cost)"   Path="../ClassShip"/>
-    <Modifier TargetProperty="TotalStrategic4Cost"                   Operation="Addition"  Value="$(TotalStrategic4Cost)"   Path="../ClassShip"/>
-    <Modifier TargetProperty="TotalStrategic5Cost"                   Operation="Addition"  Value="$(TotalStrategic5Cost)"   Path="../ClassShip"/>
-    <Modifier TargetProperty="TotalStrategic6Cost"                   Operation="Addition"  Value="$(TotalStrategic6Cost)"   Path="../ClassShip"/>
-  </SimulationDescriptor>
 
-  <!-- Large Weapon Tag -->
-  <SimulationDescriptor Name="LargeWeapon"    Type="LargeWeapon">
-    <Modifier TargetProperty="MaximumHealth"            Operation="Percent"         Value="3"   Path="ClassModule" />
-    <Modifier TargetProperty="OffensiveMilitaryPower"   Operation="Percent"         Value="1"   Path="ClassModule" />
-    <Modifier TargetProperty="Cooldown"                 Operation="Percent"         Value="1"   Path="ClassModuleWeapon,!ClassModuleWeaponAOE" />
-    <Modifier TargetProperty="CooldownVariation"        Operation="Percent"         Value="1"   Path="ClassModuleWeapon,ClassModuleWeaponMissileSwarm" />
-    <Modifier TargetProperty="Damage"                   Operation="Percent"         Value="3"   Path="ClassModuleWeapon,!ClassModuleWeaponAOE" />
-    <Modifier TargetProperty="Damage"                   Operation="Multiplication"  Value="2"   Path="ClassModuleWeapon,ClassModuleWeaponAOE"/>
-
-    <Modifier TargetProperty="TotalIndustryCost"                   Operation="Multiplication"  Value="2"   Path="ClassModuleWeapon"/>
-    <Modifier TargetProperty="TotalStrategic1Cost"                 Operation="Multiplication"  Value="2"   Path="ClassModuleWeapon"/>
-    <Modifier TargetProperty="TotalStrategic2Cost"                 Operation="Multiplication"  Value="2"   Path="ClassModuleWeapon"/>
-    <Modifier TargetProperty="TotalStrategic3Cost"                 Operation="Multiplication"  Value="2"   Path="ClassModuleWeapon"/>
-    <Modifier TargetProperty="TotalStrategic4Cost"                 Operation="Multiplication"  Value="2"   Path="ClassModuleWeapon"/>
-    <Modifier TargetProperty="TotalStrategic5Cost"                 Operation="Multiplication"  Value="2"   Path="ClassModuleWeapon"/>
-    <Modifier TargetProperty="TotalStrategic6Cost"                 Operation="Multiplication"  Value="2"   Path="ClassModuleWeapon"/>
-    <!-- Cooldown /2 & Damage x4 => DPS x2-->
-  </SimulationDescriptor>
-
-  <!-- Planet Cracker Class -->
-  <SimulationDescriptor Name="ClassModuleDestruction"  Type="ClassModuleDestruction">
-    <Property Name="StartChargeTurn" IsSealed="true"/>
-    <Property Name="TurnsBeforeDestruction"                 BaseValue="0" MinValue="2"/>
-    <Modifier TargetProperty="AINumberOfCoreCrackers" Operation="Addition" Value="1" Path="../ClassEmpire"/>
-    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="0" Path="../ClassGarrison/ClassShip" Priority="9999" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <!-- Kinetic Base -->
@@ -234,13 +190,37 @@
   <!-- **Kinetic Weapons** -->
   <!-- ******************** -->
 
+  <!-- ERA 1 -->
+  <SimulationDescriptor Name="ModuleWeaponKinetic1"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                    Operation="Addition"  Value="42"    TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"         Operation="Addition" Value="$(WeaponIndustryTier1)" Path="../ClassShip"/>
+
+    <!--DPS against Missile / Squadrons-->
+    <Modifier TargetProperty="FlakDamage"           Operation="Addition" Value="60" Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSMissile"      Operation="Addition" Left="$(FlakDamage)" BinaryOperation="Division" Right="$(FlakCooldown)"     Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSSquadron"      Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Multiplication" Right="$(EfficiencyAgainstSquadron)"     Path="ClassModule" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- ERA 2-->
+  <SimulationDescriptor Name="ModuleWeaponKinetic2"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                    Operation="Addition" Value="67"     TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"         Operation="Addition" Value="$(WeaponIndustryTier2)" Path="../ClassShip"/>
+
+    <!--DPS against Missile / Squadrons-->
+    <Modifier TargetProperty="FlakDamage"           Operation="Addition" Value="90" Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSMissile"      Operation="Addition" Left="$(FlakDamage)" BinaryOperation="Division" Right="$(FlakCooldown)"     Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSSquadron"      Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Multiplication" Right="$(EfficiencyAgainstSquadron)"     Path="ClassModule" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
   <SimulationDescriptor Name="ModuleWeaponKinetic2Strategic1"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                    Operation="Addition" Value="94"     TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"         Operation="Addition" Value="0.05"   TooltipHidden="true"/>
     <Modifier TargetProperty="Cooldown"                  Operation="Addition" Value="-0.1"   TooltipHidden="true"/>
     <Modifier TargetProperty="ShipManpowerKillPerHit"    Operation="Addition" Value="2"      TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic1Cost"       Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"         Operation="Addition" Value="$(WeaponIndustryTier1)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic1Cost"       Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(ModuleMutiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
@@ -249,13 +229,25 @@
     <BinaryModifier TargetProperty="FlakDPSSquadron"     Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Multiplication" Right="$(EfficiencyAgainstSquadron)"     Path="ClassModule" TooltipHidden="true"/>
   </SimulationDescriptor>
 
+  <!-- ERA 3-->
+  <SimulationDescriptor Name="ModuleWeaponKinetic3"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                    Operation="Addition" Value="91"      TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"         Operation="Addition" Value="$(WeaponIndustryTier3)" Path="../ClassShip"/>
+
+    <!--DPS against Missile / Squadrons-->
+    <Modifier TargetProperty="FlakDamage"           Operation="Addition" Value="120" Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSMissile"      Operation="Addition" Left="$(FlakDamage)" BinaryOperation="Division" Right="$(FlakCooldown)"     Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSSquadron"      Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Multiplication" Right="$(EfficiencyAgainstSquadron)"     Path="ClassModule" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
   <SimulationDescriptor Name="ModuleWeaponKinetic3Strategic1"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                    Operation="Addition" Value="118"    TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"         Operation="Addition" Value="0.05"   TooltipHidden="true"/>
     <Modifier TargetProperty="Cooldown"                  Operation="Addition" Value="-0.1"   TooltipHidden="true"/>
     <Modifier TargetProperty="ShipManpowerKillPerHit"    Operation="Addition" Value="2"      TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic1Cost"       Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"         Operation="Addition" Value="$(WeaponIndustryTier2)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic1Cost"       Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
@@ -268,8 +260,8 @@
     <Modifier TargetProperty="Damage"                    Operation="Addition"  Value="118"   TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"         Operation="Addition"  Value="0.2"   TooltipHidden="true"/>
     <Modifier TargetProperty="Cooldown"                  Operation="Addition"  Value="-0.1"  TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"       Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"         Operation="Addition"  Value="$(WeaponIndustryTier2)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"       Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
@@ -278,12 +270,35 @@
     <BinaryModifier TargetProperty="FlakDPSSquadron"     Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Multiplication" Right="$(EfficiencyAgainstSquadron)"     Path="ClassModule" TooltipHidden="true"/>
   </SimulationDescriptor>
 
+  <!-- ERA 4-->
+  <SimulationDescriptor Name="ModuleWeaponKinetic4"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                    Operation="Addition" Value="115"     TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"         Operation="Addition"  Value="$(WeaponIndustryTier4)" Path="../ClassShip"/>
+
+    <!--DPS against Missile / Squadrons-->
+    <Modifier TargetProperty="FlakDamage"           Operation="Addition" Value="150" Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSMissile"      Operation="Addition" Left="$(FlakDamage)" BinaryOperation="Division" Right="$(FlakCooldown)"     Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSSquadron"      Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Multiplication" Right="$(EfficiencyAgainstSquadron)"     Path="ClassModule" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleWeaponKinetic4Terrans"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                    Operation="Addition" Value="130"     TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"         Operation="Addition"  Value="$(WeaponIndustryTier4)" Path="../ClassShip"/>
+
+    <!--DPS against Missile / Squadrons-->
+    <Modifier TargetProperty="FlakDamage"           Operation="Addition" Value="150" Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSMissile"      Operation="Addition" Left="$(FlakDamage)" BinaryOperation="Division" Right="$(FlakCooldown)"     Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSSquadron"      Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Multiplication" Right="$(EfficiencyAgainstSquadron)"     Path="ClassModule" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
   <SimulationDescriptor Name="ModuleWeaponKinetic4Strategic3"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                    Operation="Addition"  Value="144"   TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"         Operation="Addition"  Value="0.2"   TooltipHidden="true"/>
     <Modifier TargetProperty="Cooldown"                  Operation="Addition"  Value="-0.1"  TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"       Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"         Operation="Addition"  Value="$(WeaponIndustryTier3)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"       Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
@@ -297,9 +312,9 @@
     <Modifier TargetProperty="CriticalHitChance"         Operation="Addition"  Value="0.05"  TooltipHidden="true"/>
     <Modifier TargetProperty="Cooldown"                  Operation="Addition"  Value="-0.1"  TooltipHidden="true"/>
     <Modifier TargetProperty="SpecialEffectDuration"     Operation="Addition"  Value="10"    TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"         Operation="Addition"  Value="$(WeaponIndustryTier3)" Path="../ClassShip"/>
     <Modifier TargetProperty="OpponentCooldownReductionPercent" Operation="Addition" Value="0.2"  TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalStrategic5Cost"        Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <BinaryModifier TargetProperty="TotalStrategic5Cost"        Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"     Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
@@ -308,12 +323,23 @@
     <BinaryModifier TargetProperty="FlakDPSSquadron"     Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Multiplication" Right="$(EfficiencyAgainstSquadron)"     Path="ClassModule" TooltipHidden="true"/>
   </SimulationDescriptor>
 
+  <SimulationDescriptor Name="ModuleWeaponKinetic5"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                    Operation="Addition" Value="140"     TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"         Operation="Addition"  Value="$(WeaponIndustryTier5)" Path="../ClassShip"/>
+
+    <!--DPS against Missile / Squadrons-->
+    <Modifier TargetProperty="FlakDamage"           Operation="Addition" Value="180" Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSMissile"      Operation="Addition" Left="$(FlakDamage)" BinaryOperation="Division" Right="$(FlakCooldown)"     Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSSquadron"      Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Multiplication" Right="$(EfficiencyAgainstSquadron)"     Path="ClassModule" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
   <SimulationDescriptor Name="ModuleWeaponKinetic5Strategic5"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                    Operation="Addition"  Value="161"   TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"         Operation="Addition"  Value="0.05"  TooltipHidden="true"/>
     <Modifier TargetProperty="Cooldown"                  Operation="Addition"  Value="-0.1"  TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic5Cost"        Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"         Operation="Addition"  Value="$(WeaponIndustryTier4)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic5Cost"        Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <Modifier TargetProperty="SpecialEffectDuration"            Operation="Addition" Value="10"  TooltipHidden="true"/>
     <Modifier TargetProperty="OpponentCooldownReductionPercent" Operation="Addition" Value="0.2"  TooltipHidden="true"/>
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"     Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
@@ -353,23 +379,54 @@
     <Modifier TargetProperty="DamagePerSecondMissile"       Operation="Addition" Value="$(DamagePerSecond)"        Path="../ClassShip"/>
   </SimulationDescriptor>
 
+  <!-- ******************** -->
+  <!-- **Missile Weapon Class** -->
+  <!-- ******************** -->
+
+  <!-- ERA 1-->
+  <SimulationDescriptor Name="ModuleWeaponMissile1"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                       Operation="Addition" Value="250"      TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier1)" Path="../ClassShip"/>
+
+    <!-- Must be same value as Salvo Health-->
+    <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="60" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- ERA 2-->
+  <SimulationDescriptor Name="ModuleWeaponMissile2"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                       Operation="Addition" Value="400"     TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier2)" Path="../ClassShip"/>
+
+    <!-- Must be same value as Salvo Health-->
+    <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="75" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
   <SimulationDescriptor Name="ModuleWeaponMissile2Strategic1"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="565"    TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.05"   TooltipHidden="true"/>
     <Modifier TargetProperty="ShipManpowerKillPerHit"       Operation="Addition" Value="20"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier1)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
 
     <!-- Must be same value as Salvo Health-->
     <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="115" TooltipHidden="true"/>
   </SimulationDescriptor>
 
+  <!-- ERA 3-->
+  <SimulationDescriptor Name="ModuleWeaponMissile3"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                       Operation="Addition" Value="550"     TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier3)" Path="../ClassShip"/>
+
+    <!-- Must be same value as Salvo Health-->
+    <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="90" TooltipHidden="true"/>
+  </SimulationDescriptor>
+  
   <SimulationDescriptor Name="ModuleWeaponMissile3Strategic1"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="715"    TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.05"   TooltipHidden="true"/>
     <Modifier TargetProperty="ShipManpowerKillPerHit"       Operation="Addition" Value="20"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier2)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
 
     <!-- Must be same value as Salvo Health-->
     <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="115"    TooltipHidden="true"/>
@@ -378,8 +435,8 @@
   <SimulationDescriptor Name="ModuleWeaponMissile3Strategic3"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="715"    TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.2"    TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier2)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
 
     <!-- Must be same value as Salvo Health-->
     <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="115"    TooltipHidden="true"/>
@@ -388,7 +445,7 @@
   <!-- ERA 4-->
   <SimulationDescriptor Name="ModuleWeaponMissile4"            Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="700"    TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier4)" Path="../ClassShip"/>
 
     <!-- Must be same value as Salvo Health-->
     <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="105"    TooltipHidden="true"/>
@@ -397,8 +454,8 @@
   <SimulationDescriptor Name="ModuleWeaponMissile4Strategic3"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="865"    TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.2"    TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier3)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
 
     <!-- Must be same value as Salvo Health-->
     <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="115"    TooltipHidden="true"/>
@@ -408,8 +465,8 @@
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="865"    TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.05"   TooltipHidden="true"/>
     <Modifier TargetProperty="SpecialEffectDuration"        Operation="Addition" Value="10"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier4)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <Modifier TargetProperty="OpponentCooldownReductionPercent"   Operation="Addition"  Value="0.2"  TooltipHidden="true"/>
 
     <!-- Must be same value as Salvo Health-->
@@ -419,7 +476,7 @@
   <!-- ERA 5-->
   <SimulationDescriptor Name="ModuleWeaponMissile5"            Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="850"    TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier5)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier5)" Path="../ClassShip"/>
 
     <!-- Must be same value as Salvo Health-->
     <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="120"    TooltipHidden="true"/>
@@ -429,8 +486,8 @@
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="1015"   TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.05"   TooltipHidden="true"/>
     <Modifier TargetProperty="SpecialEffectDuration"        Operation="Addition" Value="10"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier4)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <Modifier TargetProperty="OpponentCooldownReductionPercent"   Operation="Addition"  Value="0.2"  TooltipHidden="true"/>
 
     <!-- Must be same value as Salvo Health-->
@@ -475,30 +532,41 @@
   <!-- ERA 1-->
   <SimulationDescriptor Name="ModuleWeaponLaser1"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="28"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier1)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier1)" Path="../ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- ERA 2-->
+  <SimulationDescriptor Name="ModuleWeaponLaser2"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                       Operation="Addition" Value="38"      TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier2)" Path="../ClassShip" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleWeaponLaser2Vampirilis"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                       Operation="Addition" Value="44"      TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier2)" Path="../ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponLaser2Strategic2"    Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="54"     TooltipHidden="true"/>
     <Modifier TargetProperty="Cooldown"                     Operation="Addition" Value="-0.1"   TooltipHidden="true"/>
     <Modifier TargetProperty="SpecialEffectDuration"        Operation="Addition" Value="10"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier1)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <Modifier TargetProperty="OpponentEnergyWeaponAccuracyPercent"   Operation="Addition"  Value="-0.2"  TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <!-- ERA 3-->
   <SimulationDescriptor Name="ModuleWeaponLaser3"              Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="52"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier3)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponLaser3Strategic2"    Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="70"     TooltipHidden="true"/>
     <Modifier TargetProperty="Cooldown"                     Operation="Addition" Value="-0.1"   TooltipHidden="true"/>
     <Modifier TargetProperty="SpecialEffectDuration"        Operation="Addition" Value="10"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier2)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <Modifier TargetProperty="OpponentEnergyWeaponAccuracyPercent"   Operation="Addition"  Value="-0.2"  TooltipHidden="true"/>
   </SimulationDescriptor>
 
@@ -506,32 +574,44 @@
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="76"     TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.1"    TooltipHidden="true"/>
     <Modifier TargetProperty="Cooldown"                     Operation="Addition" Value="-0.1"   TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier2)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- ERA 4-->
+  <SimulationDescriptor Name="ModuleWeaponLaser4"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                       Operation="Addition" Value="67"      TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier4)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponLaser4Strategic4"    Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="88"     TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.1"    TooltipHidden="true"/>
     <Modifier TargetProperty="Cooldown"                     Operation="Addition"  Value="-0.1"  TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier3)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponLaser4Strategic6"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="84"     TooltipHidden="true"/>
     <Modifier TargetProperty="Cooldown"                     Operation="Addition" Value="-0.1"   TooltipHidden="true"/>
     <Modifier TargetProperty="SplashFlotillaDamagePercent"  Operation="Addition" Value="0.15"   TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier3)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- ERA 5-->
+  <SimulationDescriptor Name="ModuleWeaponLaser5"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                       Operation="Addition" Value="82"     TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier5)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponLaser5Strategic6"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="98"     TooltipHidden="true"/>
     <Modifier TargetProperty="Cooldown"                     Operation="Addition" Value="-0.1"   TooltipHidden="true"/>
     <Modifier TargetProperty="SplashFlotillaDamagePercent"  Operation="Addition" Value="0.15"   TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier4)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!-- Beams Base -->
@@ -572,80 +652,80 @@
   <!-- ERA 1 -->
   <SimulationDescriptor Name="ModuleWeaponBeam1"               Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="80"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier1)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier1)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!-- ERA 2 -->
   <SimulationDescriptor Name="ModuleWeaponBeam2"               Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="115"    TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier2)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponBeam2Strategic2"     Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="152"    TooltipHidden="true"/>
     <Modifier TargetProperty="SpecialEffectDuration"        Operation="Addition" Value="10"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier1)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <Modifier TargetProperty="OpponentEnergyWeaponAccuracyPercent"   Operation="Addition"  Value="-0.2"  TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <!-- ERA 3 -->
   <SimulationDescriptor Name="ModuleWeaponBeam3"               Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="146"    TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier3)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponBeam3Strategic2"     Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="192"    TooltipHidden="true"/>
     <Modifier TargetProperty="SpecialEffectDuration"        Operation="Addition" Value="10"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier2)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <Modifier TargetProperty="OpponentEnergyWeaponAccuracyPercent"   Operation="Addition"  Value="-0.2"  TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponBeam3Strategic4"     Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="205"    TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.15"   TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier2)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!-- ERA 4 -->
   <SimulationDescriptor Name="ModuleWeaponBeam4"               Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="185"    TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier4)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponBeam4Strategic4"     Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="235"    TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.15"   TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier3)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponBeam4Strategic6"     Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="230"    TooltipHidden="true"/>
     <Modifier TargetProperty="SplashFlotillaDamagePercent"  Operation="Addition" Value="0.15"   TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier3)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!-- ERA 5 -->
   <SimulationDescriptor Name="ModuleWeaponBeam5"               Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="220"    TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier5)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier5)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponBeam5TimeLords"      Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="220"    TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier5)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier5)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponBeam5Strategic6"     Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="265"    TooltipHidden="true"/>
     <Modifier TargetProperty="SplashFlotillaDamagePercent"  Operation="Addition" Value="0.15"   TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier4)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
   
   <!-- Swarm Missiles Base -->
@@ -694,7 +774,7 @@
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="24"     Path="ClassModuleWeapon" TooltipHidden="true"/>
     <Modifier TargetProperty="MaxSalvoShotCount"            Operation="Addition" Value="5"      Path="ClassModuleWeapon" TooltipHidden="true"/>
     <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="25"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier2)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponMissileSwarm2"       Type="ModuleWeapon">
@@ -702,7 +782,7 @@
     <Modifier TargetProperty="MaxSalvoShotCount"            Operation="Addition" Value="10"     Path="ClassModuleWeapon" TooltipHidden="true"/>
     <Modifier TargetProperty="CooldownVariation"            Operation="Addition" Value="-1.1"   Path="ClassModuleWeapon" TooltipHidden="true"/>
     <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="50"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier3)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleWeaponMissileSwarm3"       Type="ModuleWeapon">
@@ -710,7 +790,7 @@
     <Modifier TargetProperty="MaxSalvoShotCount"            Operation="Addition" Value="15"     Path="ClassModuleWeapon" TooltipHidden="true"/>
     <Modifier TargetProperty="CooldownVariation"            Operation="Addition" Value="-2.2"   Path="ClassModuleWeapon" TooltipHidden="true"/>
     <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="75"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier4)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!-- Stupid number added to cooldown -->
@@ -811,7 +891,7 @@
     <Modifier TargetProperty="ManpowerDamageOverTime"       Operation="Addition" Value="4"     Path="ClassModule" TooltipHidden="true"/>
 
     <Modifier TargetProperty="BoardingPodHealth"            Operation="Addition" Value="125"   Path="ClassModule" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier3)"   Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!-- Boarding Pod 2-->
@@ -819,7 +899,7 @@
     <Modifier TargetProperty="ManpowerDamageOverTime"       Operation="Addition" Value="8"     Path="ClassModule" TooltipHidden="true"/>
 
     <Modifier TargetProperty="BoardingPodHealth"            Operation="Addition" Value="150"   Path="ClassModule" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier4)"   Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!-- Boarding Pod 2-->
@@ -828,7 +908,7 @@
     <Modifier TargetProperty="ShipManpowerKillPerHit"       Operation="Addition" Value="10"    Path="ClassModule" TooltipHidden="true"/>
 
     <Modifier TargetProperty="BoardingPodHealth"            Operation="Addition" Value="200"   Path="ClassModule" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier4)"   Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!-- Boarding Pod 3-->
@@ -836,7 +916,7 @@
     <Modifier TargetProperty="ManpowerDamageOverTime"       Operation="Addition" Value="16"    Path="ClassModule" TooltipHidden="true"/>
 
     <Modifier TargetProperty="BoardingPodHealth"            Operation="Addition" Value="300"   Path="ClassModule" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier5)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier5)"   Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!--################################-->
@@ -865,8 +945,7 @@
     <Modifier TargetProperty="EMPDurationForWeapons"        Operation="Addition" Value="7"     Path="ClassModule" TooltipHidden="true"/>
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="250"   Path="ClassModule" TooltipHidden="true"/>
     <!--<Modifier TargetProperty="Cooldown"                 Operation="Percent"  Value="0.5"   Path="ClassModule" TooltipHidden="true"/>-->
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier5)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier5)"   Path="../ClassShip"/>
 
     <!-- Feedback -->
     <Modifier TargetProperty="EMPTargetWeapons"             Operation="Addition" Value="1"     Path="ClassModule" TooltipHidden="true"/>
@@ -880,8 +959,29 @@
   <SimulationDescriptor Name="ModuleWeaponAOENuke1"            Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="300"   Path="ClassModule" TooltipHidden="true"/>
     <Modifier TargetProperty="TargetingWeightBonus"         Operation="Addition" Value="10"    Path="ClassModuleWeaponAOE"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier5)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="$(WeaponIndustryTier5)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
+
+  <!-- ******************** -->
+  <!-- **Destruction Weapon Class** -->
+  <!-- ******************** -->
+
+  <SimulationDescriptor Name="ClassModuleDestructionEffect"         Type="ClassModuleDestructionEffect"/>
+
+  <!-- Planet Cracker Class -->
+  <SimulationDescriptor Name="ClassModuleDestruction"  Type="ClassModuleDestruction">
+   <Property Name="StartChargeTurn" IsSealed="true"/>
+   <Property Name="TurnsBeforeDestruction"                 BaseValue="0" MinValue="1"/>
+   <Modifier TargetProperty="AINumberOfCoreCrackers" Operation="Addition" Value="1" Path="../ClassEmpire"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleDestruction1"  Type="ModuleDestruction">
+    <Modifier TargetProperty="TurnsBeforeDestruction" Operation="Addition" Value="5" Path="ClassModuleDestruction" TooltipHidden="true"/>
+    <Modifier TargetProperty="TotalIndustryCost"            Operation="Addition" Value="150" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="DamageTypePhysical" Type="DamageType"/>
+  <SimulationDescriptor Name="DamageTypeEnergy" Type="DamageType"/>
 </Datatable>
