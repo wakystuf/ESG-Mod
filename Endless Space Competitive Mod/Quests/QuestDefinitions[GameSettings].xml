@@ -765,6 +765,66 @@
       </Step>
     </Steps>
   </QuestDefinition>
+
+  <!-- Food Rework (fully disabled) -->
+  <QuestDefinition Name="QuestDisableFoodRework" IsInstant="true" Category="GameSetting" SubCategory="FoodRework" TriggeringProbability="1" MinimumTurn="0">
+    <Tags>Hidden,BeginTurn</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$Trait" StringValue="FactionTraitDisableFoodRework"/>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <GameSettingPrerequisite Flags="Prerequisite,Discard">FoodRework,False</GameSettingPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Add_Trait">
+            <Sequence>
+              <Action_ApplyDescriptor LogAction="false">
+                <Input_DescriptorName VarName="$Trait"/>
+                <Input_Targets VarName="$CurrentEmpire"/>
+              </Action_ApplyDescriptor>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
+  <!-- Food Rework (partial) -->
+  <QuestDefinition Name="QuestPartialFoodRework" IsInstant="true" Category="GameSetting" SubCategory="FoodRework" TriggeringProbability="1" MinimumTurn="0">
+    <Tags>Hidden,BeginTurn</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$Trait" StringValue="FactionTraitPartialFoodRework"/>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <GameSettingPrerequisite Flags="Prerequisite,Discard">FoodRework,Partial</GameSettingPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Add_Trait">
+            <Sequence>
+              <Action_ApplyDescriptor LogAction="false">
+                <Input_DescriptorName VarName="$Trait"/>
+                <Input_Targets VarName="$CurrentEmpire"/>
+              </Action_ApplyDescriptor>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
   
   <!-- No Migration -->
   <QuestDefinition Name="QuestNoMigration" IsInstant="true" Category="GameSetting" SubCategory="NoMigration" TriggeringProbability="1" MinimumTurn="0">
