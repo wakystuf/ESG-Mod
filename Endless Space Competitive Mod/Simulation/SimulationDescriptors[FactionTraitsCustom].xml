@@ -496,9 +496,13 @@
   <!-- Higher Pop Cost -->
   <SimulationDescriptor Name="FactionTraitHigherPopCostI" Type="FactionTrait">
     <Modifier TargetProperty="BaseFoodRequiredToGrowPop" Operation="Addition" Value="100" Path="../ClassEmpire" TooltipOverride="%FactionTraitHigherPopCostI"/>
+    <BinaryModifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" Priority="4"/>
+    <BinaryModifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="2"             Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" Priority="4"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="FactionTraitHigherPopCostII" Type="FactionTrait">
     <Modifier TargetProperty="BaseFoodRequiredToGrowPop" Operation="Addition" Value="200" Path="../ClassEmpire" TooltipOverride="%FactionTraitHigherPopCostII"/>
+    <BinaryModifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Left="200" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" Priority="4"/>
+    <BinaryModifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Left="200" BinaryOperation="Multiplication" Right="2"             Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" Priority="4"/>
   </SimulationDescriptor>
 
   <!-- Higher Terraform Cost (for Cravers, to offset benefits of cheaper terraforming) -->
@@ -517,6 +521,11 @@
     <Modifier TargetProperty="AdditionalOpponentRecyclingEmpirePointPerCP"          Operation="Addition"     Value="10"  Path="../ClassEmpire/ClassGarrisonFleet/ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
 
+  <!-- Higher System Upkeep -->
+  <SimulationDescriptor Name="FactionTraitIncreasedSystemUpkeep" Type="FactionTrait">
+    <Modifier TargetProperty="SystemMoneyUpkeep" Operation="Percent" Value="0.5" Path="../ClassEmpire/ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+  
   <!-- Nakalim -->
   <SimulationDescriptor Name="FactionTraitHeroAssignmentTemplars" Type="FactionTrait">
     <Modifier TargetProperty="AssignmentCooldownDecrementPerTurn"    Operation="Percent"  Value="0.5" Path="ClassEmpire//ClassHero"/>
@@ -663,9 +672,18 @@
 
   <!-- Diplomacy Rework -->
   <SimulationDescriptor Name="FactionTraitDisableDiplomacyRework" Type="FactionTrait">
-    <Modifier TargetProperty="DiplomacyReworkDisabled" Operation="Force" Value="1" Path="ClassEmpire"/>
+    <Modifier TargetProperty="DiplomacyReworkDisabled" Operation="Subtraction" Value="1" Path="ClassEmpire"/>
   </SimulationDescriptor>
-  
+
+  <!-- Food Rework -->
+  <SimulationDescriptor Name="FactionTraitDisableFoodRework" Type="FactionTrait">
+    <Modifier TargetProperty="GameSettingFoodReworkEnabled" Operation="Force" Value="0" Path="ClassEmpire/ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="GameSettingFoodReworkScalingEnabled" Operation="Force" Value="0" Path="ClassEmpire/ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="FactionTraitPartialFoodRework" Type="FactionTrait">
+    <Modifier TargetProperty="GameSettingFoodReworkScalingEnabled" Operation="Force" Value="0" Path="ClassEmpire/ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+
   <!-- No Migration -->
   <SimulationDescriptor Name="FactionTraitNoMigration" Type="FactionTrait">
     <Modifier TargetProperty="MigrationScore" Operation="Force" Value="50" Path="ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%FactionTraitNoMigrationOverride"/>

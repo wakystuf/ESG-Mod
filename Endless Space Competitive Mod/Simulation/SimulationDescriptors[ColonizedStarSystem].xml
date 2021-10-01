@@ -20,7 +20,7 @@
 		<Property Name="DeploymentLimitRatio"				BaseValue="1" MaxValue="1.5" MinValue="0.01"/>
 		<Property Name="ManpowerCapacityWithGhosts"			BaseValue="0"/>
 		<Property Name="EmpirePointFromIndustryConversion"	BaseValue="0"/>
-
+ 
 		<!-- Food rework -->
 		<Property Name="SystemGrowthStockNextTurn"			 BaseValue="0" MinValue="0"/>
 		<Property Name="SystemGrowthStockRequiredForNextPop" BaseValue="0" MinValue="0"/>
@@ -59,6 +59,7 @@
 		<Property Name="IsAtPeace"						 	 BaseValue="1" MinValue="0" MaxValue="1"/>
 		<Property Name="LocalFIDSBonusfromMP"            	 BaseValue="0" MinValue="0" MaxValue="0.25"/>
 		<Property Name="LocalFIDSBonusfromMP_Republic"   	 BaseValue="0" MinValue="0" MaxValue="0.3"/>
+		<Property Name="ExcessApproval"    					 BaseValue="0" MinValue="0" MaxValue="20"/>
 		<Property Name="UnlockedTechnologyCount"		 	 BaseValue="0"/>
 		<Property Name="LuxuryDepositCount"				 	 BaseValue="0"/>
 		<Property Name="TradeRouteBoolean"				 	 BaseValue="0" MinValue="0" MaxValue="1"/>
@@ -1005,7 +1006,7 @@
 		<Modifier             TargetProperty="PopulationGrowthUpkeep"                   Operation="Multiplication"      Value="$(ShouldUseGrowth)"     Priority="-2"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem" />
 
 		<Modifier             TargetProperty="PopulationGrowthUpkeepFromGeneHunter"     Operation="Addition"            Value="$(PopulationGrowthUpkeep)"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
-		<BinaryModifier       TargetProperty="PopulationGrowthUpkeepFromGeneHunter"     Operation="Multiplication"      Left="0.05"          BinaryOperation="Multiplication"          Right="$(PopulationsAssimilated)"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem" />
+		<BinaryModifier       TargetProperty="PopulationGrowthUpkeepFromGeneHunter"     Operation="Multiplication"      Left="0.1"          BinaryOperation="Multiplication"          Right="$(PopulationsAssimilated)"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem" />
 		<Modifier             TargetProperty="PopulationGrowthUpkeepFromGeneHunter"     Operation="Multiplication"      Value="$(HasAffinityGeneHunter)" Path="ClassColonizedStarSystem"  />
 
 		<Modifier       TargetProperty="PassiveEnrollmentRate"              Operation="Addition"             Value="$(PassiveEnrollmentRateHissho)"  />
@@ -1072,6 +1073,10 @@
 		<BinaryModifier     TargetProperty="Happiness" Operation="Subtraction" Left="$(RepresentativeWithoutPartyInSenateCount)" BinaryOperation="Multiplication" Right="$(HappinessPenaltyPerRepresentative)" />
 		<Modifier           TargetProperty="Happiness" Operation="Multiplication" Value="$(Ownership)" Path="ColonizedStarSystemStateColony"/>
 		<Modifier           TargetProperty="Happiness" Operation="Multiplication" Value="$(Ownership)" Path="ColonizedStarSystemStateColony" Priority="1"/>
+
+		<BinaryModifier     TargetProperty="ExcessApproval" Operation="Addition" Left="$(Happiness)" BinaryOperation="Subtraction" Right="100" Path="ColonizedStarSystemStateColony"/>
+
+		
 
 		<!-- TRADE ROUTES -->
 
@@ -1374,10 +1379,10 @@
 
 		<!-- Calculate amount of cumulative food stock needed to increment TWO more pop (to enable food to roll over into making the next pop), mirroring the formula from the registry but adjusting for how Unity actually applies the formula -->
 		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Value="1" Priority="1"/>
-		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Value="$(PopulationWithGrowth)" Priority="1"/>
-		<BinaryModifier TargetProperty="SystemGrowthStockRequiredForNextPop"  Operation="Multiplication" Left="$(PopulationWithGrowth)" BinaryOperation="Addition" Right="2" Priority="2"/>
+		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Value="$(Population)" Priority="1"/>
+		<BinaryModifier TargetProperty="SystemGrowthStockRequiredForNextPop"  Operation="Multiplication" Left="$(Population)" BinaryOperation="Addition" Right="2" Priority="2"/>
 		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Multiplication" Value="5" Priority="3"/> <!-- Note: 5 = 10 more food to increment a pop each time / 2 from formula for triangular number -->
-		<BinaryModifier TargetProperty="SystemGrowthStockRequiredForNextPop"  Operation="Addition" Left="$(PopulationWithGrowth)" BinaryOperation="Multiplication" Right="305" Priority="4"/>
+		<BinaryModifier TargetProperty="SystemGrowthStockRequiredForNextPop"  Operation="Addition" Left="$(Population)" BinaryOperation="Multiplication" Right="305" Priority="4"/>
 		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Value="610" Priority="4"/><!-- Note: 2 x 305  -->
 		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="5"/>
 
@@ -1394,13 +1399,14 @@
 		<Modifier 		TargetProperty="WastedFoodtoMP"    Operation="Division" Value="4" 																								Priority="2"/>
 		<Modifier 		TargetProperty="WastedFoodtoMP"    Operation="Multiplication" Value="$(WastedGrowth)"																			Priority="8"/>
 
+		<!-- Convert food as appropriate (using separate intermediate variables so that it shows up clearly in the GUI)
 		<BinaryModifier TargetProperty="WastedFoodtoApproval" Operation="Addition" Left="$(CanConvertWastedFoodtoApproval)" BinaryOperation="Multiplication" Right="$(WastedGrowth)" 	Priority="8"/>
-		<Modifier 		TargetProperty="WastedFoodtoApproval"    Operation="Multiplication" Value="999"																					Priority="8"/>
+		<Modifier 		TargetProperty="WastedFoodtoApproval"    Operation="Multiplication" Value="999"																					Priority="8"/>-->
 
-		<Modifier 		TargetProperty="NetSystemGrowth"   Operation="Subtraction" Value="$(WastedGrowth)" 	       Priority="8"/>
+		<Modifier 		TargetProperty="NetSystemGrowth"   Operation="Subtraction" Value="$(WastedGrowth)" 	       Priority="8" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
 		<Modifier 		TargetProperty="NetSystemMoney"    Operation="Addition"    Value="$(WastedFoodtoDust)" 	   Priority="9"/>
 		<Modifier 		TargetProperty="EmpireManpower"    Operation="Addition"    Value="$(WastedFoodtoMP)" 	   Priority="9" Path="../ClassEmpire"/>
-		<Modifier 		TargetProperty="Happiness"    	   Operation="Addition"    Value="$(WastedFoodtoApproval)" Priority="9"/>
+		<!--<Modifier 		TargetProperty="Happiness"    	   Operation="Addition"    Value="$(WastedFoodtoApproval)" Priority="9"/>-->
 
 		<!-- Determine whether pop is allowed to grow this turn based on turn, presence of trait and gamespeed, and apply adjustment if needed -->
 		<BinaryModifier     TargetProperty="CurrentTurnModuloEndlessCeil"  Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="4" Priority="1"/>
@@ -1877,7 +1883,6 @@
 
 		<!-- Calculate upkeep from mothership -->
 		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Addition"       Value="$(SystemGrowthStock)" Priority="-5"   Path="ClassColonizedStarSystem,ClassExploitedStarSystem"/>
-		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Division"       Value="2"        Priority="-4"  Path="ClassColonizedStarSystem,ClassExploitedStarSystem"/>
 		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Power"          Value="1.25"          Priority="-3"  Path="ClassColonizedStarSystem,ClassExploitedStarSystem"/>
 		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Division"       Value="1200"        Priority="-2"  Path="ClassColonizedStarSystem,ClassExploitedStarSystem"/>
 		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Division"       Value="$(GameSpeedMultiplier)"        Priority="-2"  Path="ClassColonizedStarSystem,ClassExploitedStarSystem"/>
