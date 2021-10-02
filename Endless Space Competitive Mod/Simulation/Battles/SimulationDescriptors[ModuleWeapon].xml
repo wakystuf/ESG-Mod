@@ -989,16 +989,66 @@
     <Modifier TargetProperty="EMPDurationForWeapons"        Operation="Addition" Value="7"     Path="ClassModule" TooltipHidden="true"/>
     <Modifier TargetProperty="Damage"                       Operation="Addition" Value="250"   Path="ClassModule" TooltipHidden="true"/>
     <!--<Modifier TargetProperty="Cooldown"                 Operation="Percent"  Value="0.5"   Path="ClassModule" TooltipHidden="true"/>-->
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier5)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
-
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
 
     <!-- Feedback -->
     <Modifier TargetProperty="EMPTargetWeapons"             Operation="Addition" Value="1"     Path="ClassModule" TooltipHidden="true"/>
   </SimulationDescriptor>
 
+  <!-- EMP Weapon BEAM -->
+  <SimulationDescriptor Name="ModuleWeaponBeamEMP1Strategic3" Type="ModuleWeapon">
+    <Modifier TargetProperty="EMPDurationForShields"    Operation="Addition"    Value="6"         Path="ClassModule"       TooltipHidden="true"/>
+    <Modifier TargetProperty="Damage"                   Operation="Addition"    Value="40"        Path="ClassModule"       TooltipHidden="true"/>
+    <Modifier TargetProperty="Cooldown"                 Operation="Percent"     Value="0.5"       Path="ClassModule"       TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon"/>
+
+    <!-- Feedback -->
+    <Modifier TargetProperty="EMPTargetShields"         Operation="Addition"    Value="1"           Path="ClassModule"      TooltipHidden="true"/>
+  </SimulationDescriptor>
+
   <!--################################-->
   <!--###             AOE          ###-->
   <!--################################-->
+
+  <SimulationDescriptor Name="ClassModuleWeaponAOE"  Type="ClassModuleWeapon">
+    <!-- Properties -->
+    <Property Name="DamageAOE" BaseValue="0"/>
+    <Property Name="TargetingWeightBonus"                BaseValue="0"/>
+
+    <!-- Modifiers -->
+    <Modifier TargetProperty="Cooldown"                     Operation="Addition"        Value="40"       Path="ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="PreparationDuration"          Operation="Addition"        Value="0.5"      Path="ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="PreparationDurationFactorMin" Operation="Multiplication"  Value="0.8"      Path="ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="PreparationDurationFactorMax" Operation="Multiplication"  Value="1.2"      Path="ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="ShootingDuration"             Operation="Addition"        Value="5"        Path="ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="ShotsCountPerSalvo"           Operation="Addition"        Value="1"        Path="ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="ProjectileSpeed"              Operation="Addition"        Value="45"       Path="ClassModuleWeapon" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="CriticalHitChance"            Operation="Addition"        Value="0"        Path="ClassModuleWeapon" />
+    <Modifier TargetProperty="ShieldPenetrationFactor"      Operation="Addition"        Value="0.6"      Path="ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="HullPlatingPenetrationFactor" Operation="Addition"        Value="0.1"      Path="ClassModuleWeapon" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="LongRangePenalty"             Operation="Addition"        Value="0"        Path="ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="MediumRangePenalty"           Operation="Addition"        Value="0"        Path="ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="ShortRangePenalty"            Operation="Addition"        Value="0"        Path="ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="DeadZoneRangePenalty"         Operation="Addition"        Value="1"        Path="ClassModuleWeapon" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="DamageAgainstSmallShipsModifier"        Operation="Addition"        Value="1"         Path="ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="DamageAgainstMediumShipsModifier"       Operation="Addition"        Value="0.5"       Path="ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="DamageAgainstLargeShipsModifier"        Operation="Addition"        Value="0.5"       Path="ClassModuleWeapon" TooltipHidden="true"/>
+
+    <!-- We do not feedback DamagePerSecond for AoE weapons, but the explosion damage-->
+    <Modifier       TargetProperty="DamagePerSecond"    Operation="Multiplication"    Value="0"              Path="ClassModuleWeapon" Priority="1" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="OffensiveMilitaryPower" Operation="Addition" Left="$(Damage)" BinaryOperation="Division" Right="20" Path="../ClassShip"  TooltipHidden="true"/>
+
+    <Modifier       TargetProperty="DamageAOE"          Operation="Addition"    Value="$(Damage)"              Path="ClassModuleWeapon" TooltipHidden="true"/>
+    <Modifier TargetProperty="TargetingWeightBonus"      Operation="Addition" Value="$(TargetingWeightBonus)"       Path="../ClassShip"     Priority="1"/>
+
+    <!--Every time a module is installed, the upkeep grows-->
+    <Modifier TargetProperty="GarrisonMoneyUpkeep"          Operation="Addition" Value="$(UpkeepFromModules)"      Path="../ClassShip"/>
+  </SimulationDescriptor>
 
   <!--Aoe weapon-->
   <SimulationDescriptor Name="ModuleWeaponAOENuke1"            Type="ModuleWeapon">
