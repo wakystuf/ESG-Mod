@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
   
-  <!-- ******************** -->
-  <!-- ******* QUEST ******* -->
-  <!-- ******************** -->
+  <!-- ********************************** -->
+  <!-- ******* NON-FACTION QUESTS ******* -->
+  <!-- ********************************** -->
 
   <!--##### Seek the Unique Quest Modules ####-->
   <!-- Scavenged Ramscoop  -->
@@ -30,6 +30,65 @@
     <Modifier TargetProperty="MaximumHealth"    Operation="Percent" Value="-0.2"   Path="../ClassShip/ClassSectionCore"/>
   </SimulationDescriptor>
 
+  <!-- Cleaver -->
+  <SimulationDescriptor Name="ModuleWeaponBeamQuest3"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                       Operation="Addition" Value="204"     TooltipHidden="true"/>
+    <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.05"   TooltipHidden="true"/>
+    <Modifier TargetProperty="ShipManpowerKillPerHit"       Operation="Addition" Value="8"      TooltipHidden="true"/>
+    <Modifier TargetProperty="HullPlatingPenetrationFactorBonus"     Operation="Addition"  Value="0.2"  TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="53" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+   <!-- Bilgeli Plating -->
+   <SimulationDescriptor Name="ModuleDefenseHullPlatingQuest1"  Type="ModuleDefense">
+    <Modifier TargetProperty="SectionHealthBonus"               Operation="Addition" Value="700"  Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="HullPlatingAbsorption"            Operation="Addition" Value="120"  Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="VisionRange"                          Operation="Addition"        Value="1"       Path="ModuleSupportExploration"/>
+    <Modifier TargetProperty="ShipManpowerKillAbsorption"       Operation="Addition" Value="0.1"  Path="ClassModuleDefense"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- ******************************** -->
+  <!-- ************** DEEDS *********** -->
+  <!-- ******************************** -->
+
+  <SimulationDescriptor Name="ModuleWeaponKineticFlackQuest01"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                    Operation="Addition"  Value="21"    TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <!--DPS against Missile / Squadrons-->
+    <Modifier TargetProperty="FlakDamage"           Operation="Addition" Value="25" Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSMissile"      Operation="Addition" Left="$(FlakDamage)" BinaryOperation="Division" Right="$(FlakCooldown)"     Path="ClassModule" TooltipHidden="true"/>
+    <Modifier TargetProperty="EfficiencyAgainstSquadron" Operation="Addition" Value="0.975"     Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="FlakDPSSquadron"      Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Multiplication" Right="$(EfficiencyAgainstSquadron)"     Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="36" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleDefenseHullQuest01"  Type="ModuleDefense">
+    <Property Name="MaximumHealthFleet" BaseValue="0"/>
+    <Modifier TargetProperty="MaximumHealthFleet"             Operation="Addition"            Value="0.1"     Path="ClassModule"/>
+    <Modifier TargetProperty="SectionHealthBonus"               Operation="Addition" Value="615"  Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="HullPlatingAbsorption"            Operation="Addition" Value="95"   Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="MaximumHealth"             Operation="Percent"            Value="0.1"     Path="../ClassGarrisonFleet/ClassShip,!ShipRoleHero/ClassSection,ClassSectionCore"/>
+    <Modifier TargetProperty="MaximumHealth"             Operation="Percent"            Value="0.1"     Path="../ClassShip/ClassSection,ClassSectionCore"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportExperienceQuest01"  Type="ModuleSupport">
+    <Property Name="ExperiencePerTurnFleet" BaseValue="0"/>
+    <Modifier TargetProperty="ExperiencePerTurnFleet"             Operation="Addition"            Value="4"     Path="ClassModule"/>
+    <Modifier TargetProperty="ExperiencePerTurn"             Operation="Addition"            Value="4"     Path="../ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="ExperiencePerTurn"             Operation="Addition"            Value="4"     Path="../ClassGarrisonFleet/ClassHero"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- ********************************** -->
+  <!-- ************** VODYANI *********** -->
+  <!-- ********************************** -->
+
   <!--##### Vodyani Quest Modules ####-->
   <SimulationDescriptor Name="ClassModuleSupportExplorationQuestVampirilis" Type="ClassModuleSupportExploration">
     <Modifier TargetProperty="SectionHealthBonus"                   Operation="Addition"        Value="150"     Path="ClassModule"/>
@@ -50,6 +109,10 @@
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
+  <!-- *********************** -->
+  <!-- ******* LUMERIS ******* -->
+  <!-- *********************** -->
+
   <!--##### Venetians Support Speed Module ####-->
   <SimulationDescriptor Name="ClassModuleSupportExplorationQuestVenetians03" Type="ClassModuleSupportExploration">
     <Modifier TargetProperty="SectionHealthBonus"   Operation="Addition"  Value="70"  Path="ClassModule"/>
@@ -57,6 +120,10 @@
     <Modifier TargetProperty="MaximumMovement"      Operation="Addition"  Value="3"   Path="ModuleSupportEngine"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
+
+  <!-- ***************************** -->
+  <!-- ******* UNITED EMPIRE ******* -->
+  <!-- ***************************** -->
 
   <!--##### UNITED EMPIRE Emperor Support ####-->
   <SimulationDescriptor Name="ClassModuleQuestUnitedEmpire01"  Type="ClassModuleQuest">
@@ -74,14 +141,9 @@
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
-  <!-- Cleaver -->
-  <SimulationDescriptor Name="ModuleWeaponBeamQuest3"  Type="ModuleWeapon">
-    <Modifier TargetProperty="Damage"                       Operation="Addition" Value="204"     TooltipHidden="true"/>
-    <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.05"   TooltipHidden="true"/>
-    <Modifier TargetProperty="ShipManpowerKillPerHit"       Operation="Addition" Value="8"      TooltipHidden="true"/>
-    <Modifier TargetProperty="HullPlatingPenetrationFactorBonus"     Operation="Addition"  Value="0.2"  TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="53" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
+  <!-- *********************** -->
+  <!-- ******* UNFALLEN ******* -->
+  <!-- *********************** -->
 
   <!--##### UNFALLEN ####-->
   <SimulationDescriptor Name="ModuleSupportJournalistQuest1"                  Type="ModuleSupportJournalist">
@@ -120,104 +182,17 @@
     <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
-  <!--##### UPDATE7: Unfallen Pop Quest ####-->
-
   <SimulationDescriptor Name="ModuleDefenseHullPlatingQuest2"  Type="ModuleDefense">
     <Modifier TargetProperty="SectionHealthBonus"               Operation="Addition" Value="800"   Path="ClassModuleDefense"/>
     <Modifier TargetProperty="HullPlatingAbsorption"            Operation="Addition" Value="120"    Path="ClassModuleDefense"/>
     <Modifier TargetProperty="ShipManpowerKillAbsorption"       Operation="Addition" Value="0.20"  Path="ClassModuleDefense"/>
-  </SimulationDescriptor>
-
-  <!--Vaulters-->
-
-  <SimulationDescriptor Name="ModuleDefenseHullPlatingQuest1"  Type="ModuleDefense">
-    <Modifier TargetProperty="SectionHealthBonus"               Operation="Addition" Value="700"  Path="ClassModuleDefense"/>
-    <Modifier TargetProperty="HullPlatingAbsorption"            Operation="Addition" Value="120"  Path="ClassModuleDefense"/>
-    <Modifier TargetProperty="VisionRange"                          Operation="Addition"        Value="1"       Path="ModuleSupportExploration"/>
-    <Modifier TargetProperty="ShipManpowerKillAbsorption"       Operation="Addition" Value="0.1"  Path="ClassModuleDefense"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleWeaponMissileQuest01"  Type="ModuleWeapon">
-    <Modifier TargetProperty="Damage"                       Operation="Addition" Value="700"    TooltipHidden="true"/>
-    <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.15"   TooltipHidden="true"/>
-    <Modifier TargetProperty="ShipManpowerKillPerHit"       Operation="Addition" Value="20"      TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-
-    <!-- Must be same value as Salvo Health-->
-    <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="115" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportEngineQuest1" Type="ModuleSupportEngine">
-    <Modifier TargetProperty="SectionHealthBonus"       Operation="Addition"    Value="150"    Path="ClassModule"/>
-    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="4"       Path="ModuleSupportEngine"/>
-    <Modifier TargetProperty="Evasion"                 Operation="Addition"     Value="0.05"    Path="ModuleSupportEngine"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportEngine4Vaulters" Type="ModuleSupportEngine">
-    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="5"      Path="ModuleSupportEngine"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <!--Is this a leftover/dupe?-->
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportRepairEngine4Vaulters" Type="ModuleSupportRepair">
-    <Modifier TargetProperty="SectionHealthBonus"       Operation="Addition" Value="125"    Path="ClassModule"/>
-    <Modifier TargetProperty="RepairAfterBattle" Operation="Addition" Value="0.1" Path="ModuleSupportRepair"/>
-    <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.02" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleDefenseHullPlating2Vaulters"  Type="ModuleDefense">
-    <Modifier TargetProperty="SectionHealthBonus"               Operation="Addition" Value="380"   Path="ClassModuleDefense"/>
-    <Modifier TargetProperty="HullPlatingAbsorption"            Operation="Addition" Value="60"   Path="ClassModuleDefense"/>
-    <Modifier TargetProperty="ShipManpowerKillAbsorption"               Operation="Addition"        Value="0.05"                                        Path="ClassModuleDefense"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(DefenseIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleDefenseHullQuest01"  Type="ModuleDefense">
-    <Property Name="MaximumHealthFleet" BaseValue="0"/>
-    <Modifier TargetProperty="MaximumHealthFleet"             Operation="Addition"            Value="0.1"     Path="ClassModule"/>
-    <Modifier TargetProperty="SectionHealthBonus"               Operation="Addition" Value="615"  Path="ClassModuleDefense"/>
-    <Modifier TargetProperty="HullPlatingAbsorption"            Operation="Addition" Value="95"   Path="ClassModuleDefense"/>
-    
-    <Modifier TargetProperty="MaximumHealth"             Operation="Percent"            Value="0.1"     Path="../ClassGarrisonFleet/ClassShip,!ShipRoleHero/ClassSection,ClassSectionCore"/>
-    <Modifier TargetProperty="MaximumHealth"             Operation="Percent"            Value="0.1"     Path="../ClassShip/ClassSection,ClassSectionCore"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="35" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
-  <SimulationDescriptor Name="ModuleSupportExperienceQuest01"  Type="ModuleSupport">
-    <Property Name="ExperiencePerTurnFleet" BaseValue="0"/>
-    <Modifier TargetProperty="ExperiencePerTurnFleet"             Operation="Addition"            Value="4"     Path="ClassModule"/>
-
-    <Modifier TargetProperty="ExperiencePerTurn"             Operation="Addition"            Value="4"     Path="../ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="ExperiencePerTurn"             Operation="Addition"            Value="4"     Path="../ClassGarrisonFleet/ClassHero"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!--This Module was super tricky, check Sim-Desc [ModuleDLC1] and Module-Def [DLC1] if this causes issues-->
-  <SimulationDescriptor Name="ModuleWeaponKineticFlackQuest01"  Type="ModuleWeapon">
-    <Modifier TargetProperty="Damage"                    Operation="Addition"  Value="21"    TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
-
-    <!--DPS against Missile / Squadrons-->
-    <Modifier TargetProperty="FlakDamage"           Operation="Addition" Value="25" Path="ClassModule" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="FlakDPSMissile"      Operation="Addition" Left="$(FlakDamage)" BinaryOperation="Division" Right="$(FlakCooldown)"     Path="ClassModule" TooltipHidden="true"/>
-    <Modifier TargetProperty="EfficiencyAgainstSquadron" Operation="Addition" Value="0.975"     Path="ClassModule" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="FlakDPSSquadron"      Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Multiplication" Right="$(EfficiencyAgainstSquadron)"     Path="ClassModule" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="36" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-    
-
-  
-  <!--Hissho-->
+  <!-- *********************** -->
+  <!-- ******* HISSHO ******* -->
+  <!-- *********************** --> 
   <SimulationDescriptor Name="ModuleWeaponBeamQuestHisshos1"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                       Operation="Addition"  Value="170"      TooltipHidden="true"/>
     <Modifier TargetProperty="CriticalHitChance"            Operation="Addition"  Value="0.05"     TooltipHidden="true"/>
@@ -237,42 +212,59 @@
     <Modifier TargetProperty="MaximumShipProbeStock"    Operation="Addition" Value="1"      Path="ModuleSupportExploration"/>
     <Modifier TargetProperty="NetShipProbe"             Operation="Addition" Value="0.25"   Path="ModuleSupportExploration"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="35" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
-  <!--##################
-      #### POPQUEST ####
-      ##################-->
-  <!--Vaulter Pop Quest Modules, found in Sim-Descriptor[ModuleDLC1]-->
-  <SimulationDescriptor Name="ModuleSupportDustGenerator" Type="ModuleSupportDustGenerator">
-    <Property Name="NetShipMoney" BaseValue="0"/>
-  
-    <Modifier TargetProperty="NetShipMoney"      Operation="Multiplication" Value="$(Multiplier)" />
-    <Modifier TargetProperty="EmpireMoney" Operation="Addition" Value="$(NetShipMoney)" Path="../ClassEmpire"/>
-  </SimulationDescriptor>
-  
+  <!-- *********************** -->
+  <!-- ******* VAULTERS ******* -->
+  <!-- *********************** -->  
   <SimulationDescriptor Name="ModuleSupportDustGenerator1Strategic4" Type="ModuleSupportDustGenerator">
     <Modifier TargetProperty="NetShipMoney" Operation="Addition" Value="5" Path="ModuleSupportDustGenerator"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
-  <SimulationDescriptor Name="ModuleSupportStratRecycling" Type="ModuleSupportStratRecycling">
-    <Property Name="OpponentRecyclingStrategic1PerCP" BaseValue="0"/>
-    <Property Name="OpponentRecyclingStrategic2PerCP" BaseValue="0"/>
+  <SimulationDescriptor Name="ModuleSupportStratRecycling1" Type="ModuleSupportStratRecycling">
+    <Modifier TargetProperty="OpponentRecyclingStrategic1PerCP" Operation="Addition" Value="1" Path="ModuleSupportStratRecycling"/>
+    <Modifier TargetProperty="OpponentRecyclingStrategic2PerCP" Operation="Addition" Value="1" Path="ModuleSupportStratRecycling"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
 
-    <Modifier TargetProperty="OpponentRecyclingStrategic1PerCP"      Operation="Multiplication" Value="$(Multiplier)" />
-    <Modifier TargetProperty="OpponentRecyclingStrategic2PerCP"      Operation="Multiplication" Value="$(Multiplier)" />
+  <SimulationDescriptor Name="ModuleSupportRepairEngine4Vaulters" Type="ModuleSupportRepair">
+    <Modifier TargetProperty="SectionHealthBonus"       Operation="Addition" Value="125"    Path="ClassModule"/>
+    <Modifier TargetProperty="RepairAfterBattle" Operation="Addition" Value="0.1" Path="ModuleSupportRepair"/>
+    <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.02" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
 
-    <Modifier TargetProperty="OpponentRecyclingStrategic1PerCP"      Operation="Addition" Value="$(OpponentRecyclingStrategic1PerCP)"       Path="../ClassShip"     Priority="1"/>
-    <Modifier TargetProperty="OpponentRecyclingStrategic2PerCP"      Operation="Addition" Value="$(OpponentRecyclingStrategic2PerCP)"       Path="../ClassShip"     Priority="1"/>
- </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleDefenseHullPlating2Vaulters"  Type="ModuleDefense">
+    <Modifier TargetProperty="SectionHealthBonus"               Operation="Addition" Value="380"   Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="HullPlatingAbsorption"            Operation="Addition" Value="60"   Path="ClassModuleDefense"/>
+    <Modifier TargetProperty="ShipManpowerKillAbsorption"               Operation="Addition"        Value="0.05"                                        Path="ClassModuleDefense"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(DefenseIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+  
+  <SimulationDescriptor Name="ModuleWeaponMissileQuest01"  Type="ModuleWeapon">
+    <Modifier TargetProperty="Damage"                       Operation="Addition" Value="700"    TooltipHidden="true"/>
+    <Modifier TargetProperty="CriticalHitChance"            Operation="Addition" Value="0.15"   TooltipHidden="true"/>
+    <Modifier TargetProperty="ShipManpowerKillPerHit"       Operation="Addition" Value="20"      TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <!-- Must be same value as Salvo Health-->
+    <Modifier TargetProperty="MissileHealth"                Operation="Addition" Value="115" TooltipHidden="true"/>
+  </SimulationDescriptor>
 
- <SimulationDescriptor Name="ModuleSupportStratRecycling1" Type="ModuleSupportStratRecycling">
-   <Modifier TargetProperty="OpponentRecyclingStrategic1PerCP" Operation="Addition" Value="1" Path="ModuleSupportStratRecycling"/>
-   <Modifier TargetProperty="OpponentRecyclingStrategic2PerCP" Operation="Addition" Value="1" Path="ModuleSupportStratRecycling"/>
-   <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
- </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleSupportEngine4Vaulters" Type="ModuleSupportEngine">
+    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="5"      Path="ModuleSupportEngine"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportEngineQuest1" Type="ModuleSupportEngine">
+    <Modifier TargetProperty="SectionHealthBonus"       Operation="Addition"    Value="150"    Path="ClassModule"/>
+    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="4"       Path="ModuleSupportEngine"/>
+    <Modifier TargetProperty="Evasion"                 Operation="Addition"     Value="0.05"    Path="ModuleSupportEngine"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
 
 </Datatable>
