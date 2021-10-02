@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
   
-  <!--  *********************************  -->
+  <!--  ************************************  -->
   <!--  ** SUPPORT MODULE GENERAL CLASSES **  -->
-  <!--  *********************************  -->
+  <!--  ************************************  -->
   <SimulationDescriptor Name="ClassModuleAntiCrewExplication"                    Type="ClassModuleAntiCrewExplication"/>
   <SimulationDescriptor Name="ClassModuleBait1Explication"                       Type="ClassModuleBait1Explication"/>
   <SimulationDescriptor Name="ClassModuleBait2Explication"                       Type="ClassModuleBait2Explication"/>
@@ -41,307 +41,55 @@
 		<Modifier TargetProperty="MoraleBonus"            Operation="Percent"   Value="$(FlotillaMoraleBonusPercent)"  Path="../ClassGroup"     />
 	</SimulationDescriptor>
 
-  <!-- Engine Module Class -->
-  <SimulationDescriptor Name="ModuleSupportEngine" Type="ModuleSupportEngine">
-    <Property Name="MaximumMovement"/>
-    <Property Name="Evasion"/>
-    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="$(MaximumMovement)"                                   Path="../ClassShip" Priority="1"/>
-    <BinaryModifier TargetProperty="Evasion"   Operation="Addition" Left="$(Evasion)" BinaryOperation="Multiplication" Right="2" Path="../ClassShip"/>
+  <!-- ************************** -->
+  <!-- ** ANTI CARRIER MODULES ** -->
+  <!-- ************************** -->
+
+  <!-- Lock-on Modules -->
+  <SimulationDescriptor Name="ModuleSupportAntiCarrier1Strategic4"      Type="ModuleSupportAntiCarrier">
+    <Modifier TargetProperty="DamageBonusPerTargetCommandPointsFlotilla"    Operation="Addition" Value="0.06" Path="ModuleSupportAntiCarrier"/>
+    <Modifier TargetProperty="OffensiveMilitaryPower"                       Operation="Percent" Value="0.15" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
-  <!-- Economic Modules
-       Juggernaut Support Module Class -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautSystemSupport" Type="ModuleSupportJuggernautSystemSupport">
-    <Property Name="SystemGrowthJuggernautFlat" BaseValue="0"/>
-    <Property Name="SystemProductionJuggernautFlat" BaseValue="0"/>
-    <Property Name="BuildingProductionCostReduction" BaseValue="0"/>
-    <Modifier TargetProperty="JuggernautSystemSupportModulesCount" Operation="Addition" Value="1" Path="../ClassEmpire"/>
+  <SimulationDescriptor Name="ModuleSupportAntiCarrier2Strategic6"      Type="ModuleSupportAntiCarrier">
+    <Modifier TargetProperty="DamageBonusPerTargetCommandPointsFlotilla" Operation="Addition" Value="0.1" Path="ModuleSupportAntiCarrier"/>
+    <Modifier TargetProperty="OffensiveMilitaryPower"                       Operation="Percent" Value="0.2" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="70" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+  
+  <!-- ************************** -->
+  <!-- ** ANTI CREW MODULES ** -->
+  <!-- ************************** -->
+
+  <SimulationDescriptor Name="ModuleSupportAntiCrew"                 Type="ModuleSupportAntiCrew">
+    <Property Name="FlotillaShipManpowerKillPerHitPercent"                BaseValue="0"/>
+    <Property Name="FlotillaManpowerDamageOverTimeIncreaseVar"                BaseValue="0"/>
+
+    <Modifier TargetProperty="FlotillaManpowerDamageOverTimeIncrease"            Operation="Addition"	Value="$(FlotillaManpowerDamageOverTimeIncreaseVar)"      Path="../ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
 
-  <!-- Analyzer Module Class-->
-  <SimulationDescriptor Name="ModuleSupportJuggernautAnalyzer" Type="ModuleSupportJuggernautAnalyzer">
-    <Property Name="NetEmpireMoneyOnSpecialNodes"/>
-    <Property Name="NetEmpireResearchOnSpecialNodes"/>
-    <Property Name="NetEmpireEmpirePointOnSpecialNodes"/>
-    <Property Name="NetEmpireLifeForceOnSpecialNodes"/>
-    <Property Name="NetStrategic1FromSpecialNodes"/>
-    <Property Name="NetStrategic2FromSpecialNodes"/>
-    <Property Name="NetStrategic3FromSpecialNodes"/>
-    <Property Name="NetStrategic4FromSpecialNodes"/>
-    <Property Name="NetStrategic5FromSpecialNodes"/>
-    <Property Name="NetStrategic6FromSpecialNodes"/>
-    <Property Name="SpecialNodeEffectMultiplier"/>
-    <!--  "I receive bonuses here".  -->
-    <Modifier TargetProperty="HasBonusesFromOrbit" Operation="Addition" Value="1" Path="../ClassGarrisonFleet"/>
-    <!--  Bonus science, dust & influence (on any node)  -->
-    <Modifier TargetProperty="NetEmpireMoneyOnSpecialNodes" Operation="Addition" Value="$(NetEmpireMoneyOnSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNode"/>
-    <Modifier TargetProperty="NetEmpireResearchOnSpecialNodes" Operation="Addition" Value="$(NetEmpireResearchOnSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNode"/>
-    <Modifier TargetProperty="NetEmpireEmpirePointOnSpecialNodes" Operation="Addition" Value="$(NetEmpireEmpirePointOnSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNode"/>
-    <Modifier TargetProperty="NetEmpireLifeForceOnSpecialNodes" Operation="Addition" Value="$(NetEmpireLifeForceOnSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNode"/>
-    <!--  More potent special node effect on system, if owned.  -->
-    <Modifier TargetProperty="SpecialNodeEffectMultiplier" Operation="Addition" Value="$(SpecialNodeEffectMultiplier)" Path="../ClassGarrisonFleet"/>
-    <!--  Strat generation depending on special node type  -->
-    <!--  Black hole & Solar Nebula  -->
-    <Modifier TargetProperty="NetStrategic1FromSpecialNodes" Operation="Addition" Value="$(NetStrategic1FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeBlackHole"/>
-    <Modifier TargetProperty="NetStrategic1FromSpecialNodes" Operation="Addition" Value="$(NetStrategic1FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeSolarNebula"/>
-    <Modifier TargetProperty="NetStrategic1FromSpecialNodes" Operation="Addition" Value="$(NetStrategic1FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeVaulters"/>
-    <Modifier TargetProperty="NetStrategic2FromSpecialNodes" Operation="Addition" Value="$(NetStrategic2FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeBlackHole"/>
-    <Modifier TargetProperty="NetStrategic2FromSpecialNodes" Operation="Addition" Value="$(NetStrategic2FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeSolarNebula"/>
-    <Modifier TargetProperty="NetStrategic2FromSpecialNodes" Operation="Addition" Value="$(NetStrategic2FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeVaulters"/>
-    <!--  Asteroid fields & Collapsing Star  -->
-    <Modifier TargetProperty="NetStrategic3FromSpecialNodes" Operation="Addition" Value="$(NetStrategic3FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeAsteroidField"/>
-    <Modifier TargetProperty="NetStrategic3FromSpecialNodes" Operation="Addition" Value="$(NetStrategic3FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeCollapsingStar"/>
-    <Modifier TargetProperty="NetStrategic4FromSpecialNodes" Operation="Addition" Value="$(NetStrategic4FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeAsteroidField"/>
-    <Modifier TargetProperty="NetStrategic4FromSpecialNodes" Operation="Addition" Value="$(NetStrategic4FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeCollapsingStar"/>
-    <!--  Space Clouds & Neutron Star  -->
-    <Modifier TargetProperty="NetStrategic5FromSpecialNodes" Operation="Addition" Value="$(NetStrategic5FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeNeutronStar"/>
-    <Modifier TargetProperty="NetStrategic5FromSpecialNodes" Operation="Addition" Value="$(NetStrategic5FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeSpaceClouds"/>
-    <Modifier TargetProperty="NetStrategic6FromSpecialNodes" Operation="Addition" Value="$(NetStrategic6FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeNeutronStar"/>
-    <Modifier TargetProperty="NetStrategic6FromSpecialNodes" Operation="Addition" Value="$(NetStrategic6FromSpecialNodes)" Path="../ClassGarrisonFleet,FleetOrbitingSpecialNodeSpaceClouds"/>
-    <Modifier TargetProperty="JuggernautSpecialNodeModulesCount" Operation="Addition" Value="1" Path="../ClassEmpire"/>
+  <SimulationDescriptor Name="ModuleSupportAntiCrew1Strategic1"      Type="ModuleSupportAntiCrew">
+    <Modifier TargetProperty="FlotillaShipManpowerKillPerHitPercent" Operation="Addition" Value="0.3" Path="ModuleSupportAntiCrew"/>
+    <Modifier TargetProperty="FlotillaManpowerDamageOverTimeIncreaseVar" Operation="Addition" Value="0.15" Path="ModuleSupportAntiCrew"/>
+    <Modifier TargetProperty="OffensiveMilitaryPower"                       Operation="Percent" Value="0.04" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
-  <!-- Econ Module: Grants Bureau (Visual Only)-->
-  <SimulationDescriptor Name="ModuleSupportJuggernautSystemSupportFIDSFlat" Type="ModuleSupportJuggernautSystemSupport">
-    <Modifier TargetProperty="SystemGrowthJuggernautFlat"           Operation="Addition" Value="15"/>
-    <Modifier TargetProperty="SystemProductionJuggernautFlat"       Operation="Addition" Value="15"/>
-
+  <SimulationDescriptor Name="ModuleSupportAntiCrew2Strategic5"      Type="ModuleSupportAntiCrew">
+    <Modifier TargetProperty="FlotillaShipManpowerKillPerHitPercent" Operation="Addition" Value="0.6" Path="ModuleSupportAntiCrew"/>
+    <Modifier TargetProperty="FlotillaManpowerDamageOverTimeIncreaseVar" Operation="Addition" Value="0.3" Path="ModuleSupportAntiCrew"/>
+    <Modifier TargetProperty="OffensiveMilitaryPower"                       Operation="Percent" Value="0.1" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="70" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
-  <!-- Econ Module: Local Government Bureau -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautSystemSupportFIDSDynamic" Type="ModuleSupportJuggernautSystemSupport">
-    <Modifier TargetProperty="SystemGrowthJuggernautFlat"        Operation="Addition" Value="5"/>
-    <Modifier TargetProperty="SystemProductionJuggernautFlat"    Operation="Addition" Value="5"/>
-    <Modifier TargetProperty="BuildingProductionCostReduction"      Operation="Addition" Value="0.05"/>
-  </SimulationDescriptor>
-
-  <!--Advanced Node Analyzer-->
-  <SimulationDescriptor Name="ModuleSupportJuggernautAnalyzer1" Type="ModuleSupportJuggernautAnalyzer">
-    <Modifier TargetProperty="NetEmpireMoneyOnSpecialNodes" Operation="Addition" Value="30"/>
-    <Modifier TargetProperty="NetEmpireResearchOnSpecialNodes" Operation="Addition" Value="30"/>
-    <Modifier TargetProperty="NetEmpireEmpirePointOnSpecialNodes" Operation="Addition" Value="15"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="ModuleSupportJuggernautAnalyzer2" Type="ModuleSupportJuggernautAnalyzer">
-    <Modifier TargetProperty="SpecialNodeEffectMultiplier"          Operation="Addition"    Value="0.25"/>
-    <Modifier TargetProperty="NetStrategic1FromSpecialNodes"        Operation="Addition"    Value="1.5"/>
-    <Modifier TargetProperty="NetStrategic2FromSpecialNodes"        Operation="Addition"    Value="1.5"/>
-    <Modifier TargetProperty="NetStrategic3FromSpecialNodes"        Operation="Addition"    Value="1.5"/>
-    <Modifier TargetProperty="NetStrategic4FromSpecialNodes"        Operation="Addition"    Value="1.5"/>
-    <Modifier TargetProperty="NetStrategic5FromSpecialNodes"        Operation="Addition"    Value="1.5"/>
-    <Modifier TargetProperty="NetStrategic6FromSpecialNodes"        Operation="Addition"    Value="1.5"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!--Research Modules-->
-  <SimulationDescriptor Name="ModuleSupportJuggernautResearchStarting" Type="ModuleSupportJuggernautResearch">
-    <Modifier TargetProperty="NetEmpireResearchOnSpecialNodes"  Operation="Addition"    Value="30"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="80" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="ModuleSupportJuggernautResearch1" Type="ModuleSupportJuggernautResearch">
-    <Modifier TargetProperty="NetEmpireResearchOnSpecialNodes"  Operation="Addition"    Value="50"/>
-    <Modifier TargetProperty="TechnologyCostQuadrantScienceAndExplorationMultiplierFromSpecialNodes"     Operation="Addition"    Value="0.01"/>
-    <Modifier TargetProperty="TechnologyCostQuadrantEconomyAndTradeMultiplierFromSpecialNodes"           Operation="Addition"    Value="0.01"/>
-    <Modifier TargetProperty="TechnologyCostQuadrantEmpireDevelopmentMultiplierFromSpecialNodes"         Operation="Addition"    Value="0.01"/>
-    <Modifier TargetProperty="TechnologyCostQuadrantMilitaryMultiplierFromSpecialNodes"                  Operation="Addition"    Value="0.01"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="ModuleSupportJuggernautResearch2" Type="ModuleSupportJuggernautResearch">
-    <Modifier TargetProperty="NetEmpireResearchOnSpecialNodes"  Operation="Addition"    Value="200"/>
-    <Modifier TargetProperty="TechnologyCostQuadrantScienceAndExplorationMultiplierFromSpecialNodes"     Operation="Addition"    Value="0.02"/>
-    <Modifier TargetProperty="TechnologyCostQuadrantEconomyAndTradeMultiplierFromSpecialNodes"           Operation="Addition"    Value="0.02"/>
-    <Modifier TargetProperty="TechnologyCostQuadrantEmpireDevelopmentMultiplierFromSpecialNodes"         Operation="Addition"    Value="0.02"/>
-    <Modifier TargetProperty="TechnologyCostQuadrantMilitaryMultiplierFromSpecialNodes"                  Operation="Addition"    Value="0.02"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Gameplay Only -->
-  <SimulationDescriptor Name="SystemSupportModuleEffectFIDSFlat" Type="SystemSupportModuleEffect">
-    <Modifier TargetProperty="SystemGrowth"                         Operation="Addition" Value="15" TooltipHidden="false"/>
-    <Modifier TargetProperty="SystemProduction"                     Operation="Addition" Value="15" TooltipHidden="false"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="SystemSupportModuleEffectFIDSDynamic" Type="SystemSupportModuleEffect">
-    <Modifier TargetProperty="SystemGrowth"                         Operation="Addition" Value="5" TooltipHidden="false"/>
-    <Modifier TargetProperty="SystemProduction"                     Operation="Addition" Value="5" TooltipHidden="false"/>
-    <Modifier TargetProperty="BuildingProductionCostReduction"      Operation="Addition" Value="-0.05"  Path="ClassColonizedStarSystem"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Mining probe class -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningProbe" Type="ModuleSupportJuggernautMiningProbe">
-    <Property Name="NetShipMiningProbe"/>
-    <Property Name="MaximumShipMiningProbeStock"/>
-    <Property Name="MiningProbeLifetime"/>
-    <Property Name="MiningProbeCount"/>
-    <Property Name="MiningProbeDepletionPointsOnPlanet"/>
-    <Property Name="MiningProbeDepositValueMultiplier"/>
-    <Property Name="MiningProbePlanetStatsMultiplier"/>
-    <Property Name="GameSpeedMultiplier" BaseValue="1"/>
-    <Modifier TargetProperty="NetShipMiningProbe" Operation="Addition" Value="$(NetShipMiningProbe)" Path="../ClassShip"/>
-    <Modifier TargetProperty="MiningProbeDepletionPointsOnPlanet" Operation="Addition" Value="$(MiningProbeDepletionPointsOnPlanet)" Path="../ClassGarrison"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock" Operation="Addition" Value="$(MaximumShipMiningProbeStock)" Path="../ClassShip"/>
-    <Modifier TargetProperty="MiningProbeLifetime" Operation="Addition" Value="$(MiningProbeLifetime)" Path="../ClassGarrisonFleet"  Priority="2"/>
-    <Modifier TargetProperty="MiningProbeCount" Operation="Addition" Value="$(MiningProbeCount)" Path="../ClassGarrisonFleet"/>
-    <Modifier TargetProperty="JuggernautMiningModulesCount" Operation="Addition" Value="1" Path="../ClassEmpire"/>
-  </SimulationDescriptor>
-
-  <!-- Mining
-       Vanilla (non-Hissho)
-       Starting Miner -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningProbeStarting" Type="ModuleSupportJuggernautMiningProbe">
-    <BinaryModifier TargetProperty="NetShipMiningProbe"             Operation="Addition"    Left="0.2" BinaryOperation="Division" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock"          Operation="Addition"    Value="1"/>
-    <BinaryModifier TargetProperty="MiningProbeLifetime"            Operation="Addition"    Left="8" BinaryOperation="Multiplication" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MiningProbeCount"                     Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepositValueMultiplier"    Operation="Force"       Value="0.5"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Fast Miner -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningProbeFast1" Type="ModuleSupportJuggernautMiningProbe">
-    <BinaryModifier TargetProperty="NetShipMiningProbe"             Operation="Addition"    Left="0.5" BinaryOperation="Division" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock"          Operation="Addition"    Value="1"/>
-    <BinaryModifier TargetProperty="MiningProbeLifetime"            Operation="Addition"    Left="6" BinaryOperation="Multiplication" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MiningProbeCount"                     Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepositValueMultiplier"    Operation="Force"       Value="0.75"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Planetary Miner -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningProbeLong1" Type="ModuleSupportJuggernautMiningProbe">
-    <BinaryModifier TargetProperty="NetShipMiningProbe"             Operation="Addition"    Left="0.2" BinaryOperation="Division" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock"          Operation="Addition"    Value="1"/>
-    <BinaryModifier TargetProperty="MiningProbeLifetime"            Operation="Addition"    Left="16" BinaryOperation="Multiplication" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MiningProbeCount"                     Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepositValueMultiplier"    Operation="Force"       Value="0.75"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Fast Miner 2 -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningProbeFast2" Type="ModuleSupportJuggernautMiningProbe">
-    <BinaryModifier TargetProperty="NetShipMiningProbe"             Operation="Addition"    Left="0.5" BinaryOperation="Division" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock"          Operation="Addition"    Value="1"/>
-    <BinaryModifier TargetProperty="MiningProbeLifetime"            Operation="Addition"    Left="8" BinaryOperation="Multiplication" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MiningProbeCount"                     Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepositValueMultiplier"    Operation="Force"       Value="1.5"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Planetary Miner 2 -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningProbeLong2" Type="ModuleSupportJuggernautMiningProbe">
-    <BinaryModifier TargetProperty="NetShipMiningProbe"             Operation="Addition"    Left="0.2" BinaryOperation="Division" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock"          Operation="Addition"    Value="1"/>
-    <BinaryModifier TargetProperty="MiningProbeLifetime"            Operation="Addition"    Left="20" BinaryOperation="Multiplication" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MiningProbeCount"                     Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepositValueMultiplier"    Operation="Force"       Value="1.5"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Core Miner -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningProbeCore" Type="ModuleSupportJuggernautMiningProbe">
-    <BinaryModifier TargetProperty="NetShipMiningProbe"             Operation="Addition"    Left="0.125" BinaryOperation="Division" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock"          Operation="Addition"    Value="1"/>
-    <BinaryModifier TargetProperty="MiningProbeLifetime"            Operation="Addition"    Left="24" BinaryOperation="Multiplication" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MiningProbeCount"                     Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepletionPointsOnPlanet"   Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepositValueMultiplier"    Operation="Force"       Value="2.25"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Hissho Version
-       Starting -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningProbeStartingHissho" Type="ModuleSupportJuggernautMiningProbe">
-    <BinaryModifier TargetProperty="NetShipMiningProbe"             Operation="Addition"    Left="0.2" BinaryOperation="Division" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock"          Operation="Addition"    Value="1"/>
-    <BinaryModifier TargetProperty="MiningProbeLifetime"            Operation="Addition"    Left="6" BinaryOperation="Multiplication" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MiningProbeCount"                     Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepositValueMultiplier"    Operation="Force"       Value="0.5"/>
-    <Modifier TargetProperty="MiningProbePlanetStatsMultiplier"     Operation="Force"       Value="0.15"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  <!-- Fast Miner 1 -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningProbeFastHissho1" Type="ModuleSupportJuggernautMiningProbe">
-    <BinaryModifier TargetProperty="NetShipMiningProbe"             Operation="Addition"    Left="0.5" BinaryOperation="Division" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock"          Operation="Addition"    Value="1"/>
-    <BinaryModifier TargetProperty="MiningProbeLifetime"            Operation="Addition"    Left="5" BinaryOperation="Multiplication" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MiningProbeCount"                     Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepositValueMultiplier"    Operation="Force"       Value="0.75"/>
-    <Modifier TargetProperty="MiningProbePlanetStatsMultiplier"     Operation="Force"       Value="0.2"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Faster Miner 2 -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningProbeFastHissho2" Type="ModuleSupportJuggernautMiningProbe">
-    <BinaryModifier TargetProperty="NetShipMiningProbe"             Operation="Addition"    Left="0.5" BinaryOperation="Division" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock"          Operation="Addition"    Value="1"/>
-    <BinaryModifier TargetProperty="MiningProbeLifetime"            Operation="Addition"    Left="6" BinaryOperation="Multiplication" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MiningProbeCount"                     Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepositValueMultiplier"    Operation="Force"       Value="1.5"/>
-    <Modifier TargetProperty="MiningProbePlanetStatsMultiplier"     Operation="Force"       Value="0.25"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  <!-- Planetary Miner -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningProbeLongHissho1" Type="ModuleSupportJuggernautMiningProbe">
-    <BinaryModifier TargetProperty="NetShipMiningProbe"             Operation="Addition"    Left="0.2" BinaryOperation="Division" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock"          Operation="Addition"    Value="1"/>
-    <BinaryModifier TargetProperty="MiningProbeLifetime"            Operation="Addition"    Left="12" BinaryOperation="Multiplication" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MiningProbeCount"                     Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepositValueMultiplier"    Operation="Force"       Value="0.75"/>
-    <Modifier TargetProperty="MiningProbePlanetStatsMultiplier"     Operation="Force"       Value="0.2"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Planetary Miner 2 -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningProbeLongHissho2" Type="ModuleSupportJuggernautMiningProbe">
-    <BinaryModifier TargetProperty="NetShipMiningProbe"             Operation="Addition"    Left="0.2" BinaryOperation="Division" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock"          Operation="Addition"    Value="1"/>
-    <BinaryModifier TargetProperty="MiningProbeLifetime"            Operation="Addition"    Left="15" BinaryOperation="Multiplication" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MiningProbeCount"                     Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepositValueMultiplier"    Operation="Force"       Value="1.5"/>
-    <Modifier TargetProperty="MiningProbePlanetStatsMultiplier"     Operation="Force"       Value="0.25"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  <!-- Core Miner -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningProbeCoreHissho" Type="ModuleSupportJuggernautMiningProbe">
-    <BinaryModifier TargetProperty="NetShipMiningProbe"             Operation="Addition"    Left="0.125" BinaryOperation="Division" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock"          Operation="Addition"    Value="1"/>
-    <BinaryModifier TargetProperty="MiningProbeLifetime"            Operation="Addition"    Left="18" BinaryOperation="Multiplication" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MiningProbeCount"                     Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepletionPointsOnPlanet"   Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepositValueMultiplier"    Operation="Force"       Value="2.25"/>
-    <Modifier TargetProperty="MiningProbePlanetStatsMultiplier"     Operation="Force"       Value="0.25"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  <!-- Gouge of Tonatsi -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautMiningLongQuestHisshos2" Type="ModuleSupportJuggernautMining">
-    <BinaryModifier TargetProperty="NetShipMiningProbe"             Operation="Addition"    Left="0.4" BinaryOperation="Division" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MaximumShipMiningProbeStock"          Operation="Addition"    Value="1"/>
-    <BinaryModifier TargetProperty="MiningProbeLifetime"            Operation="Addition"    Left="15" BinaryOperation="Multiplication" Right="$(GameSpeedMultiplier)"/>
-    <Modifier TargetProperty="MiningProbeCount"                     Operation="Addition"    Value="1"/>
-    <Modifier TargetProperty="MiningProbeDepositValueMultiplier"    Operation="Force"       Value="0.75"/>
-    <Modifier TargetProperty="MiningProbePlanetStatsMultiplier"     Operation="Force"       Value="0.2"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Vodyani Leech -->
-  <SimulationDescriptor Name="ModuleLogistics" Type="ModuleLogistics">
-    <Property Name="SystemGrowthTransferredPerTurn" BaseValue="0"/>
-    <Property Name="EmpireMoneyTransferredPerTurn" BaseValue="0"/>
-    <Property Name="EmpireEmpirePointTransferredPerTurn" BaseValue="0"/>
-    <Property Name="OpponentRecyclingEssencePerCP" BaseValue="0"/>
-    <!--  For tooltip  -->
-    <Property Name="LifeforceLeechedPerTurn" BaseValue="0"/>
-    <Modifier TargetProperty="SystemGrowthTransferredPerTurn" Operation="Multiplication" Value="$(Multiplier)" Priority="2"/>
-    <BinaryModifier TargetProperty="LifeforceLeechedPerTurn" Operation="Addition" Left="$(SystemGrowthTransferredPerTurn)" BinaryOperation="Multiplication" Right="2.5"/>
-    <Modifier TargetProperty="LifeforceLeechedPerTurn" Operation="Addition" Value="$(EmpireMoneyTransferredPerTurn)"/>
-    <Modifier TargetProperty="LifeforceLeechedPerTurn" Operation="Addition" Value="$(EmpireEmpirePointTransferredPerTurn)"/>
-    <Modifier TargetProperty="OpponentRecyclingEssencePerCP" Operation="Multiplication" Value="$(Multiplier)" Priority="2"/>
-    <Modifier TargetProperty="OpponentRecyclingEssencePerCP" Operation="Addition" Value="$(OpponentRecyclingEssencePerCP)" Path="../ClassShip" Priority="2"/>
-  </SimulationDescriptor>
+  <!-- ******************************* -->
+  <!-- **** ARK MODULES (VODYANI) **** -->
+  <!-- ******************************* -->
 
   <!-- Vodyani Arks -->
   <SimulationDescriptor Name="ModuleStarSystemEffectFromMothership" Type="ModuleStarSystemEffectFromMothership">
@@ -358,48 +106,12 @@
     <Property Name="PlanetRawFIDS" BaseValue="0"/>    
   </SimulationDescriptor>
 
-  <!--Leech Growth-->
-  <SimulationDescriptor Name="ModuleLogisticsGrowth1"             Type="ModuleLogistics">
-    <Modifier TargetProperty="SystemGrowthTransferredPerTurn"       Operation="Addition"    Value="5"   Priority="1"/>
-    <Modifier TargetProperty="OpponentRecyclingEssencePerCP"        Operation="Addition"    Value="5"   Priority="1"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleLogisticsGrowth2"             Type="ModuleLogistics">
-    <Modifier TargetProperty="SystemGrowthTransferredPerTurn"       Operation="Addition"    Value="10"   Priority="1"/>
-    <Modifier TargetProperty="OpponentRecyclingEssencePerCP"        Operation="Addition"    Value="10"    Priority="1"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleLogisticsGrowth3"             Type="ModuleLogistics">
-    <Modifier TargetProperty="SystemGrowthTransferredPerTurn"       Operation="Addition"    Value="20"   Priority="1"/>
-    <Modifier TargetProperty="OpponentRecyclingEssencePerCP"        Operation="Addition"    Value="20"    Priority="1"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!--Leech Dust-->
-  <SimulationDescriptor Name="ModuleLogisticsEmpireMoney"        Type="ModuleLogistics">
-    <Modifier TargetProperty="EmpireMoneyTransferredPerTurn"        Operation="Addition"    Value="10"/>
-  </SimulationDescriptor>
-
-  <!--Leech Influence-->
-  <SimulationDescriptor Name="ModuleLogisticsEmpireEmpirePoint"  Type="ModuleLogistics">
-    <Modifier TargetProperty="EmpireEmpirePointTransferredPerTurn"  Operation="Addition"    Value="10"/>
-  </SimulationDescriptor>
-
   <!-- Meditation Module -->
   <SimulationDescriptor Name="ModuleSupportAnchor"/>
   <SimulationDescriptor Name="ModuleSupportMothershipAnchoredDefenseEffect" Type="ModuleSupportMothershipAnchoredDefenseEffect">
     <Modifier TargetProperty="CannotFightUnlessDetached" Operation="Addition" Value="1" Path="../ClassGarrisonFleet,FleetActionMothershipAttached"/>
     <Modifier TargetProperty="MaximumShipManpower" Operation="Force" Value="0" Path="../ClassGarrison/ClassShip,AttachedMothership"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Cravers Science per Depletion -->
-  <SimulationDescriptor Name="ModuleSupportJuggernautRejuvenatorCravers1" Type="ModuleSupportJuggernautRejuvenator">
-    <Modifier TargetProperty="NetRestorationProduction"         Operation="Addition"    Value="80"/>
-    <Modifier TargetProperty="EmpireResearchPerDepletionPoint"  Operation="Addition"    Value="0.5"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!-- All Must Provide -->
@@ -411,266 +123,6 @@
   <SimulationDescriptor Name="ModuleMothershipLifeforce3" Type="ModuleMothershipLifeforce">
     <Modifier TargetProperty="SystemLifeforceFlat"         Operation="Addition" Value="30" Path="ModuleStarSystemEffectFromMothership"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Shield Regenerator -->
-  <SimulationDescriptor Name="ModuleSupportShieldRegenerate"                         Type="ModuleSupportShieldRegenerate">
-    <Property Name="ShieldRegeneratePerSecond"                BaseValue="0"/>
-
-    <Modifier TargetProperty="ShieldRegeneratePerSecond"      Operation="Multiplication" Value="$(Multiplier)" TooltipHidden="true"/>
-    <Modifier TargetProperty="ShieldRegeneratePerSecond"      Operation="Addition" Value="$(ShieldRegeneratePerSecond)"       Path="../ClassShip"     Priority="1"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportShieldRegenerate1Strategic4"              Type="ModuleSupportShieldRegenerate">
-    <Modifier TargetProperty="ShieldRegeneratePerSecond"       Operation="Addition" Value="150"    Path="ModuleSupportShieldRegenerate"/>
-    <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.1" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportShieldRegenerate2Strategic6"              Type="ModuleSupportShieldRegenerate">
-    <Modifier TargetProperty="ShieldRegeneratePerSecond"       Operation="Addition" Value="250"    Path="ModuleSupportShieldRegenerate"/>
-    <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.2" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="80" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Shield Reloader -->
-  <SimulationDescriptor Name="ModuleSupportShieldReload" Type="ModuleSupportShieldReload">
-    <Property Name="ShieldRegeneratePerSecondDynamic"                BaseValue="0"/>
-    <Modifier TargetProperty="ShieldRegeneratePerSecondDynamic"      Operation="Addition" Value="$(ShieldRegeneratePerSecondDynamic)"       Path="../ClassGarrison/ClassShip"     Priority="1"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportShieldReload1Strategic4"              Type="ModuleSupportShieldReload">
-    <Modifier TargetProperty="ShieldRegeneratePerSecondDynamic"       Operation="Addition" Value="0.01"    Path="ModuleSupportShieldReload"/>
-    <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.2" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportShieldReload2Strategic6"              Type="ModuleSupportShieldReload">
-    <Modifier TargetProperty="ShieldRegeneratePerSecondDynamic"       Operation="Addition" Value="0.02"    Path="ModuleSupportShieldReload"/>
-    <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.4" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Coordinated Flak -->
-  <SimulationDescriptor Name="ModuleSupportFlakEnhancer"              Type="ModuleSupportFlakEnhancer">
-    <Property Name="FlotillaFlakDamageModifierVar" BaseValue="0"/>
-    <Property Name="FlotillaFlakRangePenalty" BaseValue="0" MinValue="Negative"/>
-    
-    <Modifier TargetProperty="FlotillaFlakDamageModifier"            Operation="Addition"	Value="$(FlotillaFlakDamageModifierVar)"      Path="../ClassShip" TooltipHidden="true"/>
-    <Modifier TargetProperty="FlotillaFlakMediumRangePenalty"           Operation="Addition" Value="$(FlotillaFlakRangePenalty)"         Path="../ClassShip" TooltipHidden="true"/>
-    <Modifier TargetProperty="FlotillaFlakShortRangePenalty"            Operation="Addition" Value="$(FlotillaFlakRangePenalty)"       Path="../ClassShip" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportFlakEnhancer1"              Type="ModuleSupportFlakEnhancer">
-    <Modifier TargetProperty="FlotillaFlakDamageModifierVar"            Operation="Addition"	Value="0.15"      Path="ClassModule" TooltipHidden="true"/>
-    <Modifier TargetProperty="FlotillaFlakRangePenalty"                 Operation="Addition" Value="-0.05"         Path="ClassModule" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!--  *********************************  -->
-  <!--  ** ENERGY ENHANCER MODULES **  -->
-  <!--  *********************************  -->
-  <SimulationDescriptor Name="ModuleSupportEnergyEnhancer1" Type="ModuleSupportEnergyEnhancer">
-    <Modifier TargetProperty="DamageEnergy" Operation="Addition" Value="0.20" Path="ModuleSupportEnergyEnhancer"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="ModuleSupportEnergyEnhancer2Strategic2" Type="ModuleSupportEnergyEnhancer">
-    <Modifier TargetProperty="DamageEnergy" Operation="Addition" Value="0.25" Path="ModuleSupportEnergyEnhancer"/>
-    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.05" Path="ModuleSupportEnergyEnhancer"/>
-    <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Percent" Value="0.05" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="ModuleSupportEnergyEnhancer3Strategic4" Type="ModuleSupportEnergyEnhancer">
-    <Modifier TargetProperty="DamageEnergy" Operation="Addition" Value="0.30" Path="ModuleSupportEnergyEnhancer"/>
-    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.1" Path="ModuleSupportEnergyEnhancer"/>
-    <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Percent" Value="0.06" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="70" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="ModuleSupportEnergyEnhancer4Strategic6" Type="ModuleSupportEnergyEnhancer">
-    <Modifier TargetProperty="DamageEnergy" Operation="Addition" Value="0.35" Path="ModuleSupportEnergyEnhancer"/>
-    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.15" Path="ModuleSupportEnergyEnhancer"/>
-    <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Percent" Value="0.07" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="80" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!--  *********************************  -->
-  <!--  ** PROJECTILE ENHANCER MODULES **  -->
-  <!--  *********************************  -->
-  <SimulationDescriptor Name="ModuleSupportProjectileEnhancer1" Type="ModuleSupportProjectileEnhancer">
-    <Modifier TargetProperty="DamageProjectile" Operation="Addition" Value="0.20" Path="ModuleSupportProjectileEnhancer"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="ModuleSupportProjectileEnhancer2Strategic1" Type="ModuleSupportProjectileEnhancer">
-    <Modifier TargetProperty="DamageProjectile" Operation="Addition" Value="0.25" Path="ModuleSupportProjectileEnhancer"/>
-    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.05" Path="ModuleSupportProjectileEnhancer"/>
-    <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Percent" Value="0.05" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="ModuleSupportProjectileEnhancer3Strategic3" Type="ModuleSupportProjectileEnhancer">
-    <Modifier TargetProperty="DamageProjectile" Operation="Addition" Value="0.30" Path="ModuleSupportProjectileEnhancer"/>
-    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.1" Path="ModuleSupportProjectileEnhancer"/>
-    <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Percent" Value="0.06" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="70" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="ModuleSupportProjectileEnhancer4Strategic5" Type="ModuleSupportProjectileEnhancer">
-    <Modifier TargetProperty="DamageProjectile" Operation="Addition" Value="0.35" Path="ModuleSupportProjectileEnhancer"/>
-    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.15" Path="ModuleSupportProjectileEnhancer"/>
-    <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Percent" Value="0.07" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="80" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- ********************* -->
-  <!-- ** ENGINE MODULES ** -->
-  <!-- ********************* -->
-
-  <SimulationDescriptor Name="ModuleSupportEngine1" Type="ModuleSupportEngine">
-    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="2" Path="ModuleSupportEngine"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportEngine2" Type="ModuleSupportEngine">
-    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleSupportEngine"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportEngine4" Type="ModuleSupportEngine">
-    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="5" Path="ModuleSupportEngine"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportEngine2Strategic2" Type="ModuleSupportEngine">
-    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="4"      Path="ModuleSupportEngine"/>
-    <Modifier TargetProperty="Evasion"                 Operation="Addition"     Value="0.05"    Path="ModuleSupportEngine"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportEngine3Strategic4" Type="ModuleSupportEngine">
-    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="6"      Path="ModuleSupportEngine"/>
-    <Modifier TargetProperty="Evasion"                 Operation="Addition"     Value="0.075"   Path="ModuleSupportEngine"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- ********************* -->
-  <!-- ** FLEET ENGINE MODULES ** -->
-  <!-- ********************* -->
-  <SimulationDescriptor Name="ModuleSupportFleetEngine"            Type="ModuleSupportFleetEngine">
-    <Property Name="MaximumMovementFleet"/>
-    <Property Name="GlobalSpeedBonus"/>
-
-    <Modifier TargetProperty="MaximumMovement"           Operation="Addition" Value="$(MaximumMovementFleet)"       Path="../ClassGarrison/ClassShip"     Priority="1"/>
-    <Modifier TargetProperty="GlobalSpeed"                     Operation="Percent"     Value="$(GlobalSpeedBonus)"                  Path="../ClassGarrison/ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportFleetEngine1Strategic2" Type="ModuleSupportFleetEngine">
-    <Modifier TargetProperty="MaximumMovementFleet"         Operation="Addition"     Value="1"      Path="ModuleSupportFleetEngine"/>
-    <Modifier TargetProperty="GlobalSpeedBonus"                 Operation="Addition"    Value="0.1"    Path="ModuleSupportFleetEngine"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="6" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportFleetEngine2Strategic4" Type="ModuleSupportFleetEngine">
-    <Modifier TargetProperty="MaximumMovementFleet"         Operation="Addition"     Value="2"      Path="ModuleSupportFleetEngine"/>
-    <Modifier TargetProperty="GlobalSpeedBonus"                 Operation="Addition"    Value="0.2"    Path="ModuleSupportFleetEngine"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="75" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportFleetEngine3Strategic6" Type="ModuleSupportFleetEngine">
-    <Modifier TargetProperty="MaximumMovementFleet"         Operation="Addition"     Value="3"      Path="ModuleSupportFleetEngine"/>
-    <Modifier TargetProperty="GlobalSpeedBonus"                 Operation="Addition"    Value="0.3"    Path="ModuleSupportFleetEngine"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="4" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- ***************************** -->
-  <!-- ** FLOTILLA REPAIR MODULES ** -->
-  <!-- ***************************** -->
-
-  <SimulationDescriptor Name="ModuleSupportFlotillaRepair1Strategic3"            Type="ModuleSupportFlotillaRepair">
-      <Modifier TargetProperty="FlotillaRepairAfterBattle" Operation="Addition" Value="0.05" Path="ClassModule"/>
-      <Modifier TargetProperty="FlotillaRepairAfterPhase" Operation="Addition" Value="0.05" Path="ClassModule"/>
-      <Modifier TargetProperty="DefensiveMilitaryPower"  Operation="Percent" Value="0.8" Path="../ClassShip"/>
-      <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="140" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-      <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="6" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportFlotillaRepair1Strategic3TimeLords"            Type="ModuleSupportFlotillaRepair">
-      <Modifier TargetProperty="FlotillaRepairAfterBattle" Operation="Addition" Value="0.1" Path="ClassModule"/>
-      <Modifier TargetProperty="FlotillaRepairAfterPhase" Operation="Addition" Value="0.1" Path="ClassModule"/>
-      <Modifier TargetProperty="DefensiveMilitaryPower"  Operation="Percent" Value="1" Path="../ClassShip"/>
-      <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="140" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-      <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="6" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportFlotillaRepair2Strategic5"            Type="ModuleSupportFlotillaRepair">
-      <Modifier TargetProperty="FlotillaRepairAfterBattle" Operation="Addition" Value="0.15" Path="ClassModule"/>
-      <Modifier TargetProperty="FlotillaRepairAfterPhase" Operation="Addition" Value="0.10" Path="ClassModule"/>
-      <Modifier TargetProperty="DefensiveMilitaryPower"  Operation="Percent" Value="1.2" Path="../ClassShip"/>
-      <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-      <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="6" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!--  *********************  -->
-  <!--  ** EXPLORATION MODULES **  -->
-  <!--  *********************  -->
-
-  <SimulationDescriptor Name="ModuleSupportExploration1" Type="ModuleSupportExploration">
-    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="1" Path="ModuleSupportExploration"/>
-    <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="2" Path="ModuleSupportExploration"/>
-    <Modifier TargetProperty="NetShipProbe" Operation="Addition" Value="0.25" Path="ModuleSupportExploration"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportExploration2Strategic1" Type="ModuleSupportExploration">
-    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="2" Path="ModuleSupportExploration"/>
-    <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="2" Path="ModuleSupportExploration"/>
-    <Modifier TargetProperty="NetShipProbe" Operation="Addition" Value="1" Path="ModuleSupportExploration"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportExploration2Strategic2" Type="ModuleSupportExploration">
-    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="3" Path="ModuleSupportExploration"/>
-    <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="3" Path="ModuleSupportExploration"/>
-    <Modifier TargetProperty="NetShipProbe" Operation="Addition" Value="0.5" Path="ModuleSupportExploration"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  
-  <!-- ********************* -->
-  <!-- ** JAMMER MODULES ** -->
-  <!-- ********************* -->
-  <SimulationDescriptor Name="ModuleSupportJammer"                 Type="ModuleSupportJammer">
-    <Property Name="TargetingWeightPenalty"                BaseValue="0"/>
-    <Property Name="MaximumMovement"/>
-    <Modifier TargetProperty="TargetingWeightBonus"      Operation="Subtraction" Value="$(TargetingWeightPenalty)"       Path="../ClassShip"         Priority="1"/>
-    <Modifier TargetProperty="MaximumMovement"           Operation="Addition" Value="$(MaximumMovement)"       Path="../ClassShip"     Priority="1"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportJammer1Strategic3"      Type="ModuleSupportJammer">
-    <Modifier TargetProperty="TargetingWeightPenalty" Operation="Addition" Value="10" Path="ModuleSupportJammer"/>
-    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="3"      Path="ModuleSupportJammer"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportJammer2Strategic5"      Type="ModuleSupportJammer">
-    <Modifier TargetProperty="TargetingWeightPenalty" Operation="Addition" Value="20" Path="ModuleSupportJammer"/>
-    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="5"      Path="ModuleSupportJammer"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="55" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!-- ********************* -->
@@ -699,6 +151,117 @@
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="55" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
+
+  <!-- **************************** -->
+  <!--***  BOARDING POD DEFENSE  ***-->
+  <!-- **************************** -->
+  
+  <!-- Boarding Defense -->
+  <SimulationDescriptor Name="ModuleSupportBoardingDefense" Type="ModuleSupport">
+    <Property Name="ManpowerDamageOverTimeDefense" BaseValue="0"/>
+    <Property Name="LocalManpower"/>
+
+    <Modifier TargetProperty="ManpowerDamageOverTimeDefense" Operation="Addition" Value="$(ManpowerDamageOverTimeDefense)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="LocalManpower"                            Operation="Multiplication" Value="$(Multiplier)"         TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumShipManpower"      Operation="Addition"       Value="$(LocalManpower)"         Path="../ClassShip"     Priority="1"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportBoardingDefense1" Type="ModuleSupport">
+    <Modifier TargetProperty="ManpowerDamageOverTimeDefense" Operation="Addition" Value="0.2" Path="ClassModule" TooltipHidden="true"/>
+    <Modifier TargetProperty="LocalManpower"           Operation="Addition" Value="150"    Path="ModuleSupportBoardingDefense"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- ********************* -->
+  <!-- **** CLOAKING  ****** -->
+  <!-- ********************* -->
+  
+  <SimulationDescriptor Name="ClassModuleInvisibility" Type="ClassModuleInvisibility">
+    <Property Name="AntiVisionStrengthForModule"/>
+    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="0"   Path="../ClassShip" Priority="4"/>
+    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Addition" Value="$(AntiVisionStrengthForModule)"   Path="../ClassShip" Priority="5"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassModuleInvisibilityLevel1" Type="ClassModuleInvisibility">
+    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="1" Path="ClassModuleInvisibility" Priority="1"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+  
+  <SimulationDescriptor Name="ClassModuleInvisibilityLevel2" Type="ClassModuleInvisibility">
+    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="2" Path="ClassModuleInvisibility" Priority="2"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="135" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassModuleInvisibilityLevel3" Type="ClassModuleInvisibility">
+    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="3" Path="ClassModuleInvisibility" Priority="3"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- Cloaked Evasion -->
+  <SimulationDescriptor Name="ModuleInvisibilityFullCombat1" Type="ModuleInvisibilityFullCombat">
+    <Modifier TargetProperty="FleetEvasionFromInvisibility" Operation="Addition" Value="0.2" Path="ModuleInvisibilityFullCombat"/>
+    <!-- This module has both this tag AND the tag for level 3 invisibility, so the below is simply the adjustment needed to switch from the Cloaked Ambusher module -->
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Subtraction" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- *********************************************************** -->
+  <!-- **** CLOAKING DETECTION (DECLOAKING, ANTI-CLOAKING)  ****** -->
+  <!-- *********************************************************** -->
+
+  <SimulationDescriptor Name="ModuleInvisibilityDetectionProbeLevel1" Type="ModuleInvisibilityDetectionProbe">
+    <Modifier TargetProperty="MaximumShipDetectionProbeStock" Operation="Addition" Value="2"/>
+    <Modifier TargetProperty="NetShipDetectionProbe" Operation="Addition" Value="1"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleInvisibilityDetectionProbeLevel2" Type="ModuleInvisibilityDetectionProbe">
+    <Modifier TargetProperty="MaximumShipDetectionProbeStock" Operation="Addition" Value="3"/>
+    <Modifier TargetProperty="NetShipDetectionProbe" Operation="Addition" Value="2"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="135" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleInvisibilityDetectionProbeLevel3" Type="ModuleInvisibilityDetectionProbe">
+    <Modifier TargetProperty="MaximumShipDetectionProbeStock" Operation="Addition" Value="4"/>
+    <Modifier TargetProperty="NetShipDetectionProbe" Operation="Addition" Value="3"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- ************************** -->
+  <!-- ** COLONIZATION MODULES ** -->
+  <!-- ************************** -->
+  <SimulationDescriptor Name="ModuleSupportColonization1"      Type="ModuleSupportColonization">
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportColonization2Strategic1" Type="ModuleSupportColonization">
+      <Modifier TargetProperty="MaximumShipProbeStock"    Operation="Addition" Value="1"      Path="ModuleSupportColonization"/>
+      <Modifier TargetProperty="NetShipProbe"             Operation="Addition" Value="0.25"   Path="ModuleSupportColonization"/>
+      <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportColonization3Strategic3" Type="ModuleSupportColonization">
+      <Modifier TargetProperty="MaximumShipProbeStock"    Operation="Addition" Value="1"      Path="ModuleSupportColonization"/>
+      <Modifier TargetProperty="NetShipProbe"             Operation="Addition" Value="0.5"    Path="ModuleSupportColonization"/>
+      <Modifier TargetProperty="TargetingWeightPenalty"   Operation="Addition" Value="10"     Path="ModuleSupportColonization"/>
+      <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- Root Creator Modules -->
+  <SimulationDescriptor Name="ModuleSupportRootCreation1"      Type="ModuleSupportRootCreation">
+    <Modifier TargetProperty="RootingIncreasePerTurn"          Operation="Addition"        Value="0.09"            Path="../ClassShip"     Priority="1"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportColonizationVenetian" Type="ModuleSupportColonization"/>
+  <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  <SimulationDescriptor Name="ModuleSupportRecolonizer" Type="ModuleSupportColonization"/>
   
   <!-- ********************* -->
   <!-- ** CREW  MODULES ** -->
@@ -722,7 +285,6 @@
   <SimulationDescriptor Name="ModuleSupportCrew-1"    Type="ModuleSupportCrew">
     <Modifier TargetProperty="LocalManpower"                        Operation="Addition" Value="-75"    Path="ModuleSupportCrew"/>
   </SimulationDescriptor>
-  <!--****************-->
   
   <SimulationDescriptor Name="ModuleSupportCrew1"    Type="ModuleSupportCrew">
     <Modifier TargetProperty="SectionHealthBonus"                   Operation="Addition" Value="50"    Path="ClassModule"/>
@@ -792,51 +354,246 @@
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
-  
+
   <!-- ************************** -->
-  <!-- ** ANTI CREW MODULES ** -->
+  <!--***         EMP          ***-->
   <!-- ************************** -->
 
-  <SimulationDescriptor Name="ModuleSupportAntiCrew"                 Type="ModuleSupportAntiCrew">
-    <Property Name="FlotillaShipManpowerKillPerHitPercent"                BaseValue="0"/>
-    <Property Name="FlotillaManpowerDamageOverTimeIncreaseVar"                BaseValue="0"/>
+  <!-- EMP Flotilla Defense -->
+  <SimulationDescriptor Name="ModuleSupportEMPFlotillaDefense" Type="ModuleSupport">
+    <Property Name="EMPFlotillaDefense" BaseValue="0"/>
 
-    <Modifier TargetProperty="FlotillaManpowerDamageOverTimeIncrease"            Operation="Addition"	Value="$(FlotillaManpowerDamageOverTimeIncreaseVar)"      Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="EMPFlotillaDefense" Operation="Addition" Value="$(EMPFlotillaDefense)" Path="../ClassShip" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower" Operation="Addition" Left="$(EMPFlotillaDefense)" BinaryOperation="Multiplication" Right="200" Path="../ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
 
-  <SimulationDescriptor Name="ModuleSupportAntiCrew1Strategic1"      Type="ModuleSupportAntiCrew">
-    <Modifier TargetProperty="FlotillaShipManpowerKillPerHitPercent" Operation="Addition" Value="0.3" Path="ModuleSupportAntiCrew"/>
-    <Modifier TargetProperty="FlotillaManpowerDamageOverTimeIncreaseVar" Operation="Addition" Value="0.15" Path="ModuleSupportAntiCrew"/>
-    <Modifier TargetProperty="OffensiveMilitaryPower"                       Operation="Percent" Value="0.04" Path="../ClassShip"/>
+  <SimulationDescriptor Name="ModuleSupportEMPFlotillaDefense1" Type="ModuleSupport">
+    <Modifier TargetProperty="EMPFlotillaDefense" Operation="Addition" Value="0.25" Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+
+  </SimulationDescriptor>
+
+  <!--EMP Ship only-->
+  <SimulationDescriptor Name="ModuleSupportEMPShieldDefense1Strategic3" Type="ModuleSupport">
+    <Modifier TargetProperty="EMPShieldDefense" Operation="Addition" Value="0.5" Path="ClassModule" TooltipHidden="true"/>
+    <Modifier TargetProperty="ShieldAbsorption"                 Operation="Addition" Value="100"    Path="ModuleSupportEMPShieldDefense"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportEMPWeaponDefense1Strategic4" Type="ModuleSupport">
+    <Modifier TargetProperty="EMPWeaponDefense" Operation="Addition" Value="0.5" Path="ClassModule" TooltipHidden="true"/>
+    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.1" Path="ModuleSupportEMPWeaponDefense"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- ********************* -->
+  <!-- ** ENGINE MODULES ** -->
+  <!-- ********************* -->
+
+  <!-- Engine Module Class -->
+  <SimulationDescriptor Name="ModuleSupportEngine" Type="ModuleSupportEngine">
+    <Property Name="MaximumMovement"/>
+    <Property Name="Evasion"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="$(MaximumMovement)"                                   Path="../ClassShip" Priority="1"/>
+    <BinaryModifier TargetProperty="Evasion"   Operation="Addition" Left="$(Evasion)" BinaryOperation="Multiplication" Right="2" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportEngine1" Type="ModuleSupportEngine">
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="2" Path="ModuleSupportEngine"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportEngine2" Type="ModuleSupportEngine">
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleSupportEngine"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportEngine4" Type="ModuleSupportEngine">
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="5" Path="ModuleSupportEngine"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportEngine2Strategic2" Type="ModuleSupportEngine">
+    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="4"      Path="ModuleSupportEngine"/>
+    <Modifier TargetProperty="Evasion"                 Operation="Addition"     Value="0.05"    Path="ModuleSupportEngine"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportEngine3Strategic4" Type="ModuleSupportEngine">
+    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="6"      Path="ModuleSupportEngine"/>
+    <Modifier TargetProperty="Evasion"                 Operation="Addition"     Value="0.075"   Path="ModuleSupportEngine"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!--  ********************************************  -->
+  <!--  ** ENHANCER MODULES (ENERGY & PROJECTILE) **  -->
+  <!--  ********************************************  -->
+  
+  <!--  Energy Enhancers  -->
+  <SimulationDescriptor Name="ModuleSupportEnergyEnhancer1" Type="ModuleSupportEnergyEnhancer">
+    <Modifier TargetProperty="DamageEnergy" Operation="Addition" Value="0.20" Path="ModuleSupportEnergyEnhancer"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleSupportEnergyEnhancer2Strategic2" Type="ModuleSupportEnergyEnhancer">
+    <Modifier TargetProperty="DamageEnergy" Operation="Addition" Value="0.25" Path="ModuleSupportEnergyEnhancer"/>
+    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.05" Path="ModuleSupportEnergyEnhancer"/>
+    <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Percent" Value="0.05" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleSupportEnergyEnhancer3Strategic4" Type="ModuleSupportEnergyEnhancer">
+    <Modifier TargetProperty="DamageEnergy" Operation="Addition" Value="0.30" Path="ModuleSupportEnergyEnhancer"/>
+    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.1" Path="ModuleSupportEnergyEnhancer"/>
+    <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Percent" Value="0.06" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="70" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleSupportEnergyEnhancer4Strategic6" Type="ModuleSupportEnergyEnhancer">
+    <Modifier TargetProperty="DamageEnergy" Operation="Addition" Value="0.35" Path="ModuleSupportEnergyEnhancer"/>
+    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.15" Path="ModuleSupportEnergyEnhancer"/>
+    <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Percent" Value="0.07" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="80" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!--  Projectile Enhancers  -->
+  <SimulationDescriptor Name="ModuleSupportProjectileEnhancer1" Type="ModuleSupportProjectileEnhancer">
+    <Modifier TargetProperty="DamageProjectile" Operation="Addition" Value="0.20" Path="ModuleSupportProjectileEnhancer"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleSupportProjectileEnhancer2Strategic1" Type="ModuleSupportProjectileEnhancer">
+    <Modifier TargetProperty="DamageProjectile" Operation="Addition" Value="0.25" Path="ModuleSupportProjectileEnhancer"/>
+    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.05" Path="ModuleSupportProjectileEnhancer"/>
+    <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Percent" Value="0.05" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportAntiCrew2Strategic5"      Type="ModuleSupportAntiCrew">
-    <Modifier TargetProperty="FlotillaShipManpowerKillPerHitPercent" Operation="Addition" Value="0.6" Path="ModuleSupportAntiCrew"/>
-    <Modifier TargetProperty="FlotillaManpowerDamageOverTimeIncreaseVar" Operation="Addition" Value="0.3" Path="ModuleSupportAntiCrew"/>
-    <Modifier TargetProperty="OffensiveMilitaryPower"                       Operation="Percent" Value="0.1" Path="../ClassShip"/>
+  <SimulationDescriptor Name="ModuleSupportProjectileEnhancer3Strategic3" Type="ModuleSupportProjectileEnhancer">
+    <Modifier TargetProperty="DamageProjectile" Operation="Addition" Value="0.30" Path="ModuleSupportProjectileEnhancer"/>
+    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.1" Path="ModuleSupportProjectileEnhancer"/>
+    <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Percent" Value="0.06" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="70" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleSupportProjectileEnhancer4Strategic5" Type="ModuleSupportProjectileEnhancer">
+    <Modifier TargetProperty="DamageProjectile" Operation="Addition" Value="0.35" Path="ModuleSupportProjectileEnhancer"/>
+    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.15" Path="ModuleSupportProjectileEnhancer"/>
+    <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Percent" Value="0.07" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="80" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
-  <!-- ************************** -->
-  <!-- ** ANTI CARRIER MODULES ** -->
-  <!-- ************************** -->
+  <!--  *********************************  -->
+  <!--  ** EXPLORATION (PROBE) MODULES **  -->
+  <!--  *********************************  -->
 
-  <!-- Lock-on Modules -->
-  <SimulationDescriptor Name="ModuleSupportAntiCarrier1Strategic4"      Type="ModuleSupportAntiCarrier">
-    <Modifier TargetProperty="DamageBonusPerTargetCommandPointsFlotilla"    Operation="Addition" Value="0.06" Path="ModuleSupportAntiCarrier"/>
-    <Modifier TargetProperty="OffensiveMilitaryPower"                       Operation="Percent" Value="0.15" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  <SimulationDescriptor Name="ModuleSupportExploration1" Type="ModuleSupportExploration">
+    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="1" Path="ModuleSupportExploration"/>
+    <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="2" Path="ModuleSupportExploration"/>
+    <Modifier TargetProperty="NetShipProbe" Operation="Addition" Value="0.25" Path="ModuleSupportExploration"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
-  <SimulationDescriptor Name="ModuleSupportAntiCarrier2Strategic6"      Type="ModuleSupportAntiCarrier">
-    <Modifier TargetProperty="DamageBonusPerTargetCommandPointsFlotilla" Operation="Addition" Value="0.1" Path="ModuleSupportAntiCarrier"/>
-    <Modifier TargetProperty="OffensiveMilitaryPower"                       Operation="Percent" Value="0.2" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="70" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  <SimulationDescriptor Name="ModuleSupportExploration2Strategic1" Type="ModuleSupportExploration">
+    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="2" Path="ModuleSupportExploration"/>
+    <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="2" Path="ModuleSupportExploration"/>
+    <Modifier TargetProperty="NetShipProbe" Operation="Addition" Value="1" Path="ModuleSupportExploration"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportExploration2Strategic2" Type="ModuleSupportExploration">
+    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="3" Path="ModuleSupportExploration"/>
+    <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="3" Path="ModuleSupportExploration"/>
+    <Modifier TargetProperty="NetShipProbe" Operation="Addition" Value="0.5" Path="ModuleSupportExploration"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- ********************* -->
+  <!-- *** FLAK ENHANCER *** -->
+  <!-- ********************* -->
+
+    <!-- Coordinated Flak -->
+    <SimulationDescriptor Name="ModuleSupportFlakEnhancer"              Type="ModuleSupportFlakEnhancer">
+      <Property Name="FlotillaFlakDamageModifierVar" BaseValue="0"/>
+      <Property Name="FlotillaFlakRangePenalty" BaseValue="0" MinValue="Negative"/>
+      
+      <Modifier TargetProperty="FlotillaFlakDamageModifier"            Operation="Addition"	Value="$(FlotillaFlakDamageModifierVar)"      Path="../ClassShip" TooltipHidden="true"/>
+      <Modifier TargetProperty="FlotillaFlakMediumRangePenalty"           Operation="Addition" Value="$(FlotillaFlakRangePenalty)"         Path="../ClassShip" TooltipHidden="true"/>
+      <Modifier TargetProperty="FlotillaFlakShortRangePenalty"            Operation="Addition" Value="$(FlotillaFlakRangePenalty)"       Path="../ClassShip" TooltipHidden="true"/>
+    </SimulationDescriptor>
+  
+    <SimulationDescriptor Name="ModuleSupportFlakEnhancer1"              Type="ModuleSupportFlakEnhancer">
+      <Modifier TargetProperty="FlotillaFlakDamageModifierVar"            Operation="Addition"	Value="0.15"      Path="ClassModule" TooltipHidden="true"/>
+      <Modifier TargetProperty="FlotillaFlakRangePenalty"                 Operation="Addition" Value="-0.05"         Path="ClassModule" TooltipHidden="true"/>
+      <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    </SimulationDescriptor>
+
+  <!-- *********************************************** -->
+  <!-- ** FLEET ENGINE MODULES (FLEET ACCELERATORS) ** -->
+  <!-- *********************************************** -->
+  <SimulationDescriptor Name="ModuleSupportFleetEngine"            Type="ModuleSupportFleetEngine">
+    <Property Name="MaximumMovementFleet"/>
+    <Property Name="GlobalSpeedBonus"/>
+
+    <Modifier TargetProperty="MaximumMovement"           Operation="Addition" Value="$(MaximumMovementFleet)"       Path="../ClassGarrison/ClassShip"     Priority="1"/>
+    <Modifier TargetProperty="GlobalSpeed"                     Operation="Percent"     Value="$(GlobalSpeedBonus)"                  Path="../ClassGarrison/ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportFleetEngine1Strategic2" Type="ModuleSupportFleetEngine">
+    <Modifier TargetProperty="MaximumMovementFleet"         Operation="Addition"     Value="1"      Path="ModuleSupportFleetEngine"/>
+    <Modifier TargetProperty="GlobalSpeedBonus"                 Operation="Addition"    Value="0.1"    Path="ModuleSupportFleetEngine"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="6" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportFleetEngine2Strategic4" Type="ModuleSupportFleetEngine">
+    <Modifier TargetProperty="MaximumMovementFleet"         Operation="Addition"     Value="2"      Path="ModuleSupportFleetEngine"/>
+    <Modifier TargetProperty="GlobalSpeedBonus"                 Operation="Addition"    Value="0.2"    Path="ModuleSupportFleetEngine"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="75" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportFleetEngine3Strategic6" Type="ModuleSupportFleetEngine">
+    <Modifier TargetProperty="MaximumMovementFleet"         Operation="Addition"     Value="3"      Path="ModuleSupportFleetEngine"/>
+    <Modifier TargetProperty="GlobalSpeedBonus"                 Operation="Addition"    Value="0.3"    Path="ModuleSupportFleetEngine"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="4" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- ***************************** -->
+  <!-- ** FLOTILLA REPAIR MODULES ** -->
+  <!-- ***************************** -->
+
+  <SimulationDescriptor Name="ModuleSupportFlotillaRepair1Strategic3"            Type="ModuleSupportFlotillaRepair">
+      <Modifier TargetProperty="FlotillaRepairAfterBattle" Operation="Addition" Value="0.05" Path="ClassModule"/>
+      <Modifier TargetProperty="FlotillaRepairAfterPhase" Operation="Addition" Value="0.05" Path="ClassModule"/>
+      <Modifier TargetProperty="DefensiveMilitaryPower"  Operation="Percent" Value="0.8" Path="../ClassShip"/>
+      <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="140" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+      <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="6" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportFlotillaRepair1Strategic3TimeLords"            Type="ModuleSupportFlotillaRepair">
+      <Modifier TargetProperty="FlotillaRepairAfterBattle" Operation="Addition" Value="0.1" Path="ClassModule"/>
+      <Modifier TargetProperty="FlotillaRepairAfterPhase" Operation="Addition" Value="0.1" Path="ClassModule"/>
+      <Modifier TargetProperty="DefensiveMilitaryPower"  Operation="Percent" Value="1" Path="../ClassShip"/>
+      <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="140" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+      <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="6" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportFlotillaRepair2Strategic5"            Type="ModuleSupportFlotillaRepair">
+      <Modifier TargetProperty="FlotillaRepairAfterBattle" Operation="Addition" Value="0.15" Path="ClassModule"/>
+      <Modifier TargetProperty="FlotillaRepairAfterPhase" Operation="Addition" Value="0.10" Path="ClassModule"/>
+      <Modifier TargetProperty="DefensiveMilitaryPower"  Operation="Percent" Value="1.2" Path="../ClassShip"/>
+      <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+      <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="6" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!-- ********************************** -->
@@ -876,6 +633,99 @@
     <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent"                 Value="0.2"     Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="150" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+  
+  <!-- ********************* -->
+  <!-- ** JAMMER MODULES ** -->
+  <!-- ********************* -->
+  <SimulationDescriptor Name="ModuleSupportJammer"                 Type="ModuleSupportJammer">
+    <Property Name="TargetingWeightPenalty"                BaseValue="0"/>
+    <Property Name="MaximumMovement"/>
+    <Modifier TargetProperty="TargetingWeightBonus"      Operation="Subtraction" Value="$(TargetingWeightPenalty)"       Path="../ClassShip"         Priority="1"/>
+    <Modifier TargetProperty="MaximumMovement"           Operation="Addition" Value="$(MaximumMovement)"       Path="../ClassShip"     Priority="1"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportJammer1Strategic3"      Type="ModuleSupportJammer">
+    <Modifier TargetProperty="TargetingWeightPenalty" Operation="Addition" Value="10" Path="ModuleSupportJammer"/>
+    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="3"      Path="ModuleSupportJammer"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportJammer2Strategic5"      Type="ModuleSupportJammer">
+    <Modifier TargetProperty="TargetingWeightPenalty" Operation="Addition" Value="20" Path="ModuleSupportJammer"/>
+    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="5"      Path="ModuleSupportJammer"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="55" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- ************************ -->
+  <!-- ** JOURNALIST MODULES ** -->
+  <!-- ************************ -->
+  <SimulationDescriptor Name="ModuleSupportJournalist"                   Type="ModuleSupportJournalist">
+    <Property Name="OpponentRecyclingEmpirePointPerCP"                BaseValue="0"/>
+
+    <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP"      Operation="Multiplication" Value="$(Multiplier)" />
+    <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP"      Operation="Addition" Value="$(OpponentRecyclingEmpirePointPerCP)"       Path="../ClassShip"     Priority="1"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportJournalist1"                  Type="ModuleSupportJournalist">
+    <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP" Operation="Addition" Value="10" Path="ModuleSupportJournalist"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportJournalist2Strategic5"        Type="ModuleSupportJournalist">
+    <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP" Operation="Addition" Value="20" Path="ModuleSupportJournalist"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="70" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- ********************* -->
+  <!-- ** LEECHER MODULES ** -->
+  <!-- ********************* -->
+
+  <!-- Vodyani Leech -->
+  <SimulationDescriptor Name="ModuleLogistics" Type="ModuleLogistics">
+    <Property Name="SystemGrowthTransferredPerTurn" BaseValue="0"/>
+    <Property Name="EmpireMoneyTransferredPerTurn" BaseValue="0"/>
+    <Property Name="EmpireEmpirePointTransferredPerTurn" BaseValue="0"/>
+    <Property Name="OpponentRecyclingEssencePerCP" BaseValue="0"/>
+    <!--  For tooltip  -->
+    <Property Name="LifeforceLeechedPerTurn" BaseValue="0"/>
+    <Modifier TargetProperty="SystemGrowthTransferredPerTurn" Operation="Multiplication" Value="$(Multiplier)" Priority="2"/>
+    <BinaryModifier TargetProperty="LifeforceLeechedPerTurn" Operation="Addition" Left="$(SystemGrowthTransferredPerTurn)" BinaryOperation="Multiplication" Right="2.5"/>
+    <Modifier TargetProperty="LifeforceLeechedPerTurn" Operation="Addition" Value="$(EmpireMoneyTransferredPerTurn)"/>
+    <Modifier TargetProperty="LifeforceLeechedPerTurn" Operation="Addition" Value="$(EmpireEmpirePointTransferredPerTurn)"/>
+    <Modifier TargetProperty="OpponentRecyclingEssencePerCP" Operation="Multiplication" Value="$(Multiplier)" Priority="2"/>
+    <Modifier TargetProperty="OpponentRecyclingEssencePerCP" Operation="Addition" Value="$(OpponentRecyclingEssencePerCP)" Path="../ClassShip" Priority="2"/>
+  </SimulationDescriptor>
+
+  <!--Leech Growth-->
+  <SimulationDescriptor Name="ModuleLogisticsGrowth1"             Type="ModuleLogistics">
+    <Modifier TargetProperty="SystemGrowthTransferredPerTurn"       Operation="Addition"    Value="5"   Priority="1"/>
+    <Modifier TargetProperty="OpponentRecyclingEssencePerCP"        Operation="Addition"    Value="5"   Priority="1"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleLogisticsGrowth2"             Type="ModuleLogistics">
+    <Modifier TargetProperty="SystemGrowthTransferredPerTurn"       Operation="Addition"    Value="10"   Priority="1"/>
+    <Modifier TargetProperty="OpponentRecyclingEssencePerCP"        Operation="Addition"    Value="10"    Priority="1"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleLogisticsGrowth3"             Type="ModuleLogistics">
+    <Modifier TargetProperty="SystemGrowthTransferredPerTurn"       Operation="Addition"    Value="20"   Priority="1"/>
+    <Modifier TargetProperty="OpponentRecyclingEssencePerCP"        Operation="Addition"    Value="20"    Priority="1"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!--Leech Dust-->
+  <SimulationDescriptor Name="ModuleLogisticsEmpireMoney"        Type="ModuleLogistics">
+    <Modifier TargetProperty="EmpireMoneyTransferredPerTurn"        Operation="Addition"    Value="10"/>
+  </SimulationDescriptor>
+
+  <!--Leech Influence-->
+  <SimulationDescriptor Name="ModuleLogisticsEmpireEmpirePoint"  Type="ModuleLogistics">
+    <Modifier TargetProperty="EmpireEmpirePointTransferredPerTurn"  Operation="Addition"    Value="10"/>
   </SimulationDescriptor>
 
   <!-- ********************* -->
@@ -949,6 +799,56 @@
     <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
+  <!-- ****************************** -->
+  <!-- ***** SHIELD REGENERATOR  **** -->
+  <!-- ****************************** -->
+
+  <!-- Shield Regenerator -->
+  <SimulationDescriptor Name="ModuleSupportShieldRegenerate"                         Type="ModuleSupportShieldRegenerate">
+    <Property Name="ShieldRegeneratePerSecond"                BaseValue="0"/>
+
+    <Modifier TargetProperty="ShieldRegeneratePerSecond"      Operation="Multiplication" Value="$(Multiplier)" TooltipHidden="true"/>
+    <Modifier TargetProperty="ShieldRegeneratePerSecond"      Operation="Addition" Value="$(ShieldRegeneratePerSecond)"       Path="../ClassShip"     Priority="1"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportShieldRegenerate1Strategic4"              Type="ModuleSupportShieldRegenerate">
+    <Modifier TargetProperty="ShieldRegeneratePerSecond"       Operation="Addition" Value="150"    Path="ModuleSupportShieldRegenerate"/>
+    <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.1" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportShieldRegenerate2Strategic6"              Type="ModuleSupportShieldRegenerate">
+    <Modifier TargetProperty="ShieldRegeneratePerSecond"       Operation="Addition" Value="250"    Path="ModuleSupportShieldRegenerate"/>
+    <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.2" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="80" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <!-- *************************** -->
+  <!-- ***** SHIELD RELOADER  **** -->
+  <!-- *************************** -->
+  
+  <!-- Shield Reloader -->
+  <SimulationDescriptor Name="ModuleSupportShieldReload" Type="ModuleSupportShieldReload">
+    <Property Name="ShieldRegeneratePerSecondDynamic"                BaseValue="0"/>
+    <Modifier TargetProperty="ShieldRegeneratePerSecondDynamic"      Operation="Addition" Value="$(ShieldRegeneratePerSecondDynamic)"       Path="../ClassGarrison/ClassShip"     Priority="1"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportShieldReload1Strategic4"              Type="ModuleSupportShieldReload">
+    <Modifier TargetProperty="ShieldRegeneratePerSecondDynamic"       Operation="Addition" Value="0.01"    Path="ModuleSupportShieldReload"/>
+    <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.2" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ModuleSupportShieldReload2Strategic6"              Type="ModuleSupportShieldReload">
+    <Modifier TargetProperty="ShieldRegeneratePerSecondDynamic"       Operation="Addition" Value="0.02"    Path="ModuleSupportShieldReload"/>
+    <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.4" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
   <!-- ********************************** -->
   <!-- *****       SIEGE MODULES     **** -->
   <!-- ********************************** -->
@@ -977,9 +877,9 @@
     <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
-  <!-- ********************************** -->
-  <!-- *****      F/B MODULES        **** -->
-  <!-- ********************************** -->
+  <!-- ************************************ -->
+  <!-- ***** SQUADRON ENHANCER MODULES **** -->
+  <!-- ************************************ -->
 
   <SimulationDescriptor Name="ModuleSupportSquadronOffenseEnhancer1Strategic4"              Type="ModuleSupportSquadronOffenseEnhancer">
     <Modifier TargetProperty="SquadronDamage"					Operation="Addition" Value="0.25"    Path="ModuleSupportSquadronOffenseEnhancer"/>
@@ -999,173 +899,5 @@
     <Modifier TargetProperty="FlakEvasionSquadron"				Operation="Addition"	Value="0.15"			Path="ClassModule" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
-
-  <!--################################-->
-  <!--###             EMP          ###-->
-  <!--################################-->
-
-  <!-- EMP Flotilla Defense -->
-  <SimulationDescriptor Name="ModuleSupportEMPFlotillaDefense" Type="ModuleSupport">
-    <Property Name="EMPFlotillaDefense" BaseValue="0"/>
-
-    <Modifier TargetProperty="EMPFlotillaDefense" Operation="Addition" Value="$(EMPFlotillaDefense)" Path="../ClassShip" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower" Operation="Addition" Left="$(EMPFlotillaDefense)" BinaryOperation="Multiplication" Right="200" Path="../ClassShip" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportEMPFlotillaDefense1" Type="ModuleSupport">
-    <Modifier TargetProperty="EMPFlotillaDefense" Operation="Addition" Value="0.25" Path="ClassModule" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-
-  </SimulationDescriptor>
-
-  <!--EMP Ship only-->
-  <SimulationDescriptor Name="ModuleSupportEMPShieldDefense1Strategic3" Type="ModuleSupport">
-    <Modifier TargetProperty="EMPShieldDefense" Operation="Addition" Value="0.5" Path="ClassModule" TooltipHidden="true"/>
-    <Modifier TargetProperty="ShieldAbsorption"                 Operation="Addition" Value="100"    Path="ModuleSupportEMPShieldDefense"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportEMPWeaponDefense1Strategic4" Type="ModuleSupport">
-    <Modifier TargetProperty="EMPWeaponDefense" Operation="Addition" Value="0.5" Path="ClassModule" TooltipHidden="true"/>
-    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.1" Path="ModuleSupportEMPWeaponDefense"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!--################################-->
-  <!--###  Boarding Pod Defense    ###-->
-  <!--################################-->
-  
-  <!-- Boarding Defense -->
-  <SimulationDescriptor Name="ModuleSupportBoardingDefense" Type="ModuleSupport">
-    <Property Name="ManpowerDamageOverTimeDefense" BaseValue="0"/>
-    <Property Name="LocalManpower"/>
-
-    <Modifier TargetProperty="ManpowerDamageOverTimeDefense" Operation="Addition" Value="$(ManpowerDamageOverTimeDefense)" Path="../ClassShip" TooltipHidden="true"/>
-    <Modifier TargetProperty="LocalManpower"                            Operation="Multiplication" Value="$(Multiplier)"         TooltipHidden="true"/>
-    <Modifier TargetProperty="MaximumShipManpower"      Operation="Addition"       Value="$(LocalManpower)"         Path="../ClassShip"     Priority="1"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportBoardingDefense1" Type="ModuleSupport">
-    <Modifier TargetProperty="ManpowerDamageOverTimeDefense" Operation="Addition" Value="0.2" Path="ClassModule" TooltipHidden="true"/>
-    <Modifier TargetProperty="LocalManpower"           Operation="Addition" Value="150"    Path="ModuleSupportBoardingDefense"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- ********************* -->
-  <!-- **** CLOAKING  ****** -->
-  <!-- ********************* -->
-  
-  <SimulationDescriptor Name="ClassModuleInvisibility" Type="ClassModuleInvisibility">
-    <Property Name="AntiVisionStrengthForModule"/>
-    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="0"   Path="../ClassShip" Priority="4"/>
-    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Addition" Value="$(AntiVisionStrengthForModule)"   Path="../ClassShip" Priority="5"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ClassModuleInvisibilityLevel1" Type="ClassModuleInvisibility">
-    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="1" Path="ClassModuleInvisibility" Priority="1"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-  
-  <SimulationDescriptor Name="ClassModuleInvisibilityLevel2" Type="ClassModuleInvisibility">
-    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="2" Path="ClassModuleInvisibility" Priority="2"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="135" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ClassModuleInvisibilityLevel3" Type="ClassModuleInvisibility">
-    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="3" Path="ClassModuleInvisibility" Priority="3"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Cloaked Evasion -->
-  <SimulationDescriptor Name="ModuleInvisibilityFullCombat1" Type="ModuleInvisibilityFullCombat">
-    <Modifier TargetProperty="FleetEvasionFromInvisibility" Operation="Addition" Value="0.2" Path="ModuleInvisibilityFullCombat"/>
-    <!-- This module has both this tag AND the tag for level 3 invisibility, so the below is simply the adjustment needed to switch from the Cloaked Ambusher module -->
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Subtraction" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- ********************* -->
-  <!-- **** DECLOAKING  ****** -->
-  <!-- ********************* -->
-
-  <SimulationDescriptor Name="ModuleInvisibilityDetectionProbeLevel1" Type="ModuleInvisibilityDetectionProbe">
-    <Modifier TargetProperty="MaximumShipDetectionProbeStock" Operation="Addition" Value="2"/>
-    <Modifier TargetProperty="NetShipDetectionProbe" Operation="Addition" Value="1"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleInvisibilityDetectionProbeLevel2" Type="ModuleInvisibilityDetectionProbe">
-    <Modifier TargetProperty="MaximumShipDetectionProbeStock" Operation="Addition" Value="3"/>
-    <Modifier TargetProperty="NetShipDetectionProbe" Operation="Addition" Value="2"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="135" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleInvisibilityDetectionProbeLevel3" Type="ModuleInvisibilityDetectionProbe">
-    <Modifier TargetProperty="MaximumShipDetectionProbeStock" Operation="Addition" Value="4"/>
-    <Modifier TargetProperty="NetShipDetectionProbe" Operation="Addition" Value="3"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- ********************* -->
-  <!-- ** JOURNALIST MODULES ** -->
-  <!-- ********************* -->
-  <SimulationDescriptor Name="ModuleSupportJournalist"                   Type="ModuleSupportJournalist">
-    <Property Name="OpponentRecyclingEmpirePointPerCP"                BaseValue="0"/>
-
-    <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP"      Operation="Multiplication" Value="$(Multiplier)" />
-    <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP"      Operation="Addition" Value="$(OpponentRecyclingEmpirePointPerCP)"       Path="../ClassShip"     Priority="1"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportJournalist1"                  Type="ModuleSupportJournalist">
-    <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP" Operation="Addition" Value="10" Path="ModuleSupportJournalist"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportJournalist2Strategic5"        Type="ModuleSupportJournalist">
-    <Modifier TargetProperty="OpponentRecyclingEmpirePointPerCP" Operation="Addition" Value="20" Path="ModuleSupportJournalist"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="70" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- ********************* -->
-  <!-- ** COLONIZATION MODULES ** -->
-  <!-- ********************* -->
-  <SimulationDescriptor Name="ModuleSupportColonization1"      Type="ModuleSupportColonization">
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportColonization2Strategic1" Type="ModuleSupportColonization">
-      <Modifier TargetProperty="MaximumShipProbeStock"    Operation="Addition" Value="1"      Path="ModuleSupportColonization"/>
-      <Modifier TargetProperty="NetShipProbe"             Operation="Addition" Value="0.25"   Path="ModuleSupportColonization"/>
-      <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportColonization3Strategic3" Type="ModuleSupportColonization">
-      <Modifier TargetProperty="MaximumShipProbeStock"    Operation="Addition" Value="1"      Path="ModuleSupportColonization"/>
-      <Modifier TargetProperty="NetShipProbe"             Operation="Addition" Value="0.5"    Path="ModuleSupportColonization"/>
-      <Modifier TargetProperty="TargetingWeightPenalty"   Operation="Addition" Value="10"     Path="ModuleSupportColonization"/>
-      <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Root Creator Modules -->
-  <SimulationDescriptor Name="ModuleSupportRootCreation1"      Type="ModuleSupportRootCreation">
-    <Modifier TargetProperty="RootingIncreasePerTurn"          Operation="Addition"        Value="0.09"            Path="../ClassShip"     Priority="1"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="ModuleSupportColonizationVenetian" Type="ModuleSupportColonization"/>
-  <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  <SimulationDescriptor Name="ModuleSupportRecolonizer" Type="ModuleSupportColonization"/>
-
-
 
 </Datatable>
