@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+  
+  <!--  *********************************  -->
+  <!--  ** SUPPORT MODULE GENERAL CLASSES **  -->
+  <!--  *********************************  -->
   <SimulationDescriptor Name="ClassModuleAntiCrewExplication"                    Type="ClassModuleAntiCrewExplication"/>
   <SimulationDescriptor Name="ClassModuleBait1Explication"                       Type="ClassModuleBait1Explication"/>
   <SimulationDescriptor Name="ClassModuleBait2Explication"                       Type="ClassModuleBait2Explication"/>
@@ -7,11 +11,35 @@
   <SimulationDescriptor Name="ClassModuleJammer2Explication"                     Type="ClassModuleJammer2Explication"/>
   <SimulationDescriptor Name="ClassModuleStrategicFromSpecialNodeExplication"    Type="ClassModuleStrategicFromSpecialNodeExplication"/>
 
-  <!-- Root Creator Modules -->
-  <SimulationDescriptor Name="ModuleSupportRootCreation1"      Type="ModuleSupportRootCreation">
-    <Modifier TargetProperty="RootingIncreasePerTurn"          Operation="Addition"        Value="0.09"            Path="../ClassShip"     Priority="1"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
-  </SimulationDescriptor>
+  <!-- Support Encounter -->
+	<SimulationDescriptor Name="ClassModuleSupportEncounter" Type="ClassModuleSupport">
+		<Property Name="DamageIncreasePercent"                  BaseValue="0"/>
+		<Property Name="MaximumShield"                          BaseValue="0"  MinValue="Negative"/>
+		<Property Name="HullPlatingAbsorption"                  BaseValue="0"    MinValue="Negative"/>
+		<Property Name="ShieldAbsorption"                       BaseValue="0"    MinValue="Negative"/>
+		<Property Name="DamageBonusPerTargetCommandPoints"      BaseValue="0"  MinValue="Negative"/>
+		<Property Name="RepairAfterBattle"                      BaseValue="0" MinValue="0"/>
+		<Property Name="RepairAfterPhase"                       BaseValue="0" MinValue="0"/>
+		<Property Name="ShipManpowerKillPerHitPercentEncounter" BaseValue="0"/>
+		<Property Name="MoraleBonus"                            BaseValue="0" MinValue="0"/>
+		
+		<Modifier TargetProperty="DamageIncreasePercent"   Operation="Addition"    Value="$(DamageIncreasePercent)"   Path="../ClassFlotilla/ClassShipEncounter"       Priority="1"/>
+
+		<Modifier TargetProperty="MaximumShield"            Operation="Addition" Value="$(FlotillaMaximumShield)"       Path="../ClassFlotilla"     Priority="1"/>
+		<Modifier TargetProperty="ShieldAbsorption"         Operation="Addition" Value="$(FlotillaShieldAbsorption)"       Path="../ClassFlotilla"     Priority="1"/>
+
+		<Modifier TargetProperty="HullPlatingAbsorption"   Operation="Addition" Value="$(FlotillaDmgReductionAgainstPhysical)" Path="../ClassFlotilla/ClassShipEncounter"  Priority="1"/>
+		<Modifier TargetProperty="ShieldAbsorption"     Operation="Addition" Value="$(FlotillaDmgReductionAgainstEnergy)"   Path="../ClassFlotilla/ClassShipEncounter"  Priority="1"/>
+
+		<Modifier TargetProperty="DamageBonusPerTargetCommandPoints"     Operation="Addition" Value="$(DamageBonusPerTargetCommandPointsFlotilla)"   Path="../ClassFlotilla/ClassShipEncounter" />
+
+		<Modifier TargetProperty="RepairAfterBattle"           Operation="Addition" Value="$(FlotillaRepairAfterBattle)"       Path="../ClassFlotilla/ClassShipEncounter"     Priority="1"/>
+		<Modifier TargetProperty="RepairAfterPhase"            Operation="Addition" Value="$(FlotillaRepairAfterPhase)"        Path="../ClassFlotilla/ClassShipEncounter"     Priority="1"/>
+
+		<Modifier TargetProperty="ShipManpowerKillPerHitPercentEncounter"       Operation="Addition" Value="$(FlotillaShipManpowerKillPerHitPercent)"        Path="../ClassFlotilla/ClassShipEncounter"     Priority="1"/>
+
+		<Modifier TargetProperty="MoraleBonus"            Operation="Percent"   Value="$(FlotillaMoraleBonusPercent)"  Path="../ClassGroup"     />
+	</SimulationDescriptor>
 
   <!-- Engine Module Class -->
   <SimulationDescriptor Name="ModuleSupportEngine" Type="ModuleSupportEngine">
@@ -1026,52 +1054,65 @@
     <Modifier TargetProperty="LocalManpower"           Operation="Addition" Value="150"    Path="ModuleSupportBoardingDefense"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
+
+  <!-- ********************* -->
+  <!-- **** CLOAKING  ****** -->
+  <!-- ********************* -->
   
-  <!-- Cloaking
-  Whoever originally designed this made all invisibility modules force their stats onto the ship,
-  leaving no room for fancy modifications like the kind I need to do.-->
   <SimulationDescriptor Name="ClassModuleInvisibility" Type="ClassModuleInvisibility">
     <Property Name="AntiVisionStrengthForModule"/>
     <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="0"   Path="../ClassShip" Priority="4"/>
     <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Addition" Value="$(AntiVisionStrengthForModule)"   Path="../ClassShip" Priority="5"/>
   </SimulationDescriptor>
 
+  <SimulationDescriptor Name="ClassModuleInvisibilityLevel1" Type="ClassModuleInvisibility">
+    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="1" Path="ClassModuleInvisibility" Priority="1"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+  
+  <SimulationDescriptor Name="ClassModuleInvisibilityLevel2" Type="ClassModuleInvisibility">
+    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="2" Path="ClassModuleInvisibility" Priority="2"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="135" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassModuleInvisibilityLevel3" Type="ClassModuleInvisibility">
+    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="3" Path="ClassModuleInvisibility" Priority="3"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
   <!-- Cloaked Evasion -->
   <SimulationDescriptor Name="ModuleInvisibilityFullCombat1" Type="ModuleInvisibilityFullCombat">
     <Modifier TargetProperty="FleetEvasionFromInvisibility" Operation="Addition" Value="0.2" Path="ModuleInvisibilityFullCombat"/>
-    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <!-- This module has both this tag AND the tag for level 3 invisibility, so the below is simply the adjustment needed to switch from the Cloaked Ambusher module -->
+    <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Subtraction" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
-	
-	<!-- Support Encounter -->
-	<SimulationDescriptor Name="ClassModuleSupportEncounter" Type="ClassModuleSupport">
-		<Property Name="DamageIncreasePercent"                  BaseValue="0"/>
-		<Property Name="MaximumShield"                          BaseValue="0"  MinValue="Negative"/>
-		<Property Name="HullPlatingAbsorption"                  BaseValue="0"    MinValue="Negative"/>
-		<Property Name="ShieldAbsorption"                       BaseValue="0"    MinValue="Negative"/>
-		<Property Name="DamageBonusPerTargetCommandPoints"      BaseValue="0"  MinValue="Negative"/>
-		<Property Name="RepairAfterBattle"                      BaseValue="0" MinValue="0"/>
-		<Property Name="RepairAfterPhase"                       BaseValue="0" MinValue="0"/>
-		<Property Name="ShipManpowerKillPerHitPercentEncounter" BaseValue="0"/>
-		<Property Name="MoraleBonus"                            BaseValue="0" MinValue="0"/>
-		
-		<Modifier TargetProperty="DamageIncreasePercent"   Operation="Addition"    Value="$(DamageIncreasePercent)"   Path="../ClassFlotilla/ClassShipEncounter"       Priority="1"/>
 
-		<Modifier TargetProperty="MaximumShield"            Operation="Addition" Value="$(FlotillaMaximumShield)"       Path="../ClassFlotilla"     Priority="1"/>
-		<Modifier TargetProperty="ShieldAbsorption"         Operation="Addition" Value="$(FlotillaShieldAbsorption)"       Path="../ClassFlotilla"     Priority="1"/>
+  <!-- ********************* -->
+  <!-- **** DECLOAKING  ****** -->
+  <!-- ********************* -->
 
-		<Modifier TargetProperty="HullPlatingAbsorption"   Operation="Addition" Value="$(FlotillaDmgReductionAgainstPhysical)" Path="../ClassFlotilla/ClassShipEncounter"  Priority="1"/>
-		<Modifier TargetProperty="ShieldAbsorption"     Operation="Addition" Value="$(FlotillaDmgReductionAgainstEnergy)"   Path="../ClassFlotilla/ClassShipEncounter"  Priority="1"/>
+  <SimulationDescriptor Name="ModuleInvisibilityDetectionProbeLevel1" Type="ModuleInvisibilityDetectionProbe">
+    <Modifier TargetProperty="MaximumShipDetectionProbeStock" Operation="Addition" Value="2"/>
+    <Modifier TargetProperty="NetShipDetectionProbe" Operation="Addition" Value="1"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="90" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
 
-		<Modifier TargetProperty="DamageBonusPerTargetCommandPoints"     Operation="Addition" Value="$(DamageBonusPerTargetCommandPointsFlotilla)"   Path="../ClassFlotilla/ClassShipEncounter" />
+  <SimulationDescriptor Name="ModuleInvisibilityDetectionProbeLevel2" Type="ModuleInvisibilityDetectionProbe">
+    <Modifier TargetProperty="MaximumShipDetectionProbeStock" Operation="Addition" Value="3"/>
+    <Modifier TargetProperty="NetShipDetectionProbe" Operation="Addition" Value="2"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="135" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
 
-		<Modifier TargetProperty="RepairAfterBattle"           Operation="Addition" Value="$(FlotillaRepairAfterBattle)"       Path="../ClassFlotilla/ClassShipEncounter"     Priority="1"/>
-		<Modifier TargetProperty="RepairAfterPhase"            Operation="Addition" Value="$(FlotillaRepairAfterPhase)"        Path="../ClassFlotilla/ClassShipEncounter"     Priority="1"/>
-
-		<Modifier TargetProperty="ShipManpowerKillPerHitPercentEncounter"       Operation="Addition" Value="$(FlotillaShipManpowerKillPerHitPercent)"        Path="../ClassFlotilla/ClassShipEncounter"     Priority="1"/>
-
-		<Modifier TargetProperty="MoraleBonus"            Operation="Percent"   Value="$(FlotillaMoraleBonusPercent)"  Path="../ClassGroup"     />
-	</SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleInvisibilityDetectionProbeLevel3" Type="ModuleInvisibilityDetectionProbe">
+    <Modifier TargetProperty="MaximumShipDetectionProbeStock" Operation="Addition" Value="4"/>
+    <Modifier TargetProperty="NetShipDetectionProbe" Operation="Addition" Value="3"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="180" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+    <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
 
   <!-- ********************* -->
   <!-- ** JOURNALIST MODULES ** -->
@@ -1115,7 +1156,16 @@
     <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
+  <!-- Root Creator Modules -->
+  <SimulationDescriptor Name="ModuleSupportRootCreation1"      Type="ModuleSupportRootCreation">
+    <Modifier TargetProperty="RootingIncreasePerTurn"          Operation="Addition"        Value="0.09"            Path="../ClassShip"     Priority="1"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
+  </SimulationDescriptor>
+
   <SimulationDescriptor Name="ModuleSupportColonizationVenetian" Type="ModuleSupportColonization"/>
   <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip"/>
   <SimulationDescriptor Name="ModuleSupportRecolonizer" Type="ModuleSupportColonization"/>
+
+
+
 </Datatable>
