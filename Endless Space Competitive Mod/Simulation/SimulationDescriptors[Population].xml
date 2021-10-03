@@ -408,7 +408,7 @@
     <!-- Score evolution -->
     <BinaryModifier TargetProperty="NetPopulationScore" Operation="Addition" Left="50"  BinaryOperation="Multiplication" Right="$(NetPopulationScoreModifier)" TooltipHidden="true"/>
     <Modifier TargetProperty="NetPopulationScore"          Operation="Multiplication"                	Value="$(PopulationGrowthMalus)"           		TooltipHidden="true"/>
-    <Modifier TargetProperty="NetPopulationScore"          Operation="Multiplication"                	Value="$(ShouldPopulationGrow)"                	TooltipHidden="true"   Priority="2"/>
+    <!--<Modifier TargetProperty="NetPopulationScore"          Operation="Multiplication"                	Value="$(ShouldPopulationGrow)"                	TooltipHidden="true"   Priority="2"/>-->
 
     <!--Bonus Collection checks if population is > 0-->
     <BinaryModifier TargetProperty="SystemGrowthFromCollection"				Operation="Addition"    Left="$(SystemFIDSIPercentBonusFromCollection)"		BinaryOperation="Multiplication" Right="$(PopulationCountSuperiorToZero)" Path="./ClassColonizedStarSystem"/>
@@ -460,6 +460,25 @@
     <Modifier TargetProperty="ParasitedPopulation" Operation="Addition" Value="$(PopulationCount)" Path="../ClassColonizedPlanet"/>
     <BinaryModifier TargetProperty="Happiness" Operation="Subtraction" Left="5" BinaryOperation="Multiplication" Right="$(PopulationCount)" Path="../ClassColonizedStarSystem"/>
     <Modifier TargetProperty="BonusPopulationFIDSPercent" Operation="Addition" Value="1" Path="ClassPopulationPlanet"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassPopulationStarSystemAffinityTimeLords" Type="ClassPopulationStarSystem">
+    <Modifier TargetProperty="CannotMigrate" Operation="Force" Value="1" TooltipHidden="true"/>
+    <Modifier TargetProperty="NetPopulationScore" Operation="Force" Value="-100" TooltipHidden="true"/>
+    <Modifier TargetProperty="PopulationWithGrowth" Operation="Subtraction" Value="$(PopulationCount)" Path="./ClassStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumSystemProductionStock" Operation="Force" Value="$(MaximumSystemGrowthStock)" Path="../ClassColonizedStarSystem,ColonizedStarSystemStateOutpost" SearchValueFromPath="true" Priority="1" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassPopulationStarSystemAffinityGuardians" Type="ClassPopulationStarSystem">
+    <Modifier TargetProperty="CannotMigrate" Operation="Force" Value="1" TooltipHidden="true"/>
+    <Modifier TargetProperty="NetPopulationScore" Operation="Force" Value="-100" TooltipHidden="true"/>
+    <Modifier TargetProperty="PopulationWithGrowth" Operation="Subtraction" Value="$(PopulationCount)" Path="./ClassStarSystem" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassPopulationStarSystemAffinitySuperGuardians" Type="ClassPopulationStarSystem">
+    <Modifier TargetProperty="CannotMigrate" Operation="Force" Value="1" TooltipHidden="true"/>
+    <Modifier TargetProperty="NetPopulationScore" Operation="Force" Value="-100" TooltipHidden="true"/>
+    <Modifier TargetProperty="PopulationWithGrowth" Operation="Subtraction" Value="$(PopulationCount)" Path="./ClassStarSystem" TooltipHidden="true"/>
   </SimulationDescriptor>
 
 </Datatable>
