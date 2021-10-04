@@ -90,7 +90,6 @@
   <SupportModule Name="ModuleSupportJuggernautVampirilis" Family="DestructionChargeRateBase" Level="1">
     <Cost ResourceName="SystemProduction">120</Cost>
     <InterpreterPrerequisite Flags="Edition">Path(Context, @'ClassShip,ShipRoleCarrier') or Path(Context, @'ClassShip,ShipRoleJuggernaut') or Path(Context, @'ClassShip,ShipRoleBattleship')</InterpreterPrerequisite>
-    <PathPrerequisite Flags="NoMoreThanOneModuleOfThisType,Edition,Disable" Inverted="true">ClassShip/ClassSection/ClassModule,ModuleSupportJuggernautCoreCrackerVampirilis</PathPrerequisite>
     <PathPrerequisite Flags="UnlockAvailability,Edition,Faction,AffinityGameplayVampirilis" Inverted="false">../ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
     <TechnologyPrerequisite Flags="Edition">TechnologyJuggernautFactionModule</TechnologyPrerequisite>
     <SimulationDescriptorReference Name="ClassModuleSupport"/>
@@ -234,7 +233,7 @@
 
   <!--Unfallen 07-->
   <WeaponModule Name="ModuleWeaponBeamQuest4" Type="Beam" Family="BeamStrategic2" Level="4">
-    <Cost ResourceName="SystemProduction">57</Cost>
+    <Cost ResourceName="SystemProduction">50</Cost>
     <Cost ResourceName="Strategic2" Instant="true">1</Cost>
     <!--  ** START AI DATA **  -->
     <!--  Weapons types  -->
@@ -319,9 +318,62 @@
   <SupportModule Name="ModuleQuestUnitedEmpire01" Family="QuestDefenseMatrixUnitedEmpireBase">
     <Cost ResourceName="SystemProduction">50</Cost>
     <TechnologyPrerequisite Flags="Edition">TechnologyQuestUE06</TechnologyPrerequisite>
+    <PathPrerequisite Flags="NoMoreThanOneModuleOfThisType,Edition,Disable" Inverted="true">ClassShip/ClassSection/ClassModule,ClassModuleQuestUnitedEmpire01</PathPrerequisite>
+    <PathPrerequisite Flags="Edition">ClassShip,ShipRoleSupport</PathPrerequisite>
     <SimulationDescriptorReference Name="ClassModuleSupport"/>
+    <SimulationDescriptorReference Name="ClassModuleSupportShipOnly"/>
+    <SimulationDescriptorReference Name="ClassModuleOnlyOnePerShip"/>
     <CategorizedSimulationDescriptors Category="CategoryDefenseMatrix">
       <SimulationDescriptorReference Name="ClassModuleQuestUnitedEmpire01"/>
+    </CategorizedSimulationDescriptors>
+  </SupportModule> 
+
+  <!-- Vodyani Quest Resource Module. The AI doesn't like creating a new family, so grouped with essence -->
+  <MothershipModule Name="ModuleSupportMothershipResourceFactory" Family="SystemSupportFIDS" Level="3">
+    <Cost ResourceName="SystemProduction">100</Cost>
+    <!-- I have no idea why this needs to refer to the Lumeris quest, but it's not my fault -->
+    <PathPrerequisite Flags="Edition" Inverted="false">../ClassEmpire/ClassQuests,CompletedQuestVenetians10</PathPrerequisite>
+    <PathPrerequisite Flags="NoMoreThanOneModuleOfThisType,Edition,Disable" Inverted="true">ClassShip,ShipRoleMothership/ClassSection/ClassModule,ModuleSupportMothershipResourceFactoryEffect</PathPrerequisite>
+    <PathPrerequisite Flags="Edition">../ClassShip,ShipRoleMothership</PathPrerequisite>
+    <SimulationDescriptorReference Name="ClassModuleSupport"/>
+    <SimulationDescriptorReference Name="ClassModuleOnlyOnePerShip"/>
+    <SimulationDescriptorReference Name="ModuleStarSystemEffectFromMothership"/>
+    <!--This strategic tag isn't really true, but it will ensure that it's always displayed in the GUI (and doesn't hide other modules as obsolete) -->
+    <SimulationDescriptorReference Name="ModuleTypeStrategic"/>
+    <!--I don't think this master category does much but placing it an existing one probably helps avoid confusing the AI -->
+    <CategorizedSimulationDescriptors Category="CategoryFIDSILifeforce">
+      <SimulationDescriptorReference Name="ModuleSupportMothershipResourceFactoryEffect"/>
+    </CategorizedSimulationDescriptors>
+    <SystemDescriptor Name="StarSystemEffectFromMothershipResourceFactory"/>
+  </MothershipModule>
+
+  <!-- Vodyani Quest FIDS Per Pop Module. The AI doesn't like creating a new family, so grouped with essence -->
+  <MothershipModule Name="ModuleSupportMothershipFIDSPerPop" Family="SystemSupportFIDS" Level="3">
+    <Cost ResourceName="SystemProduction">100</Cost>
+    <!-- I have no idea why this needs to refer to the Lumeris quest, but it's not my fault -->
+    <PathPrerequisite Flags="Edition" Inverted="false">../ClassEmpire/ClassQuests,CompletedQuestVenetians11</PathPrerequisite>
+    <PathPrerequisite Flags="NoMoreThanOneModuleOfThisType,Edition,Disable" Inverted="true">ClassShip,ShipRoleMothership/ClassSection/ClassModule,ModuleSupportMothershipFIDSPerPopEffect</PathPrerequisite>
+    <PathPrerequisite Flags="Edition">../ClassShip,ShipRoleMothership</PathPrerequisite>
+    <SimulationDescriptorReference Name="ClassModuleSupport"/>
+    <SimulationDescriptorReference Name="ClassModuleOnlyOnePerShip"/>
+    <SimulationDescriptorReference Name="ModuleStarSystemEffectFromMothership"/>
+     <!--This strategic tag isn't really true, but it will ensure that it's always displayed in the GUI (and doesn't hide other modules as obsolete) -->
+     <SimulationDescriptorReference Name="ModuleTypeStrategic"/>
+    <!--I don't think this master category does much but placing it an existing one probably helps avoid confusing the AI -->
+    <CategorizedSimulationDescriptors Category="CategoryFIDSILifeforce">
+      <SimulationDescriptorReference Name="ModuleSupportMothershipFIDSPerPopEffect"/>
+    </CategorizedSimulationDescriptors>
+    <SystemDescriptor Name="StarSystemEffectFromMothershipFIDSPerPop"/>
+  </MothershipModule>
+
+  <!--Lumeris Quest Module-->
+  <SupportModule Name="ModuleExplorationQuestVenetians03" Family="QuestEngineVenetiansBase">
+    <Cost ResourceName="SystemProduction">50</Cost>
+    <PathPrerequisite Flags="Edition" Inverted="false">../ClassEmpire/ClassQuests,VenetiansQuest-Chapter1.2-Military-RewardFake</PathPrerequisite>
+    <SimulationDescriptorReference Name="ClassModuleSupport"/>
+    <CategorizedSimulationDescriptors Category="CategoryEngine">
+      <SimulationDescriptorReference Name="ModuleSupportEngine"/>
+      <SimulationDescriptorReference Name="ClassModuleSupportExplorationQuestVenetians03"/>
     </CategorizedSimulationDescriptors>
   </SupportModule>
 

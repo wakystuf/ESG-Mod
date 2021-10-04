@@ -1,0 +1,1729 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+
+    <!-- ####################################### -->
+    <!-- ##                                   ## -->
+    <!-- ##      UMBRAL CHOIR MAIN QUEST      ## -->
+    <!-- ##                                   ## -->
+    <!-- ####################################### -->
+
+
+
+
+    <!-- ####################################### -->
+    <!--                 Chapter0                -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-Chapter0" Category="MajorQuest" SubCategory="UC" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>Hidden,BeginTurn</Tags>
+
+        <QuestContextSolo/>
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <!--Lesser empire-->
+            <Var VarName="$QuestEmpire">
+                <From Source="$LesserEmpire"/>
+            </Var>
+            <!--Home System of the Empire fulfilling this quest-->
+            <Var VarName="$MyHomeSystem">
+                <From Source="$CurrentEmpire.$HomeStarSystem"/>
+            </Var>
+
+            <!--PREPARATIONS FOR CHAPTER4A-->
+            <!--System to spawn for the individual UC-->
+            <Var VarName="$IndividualUCSystem" IsGlobal="true" AutoLockTargets="true">
+                <First>
+                    <From Source="$Constellations.$StarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassStarSystem,QuestNode,!SystemDesolatePlanet</PathPrerequisite>
+                        </Where>
+                        <OrderBy>
+                            <SortSystemByDistance MinimumDistance="50" OriginVarName="$MyHomeSystem" SortBy="Nearest" MinimumCandidateCount="1" ConsiderFreeMovement="true"/>
+                        </OrderBy>
+                    </From>
+                </First>
+            </Var>
+            <!--Planet the Lesser empire will get-->
+            <Var VarName="$LesserEmpirePlanet">
+                <First>
+                    <From Source="$IndividualUCSystem.$Planets"/>
+                </First>
+            </Var>
+            <!--GUID of the ColonzedStarSystem owned by the Lesser empire-->
+            <Var VarName="$ColonizedStarSystemGUID"/>
+            <!--ColonzedStarSystem owned by the Lesser empire-->
+            <Var VarName="$ColonizedIndividualUCSystem" IsGlobal="true"/>
+            <!--Amount of population to spawn on the planet-->
+            <Var VarName="$PopulationAmount" IntValue="1"/>
+            <!--Affinity of the population to spawn on the planet-->
+            <Var VarName="$PopulationAffinity" StringValue="AffinityUmbralChoir"/>
+            <!--Descriptors to apply to the system-->
+            <Var VarName="$Descriptor02" StringValue="ManpowerStockIncreased"/>
+            <Var VarName="$Descriptor03" StringValue="CannotBeConverted"/>
+            <Var VarName="$Descriptor04" StringValue="LargeFoodAmount"/>
+            <!--Manpower to add to the system-->
+            <Var VarName="$ManpowerAmount" IntValue="1000"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityUmbralChoir,PopulationMajor</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassStarSystem,HomeSystem</PathPrerequisite>
+            <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCUC</DownloadableContentPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step1_Objective1">
+                        <AIHint Category="Minimal"/>
+                        <Sequence>
+
+                            <!--For Chapter4A-->
+                            <Action_Colonize>
+                                <Input_Empire VarName="$QuestEmpire"/>
+                                <Input_Planet VarName="$LesserEmpirePlanet"/>
+                                <Output_ColonizedStarSystemGUID VarName="$ColonizedStarSystemGUID"/>
+                            </Action_Colonize>
+                            <Decorator_EntityCreated>
+                                <Input_GUID VarName="$ColonizedStarSystemGUID"/>
+                                <Output_Entity VarName="$ColonizedIndividualUCSystem"/>
+                            </Decorator_EntityCreated>
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$QuestEmpire"/>
+                                <Input_System VarName="$IndividualUCSystem"/>
+                                <Input_Amount VarName ="$PopulationAmount"/>
+                                <Input_PopulationAffinity VarName ="$PopulationAffinity"/>
+                            </Action_SpawnPopulation>
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor02"/>
+                                <Input_Targets VarName="$ColonizedIndividualUCSystem"/>
+                            </Action_ApplyDescriptor>
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor03"/>
+                                <Input_Targets VarName="$IndividualUCSystem"/>
+                            </Action_ApplyDescriptor>
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor04"/>
+                                <Input_Targets VarName="$ColonizedIndividualUCSystem"/>
+                            </Action_ApplyDescriptor>
+                            <Action_TransferLocalManpower>
+                                <Input_Location VarName="$ColonizedIndividualUCSystem"/>
+                                <Input_Amount VarName="$ManpowerAmount"/>
+                            </Action_TransferLocalManpower>
+
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--             FakeChapter0Bis             -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-FakeChapter0Bis" Category="CompetitiveQuest" SubCategory="UC" MinimumTurn="1" AlternateVersion="UmbralChoirQuest-Chapter0Bis">
+
+        <!--============ TAGS ============-->
+        <Tags>Hidden,BeginTurn</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextMulti ParticipantsVarName="$LivingEmpires">
+            <Distribution Type="FreeForAll"></Distribution>
+        </QuestContextMulti>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="1"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <SubCategoryRepetitionRules NumberOfConcurrentInstances="2"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--Living empires-->
+            <Var VarName="$LivingEmpires">
+                <From Source="$Empires">
+                    <Where>
+                        <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor,!EmpireEliminated</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+            <!--UC empire(s) (to be sure the quest only starts if there is a UC player in the game)-->
+            <Var VarName="$UCEmpires">
+                <From Source="$LivingEmpires">
+                    <Where>
+                        <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityUmbralChoir,PopulationMajor</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+            <!--List of every non-colonized special node (to trigger the real chapter 0 Bis if needed)-->
+            <Var VarName="$EverySpecialNode">
+                <From Source="$Constellations.$SpecialNodes">
+                    <Where>
+                        <FilterSystemByStatus ColonizationState="NotColonized"/>
+                    </Where>
+                </From>
+            </Var>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empires)" AnyTarget="true">
+            <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCUC</DownloadableContentPrerequisite>
+            <!--If chapter 0 Bis has not been started-->
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UmbralChoirQuest-Chapter0Bis" QuestState="InProgress"/>
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UmbralChoirQuest-Chapter0Bis" QuestState="Completed"/>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step1_Objective1">
+                        <Sequence/>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--               Chapter0Bis               -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-Chapter0Bis" Category="CompetitiveQuest" SubCategory="UC" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>Hidden,BeginTurn</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextMulti ParticipantsVarName="$LivingEmpires">
+            <Distribution Type="FreeForAll"></Distribution>
+        </QuestContextMulti>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="1"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <SubCategoryRepetitionRules NumberOfConcurrentInstances="1"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--Living empires-->
+            <Var VarName="$LivingEmpires">
+                <From Source="$Empires">
+                    <Where>
+                        <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor,!EmpireEliminated</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+            <!--Academy-->
+            <Var VarName="$Academy">
+                <Any>
+                    <From Source="$Constellations.$StarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassStarSystem,UniqueStarSystemAcademy</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <InterpretedVar VarName="$NumberOfLivingEmpires" Target="$(Participants)">
+                <Expression>Count(Context, @'EmpireTypeMajor,!EmpireEliminated')</Expression>
+            </InterpretedVar>
+            <!--UC empire(s) (to be sure the quest only starts if there is a UC player in the game)-->
+            <Var VarName="$UCEmpires">
+                <From Source="$LivingEmpires">
+                    <Where>
+                        <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityUmbralChoir,PopulationMajor</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+
+
+            <!--PREPARATIONS FOR CHAPTER2Bis-->
+            <!--System where to spawn the desolate planet-->
+            <Var VarName="$DesolateSystem" IsGlobal="true" AutoLockTargets="true">
+                <First>
+                    <From Source="$Constellations.$StarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassStarSystem,QuestNode</PathPrerequisite>
+                        </Where>
+                        <OrderBy>
+                            <SortSystemByDistance OriginVarName="$Academy" SortBy="Nearest" MinimumCandidateCount="1" ConsiderFreeMovement="true"/>
+                        </OrderBy>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$DefinitionNameDesolatePlanet" StringValue="QuestNodeDesolatePlanet"/>
+            <Var VarName="$Descriptor01" StringValue="SystemDesolatePlanet"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empires)" AnyTarget="true">
+            <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCUC</DownloadableContentPrerequisite>
+            <!--If fake chapter 0 Bis has not been started-->
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UmbralChoirQuest-FakeChapter0Bis" QuestState="InProgress"/>
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UmbralChoirQuest-FakeChapter0Bis" QuestState="Completed"/>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step1_Objective1">
+                        <Sequence>
+
+                            <!--For Chapter2Bis-->
+                            <Action_ApplyStarSystemDefinition>
+                                <Input_DefinitionName VarName="$DefinitionNameDesolatePlanet"/>
+                                <Input_StarSystemNode VarName="$DesolateSystem"/>
+                            </Action_ApplyStarSystemDefinition>
+                            <Action_ApplyDescriptor>
+                                <Input_DescriptorName VarName="$Descriptor01"/>
+                                <Input_Targets VarName="$DesolateSystem"/>
+                            </Action_ApplyDescriptor>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$LivingEmpires"/>
+                                <Input_TargetEntities VarName="$DesolateSystem"/>
+                            </Action_SetInvisibility>
+
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--              Chapter1 Part1             -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-Chapter1-Part1" Category="MajorQuest" SubCategory="UC" MinimumTurn="5">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn</Tags>
+
+        <QuestContextSolo/>
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--Empire fulfilling this quest-->
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <!--OBJECTIVE 1-->
+
+            <!--OBJECTIVE 2-->
+            <!--Amout of systems to discover-->
+            <Var VarName="$SystemObjectiveAmount" IntValue="10"/>
+            <Var VarName="$PercentageAmount" IntValue="50"/>
+
+
+            <!--Quest requirement lowered to only require cordial relations, not assimilation-->
+            <Var VarName="$RelationState" StringValue="DiplomaticRelationStateMinorCordial"/>  
+
+            <!--LOCALIZATION VARIABLE-->
+            <LocalizationVar  LocalizationKey="$SystemObjectiveAmountName"  Source="$SystemObjectiveAmount"/>
+            <LocalizationVar  LocalizationKey="$Percentage"                 Source="$PercentageAmount"/>
+
+            <!--POLITICAL EFFECT-->
+            <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventUmbralChoir1-1Pacifist"/>
+            <Var VarName="$PoliticalEffectScientist" StringValue="PopulationEventUmbralChoir1-1Scientist"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityUmbralChoir,PopulationMajor</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassStarSystem,HomeSystem</PathPrerequisite>
+            <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCUC</DownloadableContentPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ OBJECTIVE SET 0 - Pacifist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective0">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <!--Assimilate a minor faction-->
+                        <Parallel CompletionPolicy="Any">
+                            <Sequence>
+                                <!--Become Cordial-->
+                                <Decorator_DiplomaticRelationChanged Initiator="Empire">                                  
+                                    <Input_DiplomaticRelationState VarName="$RelationState"/>
+                                </Decorator_DiplomaticRelationChanged>
+                                <Action_ChooseOutcome Name="Outcome0"/>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_MinorEmpireIntegrated Initiator="Empire"/>
+                                <Action_ChooseOutcome Name="Outcome0"/>
+                            </Sequence>
+                        </Parallel>
+                        <Outcome Name="Outcome0">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>Chapter1-Part2A</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistStrategicsEra2" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ OBJECTIVE SET 1 - Scientist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective1" StartValue="0" EndValue="$SystemObjectiveAmount">
+                        <AIHint Category="MaximizeExploration" Motivation="0.6"/>
+                        <!--Discover $SystemObjectiveAmount nodes-->
+                        <Parallel CompletionPolicy="First">
+                            <Sequence>
+                                <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
+                                    <Input_MinimumPercentage VarName="$PercentageAmount"/>
+                                </Decorator_ExploredNode>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_ExplorationProgress MinimumState="Revealed">
+                                        <Input_Empire VarName="$CurrentEmpire"/>
+                                        <Input_Percentage VarName="$PercentageAmount"/>
+                                    </Condition_ExplorationProgress>
+                                </Decorator_BeginTurn>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                            <Sequence>
+                                <Loop>
+                                    <Decorator_ExploredNode Initiator="Empire" MinimumState="Revealed" ProgressionIncrement="1"/>
+                                    <Input_Count VarName="$SystemObjectiveAmount"/>
+                                </Loop>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                        </Parallel>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>Chapter1-Part2B</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistMoneyEra3" Picks="1"/> 
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--             Chapter1 Part2A             -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-Chapter1-Part2A" Category="MajorQuest" SubCategory="UC">
+
+        <!--============ TAGS ============-->
+        <Tags>Chapter1-Part2A</Tags>
+
+        <QuestContextSolo/>
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--Empire fulfilling this quest-->
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <!--OBJECTIVE 1-->
+            <!--Amout of Influence currently produced-->
+            <InterpretedVar VarName="$InfluenceAmount" Target ="$(Empire)">
+                <Expression>Floor(Property(Context,@'ClassEmpire',NetEmpireEmpirePoint))</Expression>
+            </InterpretedVar>
+            <!--Amout of Influence to produce-->
+            <InterpretedVar VarName="$InfluenceObjectiveAmount" Target="$(Empire)">
+                <Expression>Floor(Property(Context,@'ClassEmpire',NetEmpireEmpirePoint)) + 30</Expression>
+            </InterpretedVar>
+            <!--Expression to get the currently produced Influence-->
+            <Var VarName="$InfluenceAmountExpression" StringValue="Property(Context,@'ClassEmpire',NetEmpireEmpirePoint)"/>
+
+            <!--LOCALIZATION VARIABLE-->
+            <LocalizationVar  LocalizationKey="$InfluenceObjectiveAmountName" Source="$InfluenceObjectiveAmount"/>
+
+            <!--POLITICAL EFFECT-->
+            <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventUmbralChoir1-2APacifist"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <!--============ OBJECTIVE SET 0 - Pacifist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective0" StartValue ="$InfluenceAmount" EndValue ="$InfluenceObjectiveAmount">
+                        <AIHint Category="MaximizeResource" Motivation="0.6">
+                            <Resource>EmpirePoint</Resource>
+                        </AIHint>
+                        <!--Produce $InfluenceObjectiveAmount Infuence-->
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$InfluenceAmountExpression"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome0"/>
+                        </Sequence>
+                        <Outcome Name="Outcome0">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>Chapter2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter1-Part2APacifist" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--             Chapter1 Part2B             -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-Chapter1-Part2B" Category="MajorQuest" SubCategory="UC">
+
+        <!--============ TAGS ============-->
+        <Tags>Chapter1-Part2B</Tags>
+
+        <QuestContextSolo/>
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--Empire fulfilling this quest-->
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <!--OBJECTIVE 1-->
+            <!--Current maximum Bandwidth-->
+            <InterpretedVar VarName="$MaxBandwidthAmount" Target ="$(Empire)">
+                <Expression>Property(Context,@'ClassEmpire',MaximumEmpireProcessingPowerStock)</Expression>
+            </InterpretedVar>
+            <!--Maximum Bandwidth to reach-->
+            <InterpretedVar VarName="$MaxBandwidthObjectiveAmount" Target="$(Empire)">
+                <Expression>Property(Context,@'ClassEmpire',MaximumEmpireProcessingPowerStock) + 15</Expression>
+            </InterpretedVar>
+            <!--Expression to get the currently produced Influence-->
+            <Var VarName="$MaxBandwidthAmountExpression" StringValue="Property(Context,@'ClassEmpire',MaximumEmpireProcessingPowerStock)"/>
+
+            <!--LOCALIZATION VARIABLE-->
+            <LocalizationVar  LocalizationKey="$MaxBandwidthObjectiveAmountName" Source="$MaxBandwidthObjectiveAmount"/>
+
+            <!--POLITICAL EFFECT-->
+            <Var VarName="$PoliticalEffectScientist" StringValue="PopulationEventUmbralChoir1-2BScientist"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <!--============ OBJECTIVE SET 0 - Scientist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective0" StartValue ="$MaxBandwidthAmount" EndValue ="$MaxBandwidthObjectiveAmount">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <!--<AIHint Category="MaximizeResource" Motivation="0.6">
+                            <Resource>ProcessingPower</Resource>
+                        </AIHint>-->
+                        <!--Reach $MaxBandwidthObjectiveAmount of Bandwidth-->
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$MaxBandwidthAmountExpression"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome0"/>
+                        </Sequence>
+                        <Outcome Name="Outcome0">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>Chapter2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter1-Part2BScientist" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--                 Chapter2                -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-Chapter2" Category="MajorQuest" SubCategory="UC" AlternateVersion="UmbralChoirQuest-Chapter2Bis">
+
+        <!--============ TAGS ============-->
+        <Tags>Chapter2</Tags>
+
+        <QuestContextSolo/>
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--Empire fulfilling this quest-->
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$HomeSystem">
+                <From Source="$CurrentEmpire.$HomeColonizedStarSystem"/>
+            </Var>
+
+            <!--OBJECTIVE 1-->
+            <!--Amout of inhabited Systems-->
+            <InterpretedVar VarName="$SystemAmount" Target="$(Empire)">
+                <Expression>Count(Context,@'ClassEmpire/ClassColonizedStarSystem')</Expression>
+            </InterpretedVar>
+            <!--Amout of Systems to inhabit-->
+            <InterpretedVar VarName="$SystemObjectiveAmount" Target="$(Empire)">
+                <Expression>Count(Context,@'ClassEmpire/ClassColonizedStarSystem') + 2</Expression>
+            </InterpretedVar>
+            <!--Expression to get the amount of inhabited Systems-->
+            <Var VarName="$SystemAmountExpression" StringValue="Count(Context,@'ClassEmpire/ClassColonizedStarSystem')"/>
+
+            <!--OBJECTIVE 2-->
+            <!--list of the systems I own-->
+            <Var VarName="$MySystems">
+                <From Source="$CurrentEmpire.$ColonizedStarSystems.$StarSystem"/>
+            </Var>
+            <!--Special node I have to hack -->
+            <Var VarName="$TargetSpecialNode">
+                <First>
+                    <From Source="$Constellations.$SpecialNodes">
+                        <OrderBy>
+                            <SortSystemByDistance OriginVarName="$HomeSystem" SortBy="Farthest" MinimumDistance="1" MaximumDistance="25" MinimumCandidateCount="1"/>
+                        </OrderBy>
+                    </From>
+                </First>
+            </Var>
+            <!--Quest marker-->
+            <Var VarName="$Marker01"/>
+
+            <!--LOCALIZATION VARIABLE-->
+            <LocalizationVar  LocalizationKey="$SystemObjectiveAmountName" Source="$SystemObjectiveAmount"/>
+            <LocalizationVar  LocalizationKey="$TargetSpecialNodeName" Source="$TargetSpecialNode"/>
+
+            <!--POLITICAL EFFECT-->
+            <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventUmbralChoir2Pacifist"/>
+            <Var VarName="$PoliticalEffectScientist" StringValue="PopulationEventUmbralChoir2Scientist"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empire)">
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UmbralChoirQuest-Chapter2Bis" QuestState="Completed"/>
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UmbralChoirQuest-Chapter2Bis" QuestState="InProgress"/>
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UmbralChoirQuest-Chapter2Bis" QuestState="Failed"/>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ OBJECTIVE SET 0 - Pacifist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective0" StartValue ="$SystemAmount" EndValue ="$SystemObjectiveAmount">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <!--Inhabit $SystemObjectiveAmount Systems-->
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$SystemAmountExpression"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome0"/>
+                        </Sequence>
+                        <Outcome Name="Outcome0">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>Chapter3A</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter2Pacifist" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ OBJECTIVE SET 1 - Scientist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                        <!--Add a quest marker-->
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$TargetSpecialNode"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective1">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <!--Hack through a special node-->
+                        <Sequence>
+                            <Decorator_NodeHacked Initiator="Empire">
+                                <Input_Nodes VarName="$TargetSpecialNode"/>
+                            </Decorator_NodeHacked>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>Chapter3B</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter2Scientist" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--                Chapter2Bis              -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-Chapter2Bis" Category="MajorQuest" SubCategory="UC">
+
+        <!--============ TAGS ============-->
+        <Tags>Chapter2</Tags>
+
+        <QuestContextSolo/>
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--Empire fulfilling this quest-->
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <!--All empires-->
+            <Var VarName="$AllEmpires">
+                <From Source="$MajorEmpires">
+                </From>
+            </Var>
+
+            <!--OBJECTIVE 1-->
+            <!--Amout of inhabited Systems-->
+            <InterpretedVar VarName="$SystemAmount" Target="$(Empire)">
+                <Expression>Count(Context,@'ClassEmpire/ClassColonizedStarSystem')</Expression>
+            </InterpretedVar>
+            <!--Amout of Systems to inhabit-->
+            <InterpretedVar VarName="$SystemObjectiveAmount" Target="$(Empire)">
+                <Expression>Count(Context,@'ClassEmpire/ClassColonizedStarSystem') + 2</Expression>
+            </InterpretedVar>
+            <!--Expression to get the amount of inhabited Systems-->
+            <Var VarName="$SystemAmountExpression" StringValue="Count(Context,@'ClassEmpire/ClassColonizedStarSystem')"/>
+
+            <!--OBJECTIVE 2-->
+            <!--System where the desolate planet is-->
+            <Var IsGlobal="true" VarName="$DesolateSystem"/>
+            <!--Quest marker-->
+            <Var VarName="$Marker01"/>
+
+            <!--LOCALIZATION VARIABLE-->
+            <LocalizationVar  LocalizationKey="$SystemObjectiveAmountName" Source="$SystemObjectiveAmount"/>
+            <LocalizationVar  LocalizationKey="$SpawnedSystemName" Source="$DesolateSystem"/>
+
+            <!--POLITICAL EFFECT-->
+            <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventUmbralChoir2Pacifist"/>
+            <Var VarName="$PoliticalEffectScientist" StringValue="PopulationEventUmbralChoir2Scientist"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empire)">
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UmbralChoirQuest-Chapter2" QuestState="Completed"/>
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UmbralChoirQuest-Chapter2" QuestState="InProgress"/>
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UmbralChoirQuest-Chapter2" QuestState="Failed"/>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ OBJECTIVE SET 0 - Pacifist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective0" StartValue ="$SystemAmount" EndValue ="$SystemObjectiveAmount">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <!--Inhabit $SystemObjectiveAmount Systems-->
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$SystemAmountExpression"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome0"/>
+                        </Sequence>
+                        <Outcome Name="Outcome0">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>Chapter3A</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter2Pacifist" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ OBJECTIVE SET 1 - Scientist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                        <!--Add a quest marker-->
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$DesolateSystem"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective1">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <!--Hack through the spawned node node-->
+                        <Sequence>
+                            <Decorator_NodeHacked Initiator="Empire">
+                                <Input_Nodes VarName="$DesolateSystem"/>
+                            </Decorator_NodeHacked>
+                            <Decorator_BeginTurn></Decorator_BeginTurn>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>Chapter3B</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter2Scientist" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--                Chapter3A                -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-Chapter3A" Category="MajorQuest" SubCategory="UC">
+
+        <!--============ TAGS ============-->
+        <Tags>Chapter3A</Tags>
+
+        <QuestContextSolo/>
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--Empire fulfilling this quest-->
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <!--Home System of the Empire fulfilling this quest-->
+            <Var VarName="$MyHomeSystem">
+                <From Source="$CurrentEmpire.$HomeColonizedStarSystem"/>
+            </Var>
+
+            <!--OBJECTIVE 1-->
+            <!--Ship offensive power to reach-->
+            <InterpretedVar VarName="$OffensivePowerObjectiveAmount" Target="$(Empire)">
+                <Expression>Floor(MaxProperty(Context, @'ClassEmpire/ClassGarrisonFleet',OffensiveMilitaryPower)) + 70</Expression>
+            </InterpretedVar>
+            <!--Constructed ship-->
+            <Var VarName="$Ship"/>
+            <Var VarName="$MinimumShipAmount" IntValue="1"/>
+
+            <!--OBJECTIVE 2-->
+            <!--System the invisible ship must go to-->
+            <Var VarName="$TargetSystem">
+                <First>
+                    <From Source="$Constellations.$StarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassStarSystem,HomeSystem</PathPrerequisite>
+                        </Where>
+                        <OrderBy>
+                            <SortSystemByDistance MaximumDistance="90" OriginVarName="$MyHomeSystem" SortBy="Farthest" MinimumCandidateCount="1"/>
+                        </OrderBy>
+                    </From>
+                </First>
+            </Var>
+            <!--Fleet in orbit-->
+            <Var VarName="$Fleet"/>
+            <Var VarName="$MinimumFleetAmount" IntValue="1"/>
+            <!--Is the fleet invisible-->
+            <Var VarName="$InvisibleFleetPath" StringValue="ClassGarrisonFleet,InvisibilityFleetAction"/>
+            <!--Quest marker-->
+            <Var VarName="$Marker01"/>
+
+            <!--LOCALIZATION VARIABLE-->
+            <LocalizationVar  LocalizationKey="$OffensivePowerObjectiveAmountName" Source="$OffensivePowerObjectiveAmount"/>
+            <LocalizationVar  LocalizationKey="$TargetSystemName" Source="$TargetSystem"/>
+
+            <!--POLITICAL EFFECT-->
+            <Var VarName="$PoliticalEffectMilitarist" StringValue="PopulationEventUmbralChoir3AMilitarist"/>
+            <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventUmbralChoir3APacifist"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ OBJECTIVE SET 0 - Militarist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective0">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <!--Create a ship of $OffensivePowerObjectiveAmount offensive power-->
+                        <Sequence>
+                            <Decorator_ShipConstructed Initiator="Empire">
+                                <Condition_ShipStats>
+                                    <Input_ShipList VarName="$Ship"/>
+                                    <Input_MinimumAmount VarName="$MinimumShipAmount"/>
+                                    <Input_MinimumOffensiveMilitaryPower VarName="$OffensivePowerObjectiveAmount"/>
+                                </Condition_ShipStats>
+                                <Output_Ship VarName="$Ship"/>
+                            </Decorator_ShipConstructed>
+                            <Action_ChooseOutcome Name="Outcome0"/>
+                        </Sequence>
+                        <Outcome Name="Outcome0">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>Chapter4A</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter3AMilitarist" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ OBJECTIVE SET 1 - Pacifist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                        <!--Add a quest marker-->
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$TargetSystem"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective1">
+                        <AIHint Category="Exploration" Motivation ="0.6">
+                            <Input_Var VarName="$TargetSystem"/>
+                        </AIHint>
+                        <!--Have an invisible fleet orbiting $TargetSystem-->
+                        <Sequence>
+                            <Parallel CompletionPolicy="First">
+
+                                <Sequence>
+                                    <Decorator_FleetDocked Initiator="Empire" StopAtFirstFailedCondition="true">
+                                        <Condition_CheckPath>
+                                            <Input_SimulationObject VarName="$Fleet"/>
+                                            <Input_Path VarName="$InvisibleFleetPath"/>
+                                        </Condition_CheckPath>
+                                        <Input_System VarName="$TargetSystem"/>
+                                        <Output_Fleet VarName="$Fleet"/>
+                                    </Decorator_FleetDocked>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                    <Action_ChooseOutcome Name="Outcome1"/>
+                                </Sequence>
+
+                                <Sequence>
+                                    <Decorator_BeginTurn StopAtFirstFailedCondition="true">
+                                        <Condition_FleetStatsOnNode>
+                                            <Input_Nodes VarName="$TargetSystem"/>
+                                            <Input_Empire VarName="$CurrentEmpire"/>
+                                            <Input_MinimumAmount VarName="$MinimumFleetAmount"/>
+                                            <Output_Fleets VarName="$Fleet"/>
+                                        </Condition_FleetStatsOnNode>
+                                        <Condition_CheckPath>
+                                            <Input_SimulationObject VarName="$Fleet"/>
+                                            <Input_Path VarName="$InvisibleFleetPath"/>
+                                        </Condition_CheckPath>
+                                    </Decorator_BeginTurn>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                    <Action_ChooseOutcome Name="Outcome1"/>
+                                </Sequence>
+
+                            </Parallel>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>Chapter4B</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter3APacifist" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--                Chapter3B                -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-Chapter3B" Category="MajorQuest" SubCategory="UC">
+
+        <!--============ TAGS ============-->
+        <Tags>Chapter3B</Tags>
+
+        <QuestContextSolo/>
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--Empire fulfilling this quest-->
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <!--Home System of the Empire fulfilling this quest-->
+            <Var VarName="$MyHomeSystem">
+                <From Source="$CurrentEmpire.$HomeStarSystem"/>
+            </Var>
+            <!--Other empires-->
+            <Var VarName="$OtherEmpires">
+                <From Source="$MajorEmpires">
+                    <Where>
+                        <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor,!EmpireEliminated</PathPrerequisite>
+                        <IsNot EntityVarName="$CurrentEmpire"/>
+                    </Where>
+                </From>
+            </Var>
+
+            <!--OBJECTIVE 1-->
+            <!--Amount of Backdoors currently owned-->
+            <InterpretedVar VarName="$BackdoorAmount" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire',BackdoorCount)</Expression>
+            </InterpretedVar>
+            <!--Amount of Backdoors to reach-->
+            <InterpretedVar VarName="$BackdoorObjectiveAmount" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire',BackdoorCount)+2</Expression>
+            </InterpretedVar>
+            <!--Expression to get the current amout of owned Backdoors-->
+            <Var VarName="$BackdoorAmountExpression" StringValue="Property(Context, @'ClassEmpire',BackdoorCount)"/>
+
+            <!--OBJECTIVE 2-->
+            <!--Colonized Star System the Shade must be placed on-->
+            <Var VarName="$TargetColonizedSystem">
+                <Any>
+                    <From Source="$OtherEmpires.$ColonizedStarSystems">
+                        <Where>
+                            <FilterSystemByDistance OriginVarName="$MyHomeSystem" MaxDistance="35" MinDistance="10"/>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$TargetSystem">
+                <From Source="$TargetColonizedSystem.$StarSystem"/>
+            </Var>
+            <!--Quest marker-->
+            <Var VarName="$Marker01"/>
+
+            <!--LOCALIZATION VARIABLE-->
+            <LocalizationVar  LocalizationKey="$BackdoorObjectiveAmountName" Source="$BackdoorObjectiveAmount"/>
+            <LocalizationVar  LocalizationKey="$TargetSystemName" Source="$TargetSystem"/>
+
+            <!--POLITICAL EFFECT-->
+            <Var VarName="$PoliticalEffectScientist" StringValue="PopulationEventUmbralChoir3BScientist"/>
+            <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventUmbralChoir3BPacifist"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+                <!--============ OBJECTIVE SET 0 - Scientist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective0" StartValue="$BackdoorAmount" EndValue="$BackdoorObjectiveAmount">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <!--Have $BackdoorObjectiveAmount Backdoors-->
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$BackdoorAmountExpression"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome0"/>
+                        </Sequence>
+                        <Outcome Name="Outcome0">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>Chapter4C</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter3BScientist" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ OBJECTIVE SET 1 - Pacifist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                        <!--Add a quest marker-->
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$TargetSystem"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective1">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <!--Add a Shade on system $TargetColonizedSystem-->
+                        <Sequence>
+                            <Parallel CompletionPolicy="First">
+
+                                <!--If the player colonized/haunted the system-->
+                                <Sequence>
+                                    <Decorator_ColonizedSystem Initiator="Empire">
+                                        <Input_System VarName="$TargetSystem"/>
+                                    </Decorator_ColonizedSystem>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                    <Action_ChooseOutcome Name="Outcome1"/>
+                                </Sequence>
+
+                                <!--If the player captured/ghostified the system-->
+                                <Sequence>
+                                    <Decorator_InvadeSystem Initiator="Empire">
+                                        <Input_System VarName="$TargetSystem"/>
+                                        <Input_GroundBattleOutcomeType>Capture</Input_GroundBattleOutcomeType>
+                                    </Decorator_InvadeSystem>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                    <Action_ChooseOutcome Name="Outcome1"/>
+                                </Sequence>
+
+                                <!--If the player adds a shade-->
+                                <Sequence>
+                                    <Decorator_TraitorSpawned Initiator="Empire">
+                                        <Input_ColonizedStarSystem VarName="$TargetColonizedSystem"/>
+                                    </Decorator_TraitorSpawned>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                    <Action_ChooseOutcome Name="Outcome1"/>
+                                </Sequence>
+
+                            </Parallel>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>Chapter4D</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter3BPacifist" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--               Chapter4A                 -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-Chapter4A" Category="MajorQuest" SubCategory="UC">
+
+        <!--============ TAGS ============-->
+        <Tags>Chapter4A,FactionFinalQuest,FactionQuestUmbralChoir</Tags>
+
+        <QuestContextSolo/>
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--Empire fulfilling this quest-->
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <!--Other empires-->
+            <Var VarName="$OtherEmpires">
+                <From Source="$MajorEmpires">
+                    <Where>
+                        <IsNot EntityVarName="$CurrentEmpire"/>
+                    </Where>
+                </From>
+            </Var>
+
+            <!--OBJECTIVE 1-->
+            <!--Spawned system-->
+            <Var IsGlobal="true" VarName="$IndividualUCSystem"/>
+            <!--Spawned colonized star system-->
+            <Var IsGlobal="true" VarName="$ColonizedIndividualUCSystem"/>
+            <!--Planet owned by the Lesser empire-->
+            <Var VarName="$LesserEmpirePlanet">
+                <First>
+                    <From Source="$IndividualUCSystem.$Planets"/>
+                </First>
+            </Var>
+            <!--Quest marker-->
+            <Var VarName="$Marker01"/>
+            <!--Descriptors to remove from the system-->
+            <Var VarName="$Descriptor01" StringValue="CannotBeConverted"/>
+            <Var VarName="$Descriptor02" StringValue="ManpowerStockIncreased"/>
+
+            <!--LOCALIZATION VARIABLE-->
+            <LocalizationVar  LocalizationKey="$TargetSystemName" Source="$IndividualUCSystem"/>
+
+            <!--POLITICAL EFFECT-->
+            <Var VarName="$PoliticalEffectMilitarist" StringValue="PopulationEventUmbralChoir4AMilitarist"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <!--============ OBJECTIVE SET 0 - Militarist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
+                        </Action_TriggerPopulationEvent>
+                        <!--Make the system visible to the player-->
+                        <Action_SetInvisibility Invisible="false">
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_TargetEntities VarName="$IndividualUCSystem"/>
+                        </Action_SetInvisibility>
+                        <!--Add a quest marker-->
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$IndividualUCSystem"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective0">
+                        <AIHint Category="Invade" Motivation="0.6">
+                            <Input_Var VarName="$IndividualUCSystem"/>
+                        </AIHint>
+                        <!--Invade the $IndividualUCSystem system-->
+                        <Sequence>
+                            <Parallel CompletionPolicy="First">
+                                <!--Invade the system-->
+                                <Sequence>
+                                    <Decorator_InvadeSystem Initiator="Empire">
+                                        <Input_System VarName="$IndividualUCSystem"/>
+                                        <Input_AttackerEmpire VarName="$CurrentEmpire"/>
+                                        <Input_GroundBattleOutcomeType>CaptureOrRaze</Input_GroundBattleOutcomeType>
+                                    </Decorator_InvadeSystem>
+                                    <Action_ApplyDescriptor Remove="true">
+                                        <Input_DescriptorName VarName="$Descriptor02"/>
+                                        <Input_Targets VarName="$ColonizedIndividualUCSystem"/>
+                                    </Action_ApplyDescriptor>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                </Sequence>
+                                <!--Destroy the planet-->
+                                <Sequence>
+                                    <Decorator_PlanetDestroyed Initiator="AllEmpires">
+                                        <Input_Planet VarName="$LesserEmpirePlanet"/>
+                                    </Decorator_PlanetDestroyed>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                </Sequence>
+                                <!--Destroy the system-->
+                                <Sequence>
+                                    <Decorator_SystemDestroyed Initiator="AllEmpires">
+                                        <Input_Nodes VarName="$IndividualUCSystem"/>
+                                    </Decorator_SystemDestroyed>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                </Sequence>
+                            </Parallel>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$OtherEmpires"/>
+                                <Input_TargetEntities VarName="$IndividualUCSystem"/>
+                            </Action_SetInvisibility>
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor01"/>
+                                <Input_Targets VarName="$IndividualUCSystem"/>
+                            </Action_ApplyDescriptor>
+                        </Sequence>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter4AMilitarist" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--               Chapter4B                 -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-Chapter4B" Category="MajorQuest" SubCategory="UC">
+
+        <!--============ TAGS ============-->
+        <Tags>Chapter4B,FactionFinalQuest,FactionQuestUmbralChoir</Tags>
+
+        <QuestContextSolo/>
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--Empire fulfilling this quest-->
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <!--OBJECTIVE 1-->
+            <!--Amout of Dust currently produced by trade routes-->
+            <InterpretedVar VarName="$DustAmount" Target="$(Empire)">
+                <Expression>Floor(Property(Context,@'ClassEmpire',TradingRouteIncome_EmpireMoney))</Expression>
+            </InterpretedVar>
+            <!--Amout of Dust to produce by trade routes-->
+            <InterpretedVar VarName="$DustObjectiveAmount" Target ="$(Empire)">
+                <Expression>Max(Floor(Property(Context,@'ClassEmpire',TradingRouteIncome_EmpireMoney))+75,150)</Expression>
+            </InterpretedVar>
+            <!--Expression to get the current amout of Dust currently produced by trade routes-->
+            <Var VarName="$DustAmountExpression" StringValue="Floor(Property(Context,@'ClassEmpire',TradingRouteIncome_EmpireMoney))"/>
+
+            <!--LOCALIZATION VARIABLE-->
+            <LocalizationVar  LocalizationKey="$DustObjectiveAmountName" Source="$DustObjectiveAmount"/>
+
+            <!--POLITICAL EFFECT-->
+            <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventUmbralChoir4BPacifist"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <!--============ OBJECTIVE SET 0 - Pacifist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective0" StartValue="$DustAmount" EndValue="$DustObjectiveAmount">
+                        <AIHint Category="MaximizeTradeCompagny" Motivation="0.6">
+                            <Resource>Science</Resource>
+                        </AIHint>
+                        <!--Produce $DustObjectiveAmountName with your trade routes-->
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$DustAmountExpression"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                        </Sequence>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter4BPacifist" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--               Chapter4C                 -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-Chapter4C" Category="MajorQuest" SubCategory="UC">
+
+        <!--============ TAGS ============-->
+        <Tags>Chapter4C,FactionFinalQuest,FactionQuestUmbralChoir</Tags>
+
+        <QuestContextSolo/>
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--Empire fulfilling this quest-->
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$OtherEmpires">
+                <From Source="$MajorEmpires">
+                    <Where>
+                        <IsNot EntityVarName="$CurrentEmpire"/>
+                    </Where>
+                </From>
+            </Var>
+
+            <!--OBJECTIVE 1-->
+            <Var VarName="$OtherEmpiresHomeSystem">
+                <From Source="$OtherEmpires.$HomeColonizedStarSystem.$StarSystem"/>
+            </Var>
+
+            <!--POLITICAL EFFECT-->
+            <Var VarName="$PoliticalEffectScientist" StringValue="PopulationEventUmbralChoir4CScientist"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <!--============ OBJECTIVE SET 0 - Pacifist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective0">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1"/>
+                        <!--Hack a Home System-->
+                        <Sequence>
+                            <Decorator_NodeHacked NodeFilter="OnlyHackTarget" Initiator="Empire">
+                                <Input_Nodes VarName="$OtherEmpiresHomeSystem"/>
+                            </Decorator_NodeHacked>
+                        </Sequence>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter4CScientist" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- ####################################### -->
+    <!--               Chapter4D                 -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UmbralChoirQuest-Chapter4D" Category="MajorQuest" SubCategory="UC">
+
+        <!--============ TAGS ============-->
+        <Tags>Chapter4D,FactionFinalQuest,FactionQuestUmbralChoir</Tags>
+
+        <QuestContextSolo/>
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--Empire fulfilling this quest-->
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <!--Other empire-->
+            <Var VarName="$OtherEmpires">
+                <From Source="$Empires">
+                    <Where>
+                        <IsNot EntityVarName="$CurrentEmpire"/>
+                    </Where>
+                </From>
+            </Var>
+
+            <!--OBJECTIVE 1-->
+            <!--List of my colonized systems-->
+            <Var VarName="$MySystems">
+                <From Source="$CurrentEmpire.$ColonizedStarSystems"/>
+            </Var>
+            <!--Count of colonized systems I don't own at the start of the quest-->
+            <Var VarName="$OthersSystemsCount">
+                <Count>
+                    <From Source="$Empires.$ColonizedStarSystems">
+                        <Where>
+                            <IsNot EntityVarName="$MySystems"/>
+                        </Where>
+                    </From>
+                </Count>
+            </Var>
+            <!--Amount of systems I have a traitor in-->
+            <Var VarName="$TraitorizedSystemsCount">
+                <Count>
+                    <From Source="$OtherEmpires.$ColonizedStarSystems">
+                        <Where>
+                            <FilterColonizedStarSystemByTraitorPresence TraitorOwnerVarName="$CurrentEmpire"/>
+                        </Where>
+                    </From>
+                </Count>
+            </Var>
+            <!--Expression to get the amount of systems I have a traitor in-->
+            <Var VarName="$TraitorizedSystemsCountExpression" StringValue="$(TraitorizedSystemsCount)"/>
+            <!--Amount of colonized systems I must have a traitor in-->
+            <InterpretedVar VarName="$SystemTargetAmount" Target="$(Empire)">
+                <Expression>Min($(TraitorizedSystemsCount)+2+Floor(Property(Context, @../ClassEmpire, GalaxySize, true)/3),$(OthersSystemsCount))</Expression>
+            </InterpretedVar>
+
+            <!--LOCALIZATION VARIABLE-->
+            <LocalizationVar  LocalizationKey="$SystemTargetAmountName" Source="$SystemTargetAmount"/>
+
+            <!--POLITICAL EFFECT-->
+            <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventUmbralChoir4DPacifist"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+
+                <!--============ OBJECTIVE SET 0 - Pacifist ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!--Apply the political effect of this choice-->
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective0" StartValue="$TraitorizedSystemsCount" EndValue="$SystemTargetAmount">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1"/>
+                        <!--Have at least a traitor on $SystemTargetAmount different systems-->
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_HasTraitors>
+                                    <Input_Empire VarName="$CurrentEmpire"/>
+                                    <Input_MinimumSystemAmount VarName="$SystemTargetAmount"/>
+                                    <Output_Count VarName="$TraitorizedSystemsCount"/>
+                                </Condition_HasTraitors>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$TraitorizedSystemsCountExpression"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                        </Sequence>
+                    </Objective>
+                    <Reward Droplist="DroplistUmbralChoirQuest-Chapter4DPacifist" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+</Datatable>
