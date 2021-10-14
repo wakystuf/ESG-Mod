@@ -90,6 +90,48 @@
   <!-- **** ARK MODULES (VODYANI) **** -->
   <!-- ******************************* -->
 
+  <!-- Vodyani Arks -->
+  <SimulationDescriptor Name="ClassMothership" Type="ClassMothership">
+    <Property Name="IsDetached" BaseValue="1"/>
+    <Property Name="PopulationCount" BaseValue="0" Composition="Sum"/>
+    <Property Name="MaximumPopulationCountOnShip" BaseValue="3"/>
+    <Property Name="SystemGrowthStock" BaseValue="0" IsSealed="true" IsSerializable="true"/>
+    <Property Name="SystemProductionStock" BaseValue="0" IsSealed="true" IsSerializable="true"/>
+    <Property Name="SystemTurnBasedStock" BaseValue="0" IsSealed="true" IsSerializable="true"/>
+    <Property Name="SystemInfluenceStock" BaseValue="50" IsSealed="true" IsSerializable="true"/>
+    <Property Name="SystemProductionStock" BaseValue="0" IsSealed="true" IsSerializable="true"/>
+    <Property Name="SystemInfluenceStock" BaseValue="0" IsSealed="true" IsSerializable="true"/>
+    <Property Name="Quality" BaseValue="1" IsSealed="true"/>
+    <Property Name="QualityNeededForCandidate" BaseValue="0.33"/>
+    <Property Name="CandidateCountPerPopulation" BaseValue="1"/>
+    <Property Name="Penalty" BaseValue="0.75"/>
+    <Property Name="MothershipLevel" BaseValue="0" IsSealed="true" IsSerializable="true"/>
+    <Property Name="MaximumMothershipLevel" BaseValue="0"/>
+    <Property Name="AttachmentPriority"/>
+    <Property Name="TurnsSinceLastPillage" IsSealed="true"/>
+    <Property Name="NetTurnsSinceLastPillage" BaseValue="1"/>
+    <Property Name="MinimumTurnsSinceLastPillage" BaseValue="0"/>
+    <Property Name="MaximumTurnsSinceLastPillage" BaseValue="10"/>
+    <!--  Happiness  -->
+    <Property Name="Happiness" BaseValue="20" MinValue="0" MaxValue="100"/>
+    <Modifier TargetProperty="Happiness" Operation="Multiplication" Value="$(IsDetached)"/>
+    <!--  EMPIRE  -->
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="$(Happiness)" BinaryOperation="Multiplication" Right="$(PopulationCount)" Path="../ClassEmpire,EmpireTypeMajor"/>
+    <BinaryModifier TargetProperty="HappinessSum" Operation="Addition" Left="$(PopulationCount)" BinaryOperation="Multiplication" Right="$(IsDetached)" Path="../ClassEmpire,EmpireTypeMajor"/>
+    <Modifier TargetProperty="GarrisonMoneyUpkeep" Operation="Multiplication" Value="0.1" Path="./ClassGarrison" Priority="2"/>
+    <BinaryModifier TargetProperty="MaximumPopulationCountOnShip" Operation="Addition" Left="$(MothershipLevel)" BinaryOperation="Multiplication" Right="2"/>
+    <Modifier TargetProperty="VisualImportanceScore" Operation="Addition" Value="$(MothershipLevel)" Path="ClassShip"/>
+    <Modifier TargetProperty="ShipHullIndex" Operation="Force" Value="$(MothershipLevel)" Path="ClassShip" Priority="1"/>
+    <BinaryModifier TargetProperty="MaximumHealth" Operation="Addition" Left="5000" BinaryOperation="Multiplication" Right="$(MothershipLevel)" Path="ClassMothership/ClassSectionCore"/>
+    <BinaryModifier TargetProperty="MaximumShipManpower" Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(MothershipLevel)" Path="ClassMothership"/>
+    <BinaryModifier TargetProperty="Penalty" Operation="Subtraction" Left="0.25" BinaryOperation="Multiplication" Right="$(MothershipLevel)"/>
+    <Modifier TargetProperty="Damage" Operation="Subtraction" Value="$(Penalty)" Path="ClassShip"/>
+    <!--  If 2 motherships are in the same fleet, the one which'll attach is: the only one with ActionPoints, the one with highest level, or the one with highest population.  -->
+    <BinaryModifier TargetProperty="AttachmentPriority" Operation="Addition" Left="$(ActionPointStock)" BinaryOperation="Multiplication" Right="10000"/>
+    <BinaryModifier TargetProperty="AttachmentPriority" Operation="Addition" Left="$(MothershipLevel)" BinaryOperation="Multiplication" Right="100"/>
+    <BinaryModifier TargetProperty="AttachmentPriority" Operation="Addition" Left="$(PopulationCount)" BinaryOperation="Multiplication" Right="1"/>
+  </SimulationDescriptor>
+
   <!-- Vodyani Effects from Arks -->
   <SimulationDescriptor Name="ModuleStarSystemEffectFromMothership" Type="ModuleStarSystemEffectFromMothership">
     <Property Name="SystemLifeforceFlat" BaseValue="0"/>
