@@ -29,12 +29,16 @@
 		<Property Name="IsAIControlled"                     BaseValue="0" MaxValue="1" MinValue="0"/>
 		<Property Name="AINumberOfCoreCrackers"             BaseValue="0" MinValue="0"/>
 		<Property Name="AICoreCrackerMaximum"               BaseValue="5"/>
-    <Property Name="ColonizerCount"							        BaseValue="0" MinValue="0"/>
-    <Property Name="DiplomacyReworkDisabled"						BaseValue="2" MaxValue="2"/>
-    
-    <!-- Outposts + Systems + Colonizers -->
-    <Property Name="ColonizeableCount"                  BaseValue="0" MinValue="0"/>
-    <Property Name="PotentiallyOverColonizationThreshold" BaseValue="0" MinValue="0" MaxValue="1" RoundingFunction="Floor"/>
+		<Property Name="ColonizerCount"							        BaseValue="0" MinValue="0"/>
+		<Property Name="DiplomacyReworkDisabled"						BaseValue="2" MaxValue="2"/>
+		
+		<!-- Vodyani Essence GUI Explication -->
+		<Property Name="EmpireLifeforceFromMoneyConversion"  BaseValue="0"/>
+		<Property Name="EmpireLifeforceFromP05L01"  		 BaseValue="0"/>
+
+		<!-- Outposts + Systems + Colonizers -->
+		<Property Name="ColonizeableCount"                  BaseValue="0" MinValue="0"/>
+		<Property Name="PotentiallyOverColonizationThreshold" BaseValue="0" MinValue="0" MaxValue="1" RoundingFunction="Floor"/>
     
 		<!--Seek the Unique Rework-->
 		<Property Name="OwnedUniquePlanetAndGovernor"           BaseValue="0" MinValue="0" Composition="Sum" />
@@ -1128,6 +1132,9 @@
 		<Modifier TargetProperty="EmpireManpower" Operation="Addition" Value="$(EmpireLifeforceForManpower)" Path="ClassEmpire"/>
 		<BinaryModifier TargetProperty="EmpireLifeforceUpkeep" Operation="Addition" Left="$(EmpireLifeforceForManpower)" BinaryOperation="Multiplication" Right="0.5" Path="ClassEmpire"/>
 
+		<!-- Vodyani Essence GUI Explication -->
+		<Modifier TargetProperty="EmpireLifeforce" Operation="Addition" Value="$(EmpireLifeforceFromMoneyConversion)"/>
+		<Modifier TargetProperty="EmpireLifeforce" Operation="Addition" Value="$(EmpireLifeforceFromP05L01)"/>
 
 		<!-- Empire refined + empire upkeep = empire net -->
 		<Modifier TargetProperty="EmpireMoneyUpkeep" Operation="Addition" Value="$(GarrisonMoneyUpkeep)" Path="ClassEmpire"/>

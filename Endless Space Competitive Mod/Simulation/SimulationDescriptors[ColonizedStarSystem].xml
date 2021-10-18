@@ -86,6 +86,9 @@
 		<!-- Lumeris Influence Effect for Tooltip -->
 		<Property Name="SystemEmpirePointVenetians"                BaseValue="0"/>
 		
+		<!-- Essence Explication in GUI -->
+		<Property Name="SystemLifeforceFromP05L01"  BaseValue="0"/>		
+
 		<!-- Utopian Architecture -->
 		<Property Name="UtopianUnhappyReduction"					BaseValue="0" MinValue="Negative"/>
 
@@ -899,7 +902,6 @@
 
 
 		<BinaryModifier TargetProperty="NetSystemLifeforce"             Operation="Addition"    Left="$(SystemLifeforce)"             BinaryOperation="Subtraction"    Right="$(SystemLifeforceUpkeep)"/>
-		<Modifier TargetProperty="SystemLifeforce"          Operation="Addition"    Value="$(SystemLifeforceFromMoneyConversion)"       TooltipHidden="false"  />
 
 		<Modifier TargetProperty="SystemGrowthMalus"    Operation="Subtraction"     Value="$(GrowthMalusPopulationCount)"/>
 		<Modifier TargetProperty="SystemGrowthMalus"    Operation="Division"        Value="$(Population)" />
@@ -1817,7 +1819,10 @@
 		<BinaryModifier TargetProperty="PassiveStarSystemExperienceRewardForGovernors"  Operation="Multiplication"  Left="$(Population)" BinaryOperation="Division" Right="2" Path="ClassStarSystem" Priority="8"/>
 		<Modifier       TargetProperty="ExperiencePerTurn"                              Operation="Addition"        Value="$(PassiveStarSystemExperienceRewardForGovernors)" Path="ClassStarSystem/ClassHero"/>
 
-		<Modifier TargetProperty="NetSystemLifeforce"       Operation="Addition" Value="$(NetSystemLifeforce)"      Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+		<Modifier TargetProperty="NetSystemLifeforce"                 Operation="Addition" Value="$(NetSystemLifeforce)"                 Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+		<Modifier TargetProperty="EmpireLifeforceFromMoneyConversion" Operation="Addition" Value="$(SystemLifeforceFromMoneyConversion)" Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+		<Modifier TargetProperty="EmpireLifeforceFromP05L01"          Operation="Addition" Value="$(SystemLifeforceFromP05L01)"          Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+
 		<Modifier TargetProperty="NetSystemGrowth"          Operation="Addition" Value="$(NetSystemGrowth)"         Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
 		<Modifier TargetProperty="NetSystemProduction"      Operation="Addition" Value="$(NetSystemProduction)"     Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
 		<Modifier TargetProperty="NetSystemMoney"           Operation="Addition" Value="$(NetSystemMoney)"          Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
