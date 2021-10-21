@@ -4,4 +4,78 @@
         <Modifier   TargetProperty="EmpireResearch"  Operation="Percent" Value="-0.3" Path="../ClassEmpire" ValueMustBePositive="true"/>
         <Modifier TargetProperty="HackingSpeedMultiplierFromTimeBubble" Operation="Percent" Value="-1" TooltipHidden="true"/>
     </SimulationDescriptor>
+
+    <SimulationDescriptor Name="TimeBubbleSlowingTime" Type="TimeBubble">
+        <!--  Star System effects  -->
+        <BinaryModifier TargetProperty="SystemFIDSIPercentFromTimeBubble" Operation="Addition" Left="-0.25" BinaryOperation="Multiplication" Right="$(CanBeSlowed)" SearchValueFromPath="true" Path="ClassStarSystem"/>
+        <Modifier TargetProperty="PlanetDepletionMultiplier" Operation="Addition" Value="-0.5" Path="ClassStarSystem/ClassPlanet" Priority="1"/>
+        <Modifier TargetProperty="NetDustOverTime" Operation="Percent" Value="-0.5" Path="ClassStarSystem/StarSystemImprovementUniqueTimeLords" TooltipHidden="true"/>
+        <!--  Fleet/hangar effects   -->
+        <Modifier TargetProperty="AssignmentCooldownDecrementPerTurn" Operation="Percent" Value="-0.5" Path="ClassGarrison/ClassHero"/>
+        <Modifier TargetProperty="ExperienceMultiplier" Operation="Addition" Value="-0.5" Path="ClassGarrison/ClassHero"/>
+        <Modifier TargetProperty="ExperiencePerTurn" Operation="Percent" Value="-0.5" Path="ClassGarrison/ClassShip"/>
+        <Modifier TargetProperty="AssignmentCooldownDecrementPerTurn" Operation="Percent" Value="-0.5" Path="ClassStarSystem/ClassGarrison/ClassHero" TooltipHidden="true"/>
+        <Modifier TargetProperty="ExperienceMultiplier" Operation="Addition" Value="-0.5" Path="ClassStarSystem/ClassGarrison/ClassHero" TooltipHidden="true"/>
+        <Modifier TargetProperty="ExperiencePerTurn" Operation="Percent" Value="-0.5" Path="ClassStarSystem/ClassGarrison/ClassShip" TooltipHidden="true"/>
+        <Modifier TargetProperty="HackingSpeedMultiplierFromTimeBubble" Operation="Percent" Value="-0.25" Path="FAKE,ClassStarSystem"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="TimeBubbleFreezeTime" Type="TimeBubble">
+        <!--  Star System effects  -->
+        <BinaryModifier TargetProperty="NetSystemEmpirePoint" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetSystemGrowth" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetSystemInfluence" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetSystemLifeforce" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetSystemMigrationGrown" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetSystemMoney" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetSystemProduction" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetSystemResearch" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetSystemProduction" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="ShouldTakeGrowthForManpower" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <Modifier TargetProperty="PlanetDepletionPerTurn" Operation="Force" Value="0" Path="ClassStarSystem/ClassPlanet" Priority="2" TooltipHidden="true"/>
+        <Modifier TargetProperty="NetDustOverTime" Operation="Force" Value="0" Path="ClassStarSystem/StarSystemImprovementUniqueTimeLords" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetStrategic1" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetStrategic2" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetStrategic3" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetStrategic4" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetStrategic5" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetStrategic6" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury1"  Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury2"  Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury3"  Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury1"  Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury1"  Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury4"  Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury1"  Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury5"  Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury6"  Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury7"  Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury8"  Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury9"  Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury10" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury11" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury12" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury13" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury11" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury11" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury14" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury11" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury15" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury16" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury17" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury18" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury20" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury21" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury22" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury23" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <BinaryModifier TargetProperty="NetLuxury24" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(CanBeSlowed)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" Priority="1000" TooltipHidden="true"/>
+        <!--  Fleet/hangar effects   -->
+        <Modifier TargetProperty="NetStrategic1" Operation="Force" Value="0" Path="ClassGarrison" Priority="1000" TooltipHidden="true"/>
+        <Modifier TargetProperty="NetStrategic2" Operation="Force" Value="0" Path="ClassGarrison" Priority="1000" TooltipHidden="true"/>
+        <Modifier TargetProperty="NetStrategic3" Operation="Force" Value="0" Path="ClassGarrison" Priority="1000" TooltipHidden="true"/>
+        <Modifier TargetProperty="NetStrategic4" Operation="Force" Value="0" Path="ClassGarrison" Priority="1000" TooltipHidden="true"/>
+        <Modifier TargetProperty="NetStrategic5" Operation="Force" Value="0" Path="ClassGarrison" Priority="1000" TooltipHidden="true"/>
+        <Modifier TargetProperty="NetStrategic6" Operation="Force" Value="0" Path="ClassGarrison" Priority="1000" TooltipHidden="true"/>
+        <Modifier TargetProperty="HackingSpeedMultiplierFromTimeBubble" Operation="Percent" Value="-1" Path="FAKE,ClassStarSystem"/>
+    </SimulationDescriptor>
 </Datatable>

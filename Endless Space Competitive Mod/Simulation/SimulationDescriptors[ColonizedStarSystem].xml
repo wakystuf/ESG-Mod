@@ -20,7 +20,8 @@
 		<Property Name="DeploymentLimitRatio"				BaseValue="1" MaxValue="1.5" MinValue="0.01"/>
 		<Property Name="ManpowerCapacityWithGhosts"			BaseValue="0"/>
 		<Property Name="EmpirePointFromIndustryConversion"	BaseValue="0"/>
- 
+		<Property Name="CanBeSlowed"						BaseValue="1"/>
+
 		<!-- Food rework -->
 		<Property Name="SystemGrowthStockNextTurn"			 BaseValue="0" MinValue="0"/>
 		<Property Name="SystemGrowthStockRequiredForNextPop" BaseValue="0" MinValue="0"/>
@@ -86,6 +87,9 @@
 		<!-- Lumeris Influence Effect for Tooltip -->
 		<Property Name="SystemEmpirePointVenetians"                BaseValue="0"/>
 		
+		<!-- Essence Explication in GUI -->
+		<Property Name="SystemLifeforceFromP05L01"  BaseValue="0"/>		
+
 		<!-- Utopian Architecture -->
 		<Property Name="UtopianUnhappyReduction"					BaseValue="0" MinValue="Negative"/>
 
@@ -899,7 +903,6 @@
 
 
 		<BinaryModifier TargetProperty="NetSystemLifeforce"             Operation="Addition"    Left="$(SystemLifeforce)"             BinaryOperation="Subtraction"    Right="$(SystemLifeforceUpkeep)"/>
-		<Modifier TargetProperty="SystemLifeforce"          Operation="Addition"    Value="$(SystemLifeforceFromMoneyConversion)"       TooltipHidden="false"  />
 
 		<Modifier TargetProperty="SystemGrowthMalus"    Operation="Subtraction"     Value="$(GrowthMalusPopulationCount)"/>
 		<Modifier TargetProperty="SystemGrowthMalus"    Operation="Division"        Value="$(Population)" />
@@ -1480,6 +1483,7 @@
 		<Property Name="SystemFIDSIFlat"                                  MinValue="Negative"/>
 		<Property Name="SystemFIDSIFlatDevelopment"                       MinValue="Negative"/>
 		<Property Name="SystemFIDSIPercentFromTimeBubble"                 MinValue="Negative"/>
+		<Property Name="CanBeSlowed"									  BaseValue="1"/>
 		<Property Name="SystemFIDSIPercentFromImprovementUniqueTemplars"  MinValue="Negative"/>
 
 		<Property Name="SystemFIDSPercent"                 MinValue="Negative"/>
@@ -1698,6 +1702,7 @@
 		<Modifier       TargetProperty="SystemProduction"       Operation="Addition"            Value="$(PlanetIndustryConverted)"				    Path="ClassStarSystem"/>
 		<Modifier       TargetProperty="SystemProduction"       Operation="Multiplication"      Value="$(SystemProductionHissho)"	                Path="ClassStarSystem,HasObedience"/>
 		<Modifier       TargetProperty="SystemProduction"       Operation="Percent"             Value="$(SystemFIDSIPercent)"					    Path="ClassStarSystem"/>
+		<Modifier       TargetProperty="SystemProduction"       Operation="Percent"             Value="$(SystemFIDSIPercentDevelopment)"			Path="ClassStarSystem"/>
 		<Modifier       TargetProperty="SystemProduction"       Operation="Percent"             Value="$(SystemHeroFIDSIPercent)"					Path="ClassStarSystem"/>
 		<Modifier       TargetProperty="SystemProduction"       Operation="Percent"             Value="$(SystemFIDSPercent)"					    Path="ClassStarSystem"/>
 		<Modifier       TargetProperty="SystemProduction"       Operation="Percent"             Value="$(SystemFIDSIPercentFromTimeBubble)"         Path="ClassStarSystem"/>
@@ -1816,7 +1821,10 @@
 		<BinaryModifier TargetProperty="PassiveStarSystemExperienceRewardForGovernors"  Operation="Multiplication"  Left="$(Population)" BinaryOperation="Division" Right="2" Path="ClassStarSystem" Priority="8"/>
 		<Modifier       TargetProperty="ExperiencePerTurn"                              Operation="Addition"        Value="$(PassiveStarSystemExperienceRewardForGovernors)" Path="ClassStarSystem/ClassHero"/>
 
-		<Modifier TargetProperty="NetSystemLifeforce"       Operation="Addition" Value="$(NetSystemLifeforce)"      Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+		<Modifier TargetProperty="NetSystemLifeforce"                 Operation="Addition" Value="$(NetSystemLifeforce)"                 Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+		<Modifier TargetProperty="EmpireLifeforceFromMoneyConversion" Operation="Addition" Value="$(SystemLifeforceFromMoneyConversion)" Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+		<Modifier TargetProperty="EmpireLifeforceFromP05L01"          Operation="Addition" Value="$(SystemLifeforceFromP05L01)"          Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+
 		<Modifier TargetProperty="NetSystemGrowth"          Operation="Addition" Value="$(NetSystemGrowth)"         Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
 		<Modifier TargetProperty="NetSystemProduction"      Operation="Addition" Value="$(NetSystemProduction)"     Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
 		<Modifier TargetProperty="NetSystemMoney"           Operation="Addition" Value="$(NetSystemMoney)"          Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+
+
+    <!-- ####################################### -->
+    <!--      UNFALLEN QUEST Chapter0       -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="UnfallenQuest-Chapter0" Category="Test" SubCategory="">
+
+        <!--============ TAGS ============-->
+        <Tags>Hidden, BeginTurn</Tags>
+
+        <QuestContextSolo/>
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$HomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>
+                        <PathPrerequisite Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+            <Var VarName="$LavaSystem" IsGlobal="true" AutoLockTargets="true">
+                <First>
+                    <From Source="$AllStarSystems">
+                        <OrderBy>
+                            <SortSystemByDistance OriginVarName="$HomeSystem" SortBy="Nearest" MinimumDistance="1" MinimumCandidateCount="1" ConsiderFreeMovement="true"/>
+                        </OrderBy>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$NewSystemName" StringValue="%UnfallenQuest-Chapter0System_Title"/>
+            <Var VarName="$DefinitionName" StringValue="QuestNodeENFER"/>
+            <InterpretedVar VarName="$Four" Target="$(Empire)">
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*4</Expression>
+            </InterpretedVar>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityUnfallen,PopulationMajor</PathPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step1_Objective1">
+                        <Sequence>
+                            <Action_ApplyStarSystemDefinition>
+                                <Input_DefinitionName VarName="$DefinitionName"/>
+                                <Input_StarSystemNode VarName="$LavaSystem"/>
+                            </Action_ApplyStarSystemDefinition>
+                            <Action_RenameSystem>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_System VarName="$LavaSystem"/>
+                                <Input_Name VarName="$NewSystemName"/>
+                            </Action_RenameSystem>
+                            <Loop>
+                                <Decorator_BeginTurn/>
+                                <Input_Count VarName="$Four"/>
+                            </Loop>                            
+                        </Sequence>                        
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+    
+
+</Datatable>
