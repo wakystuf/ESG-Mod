@@ -1262,4 +1262,134 @@
 			</Step>
 		</Steps>
 	</QuestDefinition>
+
+
+	<!-- ============================ -->
+	<!--   A Hero Proven in Battle    -->
+	<!-- ============================ -->
+	<QuestDefinition Name="a_hero_proven_in_battle" Category="Quest" SubCategory="Exploration" MinimumTurn="54" TriggeringProbability="1" CheckRandom="false">
+		<!--  ============ TAGS ============  -->
+		<Tags>BeginTurn</Tags>
+		<QuestContextSolo/>
+		<RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0"/>
+		<!--  ========= VARIABLES ==========  -->
+		<Vars>
+			<Var VarName="$CurrentEmpire">
+				<From Source="$Empire"/>
+			</Var>
+			<Var VarName="$Timer"/>
+			<Var VarName="$DestroyedNode"/>
+			<Var VarName="$HeroShip" StringValue="ShipRoleHero"/>
+			<Var VarName="$MinAmountHero" IntValue="1"/>
+			<Var VarName="$MinHeroLevel" IntValue="1"/>
+			<Var VarName="$ShipsCount" IntValue="1"/>
+			<InterpretedVar VarName="$Duration" Target="$(Empire)">
+				<Expression>ceil((Property(Context, @../ClassEmpire, GalaxySize, true) / 2) * 20)</Expression>
+			</InterpretedVar>
+			<Var VarName="$ShipsDestroyedCounter" IntValue="1"/>
+			<Var VarName="$Expression" StringValue="$(ShipsDestroyedCounter) ge 3"/>
+			<LocalizationVar LocalizationKey="$DurationName" Source="$Duration"/>
+			<LocalizationVar LocalizationKey="$ShipsCountName" Source="$ShipsCount"/>
+			<LocalizationVar LocalizationKey="$ShipsDestroyedCounterName" Source="$ShipsDestroyedCounter"/>
+		</Vars>
+		<!--  ======= PREREQUISITES ========  -->
+		<Prerequisites Target="$(Empire)">
+			<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCDarkMatter</DownloadableContentPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">TutorialModeBeginner</PathPrerequisite>
+			<InterpreterPrerequisite Flags="Prerequisite">(Property(Context, @'ClassEmpire', NumberOfNonEliminatedMajorEmpires) - 1) ge Property(Context, @'ClassEmpire', UnknownCount)</InterpreterPrerequisite>
+			<InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire', CurrentTurn) ge 54 </InterpreterPrerequisite>
+		</Prerequisites>
+		<!--  =========== STEPS ============  -->
+		<Steps>
+			<Step Name="Step1">
+			<!-- ============ DEFEAT THE ENEMY FLEET ============ -->
+			<ObjectiveSet>
+				<StartActions>
+					<Action_StartTimer>
+						<Input_Duration VarName="$Duration"/>
+						<Output_Timer VarName="$Timer"/>
+					</Action_StartTimer>
+				</StartActions>
+				<Objective Name="Step1_Objective1" StartValue="0" EndValue="$ShipsCount">
+				<AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1"/>
+					<Parallel CompletionPolicy="First">
+						<Sequence>
+							<Decorator_BeginTurn>
+								<Condition_TimerEnded>
+									<Input_Timer VarName="$Timer"/>
+								</Condition_TimerEnded>
+							</Decorator_BeginTurn>
+							<Action_Fail/>
+						</Sequence>
+						<!-- if player uses obliterator to kill other hero ship -->
+						<!-- 
+									<Sequence>
+										<Loop Count="1000000">
+										<Decorator_SystemDestroyed Initiator="Empire">
+											<Output_Node VarName="$DestroyedNode"/>
+										</Decorator_SystemDestroyed>
+										<Decorator_ShipDestroyed CheckShipHadHero="true" ProgressionIncrement="1">
+											<Condition_IsFleetDockedOnNode>
+											<Input_Systems VarName="$DestroyedNode"/>
+											</Condition_IsFleetDockedOnNode>
+										</Decorator_ShipDestroyed>
+										<Action_SetProgress IsIncrement="true">
+											<Input_Value VarName="$ShipsDestroyedCounter"/>
+										</Action_SetProgress>
+										</Loop>
+									</Sequence>
+									-->
+						<Sequence>
+							<Loop>
+								<Decorator_HeroInjured ProgressionIncrement="1" HeroAssignationFilter="Fleet">
+									<Input_AttackerEmpire VarName="$CurrentEmpire"/>
+								</Decorator_HeroInjured>
+								<!-- 
+												<Action_SetProgress IsIncrement="true">
+													<Input_Value VarName="$ShipsDestroyedCounter"/>
+												</Action_SetProgress>
+												-->
+								<Input_Count VarName="$ShipsCount"/>
+							</Loop>
+						</Sequence>
+						<!-- 
+									<Sequence>
+										<Loop Count="100000">
+										<Decorator_ShipDestroyed CheckShipHadHero="true" Initiator="Empire" ProgressionIncrement="1">
+											<Condition_HasHeroes HeroAssignationFilter="Fleet">
+											<Input_Empire VarName="$CurrentEmpire"/>
+											<Input_MinimumAmount VarName="$MinAmountHero"/>
+											<Input_MinimumLevel VarName="$MinHeroLevel"/>
+											</Condition_HasHeroes>
+										</Decorator_ShipDestroyed>
+										</Loop>
+									</Sequence>
+									-->
+						<!--  Check a battle against an enemy fleet commanded by an hero has ended
+									<Sequence>
+										<Loop Count="1000000">                  
+										<Decorator_BattleEnded CheckFleetHadHero="true">
+											<Input_Empire VarName="$CurrentEmpire"/>
+											<Output_EnemyDestroyedShipsCount VarName="$ShipsDestroyedCounter"/>
+										</Decorator_BattleEnded>
+										<Action_SetProgress IsIncrement="true">
+											<Input_Value VarName="$ShipsDestroyedCounter"/>
+										</Action_SetProgress>
+										</Loop>
+									</Sequence>
+						
+									<Sequence>
+										<Decorator_PostEndTurn>
+										<Condition_IsProgressionComplete/>
+										</Decorator_PostEndTurn>
+									</Sequence>
+									-->
+					</Parallel>
+				</Objective>
+			</ObjectiveSet>
+			<Reward Droplist="Reward_A_Hero_Proven_In_Battle" Picks="1"/>
+			<!--  <Reward LocalizationKey="%a_hero_proven_in_battle-Reward"/>  -->
+			</Step>
+		</Steps>
+	</QuestDefinition>
 </Datatable>
