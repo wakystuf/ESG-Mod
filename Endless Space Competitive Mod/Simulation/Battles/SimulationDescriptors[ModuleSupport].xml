@@ -136,6 +136,7 @@
 
   <!-- Vodyani Effects from Arks -->
   <SimulationDescriptor Name="ModuleStarSystemEffectFromMothership" Type="ModuleStarSystemEffectFromMothership">
+    <Property Name="MaximumMovement" BaseValue="0"/>
     <Property Name="SystemLifeforceFlat" BaseValue="0"/>
     <Property Name="SystemProductionFlat" BaseValue="0"/>
     <Property Name="SystemProductionPercent" BaseValue="0"/>
@@ -146,26 +147,130 @@
     <Property Name="SystemEmpirePointFlat" BaseValue="0"/>
     <Property Name="SystemEmpirePointPercent" BaseValue="0"/>
     <Property Name="ResourceBonus" BaseValue="0"/>
-    <Property Name="PlanetRawFIDS" BaseValue="0"/>    
+    <Property Name="PlanetRawFIDS" BaseValue="0"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="$(MaximumMovement)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!-- Meditation Module -->
   <SimulationDescriptor Name="ModuleSupportAnchor"/>
   <SimulationDescriptor Name="ModuleSupportMothershipAnchoredDefenseEffect" Type="ModuleSupportMothershipAnchoredDefenseEffect">
+    <Property Name="MaximumMovement" BaseValue="0"/>
     <Modifier TargetProperty="CannotFightUnlessDetached" Operation="Addition" Value="1" Path="../ClassGarrisonFleet,FleetActionMothershipAttached"/>
     <Modifier TargetProperty="MaximumShipManpower" Operation="Force" Value="0" Path="../ClassGarrison/ClassShip,AttachedMothership"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="$(MaximumMovement)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!-- All Must Provide -->
+  <SimulationDescriptor Name="ModuleMothershipLifeforce1" Type="ModuleMothershipLifeforce">
+    <Modifier TargetProperty="SystemLifeforceFlat" Operation="Addition" Value="10" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
   <SimulationDescriptor Name="ModuleMothershipLifeforce2" Type="ModuleMothershipLifeforce">
     <Modifier TargetProperty="SystemLifeforceFlat"         Operation="Addition" Value="20" Path="ModuleStarSystemEffectFromMothership"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
   </SimulationDescriptor>
-
   <SimulationDescriptor Name="ModuleMothershipLifeforce3" Type="ModuleMothershipLifeforce">
     <Modifier TargetProperty="SystemLifeforceFlat"         Operation="Addition" Value="30" Path="ModuleStarSystemEffectFromMothership"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+
+  <!--  Industry  -->
+  <SimulationDescriptor Name="ModuleMothershipIndustry1" Type="ModuleMothershipIndustry">
+    <Modifier TargetProperty="SystemProductionFlat" Operation="Addition" Value="10" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleMothershipIndustry2" Type="ModuleMothershipIndustry">
+    <Modifier TargetProperty="SystemProductionFlat" Operation="Addition" Value="15" Path="ModuleStarSystemEffectFromMothership"/>
+    <Modifier TargetProperty="SystemProductionPercent" Operation="Addition" Value="0.01" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleMothershipIndustry3" Type="ModuleMothershipIndustry">
+    <Modifier TargetProperty="SystemProductionFlat" Operation="Addition" Value="25" Path="ModuleStarSystemEffectFromMothership"/>
+    <Modifier TargetProperty="SystemProductionPercent" Operation="Addition" Value="0.03" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleMothershipIndustry4" Type="ModuleMothershipIndustry">
+    <Modifier TargetProperty="SystemProductionFlat" Operation="Addition" Value="50" Path="ModuleStarSystemEffectFromMothership"/>
+    <Modifier TargetProperty="SystemProductionPercent" Operation="Addition" Value="0.05" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+
+  <!--  Dust  -->
+  <SimulationDescriptor Name="ModuleMothershipDust1" Type="ModuleMothershipDust">
+    <Modifier TargetProperty="SystemMoneyFlat" Operation="Addition" Value="15" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleMothershipDust2" Type="ModuleMothershipDust">
+    <Modifier TargetProperty="SystemMoneyFlat" Operation="Addition" Value="25" Path="ModuleStarSystemEffectFromMothership"/>
+    <Modifier TargetProperty="SystemMoneyPercent" Operation="Addition" Value="0.01" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleMothershipDust3" Type="ModuleMothershipDust">
+    <Modifier TargetProperty="SystemMoneyFlat" Operation="Addition" Value="40" Path="ModuleStarSystemEffectFromMothership"/>
+    <Modifier TargetProperty="SystemMoneyPercent" Operation="Addition" Value="0.03" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleMothershipDust4" Type="ModuleMothershipDust">
+    <Modifier TargetProperty="SystemMoneyFlat" Operation="Addition" Value="75" Path="ModuleStarSystemEffectFromMothership"/>
+    <Modifier TargetProperty="SystemMoneyPercent" Operation="Addition" Value="0.05" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+  
+  <!--  Science  -->
+  <SimulationDescriptor Name="ModuleMothershipScience1" Type="ModuleMothershipScience">
+    <Modifier TargetProperty="SystemResearchFlat" Operation="Addition" Value="10" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleMothershipScience2" Type="ModuleMothershipScience">
+    <Modifier TargetProperty="SystemResearchFlat" Operation="Addition" Value="15" Path="ModuleStarSystemEffectFromMothership"/>
+    <Modifier TargetProperty="SystemResearchPercent" Operation="Addition" Value="0.01" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleMothershipScience3" Type="ModuleMothershipScience">
+    <Modifier TargetProperty="SystemResearchFlat" Operation="Addition" Value="25" Path="ModuleStarSystemEffectFromMothership"/>
+    <Modifier TargetProperty="SystemResearchPercent" Operation="Addition" Value="0.03" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleMothershipScience4" Type="ModuleMothershipScience">
+    <Modifier TargetProperty="SystemResearchFlat" Operation="Addition" Value="50" Path="ModuleStarSystemEffectFromMothership"/>
+    <Modifier TargetProperty="SystemResearchPercent" Operation="Addition" Value="0.05" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+
+  <!--  Influence  -->
+  <SimulationDescriptor Name="ModuleMothershipInfluence1" Type="ModuleMothershipInfluence">
+    <Modifier TargetProperty="SystemEmpirePointFlat" Operation="Addition" Value="10" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleMothershipInfluence2" Type="ModuleMothershipInfluence">
+    <Modifier TargetProperty="SystemEmpirePointFlat" Operation="Addition" Value="15" Path="ModuleStarSystemEffectFromMothership"/>
+    <Modifier TargetProperty="SystemEmpirePointPercent" Operation="Addition" Value="0.03" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="ModuleMothershipInfluence3" Type="ModuleMothershipInfluence">
+    <Modifier TargetProperty="SystemEmpirePointFlat" Operation="Addition" Value="25" Path="ModuleStarSystemEffectFromMothership"/>
+    <Modifier TargetProperty="SystemEmpirePointPercent" Operation="Addition" Value="0.05" Path="ModuleStarSystemEffectFromMothership"/>
+    <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3" Path="ModuleStarSystemEffectFromMothership"/>
   </SimulationDescriptor>
 
   <!-- ********************* -->
