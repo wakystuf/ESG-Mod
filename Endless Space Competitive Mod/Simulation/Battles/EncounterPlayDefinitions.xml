@@ -194,6 +194,45 @@
     </ReinforcementSpawnParameters>
   </EncounterPlayDefinition>
 
+  <EncounterPlayDefinition Name="PlayOffensiveLongSplashDamage" FamilyName="FamilyOffensiveLong">
+    <AIBattleSituations Situation="LargeShip" Mode="Use" Value="1"/>
+    <AIBattleSituations Situation="SmallShip" Mode="Against" Value="1"/>
+    <AIBattleSituations Situation="LargeShip" Mode="Against" Value="-1"/>
+    <AIBattleSituations Situation="ShipToProtect" Mode="Against" Value="0.5"/>
+    <CounterRule FamilyName="FamilyShort"/>
+    <StatusModifier StatusTags="Regular Counter Countered">
+      <SimulationDescriptorReference Name="PlayEffectSplashDamage"/>
+    </StatusModifier>
+    <Flotilla Name="Flotilla01" OptimalRangeName="Long" UICommandPointsMinForUnlock="5" UIShipsMinForUnlock="2">
+      <InterpreterPrerequisite Flags="Prerequisite,Discard">$(CommandPoints) ge 5 and $(ShipsCount) ge 2</InterpreterPrerequisite>
+      <ShipSizeQuota ShipSize="ShipSizeJuggernaut" Quota="1"/>
+      <FormationReference Name="Formation03"/>
+    </Flotilla>
+    <Flotilla Name="Flotilla02" OptimalRangeName="Medium" CommandPointMin="1">
+      <ShipSizeQuota ShipSize="ShipSizeJuggernaut" Quota="1"/>
+      <FormationReference Name="Formation03"/>
+    </Flotilla>
+    <Flotilla Name="Flotilla03" OptimalRangeName="Long" UICommandPointsMinForUnlock="10" UIShipsMinForUnlock="3">
+      <InterpreterPrerequisite Flags="Prerequisite,Discard">$(CommandPoints) ge 10 and $(ShipsCount) ge 3</InterpreterPrerequisite>
+      <ShipSizeQuota ShipSize="ShipSizeJuggernaut" Quota="1"/>
+      <FormationReference Name="Formation03"/>
+    </Flotilla>
+    <ReinforcementFlotilla Name="ReinforcementFlotilla01" CommandPointMax="10">
+      <TechnologyPrerequisite Flags="Technology,Discard">TechnologyUnknown</TechnologyPrerequisite>
+      <ShipSizeQuota ShipSize="ShipSizeJuggernaut" Quota="1"/>
+      <FormationReference Name="Formation03"/>
+    </ReinforcementFlotilla>
+    <ReinforcementSpawnParameters PhaseIndex="1">
+      <SimulationDescriptorReference Name="FlotillaReinforcementPhase1"/>
+    </ReinforcementSpawnParameters>
+    <ReinforcementSpawnParameters PhaseIndex="2">
+      <SimulationDescriptorReference Name="FlotillaReinforcementPhase2"/>
+    </ReinforcementSpawnParameters>
+    <ReinforcementSpawnParameters PhaseIndex="3">
+      <SimulationDescriptorReference Name="FlotillaReinforcementPhase3"/>
+    </ReinforcementSpawnParameters>
+  </EncounterPlayDefinition>
+
   <EncounterPlayDefinition Name="PlayDefensiveLongCooldownIncrease" FamilyName="FamilyDefensiveLong">
     <AIBattleSituations Situation="MorePowerful" Mode="Against" Value="1"/>
     <AIBattleSituations Situation="ShipToProtect" Mode="Use" Value="1"/>
