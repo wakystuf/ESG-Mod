@@ -119,11 +119,14 @@
 
   <!-- Remnant Assimilation Trait -->
   <SimulationDescriptor Name="FactionTraitMinorWorldBuilders02" Type="FactionTraitMinor">
-    <Modifier TargetProperty="GroundBattleBombardmentImprovementDestructionProbability" Operation="Subtraction" Value="0.35" Path="ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%FactionTraitMinorWorldBuilders02TooltipEffects"/>
+    <Modifier TargetProperty="OpponentRecyclingDustPerCP" Operation="Addition" Value="5" Path="../ClassEmpire"/>
+    <Modifier TargetProperty="OpponentRecyclingDustPerCP" Operation="Addition" Value="5" Path="../ClassEmpire/ClassGarrisonFleet/ClassShip" TooltipHidden="true"/>
     <Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="FactionTraitMinorWorldBuilders01" Type="FactionTraitMinor">
-    <Modifier TargetProperty="WonderProductionCostReduction" Operation="Subtraction" Value="0.25" Path="ClassEmpire/ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="WonderProductionCostReduction" Operation="Subtraction" Value="0.33" Path="ClassEmpire/ClassColonizedStarSystem"/>
+    <!-- Does not work due to stupid plugin issue-->
+    <!--  <Modifier TargetProperty="UniqueBuildingProductionCostReduction" Operation="Subtraction" Value="0.25" Path="ClassEmpire/ClassColonizedStarSystem"/>-->
     <Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
 
@@ -262,7 +265,7 @@
 
   <!--Illo-->
   <SimulationDescriptor Name="FactionTraitMinorJuggernautBoost01" Type="FactionTraitMinor">
-    <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(JuggernautCount)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(JuggernautCount)" Path="ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateColony" SearchValueFromPath="true"/>
     <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="3" BinaryOperation="Multiplication" Right="$(JuggernautCount)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
     <Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
@@ -271,6 +274,12 @@
   <SimulationDescriptor Name="FactionTraitMinorPacifists01" Type="FactionTraitMinor">
     <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(PeaceCount)" Path="ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateColony" SearchValueFromPath="true"/>
     <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(AllianceCount)" Path="ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateColony" SearchValueFromPath="true"/>
+    <Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!--Deuyivan-->
+  <SimulationDescriptor Name="FactionTraitMinorEmpireResearch" Type="FactionTraitMinor">
+    <Modifier TargetProperty="TechnologyCostModifier" Value="-0.05" Operation="Percent" Path="ClassEmpire/ClassResearch" Priority="3"/>
     <Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
 
