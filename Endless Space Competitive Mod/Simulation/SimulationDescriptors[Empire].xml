@@ -1271,14 +1271,9 @@
 		<!-- Golden Age duration -->
 		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationMax" Operation="Multiplication" Value="$(GameSpeedMultiplier)"/>
 
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Addition" Value="$(GalaxySize)" Priority="1" />
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Subtraction" Value="1" Priority="2" />
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Division" Value="10" Priority="3" />
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Addition" Value="3" Priority="4" />
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Subtraction" Value="$(GameSpeedMultiplier)" Priority="5" />
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Division" Value="$(SuperColonizationSystemCount)" Priority="6" />
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="7" />
-    	<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Addition" Value="0.5" Priority="8" />
+		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Addition" Value="2" Priority="1" />
+		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Division" Value="$(SuperColonizationSystemCount)" Priority="2" />
+		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Division" Value="$(GameSpeedMultiplier)" Priority="3" />
 
 		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationMaxed" Operation="Addition" Value="$(SuperColonizationGoldenAgeDurationIncrement)" Priority="1" />
 		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationMaxed" Operation="Division" Value="$(GameSpeedMultiplier)" Priority="2" />
@@ -1292,9 +1287,9 @@
 		<Modifier TargetProperty="SuperColonizationSystemCountGameStart" Operation="Addition" Value="$(SystemCount)" />
 		<Modifier TargetProperty="TurnsBeforeNextFreeSuperColonization" Operation="Multiplication" Value="$(SuperColonizationSystemCountGameStart)" Priority="4" />
 
-		<Modifier TargetProperty="SuperColonizationCostFromBase" Operation="Multiplication" Value="$(DustInflation)" />
+		<BinaryModifier TargetProperty="SuperColonizationCostFromBase" Operation="Multiplication" Left="$(DustInflation)" BinaryOperation="Power" Right="0.33"/>
 		<Modifier TargetProperty="SuperColonizationCostFromTurns" Operation="Addition" Value="$(TurnsBeforeNextFreeSuperColonization)"/>
-		<BinaryModifier TargetProperty="SuperColonizationCostFromSystems" Operation="Addition" Left="$(SystemCount)" BinaryOperation="Division" Right="$(GalaxySize)" />
+		<BinaryModifier TargetProperty="SuperColonizationCostFromSystems" Operation="Addition" Left="$(SystemCount)" BinaryOperation="Division" Right="4" />
 
 		<Modifier TargetProperty="SuperColonizationCost" Operation="Addition" Value="$(SuperColonizationCostFromBase)" />
 		<Modifier TargetProperty="SuperColonizationCost" Operation="Multiplication" Value="$(SuperColonizationCostFromTurns)" />
@@ -1550,6 +1545,15 @@
 	<!--United Empire influence buyout without circularity ESG-->
 	<SimulationDescriptor Name="ProductionToInfluence" Type="ProductionToInfluence">
 		<BinaryModifier TargetProperty="EmpirePointFromIndustryConversion" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(SystemProduction)" SearchValueFromPath="true" Path="ClassEmpire/ClassColonizedStarSystem" Priority="9999" TooltipOverride="%ProductionToInfluenceTooltipEffects"/>
+	</SimulationDescriptor>
+
+	<SimulationDescriptor Name="EmpireTypeLesser" Type="EmpireType">
+		<Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Addition" Value="100000"/>
+		<Modifier TargetProperty="FreeMovementSpeed" Operation="Addition" Value="0.25" Path="ClassEmpire/ClassGarrison/ClassShip"/>
+		<Modifier TargetProperty="NetSystemInfluence" Operation="Force" Value="0" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="NetSystemGrowth" Operation="Force" Value="0" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="MaximumHackingOperationsCount" Operation="Force" Value="100"/>
+		<Modifier TargetProperty="OutpostMaxPop" Operation="Force" Value="5" Path="ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateOutpost" Priority="1" TooltipHidden="true"/>
 	</SimulationDescriptor>
 
 	<SimulationDescriptor Name="EmpireTypePirate" Type="EmpireType">

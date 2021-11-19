@@ -1845,6 +1845,53 @@
 		<Modifier TargetProperty="GUIStarSystemsPopulationSum" Operation="Addition" Value="$(Population)" Path="../EmpireTypeMajor"/>
 	</SimulationDescriptor>
 
+	<SimulationDescriptor Name="ColonizedStarSystemStateOutpost" Type="ColonizedStarSystemState">
+		<!--  ##########################################################  -->
+		<!--  ######################## PROPERTY ########################  -->
+		<!--  ##########################################################  -->
+		<!--  [FS] ESPROD-2437  -->
+		<!-- <Property Name="OutpostCount" BaseValue="1"/> -->
+		<Property Name="ProgressingOutpostCount" BaseValue="0"/>
+		<Property Name="AdditionalFood" BaseValue="0"/>
+		<Property Name="AdditionalIndustry" BaseValue="0"/>
+		<Property Name="AdditionalScience" BaseValue="0"/>
+		<Property Name="AdditionalDust" BaseValue="0"/>
+		<Property Name="AdditionalPrestige" BaseValue="0"/>
+		<Property Name="MaximumIncomingAutomatedShips" BaseValue="3"/>
+		<Property Name="OutpostMaxPop" BaseValue="1" MaxValue="5"/>
+		<Property Name="HasSuperColonizer" BaseValue="0"/>
+
+		<!--  ##########################################################  -->
+		<!--  ######################## MODIFIER ########################  -->
+		<!--  ##########################################################  -->
+		<BinaryModifier TargetProperty="OutpostMaxPop" Operation="Addition" Left="$(HasSuperColonizer)" BinaryOperation="Multiplication" Right="5"/>
+		<Modifier TargetProperty="Happiness" Operation="Force" Value="50" Path="ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="OwnedSystemPopulationIsMaxed" Operation="Addition" Value="$(SystemPopulationIsMaxed)" Path="ColonizedStarSystemStateOutpost"/>
+		<Modifier TargetProperty="OwnedOutposts" Operation="Addition" Value="1"/>
+		<!--  Previously outpost base -->
+		<Modifier TargetProperty="SystemGrowth" Operation="Addition" Value="5" Path="ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="SystemProduction" Operation="Addition" Value="10" Path="ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="SystemMoneyUpkeep" Operation="Addition" Value="10" Path="ClassColonizedStarSystem"/>
+		<!--  [FS] ESPROD-2437  -->
+		<Modifier TargetProperty="OutpostCount" Operation="Force" Value="1" TooltipHidden="true"/>
+		<Modifier TargetProperty="SystemGrowth" Operation="Addition" Value="$(AdditionalFood)" Path="ClassStarSystem"/>
+		<Modifier TargetProperty="SystemProduction" Operation="Addition" Value="$(AdditionalIndustry)" Path="ClassStarSystem"/>
+		<Modifier TargetProperty="SystemResearch" Operation="Addition" Value="$(AdditionalScience)" Path="ClassStarSystem"/>
+		<Modifier TargetProperty="SystemMoney" Operation="Addition" Value="$(AdditionalDust)" Path="ClassStarSystem"/>
+		<Modifier TargetProperty="SystemEmpirePoint" Operation="Addition" Value="$(AdditionalPrestige)" Path="ClassStarSystem"/>
+		<Modifier TargetProperty="MaximumPopulation" Operation="Force" Value="$(OutpostMaxPop)" Path="ClassColonizedStarSystem/ClassPlanet" Priority="1" TooltipHidden="true"/>
+		<Modifier TargetProperty="NetSystemInfluence" Operation="Force" Value="0" TooltipHidden="true" Priority="10"/>
+		<Modifier TargetProperty="SystemInfluenceRadius" Operation="Force" Value="0" TooltipHidden="true" Priority="10"/>
+		<Modifier TargetProperty="SystemNextInfluenceRadiusEstimation" Operation="Force" Value="0" TooltipHidden="true" Priority="10"/>
+		<Modifier TargetProperty="NetPopulationScore" Operation="Addition" Value="100" Path="ColonizedStarSystemStateOutpost/PopulationMajor"/>
+		<Modifier TargetProperty="PlanetOutpostFood" Operation="Addition" Value="$(NetSystemGrowth)" Path="ColonizedStarSystemStateOutpost/ClassColonizedPlanet"/>
+		<Modifier TargetProperty="PlanetOutpostIndustry" Operation="Addition" Value="$(NetSystemProduction)" Path="ColonizedStarSystemStateOutpost/ClassColonizedPlanet"/>
+		<Modifier TargetProperty="PlanetOutpostDust" Operation="Addition" Value="$(NetSystemMoney)" Path="ColonizedStarSystemStateOutpost/ClassColonizedPlanet"/>
+		<Modifier TargetProperty="PlanetOutpostScience" Operation="Addition" Value="$(NetSystemResearch)" Path="ColonizedStarSystemStateOutpost/ClassColonizedPlanet"/>
+		<Modifier TargetProperty="PlanetOutpostPrestige" Operation="Addition" Value="$(NetSystemEmpirePoint)" Path="ColonizedStarSystemStateOutpost/ClassColonizedPlanet"/>
+		<Modifier TargetProperty="VisionRange" Operation="Addition" Value="1.7"/>
+	</SimulationDescriptor>
+
 	<SimulationDescriptor Name="ColonizedStarSystemStateColony" Type="ColonizedStarSystemState">
 		<!--  ##########################################################  -->
 		<!--  ######################## PROPERTY ########################  -->
