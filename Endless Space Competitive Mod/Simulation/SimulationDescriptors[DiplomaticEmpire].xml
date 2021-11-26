@@ -3,8 +3,6 @@
   <SimulationDescriptor Name="ClassDiplomaticEmpire" Type="ClassDiplomaticEmpire">
 
     <Property Name="FreeWarDeclaration"             MinValue="0"           BaseValue="1"/>
-    <Property Name="LowerPressureCostReduction"     MinValue="0"           BaseValue="1"/>
-    <Property Name="RaisePressureCostReduction"     MinValue="0"           BaseValue="1"/>
     <Property Name="TradeAgreementCost"             MinValue="0" BaseValue="1" MaxValue="1"/>
 
     <!-- BasePressure = score difference. Multiplier = bonuses (like laws and stuff) -->
@@ -40,8 +38,8 @@
     <Property Name="HackingSpeedMultiplier"             MinValue="0.1" BaseValue="1"/>
 
     <!-- Diplomacy cost reduction -->
-    <Property Name="PeacefulTreatyCostReduction"            BaseValue="1" MinValue="0.1"/>
-    <Property Name="AggressiveTreatyCostReduction"          BaseValue="1" MinValue="0.1"/>
+    <Property Name="PeacefulTreatyCostReduction"            BaseValue="1" MinValue="0"/>
+    <Property Name="AggressiveTreatyCostReduction"          BaseValue="1" MinValue="0"/>
     <Property Name="CloseBordersCostReduction"              BaseValue="1" MinValue="0"/>
     <Property Name="WarDeclarationCostReduction"            BaseValue="1" MinValue="0"/>
     <Property Name="PeaceCostReduction"                     BaseValue="1" MinValue="0"/>
@@ -106,5 +104,40 @@
     <Modifier TargetProperty="PressureTrend" Operation="Addition"       Value="$(CurrentEffectsBonus)"/>
     <Modifier TargetProperty="PressureTrend" Operation="Multiplication" Value="$(CurrentRelationMultiplier)"/>
 
+  </SimulationDescriptor>
+
+
+  <!-- Science Agreement -->
+  <SimulationDescriptor Name="DiplomaticAbilityEffectScienceAgreement" Type="DiplomaticAbilityEffect">
+    <Property Name="ScienceAgreementDuration" BaseValue="0" IsSealed="true"/>
+    <Property Name="CurrentTurn"/>
+    <Property Name="GameSpeedScienceDiplomacy" BaseValue="1"/>
+    <Property Name="ScienceBonusStep" BaseValue="0"/>
+
+    <Property Name="ResearchBonusBasedOnDuration" BaseValue="0" MaxValue="750"/>
+
+    <!-- 10 -->
+    <Property Name="ResearchBonus" BaseValue="50"/>
+
+    <BinaryModifier TargetProperty="ScienceBonusStep" Operation="Addition" Left="12" BinaryOperation="Division" Right="$(GameSpeedScienceDiplomacy)"/>
+
+    <!-- + 10 / turn, capped at +100 after 20 turns -->
+    <BinaryModifier TargetProperty="ResearchBonusBasedOnDuration" Operation="Addition" Left="$(ScienceAgreementDuration)" BinaryOperation="Multiplication" Right="$(ScienceBonusStep)"/>
+    <Modifier TargetProperty="ResearchBonus" Operation="Addition" Value="$(ResearchBonusBasedOnDuration)" />
+
+    <!-- x (gameTurn / 5) -->
+    <BinaryModifier TargetProperty="ResearchBonus" Operation="Addition" Left="$(CurrentTurn)" BinaryOperation="Division" Right="2"/>
+
+    <Modifier TargetProperty="ResearchScienceAgreementBonus" Operation="Addition" Value="$(ResearchBonus)" Path="../ClassEmpire"/>
+
+    <BinaryModifier TargetProperty="TreatiesUpkeep"           Operation="Addition" Left="50" BinaryOperator="Multiplication" Right="$(TradeAgreementCost)" Path="../ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="ScienceAgreementUpkeep"   Operation="Addition" Left="50" BinaryOperator="Multiplication" Right="$(TradeAgreementCost)" Path="../ClassEmpire" SearchValueFromPath="true" TooltipHidden="false"/>
+
+  </SimulationDescriptor>
+
+  <!-- Trade Agreement -->
+  <SimulationDescriptor Name="DiplomaticAbilityEffectTradeAgreement" Type="DiplomaticAbilityEffect">
+    <BinaryModifier TargetProperty="TreatiesUpkeep"         Operation="Addition" Left="50" BinaryOperator="Multiplication" Right="$(TradeAgreementCost)" Path="../ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="TradeAgreementUpkeep"   Operation="Addition" Left="50" BinaryOperator="Multiplication" Right="$(TradeAgreementCost)" Path="../ClassEmpire" SearchValueFromPath="true" TooltipHidden="false"/>
   </SimulationDescriptor>
 </Datatable>
