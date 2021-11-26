@@ -19,6 +19,8 @@
     <Property Name="Strategic6Price" BaseValue="150" MinValue="1"/>
     <Property Name="GameSpeedMultiplier" BaseValue="1"/>
     <Property Name="MaximumHealthFromSkillHoratio" BaseValue="0" MinValue="0"/>
+    <Property Name="ScavengersCodeAnywhere" BaseValue="0"/>
+    <Property Name="ScavengersCodeAnywhereDisabled" BaseValue="1"/>
 
     <!-- Vanilla -->
     <!-- Base values -->
@@ -215,7 +217,7 @@
     <ProportionalProperty Name="Shield"                 BaseValue="0"   IsSealed="true" IsSerializable="true" Maximum="$(MaximumShield)" StartingRatio="1"/>
     <Property Name="MaximumShield"                      BaseValue="0"  MinValue="Negative"/>
     <Property Name="ShieldAbsorption"                   BaseValue="0"/>
-    <Property Name="ShieldAbsorptionPercent"            BaseValue="0"/>
+    <Property Name="ShieldAbsorptionPercent"            BaseValue="1"/>
     <Property Name="ShieldAbsorptionEndMultiplier"      BaseValue="0"/>
     <Property Name="ShieldAbsorptionEndMultiplierTemp"  BaseValue="0"/>
     <Property Name="ShieldVulnerability"                BaseValue="1"/>
@@ -225,7 +227,7 @@
     <Property Name="ShieldRegeneratePerSecondDynamic"   BaseValue="0"/>
 
     <Property Name="HullPlatingAbsorption"                  BaseValue="0" MinValue="Negative"/>
-    <Property Name="HullPlatingAbsorptionPercent"           BaseValue="0"/>
+    <Property Name="HullPlatingAbsorptionPercent"           BaseValue="1"/>
     <Property Name="HullPlatingAbsorptionEndMultiplier"     BaseValue="0"/>
     <Property Name="HullPlatingAbsorptionEndMultiplierTemp" BaseValue="0"/>
     <Property Name="HullPlatingAbsorptionDebuffDynamic"     BaseValue="0" MinValue="-1"/>
@@ -337,18 +339,12 @@
     <Modifier TargetProperty="HullPlatingPenetrationFactor"     Operation="Addition" Value="$(HullPlatingPenetrationFactor)"        Path="ClassShip/ClassSection/ClassModuleSquadron" />
 
     <!-- Military Power -->
-    <Modifier TargetProperty="ShieldAbsorptionEndMultiplierTemp" Operation="Addition" Value="$(ShieldAbsorption)" Priority="1"/>
-    <BinaryModifier TargetProperty="ShieldAbsorptionEndMultiplierTemp" Operation="Division" Left="$(ShieldAbsorption)" BinaryOperation="Addition" Right="$(HullWeakness)" Priority="2"/>
-    <Modifier TargetProperty="ShieldVulnerability" Operation="Subtraction" Value="$(ShieldAbsorptionEndMultiplierTemp)" Priority="3"/>
-    <Modifier TargetProperty="ShieldAbsorptionEndMultiplier" Operation="Addition" Value="$(ShieldAbsorptionEndMultiplierTemp)" Priority="4"/>
-    <BinaryModifier TargetProperty="ShieldAbsorptionEndMultiplier" Operation="Addition" Left="$(ShieldVulnerability)" BinaryOperation="Multiplication" Right="$(ShieldAbsorptionPercent)" Priority="5"/>
-
-    <Modifier TargetProperty="HullPlatingAbsorption" Operation="Percent" Value="$(HullPlatingAbsorptionDebuffDynamic)" Priority="1"/>
-    <Modifier TargetProperty="HullPlatingAbsorptionEndMultiplierTemp" Operation="Addition" Value="$(HullPlatingAbsorption)" Priority="2"/>
-    <BinaryModifier TargetProperty="HullPlatingAbsorptionEndMultiplierTemp" Operation="Division" Left="$(HullPlatingAbsorption)" BinaryOperation="Addition" Right="$(HullWeakness)" Priority="3"/>
-    <Modifier TargetProperty="HullPlatingVulnerability" Operation="Subtraction" Value="$(HullPlatingAbsorptionEndMultiplierTemp)" Priority="4"/>
-    <Modifier TargetProperty="HullPlatingAbsorptionEndMultiplier" Operation="Addition" Value="$(HullPlatingAbsorptionEndMultiplierTemp)" Priority="5"/>
-    <BinaryModifier TargetProperty="HullPlatingAbsorptionEndMultiplier" Operation="Addition" Left="$(HullPlatingVulnerability)" BinaryOperation="Multiplication" Right="$(HullPlatingAbsorptionPercent)" Priority="6"/>
+    <Modifier TargetProperty="ShieldAbsorptionEndMultiplier" Operation="Addition" Value="$(ShieldAbsorption)"/>
+    <BinaryModifier TargetProperty="ShieldAbsorptionEndMultiplier" Operation="Division" Left="$(ShieldAbsorption)" BinaryOperation="Addition" Right="$(HullWeakness)"/>
+    <Modifier TargetProperty="ShieldAbsorptionEndMultiplier" Operation="Multiplication" Value="$(ShieldAbsorptionPercent)"/>
+    <Modifier TargetProperty="HullPlatingAbsorptionEndMultiplier" Operation="Addition" Value="$(HullPlatingAbsorption)"/>
+    <BinaryModifier TargetProperty="HullPlatingAbsorptionEndMultiplier" Operation="Division" Left="$(HullPlatingAbsorption)" BinaryOperation="Addition" Right="$(HullWeakness)"/>
+    <Modifier TargetProperty="HullPlatingAbsorptionEndMultiplier" Operation="Multiplication" Value="$(HullPlatingAbsorptionPercent)"/>
 
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(MaximumShield)"                   BinaryOperation="Division" Right="60"/>
     <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(ShieldReloadPerPhase)"            BinaryOperation="Division" Right="60"/>
@@ -390,17 +386,17 @@
 
     <!-- Calculate base trade value including strat costs (computed using pseudoprices) -->
     <Modifier TargetProperty="TotalIndustryCost" Operation="Multiplication" Value="$(GameSpeedMultiplier)"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalIndustryCost)" BinaryOperation="Multiplication" Right="0.4" />
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic1Cost)" BinaryOperation="Multiplication" Right="$(Strategic1Price)"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic2Cost)" BinaryOperation="Multiplication" Right="$(Strategic2Price)"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic3Cost)" BinaryOperation="Multiplication" Right="$(Strategic3Price)"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic4Cost)" BinaryOperation="Multiplication" Right="$(Strategic4Price)"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic5Cost)" BinaryOperation="Multiplication" Right="$(Strategic5Price)"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic6Cost)" BinaryOperation="Multiplication" Right="$(Strategic6Price)"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic6Cost)" BinaryOperation="Multiplication" Right="$(Strategic6Price)"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalIndustryCost)"   BinaryOperation="Multiplication" Right="0.4"                Path="ClassShip,!ShipSizeJuggernaut"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic1Cost)" BinaryOperation="Multiplication" Right="$(Strategic1Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic2Cost)" BinaryOperation="Multiplication" Right="$(Strategic2Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic3Cost)" BinaryOperation="Multiplication" Right="$(Strategic3Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic4Cost)" BinaryOperation="Multiplication" Right="$(Strategic4Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic5Cost)" BinaryOperation="Multiplication" Right="$(Strategic5Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic6Cost)" BinaryOperation="Multiplication" Right="$(Strategic6Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic6Cost)" BinaryOperation="Multiplication" Right="$(Strategic6Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
 
     <!--Adjust for stupid Market shenanigans -->
-    <Modifier TargetProperty="TradeValue" Operation="Multiplication" Value="1" />
+    <Modifier TargetProperty="TradeValue" Operation="Multiplication" Value="1" Path="ClassShip,!ShipSizeJuggernaut"/>
 
   </SimulationDescriptor>
 
@@ -586,15 +582,35 @@
     <Modifier TargetProperty="HullWeakness"         Operation="Addition" Value="200"     Path="ClassShip"/>
   </SimulationDescriptor>
 
+  <SimulationDescriptor Name="ShipSizeJuggernaut"               Type="ShipSize">
+    <Property Name="MiningProbeDepositValueMultiplier"          BaseValue="0" MinValue="0" Composition="Maximum"/>
+    <Property Name="MiningProbePlanetStatsMultiplier"           BaseValue="0" MinValue="0" Composition="Maximum"/>
+
+    <Modifier TargetProperty="VisionRange"                      Operation="Addition"    Value="1"       Path="ClassShip"/>
+    <Modifier TargetProperty="CommandPoints"                    Operation="Addition"    Value="10"      Path="ClassShip"/>
+    <Modifier TargetProperty="ShieldRadius"                     Operation="Addition"    Value="2.5"     Path="ClassShip"/>
+    <Modifier TargetProperty="ScrapPriority"                    Operation="Subtraction" Value="2"       Path="ClassShip"/>
+    <Modifier TargetProperty="VisualImportanceScore"            Operation="Addition"    Value="1000"    Path="ClassShip"/>
+    <Modifier TargetProperty="HullWeakness"                     Operation="Addition"    Value="500"     Path="ClassShip"/>
+    <Modifier TargetProperty="SizeDamageMultiplierForSquadron"  Operation="Addition"    Value="1"       Path="ClassShip" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="JuggernautCount"                  Operation="Addition"    Value="1"       Path="../ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumHonorZoneRadius"           Operation="Addition"    Value="20"/>
+
+    <Modifier TargetProperty="TradeValue"                       Operation="Force"    Value="1"      Path="ClassShip" Priority="-1"/>
+    <Modifier TargetProperty="TradeValue"                       Operation="Force"    Value="1"      Path="ClassShip" Priority="999"/>
+  </SimulationDescriptor>
+
   <!-- Roles -->
   <SimulationDescriptor Name="ShipRoleBehemoth" Type="ShipRole"/>
   <SimulationDescriptor Name="ShipRoleHero"           Type="ShipRole">
     <Property Name="AdmiralsInFriendlyTerritory" BaseValue="1"/>
-    <Modifier TargetProperty="CommandPoints"                Operation="Force"    Value="0"     Path="ClassShip"/>
-    <Modifier TargetProperty="VisualImportanceScore"        Operation="Addition" Value="200"   Path="ClassShip"/>
-    <Modifier TargetProperty="NetShipProbe"                 Operation="Addition" Value="0.5"   Path="ClassShip"/>
+    <Modifier TargetProperty="CommandPoints"                Operation="Force"    Value="0"      Path="ClassShip"/>
+    <Modifier TargetProperty="VisualImportanceScore"        Operation="Addition" Value="200"    Path="ClassShip"/>
+    <Modifier TargetProperty="NetShipProbe"                 Operation="Addition" Value="0.5"    Path="ClassShip"/>
     <Modifier TargetProperty="ExperienceBonusFromBattle"    Operation="Addition" Value="10"     Path="ClassShip"/>
   </SimulationDescriptor>
+  <SimulationDescriptor Name="ShipRoleJuggernaut" Type="ShipRole"/>
   <!-- ********************* -->
   <!-- ** SHIP BASE INFOS ** -->
   <!-- ********************* -->

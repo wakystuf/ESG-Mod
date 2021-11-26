@@ -20,7 +20,8 @@
 		<Property Name="DeploymentLimitRatio"				BaseValue="1" MaxValue="1.5" MinValue="0.01"/>
 		<Property Name="ManpowerCapacityWithGhosts"			BaseValue="0"/>
 		<Property Name="EmpirePointFromIndustryConversion"	BaseValue="0"/>
- 
+		<Property Name="CanBeSlowed"						BaseValue="1"/>
+
 		<!-- Food rework -->
 		<Property Name="SystemGrowthStockNextTurn"			 BaseValue="0" MinValue="0"/>
 		<Property Name="SystemGrowthStockRequiredForNextPop" BaseValue="0" MinValue="0"/>
@@ -86,6 +87,10 @@
 		<!-- Lumeris Influence Effect for Tooltip -->
 		<Property Name="SystemEmpirePointVenetians"                BaseValue="0"/>
 		
+		<!-- Essence Explication in GUI -->
+		<Property Name="SystemLifeforceFromP05L01"  BaseValue="0"/>
+		<Property Name="SystemLifeforceFromLux"  BaseValue="0"/>
+
 		<!-- Utopian Architecture -->
 		<Property Name="UtopianUnhappyReduction"					BaseValue="0" MinValue="Negative"/>
 
@@ -248,7 +253,7 @@
 
 		<!-- System's stock resources -->
 		<Property Name="ShouldUseGrowth"            BaseValue="1" MaxValue="1"/>
-		<Property Name="SystemGrowthStock"          IsSealed="false" />
+		<Property Name="SystemGrowthStock"          IsSealed="true" />
 		<Property Name="SystemProductionStock"      IsSealed="true" />
 		<Property Name="SystemTurnBasedStock"       IsSealed="true" />
 		<Property Name="SystemInfluenceStock"       IsSealed="true" />
@@ -566,6 +571,7 @@
 		<Property Name="VaultersSystemDevelopmentImpactBoost" BaseValue="1"/>
 
 		<Property Name="RecipeIngredientEffectTier1Luxury1" BaseValue="0" />
+		<Property Name="RecipeIngredientEffectTier1Luxury1Bis" BaseValue="0" />
 		<Property Name="RecipeIngredientEffectTier1Luxury2" BaseValue="0" />
 		<Property Name="RecipeIngredientEffectTier1Luxury3" BaseValue="0" />
 		<Property Name="RecipeIngredientEffectTier1Luxury4" BaseValue="0" />
@@ -580,6 +586,7 @@
 		<Property Name="RecipeIngredientEffectATier1Luxury8" BaseValue="0"/>
 		<Property Name="RecipeIngredientEffectBTier1Luxury8" BaseValue="0"/>
 		<Property Name="RecipeIngredientEffectTier2Luxury9" BaseValue="0"/>
+		<Property Name="RecipeIngredientEffectTier2Luxury9Bis" BaseValue="0" />
 		<Property Name="RecipeIngredientEffectTier2Luxury10" BaseValue="0"/>
 		<Property Name="RecipeIngredientEffectTier2Luxury11" BaseValue="0"/>
 		<Property Name="RecipeIngredientEffectTier2Luxury12" BaseValue="0"/>
@@ -735,6 +742,7 @@
 
     <!-- Development Effect Boost -->
 		<Modifier TargetProperty="RecipeIngredientEffectTier1Luxury1" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
+		<Modifier TargetProperty="RecipeIngredientEffectTier1Luxury1Bis" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
 		<Modifier TargetProperty="RecipeIngredientEffectTier1Luxury2" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
 		<Modifier TargetProperty="RecipeIngredientEffectTier1Luxury3" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
 		<Modifier TargetProperty="RecipeIngredientEffectTier1Luxury4" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
@@ -749,6 +757,7 @@
 		<Modifier TargetProperty="RecipeIngredientEffectATier1Luxury8" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
 		<Modifier TargetProperty="RecipeIngredientEffectBTier1Luxury8" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
 		<Modifier TargetProperty="RecipeIngredientEffectTier2Luxury9" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
+		<Modifier TargetProperty="RecipeIngredientEffectTier2Luxury9Bis" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
 		<Modifier TargetProperty="RecipeIngredientEffectTier2Luxury10" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
 		<Modifier TargetProperty="RecipeIngredientEffectTier2Luxury11" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
 		<Modifier TargetProperty="RecipeIngredientEffectTier2Luxury12" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
@@ -899,7 +908,6 @@
 
 
 		<BinaryModifier TargetProperty="NetSystemLifeforce"             Operation="Addition"    Left="$(SystemLifeforce)"             BinaryOperation="Subtraction"    Right="$(SystemLifeforceUpkeep)"/>
-		<Modifier TargetProperty="SystemLifeforce"          Operation="Addition"    Value="$(SystemLifeforceFromMoneyConversion)"       TooltipHidden="false"  />
 
 		<Modifier TargetProperty="SystemGrowthMalus"    Operation="Subtraction"     Value="$(GrowthMalusPopulationCount)"/>
 		<Modifier TargetProperty="SystemGrowthMalus"    Operation="Division"        Value="$(Population)" />
@@ -929,6 +937,7 @@
 
 		<Modifier TargetProperty="WonderProductionCostReduction"      Operation="Multiplication" Value="-1" TooltipHidden="true"  Priority="10"/>
 		<Modifier TargetProperty="BuildingProductionCostReduction"      Operation="Multiplication" Value="-1" TooltipHidden="true"  Priority="10"/>
+		<Modifier TargetProperty="UniqueBuildingProductionCostReduction"      Operation="Multiplication" Value="-1" TooltipHidden="true"  Priority="10"/>
 		<Modifier TargetProperty="ShipProductionCostReduction"          Operation="Multiplication" Value="-1" TooltipHidden="true"  Priority="10"/>
 		<Modifier TargetProperty="ColonyShipProductionCostReduction"    Operation="Multiplication" Value="-1" TooltipHidden="true"  Priority="10"/>
 		<Modifier TargetProperty="MilitaryShipProductionCostReduction"  Operation="Multiplication" Value="-1" TooltipHidden="true"  Priority="10"/>
@@ -1294,12 +1303,14 @@
 		<Modifier TargetProperty="TradingRouteIncomeModifier"                               Operation="Addition"    Value="$(RecipeIngredientEffectATier1Luxury8)"                  Path="ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="ResourceBonus"                                      		Operation="Addition"    Value="$(RecipeIngredientEffectBTier1Luxury8)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeLuxury"/>
 		<Modifier TargetProperty="SystemGrowth"                                             Operation="Addition"    Value="$(RecipeIngredientEffectTier1Luxury1)"                   Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
+		<Modifier TargetProperty="SystemLifeforceFromLux"                                   Operation="Addition"    Value="$(RecipeIngredientEffectTier1Luxury1Bis)"                Path="ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="SystemProduction"                                         Operation="Addition"    Value="$(RecipeIngredientEffectTier1Luxury2)"                   Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
 		<Modifier TargetProperty="SystemMoney"                                              Operation="Addition"    Value="$(RecipeIngredientEffectTier1Luxury3)"                   Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
 		<Modifier TargetProperty="SystemResearch"                                           Operation="Addition"    Value="$(RecipeIngredientEffectTier1Luxury4)"                   Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
 		<Modifier TargetProperty="SystemEmpirePoint"                                        Operation="Addition"    Value="$(RecipeIngredientEffectTier1Luxury5)"                   Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
 		<Modifier TargetProperty="Happiness"                                                Operation="Addition"    Value="$(RecipeIngredientEffectTier1Luxury6)"                   Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
 		<Modifier TargetProperty="PlanetRawFood"                                            Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury9)"                   Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+		<BinaryModifier TargetProperty="SystemLifeforceFromLux"                             Operation="Addition"    Left="$(RecipeIngredientEffectTier2Luxury9Bis)" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="PlanetRawIndustry"                                        Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury10)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
 		<Modifier TargetProperty="PlanetRawDust"                                            Operation="Addition"    Value="$(RecipeIngredientEffectTier2Luxury11)"                  Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
 		<BinaryModifier TargetProperty="PlanetRawScience" Operation="Addition" Left="$(RecipeIngredientEffectTier2Luxury12)" BinaryOperation="Multiplication" Right="$(CanUseRawPlanetScience)" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
@@ -1480,6 +1491,7 @@
 		<Property Name="SystemFIDSIFlat"                                  MinValue="Negative"/>
 		<Property Name="SystemFIDSIFlatDevelopment"                       MinValue="Negative"/>
 		<Property Name="SystemFIDSIPercentFromTimeBubble"                 MinValue="Negative"/>
+		<Property Name="CanBeSlowed"									  BaseValue="1"/>
 		<Property Name="SystemFIDSIPercentFromImprovementUniqueTemplars"  MinValue="Negative"/>
 
 		<Property Name="SystemFIDSPercent"                 MinValue="Negative"/>
@@ -1619,6 +1631,7 @@
 		<!-- Production cost bonus -->
 		<Property Name="WonderProductionCostReduction" MaxValue="0.75"/>
 		<Property Name="BuildingProductionCostReduction" MaxValue="0.75"/>
+		<Property Name="UniqueBuildingProductionCostReduction" MaxValue="0.75"/>
 		<Property Name="ShipProductionCostReduction" MinValue="Negative" MaxValue="0.75"/>
 		<Property Name="ColonyShipProductionCostReduction" MaxValue="0.75"/>
 		<Property Name="MilitaryShipProductionCostReduction" MinValue="Negative" MaxValue="0.75"/>
@@ -1698,6 +1711,7 @@
 		<Modifier       TargetProperty="SystemProduction"       Operation="Addition"            Value="$(PlanetIndustryConverted)"				    Path="ClassStarSystem"/>
 		<Modifier       TargetProperty="SystemProduction"       Operation="Multiplication"      Value="$(SystemProductionHissho)"	                Path="ClassStarSystem,HasObedience"/>
 		<Modifier       TargetProperty="SystemProduction"       Operation="Percent"             Value="$(SystemFIDSIPercent)"					    Path="ClassStarSystem"/>
+		<Modifier       TargetProperty="SystemProduction"       Operation="Percent"             Value="$(SystemFIDSIPercentDevelopment)"			Path="ClassStarSystem"/>
 		<Modifier       TargetProperty="SystemProduction"       Operation="Percent"             Value="$(SystemHeroFIDSIPercent)"					Path="ClassStarSystem"/>
 		<Modifier       TargetProperty="SystemProduction"       Operation="Percent"             Value="$(SystemFIDSPercent)"					    Path="ClassStarSystem"/>
 		<Modifier       TargetProperty="SystemProduction"       Operation="Percent"             Value="$(SystemFIDSIPercentFromTimeBubble)"         Path="ClassStarSystem"/>
@@ -1816,7 +1830,11 @@
 		<BinaryModifier TargetProperty="PassiveStarSystemExperienceRewardForGovernors"  Operation="Multiplication"  Left="$(Population)" BinaryOperation="Division" Right="2" Path="ClassStarSystem" Priority="8"/>
 		<Modifier       TargetProperty="ExperiencePerTurn"                              Operation="Addition"        Value="$(PassiveStarSystemExperienceRewardForGovernors)" Path="ClassStarSystem/ClassHero"/>
 
-		<Modifier TargetProperty="NetSystemLifeforce"       Operation="Addition" Value="$(NetSystemLifeforce)"      Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+		<Modifier TargetProperty="NetSystemLifeforce"                 Operation="Addition" Value="$(NetSystemLifeforce)"                 Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+		<Modifier TargetProperty="EmpireLifeforceFromMoneyConversion" Operation="Addition" Value="$(SystemLifeforceFromMoneyConversion)" Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+		<Modifier TargetProperty="EmpireLifeforceFromP05L01"          Operation="Addition" Value="$(SystemLifeforceFromP05L01)"          Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+		<Modifier TargetProperty="EmpireLifeforceFromLux"          	  Operation="Addition" Value="$(SystemLifeforceFromLux)"          	 Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+
 		<Modifier TargetProperty="NetSystemGrowth"          Operation="Addition" Value="$(NetSystemGrowth)"         Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
 		<Modifier TargetProperty="NetSystemProduction"      Operation="Addition" Value="$(NetSystemProduction)"     Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
 		<Modifier TargetProperty="NetSystemMoney"           Operation="Addition" Value="$(NetSystemMoney)"          Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
@@ -1825,6 +1843,53 @@
 
 		<!-- Gui Empire Happiness-->
 		<Modifier TargetProperty="GUIStarSystemsPopulationSum" Operation="Addition" Value="$(Population)" Path="../EmpireTypeMajor"/>
+	</SimulationDescriptor>
+
+	<SimulationDescriptor Name="ColonizedStarSystemStateOutpost" Type="ColonizedStarSystemState">
+		<!--  ##########################################################  -->
+		<!--  ######################## PROPERTY ########################  -->
+		<!--  ##########################################################  -->
+		<!--  [FS] ESPROD-2437  -->
+		<!-- <Property Name="OutpostCount" BaseValue="1"/> -->
+		<Property Name="ProgressingOutpostCount" BaseValue="0"/>
+		<Property Name="AdditionalFood" BaseValue="0"/>
+		<Property Name="AdditionalIndustry" BaseValue="0"/>
+		<Property Name="AdditionalScience" BaseValue="0"/>
+		<Property Name="AdditionalDust" BaseValue="0"/>
+		<Property Name="AdditionalPrestige" BaseValue="0"/>
+		<Property Name="MaximumIncomingAutomatedShips" BaseValue="3"/>
+		<Property Name="OutpostMaxPop" BaseValue="1" MaxValue="5"/>
+		<Property Name="HasSuperColonizer" BaseValue="0"/>
+
+		<!--  ##########################################################  -->
+		<!--  ######################## MODIFIER ########################  -->
+		<!--  ##########################################################  -->
+		<BinaryModifier TargetProperty="OutpostMaxPop" Operation="Addition" Left="$(HasSuperColonizer)" BinaryOperation="Multiplication" Right="5"/>
+		<Modifier TargetProperty="Happiness" Operation="Force" Value="50" Path="ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="OwnedSystemPopulationIsMaxed" Operation="Addition" Value="$(SystemPopulationIsMaxed)" Path="ColonizedStarSystemStateOutpost"/>
+		<Modifier TargetProperty="OwnedOutposts" Operation="Addition" Value="1"/>
+		<!--  Previously outpost base -->
+		<Modifier TargetProperty="SystemGrowth" Operation="Addition" Value="5" Path="ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="SystemProduction" Operation="Addition" Value="10" Path="ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="SystemMoneyUpkeep" Operation="Addition" Value="10" Path="ClassColonizedStarSystem"/>
+		<!--  [FS] ESPROD-2437  -->
+		<Modifier TargetProperty="OutpostCount" Operation="Force" Value="1" TooltipHidden="true"/>
+		<Modifier TargetProperty="SystemGrowth" Operation="Addition" Value="$(AdditionalFood)" Path="ClassStarSystem"/>
+		<Modifier TargetProperty="SystemProduction" Operation="Addition" Value="$(AdditionalIndustry)" Path="ClassStarSystem"/>
+		<Modifier TargetProperty="SystemResearch" Operation="Addition" Value="$(AdditionalScience)" Path="ClassStarSystem"/>
+		<Modifier TargetProperty="SystemMoney" Operation="Addition" Value="$(AdditionalDust)" Path="ClassStarSystem"/>
+		<Modifier TargetProperty="SystemEmpirePoint" Operation="Addition" Value="$(AdditionalPrestige)" Path="ClassStarSystem"/>
+		<Modifier TargetProperty="MaximumPopulation" Operation="Force" Value="$(OutpostMaxPop)" Path="ClassColonizedStarSystem/ClassPlanet" Priority="1" TooltipHidden="true"/>
+		<Modifier TargetProperty="NetSystemInfluence" Operation="Force" Value="0" TooltipHidden="true" Priority="10"/>
+		<Modifier TargetProperty="SystemInfluenceRadius" Operation="Force" Value="0" TooltipHidden="true" Priority="10"/>
+		<Modifier TargetProperty="SystemNextInfluenceRadiusEstimation" Operation="Force" Value="0" TooltipHidden="true" Priority="10"/>
+		<Modifier TargetProperty="NetPopulationScore" Operation="Addition" Value="100" Path="ColonizedStarSystemStateOutpost/PopulationMajor"/>
+		<Modifier TargetProperty="PlanetOutpostFood" Operation="Addition" Value="$(NetSystemGrowth)" Path="ColonizedStarSystemStateOutpost/ClassColonizedPlanet"/>
+		<Modifier TargetProperty="PlanetOutpostIndustry" Operation="Addition" Value="$(NetSystemProduction)" Path="ColonizedStarSystemStateOutpost/ClassColonizedPlanet"/>
+		<Modifier TargetProperty="PlanetOutpostDust" Operation="Addition" Value="$(NetSystemMoney)" Path="ColonizedStarSystemStateOutpost/ClassColonizedPlanet"/>
+		<Modifier TargetProperty="PlanetOutpostScience" Operation="Addition" Value="$(NetSystemResearch)" Path="ColonizedStarSystemStateOutpost/ClassColonizedPlanet"/>
+		<Modifier TargetProperty="PlanetOutpostPrestige" Operation="Addition" Value="$(NetSystemEmpirePoint)" Path="ColonizedStarSystemStateOutpost/ClassColonizedPlanet"/>
+		<Modifier TargetProperty="VisionRange" Operation="Addition" Value="1.7"/>
 	</SimulationDescriptor>
 
 	<SimulationDescriptor Name="ColonizedStarSystemStateColony" Type="ColonizedStarSystemState">
