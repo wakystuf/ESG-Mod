@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Registry xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Gameplay>
+    <Empire>
+      <Agencies>
+        <DepartmentOfCommerce>
+          <ResourceIncome>
+            <NeighbourModifier>0.8</NeighbourModifier>
+            <TradingCompanyHeadquartersModifier>2</TradingCompanyHeadquartersModifier>
+            <TradingCompanySubsidiaryModifier>1.8</TradingCompanySubsidiaryModifier>
+          </ResourceIncome>
+          <!-- I've literally just doubled all the values
+               Accumulated income to unlock new Trade HQ -->
+          <TradingRoutesIncomeThresholdFormula>(Floor(250 * Pow(4.2, Property(Empire, AvailableNumberOfTradingCompanyHeadquarters)))) * 2</TradingRoutesIncomeThresholdFormula>
+          <!-- Required experience to level up -->
+          <TradingRoutesExperienceThresholdFormula>((Floor(500 * (1 + Pow(1.45, Property(TradingCompany, Level))) - 900)) * Property(TradingCompany, @../ClassEmpire, TradingCompanyLevelUpMultiplier)) * 2</TradingRoutesExperienceThresholdFormula>
+          <!-- Trade Income Multiplier x Trade Income = Trade Income -->
+          <TradingCompanyIncomeMultiplierFormula>(0.75 + Pow(Property(TradingCompany, Level) / 35, 0.75)) * 2</TradingCompanyIncomeMultiplierFormula>
+        </DepartmentOfCommerce>
+        <DepartmentOfTheInterior>
+          <OutpostBuyoutCostFormula>((Ceil(((((Property(Empire, @AffinityGameplayVenetians, OwnedSystems) + Property(Empire, @AffinityGameplayVenetians, OwnedOutposts) - 1)) + 1) * 100) ^ (1 + 1.25 * ((Property(Empire, @AffinityGameplayVenetians, OwnedSystems) + Property(Empire, @AffinityGameplayVenetians, OwnedOutposts) - 1) / Property(Empire, @AffinityGameplayVenetians, NumberOfGalaxyNodes)))) + 100))</OutpostBuyoutCostFormula>
+          <OutpostBuyoutRefoundFormula>((Ceil(((((Property(Empire, @AffinityGameplayVenetians, OwnedSystems) + Property(Empire, @AffinityGameplayVenetians, OwnedOutposts) - 2)) + 1) * 100) ^ (1 + 1.25 * ((Property(Empire, @AffinityGameplayVenetians, OwnedSystems) + Property(Empire, @AffinityGameplayVenetians, OwnedOutposts) - 2) / Property(Empire, @AffinityGameplayVenetians, NumberOfGalaxyNodes)))) + 100))</OutpostBuyoutRefoundFormula>
+          <InfluenceConversionLifeforceGain>1500</InfluenceConversionLifeforceGain>
+        </DepartmentOfTheInterior>
+      </Agencies>
+    </Empire>
+    <Marketplace>
+      <MaximumTransactionCount>999</MaximumTransactionCount>
+    </Marketplace>
+    <CustomFaction>
+      <FactionTraitsMaxCount>999</FactionTraitsMaxCount>
+      <MajorPopulationInitialCount>
+        <Default>10</Default>
+        <AffinityGameplayVampirilis>1</AffinityGameplayVampirilis>
+      </MajorPopulationInitialCount>
+    </CustomFaction>
+    <Pirates>
+      <MinimumSpawnDistanceToSystems>1</MinimumSpawnDistanceToSystems>
+      <MaximumSpawnDistanceToSystems>4</MaximumSpawnDistanceToSystems>
+    </Pirates>
+  </Gameplay>
+</Registry>

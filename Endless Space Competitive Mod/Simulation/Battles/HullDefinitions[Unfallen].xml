@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/HullDefinition.xsd">
+  <!-- Explorer -->
+  <HullDefinition Name="HullSmall04Unfallen" ScoreProvider="CivilianShipConstructed" Category="CategoryHull" SubCategory="SubCategoryShipDesign">
+    <CustomCost ResourceName="SystemProduction">Max(0,((Property(StockLocation, @../ClassEmpire/ClassResearch, TechnologyQuadrantMilitaryActualStageNumber, true) - 1 ) * 25)) + 50 </CustomCost>
+    <!-- S2 costs here -->
+
+    <PathPrerequisite Flags="Prerequisite,Discard">ClassColonizedStarSystem,ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard,Edition">../ClassEmpire,AffinityMappingUnfallen</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard,Edition">../ClassEmpire,!AffinityGameplayVampirilis</PathPrerequisite>
+
+    <SimulationDescriptorReference Name="ClassHullSmallCivilian"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityKinetic"/>
+    <SimulationDescriptorReference Name="ShipSizeSmall"/>
+    <SimulationDescriptorReference Name="ShipFactionUnfallen"/>
+    <SimulationDescriptorReference Name="ShipHull01"/>
+
+    <ShipDesignLayout>
+      <ShipRoleReference Name="ShipRoleExploration"/>
+      <SectionPattern_Eight>
+        <!-- Core Section -->
+        <CoreSection Name="CoreSection">
+          <VisualSectionName>Core</VisualSectionName>
+          <SimulationDescriptorReference Name="ClassSectionCore"/>
+          <SimulationDescriptorReference Name="ClassSectionCoreSmallCivilian"/>
+          <Slot Name="SupportDefense01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UICoreWeapon07</UISlotName>
+          </Slot>
+          <Slot Name="Support01">
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyImproveExplorerHullUnfallens</TechnologyPrerequisite>
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <UISlotName>UICore08</UISlotName>
+          </Slot>
+        </CoreSection>
+
+        <!-- Forward Section -->
+        <Section Name="SectionN">
+          <VisualSectionName>Front</VisualSectionName>
+          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="180">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="0" Z="1"/>
+              <Angle>270</Angle>
+              <VisualSlot Name="MDL_Wp_Small_Up_00"></VisualSlot>
+            </LineOfSight>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="TopWeapon"/>
+            </ModuleModifier>
+            <UISlotName>UIFrontWeapon01</UISlotName>
+          </Slot>
+          <Slot Name="Defense01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UIFront02</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Forward/Right Section -->
+        <Section Name="SectionNE">
+          <VisualSectionName>FrontRight</VisualSectionName>
+          <Slot Name="Defense01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <UISlotName>UIFrontRight03</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Right Section -->
+        <Section Name="SectionE">
+          <VisualSectionName>Right</VisualSectionName>
+        </Section>
+
+        <!-- Back/Right Section -->
+        <Section Name="SectionSE">
+          <VisualSectionName>BackRight</VisualSectionName>
+        </Section>
+
+        <!-- Back Section -->
+        <Section Name="SectionS">
+          <VisualSectionName>Back</VisualSectionName>
+          <Slot Name="Support01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UIBack06</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back/Left Section -->
+        <Section Name="SectionSW">
+          <VisualSectionName>BackLeft</VisualSectionName>
+        </Section>
+
+        <!-- Left Section -->
+        <Section Name="SectionW">
+          <VisualSectionName>Left</VisualSectionName>
+        </Section>
+
+        <!-- Forward/Left Section -->
+        <Section Name="SectionNW">
+          <VisualSectionName>FrontLeft</VisualSectionName>
+        </Section>
+      </SectionPattern_Eight>
+    </ShipDesignLayout>
+
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterAttack"/>
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterDamage"/>
+    <BattleActionReference Name="Ship_Healing"/>
+    <BattleActionReference Name="Ship_OnDestruction"/>
+
+    <LevelUpRuleReference Name="ShipLevelUpRule"/>
+  </HullDefinition>
+
+  <!-- Vineship -->
+  <HullDefinition Name="HullSmall06Unfallen" ScoreProvider="CivilianShipConstructed" Category="CategoryHull" SubCategory="SubCategoryShipDesign">
+    <CostReductionReference Name="ColonyShipConstructible"/>
+    <CustomCost ResourceName="SystemProduction">400</CustomCost>
+    <PathPrerequisite Flags="Prerequisite,Discard">ClassColonizedStarSystem,ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard,Edition">../ClassEmpire,AffinityGameplayUnfallen/ClassPopulationEmpireAffinityUnfallen,PopulationMajor</PathPrerequisite>
+
+    <SimulationDescriptorReference Name="ClassHullSmallCivilian"/>
+    <SimulationDescriptorReference Name="ShipSizeSmall"/>
+    <SimulationDescriptorReference Name="ShipFactionUnfallen"/>
+    <SimulationDescriptorReference Name="ShipHull03"/>
+    <SimulationDescriptorReference Name="CannotHaveWeapon"/>
+
+    <ShipDesignLayout>
+      <ShipRoleReference Name="ShipRoleRootCreator"/>
+      <SectionPattern_Eight>
+        <!-- Core Section -->
+        <CoreSection Name="CoreSection">
+          <VisualSectionName>Core</VisualSectionName>
+          <SimulationDescriptorReference Name="ClassSectionCore"/>
+          <SimulationDescriptorReference Name="ClassSectionCoreSmallCivilian"/>
+          <Slot Name="Support01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UICore04</UISlotName>
+          </Slot>
+        </CoreSection>
+
+        <!-- Forward Section -->
+        <Section Name="SectionN">
+          <VisualSectionName>Front</VisualSectionName>
+          <Slot Name="Defense01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UIFront01</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Forward/Right Section -->
+        <Section Name="SectionNE">
+          <VisualSectionName>FrontRight</VisualSectionName>
+          <Slot Name="Defense01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <UISlotName>UIFrontRight02</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Right Section -->
+        <Section Name="SectionE">
+          <VisualSectionName>Right</VisualSectionName>
+        </Section>
+
+        <!-- Back/Right Section -->
+        <Section Name="SectionSE">
+          <VisualSectionName>BackRight</VisualSectionName>
+        </Section>
+
+        <!-- Back Section -->
+        <Section Name="SectionS">
+          <VisualSectionName>Back</VisualSectionName>
+          <Slot Name="Support01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UIBack03</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back/Left Section -->
+        <Section Name="SectionSW">
+          <VisualSectionName>BackLeft</VisualSectionName>
+        </Section>
+
+        <!-- Left Section -->
+        <Section Name="SectionW">
+          <VisualSectionName>Left</VisualSectionName>
+        </Section>
+
+        <!-- Forward/Left Section -->
+        <Section Name="SectionNW">
+          <VisualSectionName>FrontLeft</VisualSectionName>
+        </Section>
+      </SectionPattern_Eight>
+    </ShipDesignLayout>
+
+
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterAttack"/>
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterDamage"/>
+    <BattleActionReference Name="Ship_Healing"/>
+    <BattleActionReference Name="Ship_OnDestruction"/>
+
+
+    <LevelUpRuleReference Name="ShipLevelUpRule"/>
+  </HullDefinition>
+</Datatable>
