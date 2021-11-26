@@ -1,63 +1,51 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
-  <!-- Generic Tags -->
-  <SimulationDescriptor Name="PopulationCollectionBonusLevel1" Type="PopulationCollectionBonus" >
-    <Modifier TargetProperty="TotalPopulationCollectionBonus" Operation="Addition" Value="1"  Path="../ClassEmpire"   TooltipHidden="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="PopulationCollectionBonusLevel2" Type="PopulationCollectionBonus">
-    <Modifier TargetProperty="TotalPopulationCollectionBonus" Operation="Addition" Value="1"  Path="../ClassEmpire"   TooltipHidden="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="PopulationCollectionBonusLevel3" Type="PopulationCollectionBonus">
-    <Modifier TargetProperty="TotalPopulationCollectionBonus" Operation="Addition" Value="1"  Path="../ClassEmpire"   TooltipHidden="true"/>
-  </SimulationDescriptor>
+	<SimulationDescriptor Name="PopulationCollectionBonusVaultersScience3" Type="PopulationCollectionBonus">
+		<BinaryModifier TargetProperty="SystemResearch" Operation="Percent" Left="0.1"  BinaryOperation="Multiplication" Right="$(OwnedStrategicDeposits)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
+	</SimulationDescriptor>
 
-  <!-- Faction Bonuses -->
-  <SimulationDescriptor Name="PopulationCollectionBonusVaultersScience3" Type="PopulationCollectionBonus">
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Percent" Left="0.1"  BinaryOperation="Multiplication" Right="$(OwnedStrategicDeposits)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
+	<SimulationDescriptor Name="PopulationCollectionBonusVaultersMilitary3" Type="PopulationCollectionBonus">
+		<Modifier TargetProperty="GroundBattleDefenderTroopsDamageMultiplier"       Operation="Percent"     Value="0.35" Path="./ClassEmpire/ClassColonizedStarSystem"/>
+	</SimulationDescriptor>
 
-  <SimulationDescriptor Name="PopulationCollectionBonusVaultersMilitary3" Type="PopulationCollectionBonus">
-    <Modifier TargetProperty="GroundBattleDefenderTroopsDamageMultiplier"       Operation="Percent"     Value="0.35" Path="./ClassEmpire/ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
+	<SimulationDescriptor Name="PopulationCollectionBonusTemplars3" Type="PopulationCollectionBonus"/>
 
-  <SimulationDescriptor Name="PopulationCollectionBonusTemplars3" Type="PopulationCollectionBonus"/>
+	<SimulationDescriptor Name="PopulationCollectionBonusTimeLords3" Type="PopulationCollectionBonus">
+		<Modifier TargetProperty="WormholeSpeed"         Operation="Multiplication" Value="2" Path="./ClassEmpire/ClassGarrisonFleet/ClassShip" TooltipHidden="true"/>
+		<Modifier TargetProperty="BaseWormholeSpeed"     Operation="Multiplication" Value="2" Path="./ClassEmpire" TooltipHidden="true"/>
+		<Modifier TargetProperty="TerraformationModifier"   Operation="Percent" Value="-0.5"  Path="./ClassEmpire"/>
+	</SimulationDescriptor>
 
-  <SimulationDescriptor Name="PopulationCollectionBonusTimeLords3" Type="PopulationCollectionBonus">
-    <Modifier TargetProperty="WormholeSpeed"         Operation="Multiplication" Value="2" Path="./ClassEmpire/ClassGarrisonFleet/ClassShip" TooltipHidden="true"/>
-    <Modifier TargetProperty="BaseWormholeSpeed"     Operation="Multiplication" Value="2" Path="./ClassEmpire" TooltipHidden="true"/>
-    <Modifier TargetProperty="TerraformationModifier"   Operation="Percent" Value="-0.5"  Path="./ClassEmpire"/>
-  </SimulationDescriptor>
+	<!--United Empire population colection for all subfactions-->
 
-  <!--United Empire population colection for all subfactions-->
+	<SimulationDescriptor Name="PopulationCollectionBonusTerrans2" Type="PopulationCollectionBonus">
+		<Modifier TargetProperty="SystemProductionBonusFromCollection" Operation="Addition" Value="0.15" Path="false/./ClassEmpire/ClassStarSystem/ClassPopulationStarSystemAffinityTerrans" SearchValueFromPath="true" />
+		<Modifier TargetProperty="SystemProductionBonusFromCollection" Operation="Addition" Value="0.15" Path="PopulationCollectionBonusTerrans2,ClassPopulationEmpireAffinityTerransCount/./ClassEmpire/ClassStarSystem/ClassPopulationStarSystemAffinityTerrans" SearchValueFromPath="true" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <SimulationDescriptor Name="PopulationCollectionBonusTerrans2" Type="PopulationCollectionBonus">
-    <Modifier TargetProperty="SystemProductionBonusFromCollection" Operation="Addition" Value="0.15" Path="false/./ClassEmpire/ClassStarSystem/ClassPopulationStarSystemAffinityTerrans" SearchValueFromPath="true" />
-    <Modifier TargetProperty="SystemProductionBonusFromCollection" Operation="Addition" Value="0.15" Path="PopulationCollectionBonusTerrans2,ClassPopulationEmpireAffinityTerransCount/./ClassEmpire/ClassStarSystem/ClassPopulationStarSystemAffinityTerrans" SearchValueFromPath="true" TooltipHidden="true"/>
-  </SimulationDescriptor>
+	<SimulationDescriptor Name="PopulationCollectionBonusTerrans3" Type="PopulationCollectionBonus">
+		<!--<Modifier TargetProperty="InfluenceConversionModifierMultiplier" Operation="Addition" Value="-0.2" Path="./ClassEmpire"/>-->
+		<Modifier TargetProperty="RatioOfProductionSpentGainedAsEmpirePoint" Operation="Addition" Value="0.2" Path="./ClassEmpire" TooltipOverride="%ProductionSpentGainedAsEmpirePointUnlockedTooltip2"/>
+	</SimulationDescriptor>
 
-  <SimulationDescriptor Name="PopulationCollectionBonusTerrans3" Type="PopulationCollectionBonus">
-    <!--<Modifier TargetProperty="InfluenceConversionModifierMultiplier" Operation="Addition" Value="-0.2" Path="./ClassEmpire"/>-->
-    <BinaryModifier TargetProperty="EmpirePointFromIndustryConversion" Operation="Addition" Left="0.2" BinaryOperation="Multiplication" Right="$(SystemProduction)" SearchValueFromPath="true" Path="../ClassEmpire/ClassColonizedStarSystem" Priority="9999" TooltipOverride="%PopulationCollectionBonusTerrans3TooltipEffects"/>
-  </SimulationDescriptor>
+	<SimulationDescriptor Name="PopulationCollectionBonusMezari2" Type="PopulationCollectionBonus">
+		<Modifier TargetProperty="SystemResearchBonusFromCollection" Operation="Addition" Value="0.15" Path="../ClassEmpire/ClassStarSystem/ClassPopulationStarSystemAffinityMezari" SearchValueFromPath="true"/>
+	</SimulationDescriptor>
 
-  <SimulationDescriptor Name="PopulationCollectionBonusMezari2" Type="PopulationCollectionBonus">
-    <Modifier TargetProperty="SystemResearchBonusFromCollection" Operation="Addition" Value="0.15" Path="../ClassEmpire/ClassStarSystem/ClassPopulationStarSystemAffinityMezari" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="PopulationCollectionBonusMezari3" Type="PopulationCollectionBonus">
-    <BinaryModifier TargetProperty="NetSystemEmpirePoint" Operation="Addition" Left="0.2" BinaryOperation="Multiplication" Right="$(NetSystemResearch)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <!--used as a template for this collection bonus>
+	<SimulationDescriptor Name="PopulationCollectionBonusMezari3" Type="PopulationCollectionBonus">
+		<BinaryModifier TargetProperty="NetSystemEmpirePoint" Operation="Addition" Left="0.2" BinaryOperation="Multiplication" Right="$(NetSystemResearch)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
+		<!--used as a template for this collection bonus>
     <BinaryModifier TargetProperty="NetSystemEmpirePoint" Operation="Addition" Left="0.05" BinaryOperation="Multiplication" Right="$(SystemGrowth)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/> -->
-  </SimulationDescriptor>
+	</SimulationDescriptor>
 
-  <SimulationDescriptor Name="PopulationCollectionBonusSheredyn3" Type="PopulationCollectionBonus">
-    <BinaryModifier TargetProperty="NetSystemEmpirePoint"   Operation="Addition"        Left="10" BinaryOperation="Multiplication" Right="$(SystemManpowerStock100Threshold)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
+	<SimulationDescriptor Name="PopulationCollectionBonusSheredyn3" Type="PopulationCollectionBonus">
+		<BinaryModifier TargetProperty="NetSystemEmpirePoint"   Operation="Addition"        Left="10" BinaryOperation="Multiplication" Right="$(SystemManpowerStock100Threshold)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
+	</SimulationDescriptor>
 
-  <!--Unfallen population collection-->
-  <SimulationDescriptor Name="PopulationCollectionBonusUnfallen3" Type="PopulationCollectionBonus">
-    <BinaryModifier TargetProperty="EmpireResearch" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(OwnedTeemingPlanets)" Path="./ClassEmpire" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
+	<!--Unfallen population collection-->
+	<SimulationDescriptor Name="PopulationCollectionBonusUnfallen3" Type="PopulationCollectionBonus">
+		<BinaryModifier TargetProperty="EmpireResearch" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(OwnedTeemingPlanets)" Path="./ClassEmpire" SearchValueFromPath="true"/>
+	</SimulationDescriptor>
 
   <!--Vaulter 2nd pop collection bonus-->
   <SimulationDescriptor Name="PopulationCollectionBonusVaulters2" Type="PopulationCollectionBonus">
@@ -67,9 +55,9 @@
   </SimulationDescriptor>
 
   <!--Vaulter 3rd pop collection bonus-->
-  <SimulationDescriptor Name="PopulationCollectionBonusVaulters3" Type="PopulationCollectionBonus">
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(SystemManpowerStock)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
+	<SimulationDescriptor Name="PopulationCollectionBonusVaulters3" Type="PopulationCollectionBonus">
+		<BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(SystemManpowerStock)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
+	</SimulationDescriptor>
 
   <!--Sisters of Mercy 2nd-->
   <SimulationDescriptor Name="PopulationCollectionBonusSistersOfMercy2" Type="PopulationCollectionBonus">
@@ -77,322 +65,308 @@
   </SimulationDescriptor>
 
   <!--Horatio 3rd pop Collection Bonus-->
-  <SimulationDescriptor Name="PopulationCollectionBonusHoratio3" Type="PopulationCollectionBonus">
-    <BinaryModifier TargetProperty="SystemFIDSIPercent"           Operation="Addition"        Left="0.001" BinaryOperation="Multiplication" Right="$(EmpireMajorPopulationCount)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
+	<SimulationDescriptor Name="PopulationCollectionBonusHoratio3" Type="PopulationCollectionBonus">
+		<BinaryModifier TargetProperty="SystemFIDSIPercent"           Operation="Addition"        Left="0.001" BinaryOperation="Multiplication" Right="$(EmpireMajorPopulationCount)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
+	</SimulationDescriptor>
 
-  <!--UC pop collection bonus-->
-  <SimulationDescriptor Name="PopulationCollectionBonusUmbralChoir2" Type="PopulationCollectionBonus">
-    <BinaryModifier TargetProperty="EmpireEmpirePoint"                  Operation="Addition"    Left="1" BinaryOperation="Multiplication" Right="$(MaximumEmpireProcessingPowerStock)" Path="./ClassEmpire" SearchValueFromPath="true" EnforceRightAsPer="true"/>
-    <Modifier       TargetProperty="MaximumEmpireProcessingPowerStock"  Operation="Addition"    Value="15"      Path="./ClassEmpire" />
-  </SimulationDescriptor>
+	<!--UC pop collection bonus-->
+	<SimulationDescriptor Name="PopulationCollectionBonusUmbralChoir2" Type="PopulationCollectionBonus">
+		<BinaryModifier TargetProperty="EmpireEmpirePoint"                  Operation="Addition"    Left="1" BinaryOperation="Multiplication" Right="$(MaximumEmpireProcessingPowerStock)" Path="./ClassEmpire" SearchValueFromPath="true" EnforceRightAsPer="true"/>
+		<Modifier       TargetProperty="MaximumEmpireProcessingPowerStock"  Operation="Addition"    Value="15"      Path="./ClassEmpire" />
+	</SimulationDescriptor>
 
-  <!--Super pop collection bonus-->
-  <SimulationDescriptor Name="PopulationCollectionBonusSuperPopulation1" Type="PopulationCollectionBonus">
-    <Modifier TargetProperty="Politics02ToPolitics02" Operation="Addition" Value="1" Path="../ClassEmpire/ClassPopulationEmpireSuperPopulation"      TooltipOverride="%TooltipOverridePositivePolitics02"/>
-  </SimulationDescriptor>
+	<!--Super pop collection bonus-->
+	<SimulationDescriptor Name="PopulationCollectionBonusSuperPopulation1" Type="PopulationCollectionBonus">
+		<Modifier TargetProperty="Politics02ToPolitics02" Operation="Addition" Value="1" Path="../ClassEmpire/ClassPopulationEmpireSuperPopulation"      TooltipOverride="%TooltipOverridePositivePolitics02"/>
+	</SimulationDescriptor>
 
-  <SimulationDescriptor Name="PopulationCollectionBonusSuperPopulation2" Type="PopulationCollectionBonus">
-    <BinaryModifier TargetProperty="SystemFIDSFlat" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(SuperPopulationCount)" Path="PopulationCollectionBonusSuperPopulation2,ClassPopulationEmpireSuperPopulation/./ClassEmpire/ClassStarSystem,HomeSystem,!ColonizedStarSystemStateGhost" SearchValueFromPath="true" EnforceRightAsPer="true" TooltipOverride="%PopulationCollectionBonusSuperPopulation2"/>
-  </SimulationDescriptor>
+	<SimulationDescriptor Name="PopulationCollectionBonusSuperPopulation2" Type="PopulationCollectionBonus">
+		<BinaryModifier TargetProperty="SystemFIDSFlat" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(SuperPopulationCount)" Path="PopulationCollectionBonusSuperPopulation2,ClassPopulationEmpireSuperPopulation/./ClassEmpire/ClassStarSystem,HomeSystem,!ColonizedStarSystemStateGhost" SearchValueFromPath="true" EnforceRightAsPer="true"/>
+	</SimulationDescriptor>
 
-  <SimulationDescriptor Name="PopulationCollectionBonusSuperPopulation3" Type="PopulationCollectionBonus">
-    <BinaryModifier TargetProperty="SystemFIDSFlat" Operation="Addition" Left="4" BinaryOperation="Multiplication" Right="$(MaximumEmpireProcessingPowerStock)" Path="./ClassEmpire/ClassStarSystem,HomeSystem,!ColonizedStarSystemStateGhost" SearchValueFromPath="true" EnforceRightAsPer="true" TooltipOverride="%PopulationCollectionBonusSuperPopulation3"/>
-  </SimulationDescriptor>
+	<SimulationDescriptor Name="PopulationCollectionBonusSuperPopulation3" Type="PopulationCollectionBonus">
+		<BinaryModifier TargetProperty="SystemFIDSFlat" Operation="Addition" Left="4" BinaryOperation="Multiplication" Right="$(MaximumEmpireProcessingPowerStock)" Path="./ClassEmpire/ClassStarSystem,HomeSystem,!ColonizedStarSystemStateGhost" SearchValueFromPath="true" EnforceRightAsPer="true"/>
+	</SimulationDescriptor>
 
-  <!-- Craver Collection III -->
-  <SimulationDescriptor Name="PopulationCollectionBonusCravers3" Type="PopulationCollectionBonus">
-    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(PopulationEmpireDepletedPlanetCount)" Path="../ClassEmpire/ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
+	<!-- Minor Laws -->
+	<!-- Haroshems -->
+	<SimulationDescriptor Name="PopulationCollectionBonusHaroshems3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusHaroshems3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusHaroshems3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-  <!-- Lumeris Collection III -->
-  <SimulationDescriptor Name="PopulationCollectionBonusVenetians3" Type="PopulationCollectionBonus">
-    <Modifier TargetProperty="IgnoresTradingRouteBlockade" Operation="Addition" Value="1" Path="./ClassEmpire,EmpireTypeMajor" TooltipOverride="%TooltipOverrideIgnoreTradingRouteBlockade"/>
-    <Modifier TargetProperty="SystemEmpirePoint" Operation="Addition" Value="25" Path="FAKE/ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%TooltipOverridePopulationCollectionVenetians3"/>
-    <BinaryModifier TargetProperty="EmpireEmpirePoint" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(TradingRouteIncome_EmpireMoney)" Path="PopulationCollectionBonusVenetians3,ClassPopulationEmpireAffinityVenetiansCount/./ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
-    <Modifier TargetProperty="BuildingBuyoutReduction" Operation="Addition" Value="0.05" Path="../ClassEmpire/ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="ShipBuyoutReduction" Operation="Addition" Value="0.05" Path="../ClassEmpire/ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<Modifier TargetProperty="PopulationGrowthUpkeep" Operation="Percent" Value="-0.2" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Minor Laws -->
-  <!-- Haroshems -->
-  <SimulationDescriptor Name="PopulationCollectionBonusHaroshems3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusHaroshems3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusHaroshems3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Kalgeros -->
+	<SimulationDescriptor Name="PopulationCollectionBonusBenthys3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusBenthys3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusBenthys3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusBenthysHissho3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusBenthysHissho3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <Modifier TargetProperty="PopulationGrowthUpkeep" Operation="Percent" Value="-0.2" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<Modifier TargetProperty="OverPopulationPenalties" Operation="Multiplication" Value="0" Priority="10" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
 
-  <!-- Kalgeros -->
-  <SimulationDescriptor Name="PopulationCollectionBonusBenthys3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusBenthys3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusBenthys3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusBenthysHissho3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusBenthysHissho3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+		<!-- Hissho -->
+		<Modifier TargetProperty="PassiveEnrollmentRateHissho" Operation="Addition" Value="0.2" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem"  TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-    <!--  Effect -->
-    <Modifier TargetProperty="OverPopulationPenalties" Operation="Multiplication" Value="0" Priority="10" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
+	<!-- Epistis -->
+	<SimulationDescriptor Name="PopulationCollectionBonusBots3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusBots3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusBots3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!-- Hissho -->
-    <Modifier TargetProperty="PassiveEnrollmentRateHissho" Operation="Addition" Value="0.2" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem"  TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<Modifier TargetProperty="OwnerShipRecoveryRate" Operation="Percent" Value="0.5" Priority="10" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Epistis -->
-  <SimulationDescriptor Name="PopulationCollectionBonusBots3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusBots3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusBots3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Deuyivans -->
+	<SimulationDescriptor Name="PopulationCollectionBonusDeuyivans3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusDeuyivans3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusDeuyivans3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <Modifier TargetProperty="OwnerShipRecoveryRate" Operation="Percent" Value="0.5" Priority="10" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<Modifier TargetProperty="TechnologyCostQuadrantEmpireDevelopmentMultiplier"	Operation="Addition" Value="-0.3" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipHidden="true"/>
+		<Modifier TargetProperty="TechnologyCostQuadrantEmpireDevelopmentMultiplier"	Operation="Addition" Value="-0.3" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassResearch" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Deuyivans -->
-  <SimulationDescriptor Name="PopulationCollectionBonusDeuyivans3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusDeuyivans3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusDeuyivans3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Yuushos -->
+	<SimulationDescriptor Name="PopulationCollectionBonusHisshos3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusHisshos3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusHisshos3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <Modifier TargetProperty="TechnologyCostQuadrantEmpireDevelopmentMultiplier"	Operation="Addition" Value="-0.3" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipHidden="true"/>
-    <Modifier TargetProperty="TechnologyCostQuadrantEmpireDevelopmentMultiplier"	Operation="Addition" Value="-0.3" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassResearch" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<Modifier TargetProperty="FleetManpowerRefillRateModifier" Operation="Addition" Value="0.25" Priority="10" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassGarrison,FleetInfluenceStateOutsideBorders" TooltipHidden="true"/>
+		<Modifier TargetProperty="FleetManpowerRefillRateModifier" Operation="Addition" Value="0.25" Priority="10" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassGarrison" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Yuushos -->
-  <SimulationDescriptor Name="PopulationCollectionBonusHisshos3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusHisshos3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusHisshos3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Mavros -->
+	<SimulationDescriptor Name="PopulationCollectionBonusMavros3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusMavros3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusMavros3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusMavrosHissho3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusMavrosHissho3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <Modifier TargetProperty="FleetManpowerRefillRateModifier" Operation="Addition" Value="0.25" Priority="10" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassGarrison,FleetInfluenceStateOutsideBorders" TooltipHidden="true"/>
-    <Modifier TargetProperty="FleetManpowerRefillRateModifier" Operation="Addition" Value="0.25" Priority="10" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassGarrison" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<Modifier TargetProperty="OverColonizationPenalties" Operation="Percent" Value="-0.5" Priority="10" Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayMajorHisshos/ClassColonizedStarSystem" TooltipHidden="true"/>
 
-  <!-- Mavros -->
-  <SimulationDescriptor Name="PopulationCollectionBonusMavros3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusMavros3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusMavros3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusMavrosHissho3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusMavrosHissho3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+		<!-- Hissho -->
+		<Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="2" Priority="10" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayMajorHisshos" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-    <!--  Effect -->
-    <Modifier TargetProperty="OverColonizationPenalties" Operation="Percent" Value="-0.5" Priority="10" Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayMajorHisshos/ClassColonizedStarSystem" TooltipHidden="true"/>
+	<!-- Amoeba -->
+	<SimulationDescriptor Name="PopulationCollectionBonusAmoeba3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusAmoeba3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusAmoeba3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!-- Hissho -->
-    <Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="2" Priority="10" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayMajorHisshos" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<Modifier TargetProperty="PressureFrom" Operation="Percent" Value="-0.5" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipHidden="true"/>
+		<Modifier TargetProperty="BasePressureMultiplier" Operation="Percent" Value="0.5"  Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassDiplomacy" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Amoeba -->
-  <SimulationDescriptor Name="PopulationCollectionBonusAmoeba3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusAmoeba3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusAmoeba3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Pilgrims -->
+	<SimulationDescriptor Name="PopulationCollectionBonusPilgrims3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusPilgrims3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusPilgrims3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <Modifier TargetProperty="PressureFrom" Operation="Percent" Value="-0.5" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipHidden="true"/>
-    <Modifier TargetProperty="BasePressureMultiplier" Operation="Percent" Value="0.5"  Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassDiplomacy" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<Modifier TargetProperty="SeesAllFleets" Operation="Force" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Pilgrims -->
-  <SimulationDescriptor Name="PopulationCollectionBonusPilgrims3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusPilgrims3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusPilgrims3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Z'vali -->
+	<SimulationDescriptor Name="PopulationCollectionBonusZvali3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusZvali3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusZvali3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <Modifier TargetProperty="SeesAllFleets" Operation="Force" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<Modifier TargetProperty="BlockadeImpactFactor" Operation="Multiplication" Value="0" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem,BlockadedColonizedStarSystem" TooltipHidden="true"/>
+		<Modifier TargetProperty="BlockadeImpactFactor" Operation="Multiplication" Value="0" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem,BesiegedColonizedStarSystem" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Z'vali -->
-  <SimulationDescriptor Name="PopulationCollectionBonusZvali3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusZvali3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusZvali3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Eyders -->
+	<SimulationDescriptor Name="PopulationCollectionBonusEyders3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusEyders3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusEyders3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <Modifier TargetProperty="BlockadeImpactFactor" Operation="Multiplication" Value="0" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem,BlockadedColonizedStarSystem" TooltipHidden="true"/>
-    <Modifier TargetProperty="BlockadeImpactFactor" Operation="Multiplication" Value="0" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem,BesiegedColonizedStarSystem" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<BinaryModifier TargetProperty="EmpireMoney" Operation="Percent" Left="0.1" BinaryOperation="Multiplication" Right="$(PeaceCount)" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Eyders -->
-  <SimulationDescriptor Name="PopulationCollectionBonusEyders3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusEyders3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusEyders3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Niris -->
+	<SimulationDescriptor Name="PopulationCollectionBonusNiris3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusNiris3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusNiris3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusNirisHissho3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusNirisHissho3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <BinaryModifier TargetProperty="EmpireMoney" Operation="Percent" Left="0.1" BinaryOperation="Multiplication" Right="$(PeaceCount)" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(SystemLevel)"	Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayMajorHisshos/ClassColonizedStarSystem"	SearchValueFromPath="true" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Population)"		Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayMajorHisshos/ClassColonizedStarSystem"	SearchValueFromPath="true" TooltipHidden="true"/>
 
-  <!-- Niris -->
-  <SimulationDescriptor Name="PopulationCollectionBonusNiris3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusNiris3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusNiris3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusNirisHissho3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusNirisHissho3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+		<!-- Hissho -->
+		<BinaryModifier TargetProperty="BoostToHonorInGroundBattle" Operation="Addition" Left="0.03" BinaryOperation="Multiplication" Right="$(SystemLevel)"	Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayMajorHisshos/ClassColonizedStarSystem"	SearchValueFromPath="true" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="BoostToHonorInShipBattle"   Operation="Addition" Left="0.03" BinaryOperation="Multiplication" Right="$(SystemLevel)"	Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayMajorHisshos/ClassColonizedStarSystem"	SearchValueFromPath="true" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-    <!--  Effect -->
-    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(SystemLevel)"	Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayMajorHisshos/ClassColonizedStarSystem"	SearchValueFromPath="true" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Population)"		Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayMajorHisshos/ClassColonizedStarSystem"	SearchValueFromPath="true" TooltipHidden="true"/>
+	<!-- Remnant -->
+	<SimulationDescriptor Name="PopulationCollectionBonusRemnant3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusRemnant3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusRemnant3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!-- Hissho -->
-    <BinaryModifier TargetProperty="BoostToHonorInGroundBattle" Operation="Addition" Left="0.03" BinaryOperation="Multiplication" Right="$(SystemLevel)"	Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayMajorHisshos/ClassColonizedStarSystem"	SearchValueFromPath="true" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="BoostToHonorInShipBattle"   Operation="Addition" Left="0.03" BinaryOperation="Multiplication" Right="$(SystemLevel)"	Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayMajorHisshos/ClassColonizedStarSystem"	SearchValueFromPath="true" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<Modifier TargetProperty="DepositValue" Operation="Percent" Value="0.50"	Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem/ClassColonizedPlanet/ClassColonizedResourceDeposit,ResourceTypeStrategic" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Remnant -->
-  <SimulationDescriptor Name="PopulationCollectionBonusRemnant3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusRemnant3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusRemnant3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Pulsos -->
+	<SimulationDescriptor Name="PopulationCollectionBonusPulsos3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusPulsos3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusPulsos3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <Modifier TargetProperty="DepositValue" Operation="Percent" Value="0.50"	Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem/ClassColonizedPlanet/ClassColonizedResourceDeposit,ResourceTypeStrategic" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(SystemProduction)" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" SearchValueFromPath="true"  TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Pulsos -->
-  <SimulationDescriptor Name="PopulationCollectionBonusPulsos3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusPulsos3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusPulsos3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Amblyr -->
+	<SimulationDescriptor Name="PopulationCollectionBonusGreenman3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusGreenman3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusGreenman3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(SystemProduction)" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" SearchValueFromPath="true"  TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<Modifier TargetProperty="DepositValue" Operation="Percent"		Value="0.5"			Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem/ClassPlanet/ClassResourceDeposit,ResourceTypeLuxury"  TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Amblyr -->
-  <SimulationDescriptor Name="PopulationCollectionBonusGreenman3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusGreenman3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusGreenman3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Guardians -->
+	<SimulationDescriptor Name="PopulationCollectionBonusGuardians3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusGuardians3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusGuardians3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <Modifier TargetProperty="DepositValue" Operation="Percent"		Value="0.5"			Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem/ClassPlanet/ClassResourceDeposit,ResourceTypeLuxury"  TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<BinaryModifier TargetProperty="GroundBattleDefenderTroopsDamageMultiplier" Operation="Percent" Left="0.1" BinaryOperation="Multiplication" Right="$(PeaceCount)" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" Priority="-5" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="GroundBattleDefenderTroopsDamageMultiplier" Operation="Percent" Left="0.15" BinaryOperation="Multiplication" Right="$(AllianceCount)" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" Priority="-5" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Guardians -->
-  <SimulationDescriptor Name="PopulationCollectionBonusGuardians3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusGuardians3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusGuardians3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Basryxo -->
+	<SimulationDescriptor Name="PopulationCollectionBonusBasryxo3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusBasryxo3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusBasryxo3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <BinaryModifier TargetProperty="GroundBattleDefenderTroopsDamageMultiplier" Operation="Percent" Left="0.1" BinaryOperation="Multiplication" Right="$(PeaceCount)" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" Priority="-5" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="GroundBattleDefenderTroopsDamageMultiplier" Operation="Percent" Left="0.15" BinaryOperation="Multiplication" Right="$(AllianceCount)" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" Priority="-5" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<BinaryModifier TargetProperty="SystemGrowth" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(OwnedMeagerPlanets)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Basryxo -->
-  <SimulationDescriptor Name="PopulationCollectionBonusBasryxo3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusBasryxo3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusBasryxo3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Sisters of Mercy -->
+	<SimulationDescriptor Name="PopulationCollectionBonusSistersOfMercy3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusSistersOfMercy3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusSistersOfMercy3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <BinaryModifier TargetProperty="SystemGrowth" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(OwnedMeagerPlanets)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Addition" Value="0.35" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" SearchValueFromPath="true"  TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Sisters of Mercy -->
-  <SimulationDescriptor Name="PopulationCollectionBonusSistersOfMercy3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusSistersOfMercy3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusSistersOfMercy3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Illo -->
+	<SimulationDescriptor Name="PopulationCollectionBonusIllo3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusIllo3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusIllo3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Addition" Value="0.35" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" SearchValueFromPath="true"  TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<BinaryModifier TargetProperty="NetSystemEmpirePoint" Operation="Percent" Left="0.05" BinaryOperation="Multiplication" Right="$(WarCount)" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" SearchValueFromPath="true"  TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Illo -->
-  <SimulationDescriptor Name="PopulationCollectionBonusIllo3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusIllo3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusIllo3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Kalmat -->
+	<SimulationDescriptor Name="PopulationCollectionBonusMinorHacking3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusMinorHacking3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusMinorHacking3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <BinaryModifier TargetProperty="NetSystemEmpirePoint" Operation="Percent" Left="0.05" BinaryOperation="Multiplication" Right="$(WarCount)" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" SearchValueFromPath="true"  TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<Modifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Percent" Value="0.2" Path="../ClassEmpire,FactionTraitDisableMinorLaws" SearchValueFromPath="true"  TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Kalmat -->
-  <SimulationDescriptor Name="PopulationCollectionBonusMinorHacking3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusMinorHacking3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusMinorHacking3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Xirmisala -->
+	<SimulationDescriptor Name="PopulationCollectionBonusMinorOraculars3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusMinorOraculars3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusMinorOraculars3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <Modifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Percent" Value="0.2" Path="../ClassEmpire,FactionTraitDisableMinorLaws" SearchValueFromPath="true"  TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<BinaryModifier TargetProperty="SystemMoney" Operation="Percent" Left="0.5" BinaryOperation="Multiplication" Right="$(hasUniquePlanet)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Xirmisala -->
-  <SimulationDescriptor Name="PopulationCollectionBonusMinorOraculars3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusMinorOraculars3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusMinorOraculars3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Sowers -->
+	<SimulationDescriptor Name="PopulationCollectionBonusSowers3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusSowers3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusSowers3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Percent" Left="0.5" BinaryOperation="Multiplication" Right="$(hasUniquePlanet)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<BinaryModifier		TargetProperty="SystemGrowth"       Operation="Percent" Left="0.05" BinaryOperation="Multiplication" Right="$(OwnedTeemingPlanets)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
+		<BinaryModifier		TargetProperty="SystemProduction"   Operation="Percent" Left="0.05" BinaryOperation="Multiplication" Right="$(OwnedTeemingPlanets)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
+		<BinaryModifier		TargetProperty="SystemMoney"        Operation="Percent" Left="0.05" BinaryOperation="Multiplication" Right="$(OwnedTeemingPlanets)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
+		<BinaryModifier		TargetProperty="SystemResearch"     Operation="Percent" Left="0.05" BinaryOperation="Multiplication" Right="$(OwnedTeemingPlanets)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Sowers -->
-  <SimulationDescriptor Name="PopulationCollectionBonusSowers3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusSowers3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusSowers3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Kal'Tik'Mas -->
+	<SimulationDescriptor Name="PopulationCollectionBonusKalTikMas3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusKalTikMas3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusKalTikMas3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <BinaryModifier		TargetProperty="SystemGrowth"       Operation="Percent" Left="0.05" BinaryOperation="Multiplication" Right="$(OwnedTeemingPlanets)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier		TargetProperty="SystemProduction"   Operation="Percent" Left="0.05" BinaryOperation="Multiplication" Right="$(OwnedTeemingPlanets)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier		TargetProperty="SystemMoney"        Operation="Percent" Left="0.05" BinaryOperation="Multiplication" Right="$(OwnedTeemingPlanets)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier		TargetProperty="SystemResearch"     Operation="Percent" Left="0.05" BinaryOperation="Multiplication" Right="$(OwnedTeemingPlanets)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<BinaryModifier TargetProperty="MovementBonusFromKalTikMasLaw"  Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(SystemCount)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Kal'Tik'Mas -->
-  <SimulationDescriptor Name="PopulationCollectionBonusKalTikMas3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusKalTikMas3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusKalTikMas3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Sefaloros -->
+	<SimulationDescriptor Name="PopulationCollectionBonusSefaloros3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusSefaloros3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusSefaloros3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <BinaryModifier TargetProperty="MovementBonusFromKalTikMasLaw"  Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(SystemCount)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<BinaryModifier TargetProperty="BuildingProductionCostReduction"  Operation="Addition" Left="$(OwnedLuxuryDeposits)" BinaryOperation="Multiplication" Right="-0.1" SearchValueFromPath="true"  Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Sefaloros -->
-  <SimulationDescriptor Name="PopulationCollectionBonusSefaloros3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusSefaloros3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusSefaloros3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Galvrans -->
+	<SimulationDescriptor Name="PopulationCollectionBonusGalvrans3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusGalvrans3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusGalvrans3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <BinaryModifier TargetProperty="BuildingProductionCostReduction"  Operation="Addition" Left="$(OwnedLuxuryDeposits)" BinaryOperation="Multiplication" Right="-0.1" SearchValueFromPath="true"  Path="../ClassEmpire,FactionTraitDisableMinorLaws/ClassColonizedStarSystem" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<BinaryModifier TargetProperty="TechnologyCostModifierFromGalvransLaw" Operation="Subtraction" Left="0.01" BinaryOperation="Multiplication" Right="$(StrategicDepositCount)" SearchValueFromPath="true"  Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipHidden="true"/>
+	</SimulationDescriptor>
 
-  <!-- Galvrans -->
-  <SimulationDescriptor Name="PopulationCollectionBonusGalvrans3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws" TooltipOverride="%PopulationCollectionBonusGalvrans3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipOverride="%PopulationCollectionBonusGalvrans3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+	<!-- Harmony -->
+	<SimulationDescriptor Name="PopulationCollectionBonusHarmony3" Type="PopulationCollectionBonus">
+		<!-- Tooltip -->
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusHarmony_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusHarmony_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusHarmonyHissho3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
+		<Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusHarmonyHissho3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
 
-    <!--  Effect -->
-    <BinaryModifier TargetProperty="TechnologyCostModifierFromGalvransLaw" Operation="Subtraction" Left="0.01" BinaryOperation="Multiplication" Right="$(StrategicDepositCount)" SearchValueFromPath="true"  Path="../ClassEmpire,FactionTraitDisableMinorLaws" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!--  Effect -->
+		<BinaryModifier TargetProperty="Happiness"  Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(OwnedStrategicDeposits)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayMajorHisshos/ClassColonizedStarSystem" TooltipHidden="true"/>
 
-  <!-- Harmony -->
-  <SimulationDescriptor Name="PopulationCollectionBonusHarmony3" Type="PopulationCollectionBonus">
-    <!-- Tooltip -->
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusHarmony_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusHarmony_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitEnableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusHarmonyHissho3_TooltipEffect" TooltipHiddenIfPathInvalid="true"/>
-    <Modifier TargetProperty="UselessForTooltip" Operation="Addition" Value="1" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayHissho" TooltipOverride="%PopulationCollectionBonusHarmonyHissho3_TraitEffect" TooltipHiddenIfPathInvalid="true"/>
-
-    <!--  Effect -->
-    <BinaryModifier TargetProperty="Happiness"  Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(OwnedStrategicDeposits)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws,!AffinityGameplayMajorHisshos/ClassColonizedStarSystem" TooltipHidden="true"/>
-
-    <!-- Hissho -->
-    <BinaryModifier TargetProperty="BoostToHonorInGroundBattle"  Operation="Addition" Left="0.02" BinaryOperation="Multiplication" Right="$(OwnedStrategicDeposits)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayMajorHisshos/ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="BoostToHonorInShipBattle"    Operation="Addition" Left="0.02" BinaryOperation="Multiplication" Right="$(OwnedStrategicDeposits)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayMajorHisshos/ClassColonizedStarSystem" TooltipHidden="true"/>
-  </SimulationDescriptor>
+		<!-- Hissho -->
+		<BinaryModifier TargetProperty="BoostToHonorInGroundBattle"  Operation="Addition" Left="0.02" BinaryOperation="Multiplication" Right="$(OwnedStrategicDeposits)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayMajorHisshos/ClassColonizedStarSystem" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="BoostToHonorInShipBattle"    Operation="Addition" Left="0.02" BinaryOperation="Multiplication" Right="$(OwnedStrategicDeposits)" SearchValueFromPath="true" Path="../ClassEmpire,FactionTraitDisableMinorLaws,AffinityGameplayMajorHisshos/ClassColonizedStarSystem" TooltipHidden="true"/>
+	</SimulationDescriptor>
 </Datatable>

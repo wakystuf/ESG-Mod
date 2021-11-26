@@ -12,6 +12,9 @@
     <Modifier TargetProperty="PlanetInitialFIDSPenalty" Operation="Force" Value="0" Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeBoreal" TooltipHidden="true"/>
     <Modifier TargetProperty="PlanetInitialFIDSPenalty" Operation="Force" Value="0" Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeJungle" TooltipHidden="true"/>
 
+    <Modifier TargetProperty="HullTypes" Operation="Subtraction" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
+    <!--HullType -1 since they only have 1 starting hull instead of 2-->
+
 		<Modifier TargetProperty="BuyoutActivated" Operation="Force" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
 
 		<Modifier TargetProperty="SystemOutpostMigrationGrowth" Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/ClassOutpostMigrationFlux"     TooltipOverride="%FactionTraitNoOutPostFoodShippingTooltipOverride" TooltipHidden="true"/>
@@ -47,20 +50,14 @@
     <!--Double law upkeep-->
     <Modifier TargetProperty="LawUpkeep"             Operation="Percent" Value="1"   Path="ClassEmpire" TooltipOverride="%EmpireImprovementLawUpkeepIncrease"/>
 
-    <!--Ark essence cost rework-->
+    <!--Ark essence cost rework (currently busted)-->
     <Modifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Value="400"     Path="ClassEmpire,AffinityGameplayVampirilis" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Left="$(MothershipCount)" BinaryOperation="Multiplication" Right="400" Path="ClassEmpire,AffinityGameplayVampirilis" SearchValueFromPath="true" TooltipHidden="true"/>
     <Modifier TargetProperty="temp" Operation="Force" Value="$(MothershipCount)" Path="ClassEmpire,AffinityGameplayVampirilis" SearchValueFromPath="true" Priority="1" TooltipHidden="true"/>
+    <!--Chaos stinks (Chaos can fix this easily if he bothers to look at this code to fix it)-->
     <BinaryModifier TargetProperty="temp" Operation="Multiplication" Left="$(MothershipCount)" BinaryOperation="Subtraction" Right="1" Path="ClassEmpire,AffinityGameplayVampirilis" SearchValueFromPath="true" Priority="2" TooltipHidden="true"/>
     <Modifier TargetProperty="temp" Operation="Division" Value="2" Priority="3" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Addition" Left="$(temp)" BinaryOperation="Multiplication" Right="200" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
-  <!--Utopian Infrastructure-->
-  <SimulationDescriptor Name="FactionTraitUtopianInfrastructure" Type="FactionTrait">
-    <BinaryModifier TargetProperty="UtopianUnhappyReduction" Operation="Addition" Left="-0.25" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%FactionTraitUtopianInfrastructureTooltipOverride"/>
-    <Modifier TargetProperty="UtopianUnhappyReduction" Operation="Addition" Value="0.25" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="UtopianUnhappyReductionPerPop" Operation="Addition" Left="$(UtopianUnhappyReduction)" BinaryOperation="Multiplication" Right="$(HappinessRaw)" Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet" SearchValueFromPath="true" Priority="10" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <!--Unfallen-->
@@ -92,18 +89,6 @@
 		<Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeBoreal" TooltipHidden="true"/>
 		<Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeJungle" TooltipHidden="true"/>
 	</SimulationDescriptor>
-
-  <!--  increase exploration power (Lumeris)  -->
-  <SimulationDescriptor Name="FactionTraitEfficientExplorer1" Type="FactionTrait">
-    <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="1" Path="ClassEmpire/ClassGarrison/ClassShip,ShipRoleExploration"/>
-    <Modifier TargetProperty="NetShipProbe" Operation="Addition" Value="1" Path="ClassEmpire/ClassGarrison/ClassShip,ShipRoleExploration"/>
-    <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="1" Path="ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipRoleExploration" TooltipHidden="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="FactionTraitEfficientExplorer2" Type="FactionTrait">
-    <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="2" Path="ClassEmpire/ClassGarrison/ClassShip,ShipRoleExploration"/>
-    <Modifier TargetProperty="NetShipProbe" Operation="Addition" Value="2" Path="ClassEmpire/ClassGarrison/ClassShip,ShipRoleExploration"/>
-    <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="2" Path="ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipRoleExploration" TooltipHidden="true"/>
-  </SimulationDescriptor>
 
 	<!-- Pilgrims Assimilation Trait -->
   <SimulationDescriptor Name="FactionTraitMinorExplorers01" Type="FactionTraitMinor">
@@ -185,8 +170,8 @@
     <Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="FactionTraitMinorDiplomats02" Type="FactionTraitMinor">
-    <BinaryModifier TargetProperty="PeacefulTreatyCostReduction" Operation="Multiplication" Left="0.85" BinaryOperation="Power" Right="$(PeaceCount)" Path="ClassEmpire" TooltipOverride="%FactionTraitMinorDiplomats02A"/>
-    <BinaryModifier TargetProperty="PeacefulTreatyCostReduction" Operation="Multiplication" Left="0.8" BinaryOperation="Power" Right="$(AllianceCount)" Path="ClassEmpire" TooltipOverride="%FactionTraitMinorDiplomats02B"/>
+    <BinaryModifier TargetProperty="PeacefulTreatyCostReduction" Operation="Division" Left="0.85" BinaryOperation="Multiplication" Right="$(PeaceCount)" Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="PeacefulTreatyCostReduction" Operation="Division" Left="0.8" BinaryOperation="Multiplication" Right="$(AllianceCount)" Path="ClassEmpire"/>
     <Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
 
@@ -293,21 +278,17 @@
 
   <!-- Price of Perfection -->
   <SimulationDescriptor Name="FactionTraitPriceOfPerfection1" Type="FactionTrait">
-    <Modifier TargetProperty="ShipProductionCostReduction" Operation="Addition" Value="0.1" Path="ClassEmpire/ClassColonizedStarSystem" Priority="-5"/>
+    <Modifier TargetProperty="ShipProductionCostReduction" Operation="Addition" Value="0.05" Path="ClassEmpire/ClassColonizedStarSystem" Priority="-5"/>
     <Modifier TargetProperty="ColonyShipProductionCostReduction" Operation="Addition" Value="0.10" Path="ClassEmpire/ClassColonizedStarSystem" Priority="-5" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="MaximumHealthFromSkillHoratio" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(IndustryCost)" Path="ClassEmpire//ClassGarrisonFleet/ClassShip" SearchValueFromPath="true" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="MaximumShield" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(IndustryCost)" Path="ClassEmpire//ClassGarrisonFleet/ClassShip" SearchValueFromPath="true" TooltipOverride="%HoratioIndToHealth_ToolTipOverride_0"/>
-    <Modifier TargetProperty="MaximumHealthFromSkillHoratio" Operation="Division" Value="$(GameSpeedMultiplier)" Path="ClassEmpire//ClassGarrisonFleet/ClassShip" TooltipHidden="true"/>
-    <Modifier TargetProperty="MaximumShield"                 Operation="Division" Value="$(GameSpeedMultiplier)" Path="ClassEmpire//ClassGarrisonFleet/ClassShip" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="Damage" Operation="Percent" Value="0.05" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="FactionTraitPriceOfPerfection2" Type="FactionTrait">
-    <Modifier TargetProperty="ShipProductionCostReduction" Operation="Addition" Value="0.20" Path="ClassEmpire/ClassColonizedStarSystem" Priority="-5"/>
+    <Modifier TargetProperty="ShipProductionCostReduction" Operation="Addition" Value="0.10" Path="ClassEmpire/ClassColonizedStarSystem" Priority="-5"/>
     <Modifier TargetProperty="ColonyShipProductionCostReduction" Operation="Addition" Value="0.20" Path="ClassEmpire/ClassColonizedStarSystem" Priority="-5" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="MaximumHealthFromSkillHoratio" Operation="Addition" Left="0.5" BinaryOperation="Multiplication" Right="$(IndustryCost)" Path="ClassEmpire//ClassGarrisonFleet/ClassShip" SearchValueFromPath="true" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="MaximumShield"                 Operation="Addition" Left="0.5" BinaryOperation="Multiplication" Right="$(IndustryCost)" Path="ClassEmpire//ClassGarrisonFleet/ClassShip" SearchValueFromPath="true" TooltipOverride="%HoratioIndToHealth_ToolTipOverride_1"/>
-    <Modifier TargetProperty="MaximumHealthFromSkillHoratio" Operation="Division" Value="$(GameSpeedMultiplier)" Path="ClassEmpire//ClassGarrisonFleet/ClassShip" TooltipHidden="true"/>
-    <Modifier TargetProperty="MaximumShield"                 Operation="Division" Value="$(GameSpeedMultiplier)" Path="ClassEmpire//ClassGarrisonFleet/ClassShip" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="Damage" Operation="Percent" Value="0.1" Path="ClassEmpire/ClassGarrison/ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
   </SimulationDescriptor>
 
   <!-- Nakalim -->
@@ -365,38 +346,24 @@
   <!--UC-->
   <SimulationDescriptor Name="FactionTraitProcessingPowerFromTraitors"    Type="FactionTrait">
     <BinaryModifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Addition" Left="$(TraitorsCount)" BinaryOperation="Multiplication" Right="1" Path="../ClassEmpire"/>
-    <BinaryModifier TargetProperty="EmpireManpower" Operation="Addition" Left="$(TraitorsCount)" BinaryOperation="Multiplication" Right="3" Path="../ClassEmpire"/>
+    <BinaryModifier TargetProperty="NetEmpireManpower" Operation="Addition" Left="$(TraitorsCount)" BinaryOperation="Multiplication" Right="3" Path="../ClassEmpire"/>
   </SimulationDescriptor>  
  
   <SimulationDescriptor Name="FactionTraitAntiExpansionists" Type="FactionTrait">
-    <Modifier TargetProperty="OverColonizationPenaltiesReduction" Value="1" Operation="Addition" Path="ClassEmpire"/>
+    <Modifier TargetProperty="OverColonizationPenaltiesReduction" Value="0.3333" Operation="Addition" Path="ClassEmpire"/>
     <BinaryModifier TargetProperty="MaximumEmpireProcessingPowerStockOvercolonizationMultiplier" Operation="Addition" Left="-0.05" BinaryOperation="Multiplication" Right="$(SystemsAboveOverColonizationCount)" Path="ClassEmpire" TooltipOverride="%FactionTraitAntiExpansionistsProcessingPowerEffectOverride"/>
   </SimulationDescriptor>
 
   <!-- Ghost Crew-->
   <SimulationDescriptor Name="FactionTraitGhostCrew"    Type="FactionTrait">
-    <Modifier TargetProperty="MaximumShipManpower"	Operation="Percent"		Value="-0.8"	Priority="999"	Path="ClassEmpire//ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="MaximumShipManpower"	Operation="Percent"		Value="-0.8"	Priority="0"	Path="ClassEmpire//ClassGarrison/ClassShip"/>
     <Modifier TargetProperty="ShipManpowerKillAbsorption"	Operation="Addition"		Value="0.95"		Path="ClassEmpire//ClassGarrison/ClassShip"/>
     <Modifier TargetProperty="ManpowerDamageOverTimeDefense"	Operation="Addition"		Value="0.95"		Path="ClassEmpire//ClassGarrison/ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
 
-  <!-- Extra Maintenance Required -->
-  <SimulationDescriptor Name="FactionTraitHigherUpkeep"    Type="FactionTrait">
-    <Modifier TargetProperty="GarrisonMoneyUpkeep" Operation="Percent" Value="0.25" Path="ClassEmpire//ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Big Fleets -->
-  <SimulationDescriptor Name="FactionTraitBigFleets1" Type="FactionTrait">
-    <Modifier TargetProperty="MaximumCommandPoints" Operation="Addition" Value="1" Path="ClassEmpire"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="FactionTraitBigFleets2" Type="FactionTrait">
-    <Modifier TargetProperty="MaximumCommandPoints" Operation="Addition" Value="2" Path="ClassEmpire"/>
-  </SimulationDescriptor>
-
-  <!--Hissho-->
-  <SimulationDescriptor Name="FactionTraitMiningExperts" Type="FactionTrait">
-    <Modifier TargetProperty="OverColonizationThreshold" Operation="Subtraction" Value="1" Priority="999" Path="../ClassEmpire"/>
-    <BinaryModifier TargetProperty="SystemFIDSPercent" Operation="Subtraction" Left="0.05" BinaryOperation="Multiplication" Right="$(SystemsAboveOverColonizationCount)" Priority="-1" Path="../ClassEmpire/ClassColonizedStarSystem"/>
+  <!--Immigration Bonus Test-->
+  <SimulationDescriptor Name="FactionTraitIncreasedMigration" Type="FactionTrait">
+    <Modifier TargetProperty="MigrationScore"             Operation="Percent"     Value="0.4"    Priority="10" Path="ClassEmpire/ClassColonizedStarSystem"     TooltipHidden="false"/>
   </SimulationDescriptor>
 
   <!--Vaulters-->
@@ -418,27 +385,13 @@
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="FactionTraitCoreWorlds" Type="FactionTrait">
-    <Modifier TargetProperty="OverColonizationThreshold" Operation="Subtraction" Value="1" Priority="999" Path="../ClassEmpire"/>
+    <Modifier TargetProperty="OverColonizationThreshold" Operation="Subtraction" Value="1" Priority="-1" Path="../ClassEmpire"/>
     <BinaryModifier TargetProperty="SystemFIDSPercent" Operation="Subtraction" Left="0.10" BinaryOperation="Multiplication" Right="$(SystemsAboveOverColonizationCount)" Priority="-1" Path="../ClassEmpire/ClassColonizedStarSystem"/>
     <Modifier TargetProperty="IsUsingColonizationThresholdHappinessBonus" Operation="Force" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
-  
-  <!-- Unfallen -->
-  <!-- Harmonious -->
-  <SimulationDescriptor Name="FactionTraitNaive1" Type="FactionTrait">
-    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(TotalPopulationCollectionBonus)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="FactionTraitNaive2" Type="FactionTrait">
-    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(TotalPopulationCollectionBonus)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
 
-  <!-- Mutual Understanding -->
-  <SimulationDescriptor Name="FactionTraitMutualUnderstanding1" Type="FactionTrait">
-    <Modifier TargetProperty="Damage" Operation="Addition"  Value="0.1" Path="ClassEmpire/ClassGarrison,FleetInfluenceStateFriendly/ClassShip"  />
+  <SimulationDescriptor Name="EmpireImprovementUnique11SuperColonizer"       Type="EmpireImprovement">
+    <Modifier TargetProperty="VisionRange"          Operation="Addition"    Value="3"		Path="ClassEmpire/ClassGarrison/ClassShip,ShipRoleSuperColonizer"/>
+    <Modifier TargetProperty="VisionRange"          Operation="Addition"    Value="3"		Path="ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipRoleSuperColonize" TooltipHidden="true"/>
   </SimulationDescriptor>
-  
-  <SimulationDescriptor Name="FactionTraitMutualUnderstanding2" Type="FactionTrait">
-    <Modifier TargetProperty="Damage" Operation="Addition"  Value="0.2" Path="ClassEmpire/ClassGarrison,FleetInfluenceStateFriendly/ClassShip"  />
-  </SimulationDescriptor>
-  
 </Datatable>
