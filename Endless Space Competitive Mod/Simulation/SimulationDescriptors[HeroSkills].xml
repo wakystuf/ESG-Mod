@@ -1,373 +1,64 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
-  
-  <!-- ****************** -->
-  <!-- GENERIC SKILL TREE -->
-  <!-- ****************** -->
-
-  <!-- Conscription Genius -->
-  <SimulationDescriptor Name="HeroSkillSenator4_EmpireManpower_Percent" Type="HeroSkillSenator" IsSerializable="false">
-    <Property Name="EmpireManpower_Percent" BaseValue="0.25"/>
-    <Modifier TargetProperty="EmpireManpower_Percent" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
-    <Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Percent" Value="$(EmpireManpower_Percent)" Path="../ClassEmpire" TooltipOverride="%HeroSkillSenator4_EmpireManpower_Percent1"/>
-    <BinaryModifier TargetProperty="SystemManpowerGenericHeroSkill" Operation="Addition" Left="15" BinaryOperation="Multiplication" Right="$(SenatorSkillEffectDictatorshipMultiplier)" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="$(SystemManpowerGenericHeroSkill)" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
+  <SimulationDescriptor Name="HeroSkillSenator122_FIDSI_0" Type="HeroSkillSenator" IsSerializable="false">
+    <Property Name="FIDSI_PerHeroLevel" BaseValue="0.02"/>
+    <Modifier TargetProperty="FIDSI_PerHeroLevel" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemFIDSIPercent"  Operation="Addition"        Left="$(FIDSI_PerHeroLevel)" BinaryOperation="Multiplication"  Right="$(AllianceCount)"  Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
   </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSenator4_EmpireManpower_2Percent" Type="HeroSkillSenator" IsSerializable="false">
-    <Property Name="EmpireManpower_Percent" BaseValue="0.25"/>
-    <Property Name="SystemManpower_Temp" BaseValue="0"/>
-    <Modifier TargetProperty="EmpireManpower_Percent" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
-    <Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Percent" Value="$(EmpireManpower_Percent)" Path="../ClassEmpire" TooltipOverride="%HeroSkillSenator4_EmpireManpower_Percent2"/>
-    <BinaryModifier TargetProperty="SystemManpowerGenericHeroSkill" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(SenatorSkillEffectDictatorshipMultiplier)" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="$(SystemManpowerGenericHeroSkill)" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem5_SystemManpower_Flat_2" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(Population)"/>
-    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem5_SystemManpower_Flat_3" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Population)"/>
-    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
-  </SimulationDescriptor>
-
-  <!-- HeroSkill17 -->
-  <SimulationDescriptor Name="HeroSkill17_HeroUpkeepHeroCooldown_Percent_3" Type="HeroSkill" IsSerializable="false">
-    <Modifier TargetProperty="AssignmentCooldownBaseDuration" Operation="Percent" Value="-0.5"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem17_GovernorUpkeepReduction_Percent_3" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemMoneyUpkeep" Operation="Percent" Value="-0.1" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkill17_HeroUpkeepHeroCooldown_Percent_4" Type="HeroSkill" IsSerializable="false">
-    <Modifier TargetProperty="AssignmentCooldownBaseDuration" Operation="Percent" Value="-1"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem17_GovernorUpkeepReduction_Percent_4" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemMoneyUpkeep" Operation="Percent" Value="-0.2" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-
-  <!-- Ship Damage -->
-  <SimulationDescriptor Name="HeroSkillShip22_FleetDamage_Percent_0" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="EfficiencyAgainstSquadron" Operation="Percent" Value="0.3" Path="./ClassGarrisonFleet//ClassModuleWeapon" TooltipOverride="%HeroSkillShip22_FleetDamage_Percent_0TooltipOverride"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip22_FleetDamage_Percent_3" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="EfficiencyAgainstSquadron" Operation="Percent" Value="1" Path="./ClassGarrisonFleet//ClassModuleWeapon" TooltipOverride="%HeroSkillShip22_FleetDamage_Percent_3TooltipOverride"/>
-  </SimulationDescriptor>
-
-  <!-- ****************** -->
-  <!-- OVERSEER SKILL TREE -->
-  <!-- ****************** -->
-
-  <!-- Innate Class Skills -->
-  <SimulationDescriptor Name="HeroSkillSystemOverseerInnate" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="PlanetRawFood" Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
-    <Modifier TargetProperty="PlanetRawIndustry" Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
-    <!-- FEEDBACK FOR SCAN VIEW -->
-    <BinaryModifier TargetProperty="BonusHeroPlanetFood" Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" SearchValueFromPath="true"/>
-    <BinaryModifier TargetProperty="BonusHeroPlanetIndustry" Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
-
-  <!-- Fleet MP skill -->
-  <SimulationDescriptor Name="HeroSkillShip7_SystemManpower_Percent_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="MaximumDamageBonusFromManpower" Operation="Addition" Value="0.15" Path="./ClassGarrisonFleet/ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip7_SystemManpower_Percent_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="MaximumDamageBonusFromManpower" Operation="Addition" Value="0.3" Path="./ClassGarrisonFleet/ClassShip"/>
-  </SimulationDescriptor>
-
-  <!-- Ind per planet/Hot -->
-  <SimulationDescriptor Name="HeroSkillSystem71_Industry_PerPlanetFlat_2" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <Modifier TargetProperty="SystemProduction" Operation="Addition" Value="10" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedHotPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <!-- FEEDBACK FOR SCAN VIEW -->
-    <BinaryModifier TargetProperty="BonusHeroSystemIndustry" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
-    <BinaryModifier TargetProperty="BonusHeroSystemIndustry" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedHotPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem71_Industry_PerPlanetFlat_3" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <Modifier TargetProperty="SystemProduction" Operation="Addition" Value="20" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(OwnedHotPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <!-- FEEDBACK FOR SCAN VIEW -->
-    <BinaryModifier TargetProperty="BonusHeroSystemIndustry" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
-    <BinaryModifier TargetProperty="BonusHeroSystemIndustry" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(OwnedHotPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
-  </SimulationDescriptor>
-
-  <!-- Buiding and Upkeep Cost Reductions -->
-  <SimulationDescriptor Name="HeroSkillCostReductions_1" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="BuildingProductionCostReduction" Operation="Addition" Value="-0.1" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="SystemMoneyUpkeep" Operation="Percent" Value="-0.1" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillCostReductions_2" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="BuildingProductionCostReduction" Operation="Addition" Value="-0.2" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="SystemMoneyUpkeep" Operation="Percent" Value="-0.2" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-
-  <!-- HeroSkill43 -->
-  <SimulationDescriptor Name="HeroSkillShip43_FleetExplorationFleetDefense_PercentFlat_3" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ShipMaximumMovement" Operation="Addition" Value="1" Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="FleetMaximumShield" Operation="Addition" Value="0.15" Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="GarrisonMoneyUpkeep" Operation="Percent" Value="-0.2" Path="./ClassGarrisonFleet"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip43_FleetExplorationFleetDefense_PercentFlat_4" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ShipMaximumMovement" Operation="Addition" Value="2" Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="FleetMaximumShield" Operation="Addition" Value="0.30" Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="GarrisonMoneyUpkeep" Operation="Percent" Value="-0.4" Path="./ClassGarrisonFleet"/>
-  </SimulationDescriptor>
-
-  <!-- ****************** -->
-  <!-- COUNSELOR SKILL TREE -->
-  <!-- ****************** -->
 
   <!-- Innate Class Skills -->
   <SimulationDescriptor Name="HeroSkillSystemCounselorInnate" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="PlanetRawDust" Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
-    <Modifier TargetProperty="PlanetRawScience" Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <Modifier TargetProperty="PlanetRawDust"									Operation="Addition"		Value="1"			Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <Modifier TargetProperty="PlanetRawScience"								Operation="Addition"		Value="1"			Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
     <!-- FEEDBACK FOR SCAN VIEW -->
-    <BinaryModifier TargetProperty="BonusHeroPlanetDust" Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" SearchValueFromPath="true"/>
-    <BinaryModifier TargetProperty="BonusHeroPlanetScience" Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="BonusHeroPlanetDust"		Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="BonusHeroPlanetScience"	Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" SearchValueFromPath="true"/>
   </SimulationDescriptor>
 
-  <!-- Person of Means -->
-  <SimulationDescriptor Name="HeroSkillSystem58_Dust_PerPlanetFlat_1" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="PlanetRawDust" Operation="Addition" Value="2" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
-    <Modifier TargetProperty="PlanetRawDust" Operation="Addition" Value="2" Path="ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeMeager"/>
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
+  <SimulationDescriptor Name="HeroSkillSystemOverseerInnate" Type="HeroSkillSystem" IsSerializable="false">
+    <Modifier TargetProperty="PlanetRawFood"									Operation="Addition"		Value="1"			Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <Modifier TargetProperty="PlanetRawIndustry"								Operation="Addition"		Value="1"			Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
     <!-- FEEDBACK FOR SCAN VIEW -->
-    <Modifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Value="2" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true"/>
-    <Modifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Value="2" Path="ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeMeager" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="BonusHeroPlanetFood"		Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="BonusHeroPlanetIndustry"	Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" SearchValueFromPath="true"/>
   </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem58_Dust_PerPlanetFlat_2" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="PlanetRawDust" Operation="Addition" Value="4" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
-    <Modifier TargetProperty="PlanetRawDust" Operation="Addition" Value="4" Path="ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeMeager"/>
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
+
+  <!--HeroSkill75-->
+  <SimulationDescriptor Name="HeroSkillSystem75_Industry_PerAnomaly_0" Type="HeroSkillSystem" IsSerializable="false">
+    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="ClassColonizedStarSystem" TooltipOverride="%HeroSkill75_Industry_PerAnomaly_EffectOverride"/>
     <!-- FEEDBACK FOR SCAN VIEW -->
-    <Modifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Value="4" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true"/>
-    <Modifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Value="4" Path="ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeMeager" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="BonusHeroSystemIndustry"  Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
   </SimulationDescriptor>
-
-  <!-- HeroSkill107 -->
-  <SimulationDescriptor Name="HeroSkillShip107_FleetDefense_Percent_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="FleetMaximumHealth" Operation="Addition" Value="0.10" Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="OpponentCriticalHitDamagePercent" Operation="Addition" Value="-0.10" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%HeroSkillShip107_FleetDefense_Percent_2"/>
-    <Modifier TargetProperty="OpponentCriticalHitDamagePercent" Operation="Addition" Value="-0.10" Path="./ClassGarrisonFleet/ClassShip,ShipRoleSupport" TooltipHidden="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip107_FleetDefense_Percent_3" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="FleetMaximumHealth" Operation="Addition" Value="0.20" Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="OpponentCriticalHitDamagePercent" Operation="Addition" Value="-0.20" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%HeroSkillShip107_FleetDefense_Percent_3"/>
-    <Modifier TargetProperty="OpponentCriticalHitDamagePercent" Operation="Addition" Value="-0.20" Path="./ClassGarrisonFleet/ClassShip,ShipRoleSupport" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
-  <!-- Public Relations Expert -->
-  <SimulationDescriptor Name="HeroSkillSystem81_Influence_PercentFlat_2" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <Modifier TargetProperty="SystemEmpirePoint" Operation="Percent" Value="0.05" Path="ClassColonizedStarSystem" />
+  <SimulationDescriptor Name="HeroSkillSystem75_Industry_PerAnomaly_4" Type="HeroSkillSystem" IsSerializable="false">
+    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="ClassColonizedStarSystem" />
     <!-- FEEDBACK FOR SCAN VIEW -->
-    <BinaryModifier TargetProperty="BonusHeroSystemPrestige" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
-    <!-- Percent TODO -->
+    <BinaryModifier TargetProperty="BonusHeroSystemIndustry"  Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
   </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem81_Influence_PercentFlat_3" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <Modifier TargetProperty="SystemEmpirePoint" Operation="Percent" Value="0.10" Path="ClassColonizedStarSystem" />
+  <SimulationDescriptor Name="HeroSkillSenator75_Industry_PerAnomaly_4" Type="HeroSkillSenator" IsSerializable="false">
+    <Property Name="DictatorshipBonus" BaseValue="-1" MinValue="Negative"/>
+    <!--Base Effect-->
+    <BinaryModifier TargetProperty="SystemProduction"   Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%HeroSkill75_SenateIndustry_PerAnomaly_EffectOverride"/>
+    <!--Dictatorship Bonus-->
+    <Modifier TargetProperty="DictatorshipBonus"        Operation="Addition" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemProduction"   Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(SenatorSkillEffectDictatorshipMultiplier)" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
     <!-- FEEDBACK FOR SCAN VIEW -->
-    <BinaryModifier TargetProperty="BonusHeroSystemPrestige" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
-    <!-- Percent TODO -->
+    <BinaryModifier TargetProperty="BonusHeroSystemIndustry"  Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true"    Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="BonusHeroSystemIndustry"  Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(SenatorSkillEffectDictatorshipMultiplier)"   Path="../ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
   </SimulationDescriptor>
 
-  <!-- Market Master -->
-  <SimulationDescriptor Name="HeroSkillSystem_Corporate_08_01" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="TradingRouteIncomeModifier" Operation="Percent" Value="0.15" Path="./ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="DepositValue" Operation="Addition" Value="0.5" Path="ClassColonizedStarSystem/ClassPlanet/ClassResourceDeposit,ResourceTypeLuxury" />
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem_Corporate_08_02" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="TradingRouteIncomeModifier" Operation="Percent" Value="0.30" Path="./ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="DepositValue" Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassPlanet/ClassResourceDeposit,ResourceTypeLuxury" />
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSenate_Corporate_08_01" Type="HeroSkillSenator" IsSerializable="false">
-    <Property Name="TradeCompanies_Percent" BaseValue="0.1"/>
-    <Modifier TargetProperty="TradeCompanies_Percent" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
-    <Modifier TargetProperty="TradingRouteIncomeModifier" Operation="Percent" Value="$(TradeCompanies_Percent)" Path="../ClassEmpire/ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSenate_Corporate_08_02" Type="HeroSkillSenator" IsSerializable="false">
-    <Property Name="TradeCompanies_Percent" BaseValue="0.2"/>
-    <Modifier TargetProperty="TradeCompanies_Percent" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
-    <Modifier TargetProperty="TradingRouteIncomeModifier" Operation="Percent" Value="$(TradeCompanies_Percent)" Path="../ClassEmpire/ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-
-  <!-- Sensitive Systems -->
-  <SimulationDescriptor Name="HeroSkillShip45_FleetExplorationFleetUpkeep_Percent_3" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="SiegePower"  Operation="Percent" Value="0.25" Path="./ClassGarrisonFleet" TooltipOverride="%HeroSkillSiegePower1"/>
-    <Modifier TargetProperty="AdditionalOpponentRecyclingDustPerCP" Operation="Addition" Value="25"  Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="ShipMaximumMovement" Operation="Addition" Value="1" Path="./ClassGarrisonFleet" />
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip45_FleetExplorationFleetUpkeep_Percent_4" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="SiegePower"  Operation="Percent" Value="0.5" Path="./ClassGarrisonFleet" TooltipOverride="%HeroSkillSiegePower2"/>
-    <Modifier TargetProperty="AdditionalOpponentRecyclingDustPerCP" Operation="Addition" Value="50"  Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="ShipMaximumMovement" Operation="Addition" Value="2" Path="./ClassGarrisonFleet" />
-  </SimulationDescriptor>
-
-  <!-- The Joy Initiative -->
-  <SimulationDescriptor Name="HeroSkillSystem52_Approval_Force_4" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="Happiness" Operation="Force" Value="100" Path="ClassColonizedStarSystem" Priority="10000" TooltipOverride="%HeroSkill07BranchCorporate_01_TooltipEffect"/>
-    <Modifier TargetProperty="UnclampedNetEmpireHonor" Operation="Addition" Value="0.5" Path="../ClassEmpire" Priority="10000" />
-    <Modifier TargetProperty="SystemMoneyUpkeep" Operation="Percent" Value="-0.3" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-
-  <!-- ****************** -->
-  <!-- GUARDIAN SKILL TREE -->
-  <!-- ****************** -->
-
-  <!-- Efficiency Aficionado (note: level 2 of this is already level 1 for the Overseer tree) -->
-  <SimulationDescriptor Name="HeroSkillSystem71_Industry_PerPlanetFlat_1" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <Modifier TargetProperty="SystemProduction" Operation="Addition" Value="5" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(OwnedHotPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <!-- FEEDBACK FOR SCAN VIEW -->
-    <BinaryModifier TargetProperty="BonusHeroSystemIndustry" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
-    <BinaryModifier TargetProperty="BonusHeroSystemIndustry" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(OwnedHotPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
-  </SimulationDescriptor>
-
-  <!-- Papers Please (Deprecated, but still better to ensure this sim descriptor works properly)-->
-  <SimulationDescriptor Name="HeroSkillSenator14_Diplomacy_Percent" Type="HeroSkillSenator" IsSerializable="false">
-    <Property Name="Diplomacy_Percent" BaseValue="0.5"/>
-    <Modifier TargetProperty="Diplomacy_Percent" Operation="Division" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
-    <Modifier TargetProperty="PeacefulTreatyCostReduction"      Operation="Multiplication" Value="$(Diplomacy_Percent)" Path="../ClassEmpire"/>
-  </SimulationDescriptor>
-
-  <!-- Manpower per pop -->
-  <SimulationDescriptor Name="HeroSkillManpowerPerPop" Type="HeroSkill" IsSerializable="false">
-    <BinaryModifier TargetProperty="NetSystemManpower" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
-
-  <!-- Fleet Damage -->
-  <SimulationDescriptor Name="HeroSkillShip18_FleetDamage_Percent_3" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ShipDamage" Operation="Addition" Value="0.15" Path="./ClassGarrisonFleet"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip18_FleetDamage_Percent_4" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ShipDamage" Operation="Addition" Value="0.30" Path="./ClassGarrisonFleet"/>
-  </SimulationDescriptor>
-
-  <!-- Hull Plating % convereted to MP Deployment -->
-  <SimulationDescriptor Name="HeroSkillShip27_FleetDefense_Percent_0" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="AdditionalGroundBattleManpowerLimit" Operation="Percent" Value="0.1" Path="./ClassGarrisonFleet" Priority="2" TooltipOverride="%HeroSkillShip27_FleetDefense_Percent_0"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip27_FleetDefense_Percent_3" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="AdditionalGroundBattleManpowerLimit" Operation="Percent" Value="0.2" Path="./ClassGarrisonFleet" Priority="2" TooltipOverride="%HeroSkillShip27_FleetDefense_Percent_3"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip27_FleetDefense_Percent_4" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="AdditionalGroundBattleManpowerLimit" Operation="Percent" Value="0.4" Path="./ClassGarrisonFleet" Priority="2" TooltipOverride="%HeroSkillShip27_FleetDefense_Percent_4"/>
-  </SimulationDescriptor>
-
-  <!-- ****************** -->
-  <!-- SEEKER SKILL TREE  -->
-  <!-- ****************** -->
-
-  <!-- HeroSkill28 -->
-  <SimulationDescriptor Name="HeroSkillShip28_FleetDefense_Percent_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="RepairAfterBattle" Operation="Addition" Value="0.05" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%RepairAfterBattle1"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip28_FleetDefense_Percent_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="RepairAfterBattle" Operation="Addition" Value="0.1" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%RepairAfterBattle2"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip28_FleetDefense_Percent_3" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="RepairAfterBattle" Operation="Addition" Value="0.2" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%RepairAfterBattle3"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip28_FleetDefense_Percent_4" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="RepairAfterBattle" Operation="Addition" Value="0.4" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%RepairAfterBattle4"/>
-  </SimulationDescriptor>
-
-  <!-- Anomaly Science -->
-  <SimulationDescriptor Name="HeroSkillAnomalySciencePercent_1" Type="HeroSkill" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Percent" Left="0.05" BinaryOperation="Multiplication" Right="$(AnomalyCount)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillAnomalySciencePercent_2" Type="HeroSkill" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Percent" Left="0.1" BinaryOperation="Multiplication" Right="$(AnomalyCount)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
-
-  <!-- HeroSkill16 -->
-  <SimulationDescriptor Name="HeroSkill16_HeroCooldown_Percent_4" Type="HeroSkill" IsSerializable="false">
-    <Modifier TargetProperty="MoraleBonus" Operation="Percent" Value="0.5" Path="./ClassGarrisonFleet//ClassGroup"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkill16_HeroCooldown_Percent_4_OutOfTerritory" Type="HeroSkill" IsSerializable="false">
-    <Modifier TargetProperty="CanBeAssignedOutOfTerritory" Operation="Force" Value="1" Path="ClassHero" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
-  <!-- ******************* -->
-  <!-- UNFALLEN SKILL TREE -->
-  <!-- ******************* -->
-
-  <!-- HeroSkill24 -->
-  <SimulationDescriptor Name="HeroSkillShip24_FleetDefense_Percent_0" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="HPRestoredPerSecond" Operation="Addition" Value="50" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%HeroSkillShip24_FleetDefense_Percent_0TooltipOverride"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip24_FleetDefense_Percent_3" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="HPRestoredPerSecond" Operation="Addition" Value="150" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%HeroSkillShip24_FleetDefense_Percent_3TooltipOverride"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip24_FleetDefense_Percent_4" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="HPRestoredPerSecond" Operation="Addition" Value="300" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%HeroSkillShip24_FleetDefense_Percent_4TooltipOverride"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSenator24_FleetDefense_Percent_4" Type="HeroSkillSenator" IsSerializable="false">
-    <Property Name="FleetDefense_Percent" BaseValue="100"/>
-    <Modifier TargetProperty="FleetDefense_Percent" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
-    <Modifier TargetProperty="HPRestoredPerSecond" Operation="Addition" Value="$(FleetDefense_Percent)" Path="../ClassEmpire/ClassGarrisonFleet/ClassShip" TooltipOverride="%HeroSkillShip24_FleetDefense_Percent_SenatorTooltipOverride"/>
-  </SimulationDescriptor>
-
-  <!-- Pop Boost Effect -->
-  <SimulationDescriptor Name="HeroSkillPopulationBoosts" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="PopulationPercentModifier" Operation="Percent" Value="0.33" Path="../ClassEmpire,!AffinityGameplayCravers,!AffinityGameplayTimeLords/ClassColonizedStarSystem/ClassPlanet/ClassPopulation" TooltipOverride="%HeroSkillPopulationBoostsOverride2"/>
-  </SimulationDescriptor>
-  
-  <!-- ****************** -->
-  <!-- RIFTBORN SKILL TREE -->
-  <!-- ****************** -->
-
-  <!-- Defensive AI Integration -->
-  <SimulationDescriptor Name="HeroSkillShip25_FleetDefense_Percent_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="FleetMaximumShield" Operation="Addition" Value="0.15" Path="./ClassGarrisonFleet" />
-    <Modifier TargetProperty="ShieldRegeneratePerSecond" Operation="Addition" Value="50" Path="./ClassGarrisonFleet/ClassShip" />
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="HeroSkillShip25_FleetDefense_Percent_2_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="FleetMaximumShield" Operation="Addition" Value="0.30" Path="./ClassGarrisonFleet" />
-    <Modifier TargetProperty="ShieldRegeneratePerSecond" Operation="Addition" Value="100" Path="./ClassGarrisonFleet/ClassShip" />
-  </SimulationDescriptor>
-
-  <!-- Anomaly Science -->
   <SimulationDescriptor Name="HeroSkillSystem91_Science_PerAnomalyFlat_2" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemResearch" Operation="Addition" Value="20" Path="ClassColonizedStarSystem" />
-    <Modifier TargetProperty="SystemResearch" Operation="Addition" Value="20" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="ClassColonizedStarSystem" TooltipOverride="%HeroSkill91_Science_PerAnomalyFlat_EffectOverride"/>
+    <Modifier       TargetProperty="SystemResearch"		Operation="Addition"		Value="20"		Path="ClassColonizedStarSystem" />
+    <Modifier       TargetProperty="SystemResearch"	    Operation="Addition"	    Value="20"		Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
+    <BinaryModifier TargetProperty="SystemResearch"     Operation="Addition"        Left="20" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="ClassColonizedStarSystem" TooltipOverride="%HeroSkill91_Science_PerAnomalyFlat_EffectOverride"/>
     <!-- FEEDBACK FOR SCAN VIEW -->
-    <Modifier TargetProperty="BonusHeroSystemScience" Operation="Addition" Value="20" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+    <Modifier TargetProperty="BonusHeroSystemScience"									Operation="Addition"			Value="20"			Path="ClassColonizedStarSystem" TooltipHidden="true" />
     <BinaryModifier TargetProperty="BonusHeroSystemScience" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="ClassColonizedStarSystem" TooltipHidden="true" />
   </SimulationDescriptor>
 
-  <!--HeroSkill75 -->
-  <SimulationDescriptor Name="HeroSkillSystem75_Industry_PerAnomaly_0" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="15" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="ClassColonizedStarSystem" TooltipOverride="%HeroSkill75_Industry_PerAnomaly_EffectOverride"/>
-    <!-- FEEDBACK FOR SCAN VIEW -->
-    <BinaryModifier TargetProperty="BonusHeroSystemIndustry" Operation="Addition" Left="15" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem75_Industry_PerAnomaly_4" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="ClassColonizedStarSystem" />
-    <!-- FEEDBACK FOR SCAN VIEW -->
-    <BinaryModifier TargetProperty="BonusHeroSystemIndustry" Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(AnomalyCount)" SearchValueFromPath="true" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-  </SimulationDescriptor>
-  <!--Buffed senator skill and fixed vanilla bug -->
-  <SimulationDescriptor Name="HeroSkillSenator75_Industry_PerAnomaly_4" Type="HeroSkillSenator" IsSerializable="false">
-    <Property Name="BonusHeroSystemProduction_Temp" BaseValue="0.05"/>
-    <Modifier TargetProperty="BonusHeroSystemProduction_Temp" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
-    <Modifier TargetProperty="SystemProductionAnomalyPercentBonus"  Operation="Addition" Value="$(BonusHeroSystemProduction_Temp)" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%HeroSkill75_SenateIndustry_PerAnomaly_EffectOverride"/>
-  </SimulationDescriptor>
-
-  <!-- ****************** -->
-  <!-- CRAVERS SKILL TREE -->
-  <!-- ****************** -->
-
   <!-- Endless Consumption -->
   <SimulationDescriptor Name="HeroSkillSystem104_FIDSI_PercentFlat_4Variant" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="PlanetDepletionPerTurn" Operation="Addition" Value="8" Path="ClassColonizedStarSystem/ClassPlanet" />
-    <Modifier TargetProperty="PlanetRawFIDSI" Operation="Addition" Value="12" Path="ClassColonizedStarSystem/ClassColonizedPlanet" />
+    <Modifier TargetProperty="PlanetDepletionPerTurn"			Operation="Addition"				Value="8"			Path="ClassColonizedStarSystem/ClassPlanet" />
+    <Modifier TargetProperty="PlanetRawFIDSI"			    Operation="Addition"			    Value="12"		    Path="ClassColonizedStarSystem/ClassColonizedPlanet" />
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="HeroSkillSystem104_FIDSI_PercentFlat_4" Type="HeroSkillSystem" IsSerializable="false">
@@ -375,533 +66,148 @@
     <Modifier TargetProperty="PlanetHeroFIDSIFlat" Operation="Addition" Value="12" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
   </SimulationDescriptor>
 
-  <!-- ************************ -->
-  <!-- UNITED EMPIRE SKILL TREE -->
-  <!-- ************************ -->
-
-  <!-- HeroSkill76 -->
-  <SimulationDescriptor Name="HeroSkillSystem76_Industry_PerPlanetFlat_1" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedMeagerPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <!--  FEEDBACK FOR SCAN VIEW  -->
-    <BinaryModifier TargetProperty="BonusHeroSystemIndustry" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="BonusHeroSystemIndustry" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedMeagerPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem76_Industry_PerPlanetFlat_2" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(OwnedMeagerPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <!--  FEEDBACK FOR SCAN VIEW  -->
-    <BinaryModifier TargetProperty="BonusHeroSystemIndustry" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="BonusHeroSystemIndustry" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(OwnedMeagerPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
+  <!-- Papers Please -->
+  <SimulationDescriptor Name="HeroSkillSenator14_Diplomacy_Percent" Type="HeroSkillSenator" IsSerializable="false">
+    <Property Name="Diplomacy_Percent" BaseValue="0.5"/>
+    <Modifier TargetProperty="Diplomacy_Percent" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PeacefulTreatyCostReduction"      Operation="Multiplication" Value="$(Diplomacy_Percent)" Path="../ClassEmpire"/>
+    <Modifier TargetProperty="AggressiveTreatyCostReduction"    Operation="Multiplication" Value="$(Diplomacy_Percent)" Path="../ClassEmpire"/>
   </SimulationDescriptor>
 
-  <!-- ****************** -->
-  <!-- SOPHON SKILL TREE -->
-  <!-- ****************** -->
- 
-  <SimulationDescriptor Name="HeroSkillShip20_FleetDamage_Percent_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ShipDamageEnergy" Operation="Addition" Value="0.15" Path="./ClassGarrisonFleet"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip20_FleetDamage_Percent_3" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ShipDamageEnergy" Operation="Addition" Value="0.3" Path="./ClassGarrisonFleet"/>
+  <!-- Defensive AI Integration -->
+  <SimulationDescriptor Name="HeroSkillShip25_FleetDefense_Percent_2" Type="HeroSkillShip" IsSerializable="false">
+    <Modifier TargetProperty="FleetMaximumShield"   Operation="Addition"		Value="0.15"		Path="./ClassGarrisonFleet" />
+    <Modifier TargetProperty="ShieldRegeneratePerSecond"	Operation="Addition"		Value="50"		Path="./ClassGarrisonFleet/ClassShip" />
   </SimulationDescriptor>
 
-  <SimulationDescriptor Name="HeroSkillSystem94_Science_PerHeroLevelFlat_1" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemResearch" Operation="Addition" Value="10" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="SystemResearch" Operation="Addition" Value="10" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
-    <!--  FEEDBACK FOR SCAN VIEW  -->
-    <Modifier TargetProperty="BonusHeroSystemScience" Operation="Addition" Value="10" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="BonusHeroSystemScience" Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem94_Science_PerHeroLevelFlat_2" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemResearch" Operation="Addition" Value="20" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="SystemResearch" Operation="Addition" Value="20" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
-    <!--  FEEDBACK FOR SCAN VIEW  -->
-    <Modifier TargetProperty="BonusHeroSystemScience" Operation="Addition" Value="20" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="BonusHeroSystemScience" Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+  <SimulationDescriptor Name="HeroSkillShip25_FleetDefense_Percent_2_2" Type="HeroSkillShip" IsSerializable="false">
+    <Modifier TargetProperty="FleetMaximumShield"   Operation="Addition"		Value="0.30"		Path="./ClassGarrisonFleet" />
+    <Modifier TargetProperty="ShieldRegeneratePerSecond"	Operation="Addition"		Value="75"		Path="./ClassGarrisonFleet/ClassShip" />
   </SimulationDescriptor>
 
-    <!-- Movement -->
-    <SimulationDescriptor Name="HeroSkillShip37_FleetExploration_Flat_3" Type="HeroSkillShip" IsSerializable="false">
-      <Modifier TargetProperty="ShipMaximumMovement" Operation="Addition" Value="5" Path="./ClassGarrisonFleet"/>
-      <Modifier TargetProperty="VisionRange" Operation="Addition" Value="3" Path="./ClassGarrisonFleet"/>
-    </SimulationDescriptor>
-
-  <!-- ****************** -->
-  <!-- VODYANI SKILL TREE -->
-  <!-- ****************** -->
-
-  <!--  Fleet Shielding  -->
-  <SimulationDescriptor Name="HeroSkillShip26_FleetDefense_Percent_0" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.10" Path="./ClassGarrisonFleet/ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip26_FleetDefense_Percent_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.10" Path="./ClassGarrisonFleet/ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip26_FleetDefense_Percent_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.20" Path="./ClassGarrisonFleet/ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip26_FleetDefense_Percent_3" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="MaximumShield" Operation="Percent" Value="0.40" Path="./ClassGarrisonFleet/ClassShip"/>
+  <!-- The Joy Initiative -->
+  <SimulationDescriptor Name="HeroSkillSystem52_Approval_Force_4" Type="HeroSkillSystem" IsSerializable="false">
+    <Modifier TargetProperty="Happiness"							Operation="Force"		Value="100"			  Path="ClassColonizedStarSystem" Priority="10000" TooltipOverride="%HeroSkill07BranchCorporate_01_TooltipEffect"/>
+    <Modifier TargetProperty="UnclampedNetEmpireHonor"				Operation="Addition"	Value="0.5"			  Path="../ClassEmpire" Priority="10000" />
+    <Modifier TargetProperty="SystemMoneyUpkeep"				    Operation="Percent"		Value="-0.3"		  Path="ClassColonizedStarSystem"/>
   </SimulationDescriptor>
 
-  <!-- Movement -->
-  <SimulationDescriptor Name="HeroSkillShip37_FleetExploration_Flat_2B" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ShipMaximumMovement" Operation="Addition" Value="3" Path="./ClassGarrisonFleet"/>
-  </SimulationDescriptor>
-
-  <!-- Science (replaces lost +3 movement) -->
-  <SimulationDescriptor Name="HeroSkillSystemSciencePerLevel" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="10"  BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Percent"  Left="0.01" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-
-  <!-- HeroSkill49 -->
-  <SimulationDescriptor Name="HeroSkillShip49_FleetDefenseFleetDamage_Percent_4" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="FleetMaximumHealth" Operation="Addition" Value="0.25" Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="ShipDamage" Operation="Addition" Value="0.10" Path="./ClassGarrisonFleet"/>
-  </SimulationDescriptor>
-
-  <!-- *********************** -->
-  <!-- UMBRAL CHOIR SKILL TREE -->
-  <!-- *********************** -->
-
-  <!-- HeroSkill120 -->
-  <SimulationDescriptor Name="HeroSkillSystem120_ProcessingPower_Flat_0" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Percent" Value="0.1" Path="../ClassEmpire"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem120_ProcessingPower_Flat_1" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Percent" Value="0.2" Path="../ClassEmpire"/>
-  </SimulationDescriptor>
-
-  <!-- Evasion Skill (Note: in vanilla, Evasion is exactly 50% as good as it claims, so this includes the offset) -->
-  <SimulationDescriptor Name="HeroSkillShip33_FleetDefense_Percent_0" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="Evasion" Operation="Addition" Value="0.1" Path="FAKE//ClassGarrisonFleet"/>
-    <Modifier TargetProperty="Evasion" Operation="Addition" Value="0.2" Path="./ClassGarrisonFleet" TooltipHidden="true"/>  
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip33_FleetDefense_Percent_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="Evasion" Operation="Addition" Value="0.2" Path="FAKE//ClassGarrisonFleet"/>
-    <Modifier TargetProperty="Evasion" Operation="Addition" Value="0.4" Path="./ClassGarrisonFleet" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
-  <!-- HeroSkill113 -->
-  <SimulationDescriptor Name="HeroSkillShip113_FleetExploration_Flat_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="2" Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="SiegePower"  Operation="Percent" Value="0.25" Path="./ClassGarrisonFleet" TooltipOverride="%HeroSkillSiegePower1"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip113_FleetExploration_Flat_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="4" Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="SiegePower"  Operation="Percent" Value="0.5" Path="./ClassGarrisonFleet" TooltipOverride="%HeroSkillSiegePower2"/>
-  </SimulationDescriptor>
-  
-  <!-- ****************** -->
-  <!-- VAULTER SKILL TREE -->
-  <!-- ****************** -->
-
-  <!-- HeroSkill116 -->
-  <SimulationDescriptor Name="HeroSkillSystem116_TroopBonus_Percent_3" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Addition" Value="0.10"/>
-    <Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Addition" Value="0.10" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
-    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(Population)"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem116_TroopBonus_Percent_4" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Addition" Value="0.2"/>
-    <Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Addition" Value="0.2" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
-    <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="60" BinaryOperation="Multiplication" Right="$(Population)"/>
-  </SimulationDescriptor>
-
-  <!-- ****************** -->
-  <!-- LUMERIS SKILL TREE -->
-  <!-- ****************** -->
-
-  <!-- HeroSkill62 -->
-  <SimulationDescriptor Name="HeroSkillSystem62_Dust_PerPlanetFlat_1" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemMoney" Operation="Addition" Value="5" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="SystemMoney" Operation="Addition" Value="5" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <!--  FEEDBACK FOR SCAN VIEW  -->
-    <Modifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Value="5" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem62_Dust_PerPlanetFlat_2" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemMoney" Operation="Addition" Value="10" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="SystemMoney" Operation="Addition" Value="10" Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <!--  FEEDBACK FOR SCAN VIEW  -->
-    <Modifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Value="10" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
-  <!--HeroSkill73 (fixing vanilla bug)-->
-  <SimulationDescriptor Name="HeroSkillSystem73_Industry_Perpop_4" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="PlanetRawIndustry"                                Operation="Addition"            Value="6"        Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+  <!-- Efficiency Aficionado -->
+  <SimulationDescriptor Name="HeroSkillSystem71_Industry_PerPlanetFlat_1" Type="HeroSkillSystem" IsSerializable="false">
+    <BinaryModifier TargetProperty="SystemProduction"		        Operation="Addition"		Left="5"   BinaryOperation="Multiplication" Right="$(OwnedPlanets)"		    Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <Modifier       TargetProperty="SystemProduction"	Operation="Addition"	    Value="5"		Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
+    <BinaryModifier TargetProperty="SystemProduction"	Operation="Addition"		Left="5"        BinaryOperation="Multiplication" Right="$(OwnedHotPlanets)"		Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
     <!-- FEEDBACK FOR SCAN VIEW -->
-    <BinaryModifier TargetProperty="BonusHeroPlanetIndustry"        Operation="Addition" Left="6" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="BonusHeroSystemIndustry"		    Operation="Addition"		Left="5"    BinaryOperation="Multiplication" Right="$(OwnedPlanets)"		Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
+    <BinaryModifier TargetProperty="BonusHeroSystemIndustry"		    Operation="Addition"		Left="5"    BinaryOperation="Multiplication" Right="$(OwnedHotPlanets)"		Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
   </SimulationDescriptor>
 
-  <!-- HeroSkill85 -->
-  <SimulationDescriptor Name="HeroSkillSystem85_InfluenceDust_Flat_3" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemEmpirePoint" Operation="Addition" Value="20" Path="ClassColonizedStarSystem"/>
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <!--  FEEDBACK FOR SCAN VIEW  -->
-    <Modifier TargetProperty="BonusHeroSystemPrestige" Operation="Addition" Value="20" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" TooltipHidden="true" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem85_InfluenceDust_Flat_4" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemEmpirePoint" Operation="Addition" Value="40" Path="ClassColonizedStarSystem"/>
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="80" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <!--  FEEDBACK FOR SCAN VIEW  -->
-    <Modifier TargetProperty="BonusHeroSystemPrestige" Operation="Addition" Value="40" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Left="80" BinaryOperation="Multiplication" Right="$(OwnedPlanets)" TooltipHidden="true" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
+  <!-- Level 2 -->
+  <SimulationDescriptor Name="HeroSkillSystem71_Industry_PerPlanetFlat_2" Type="HeroSkillSystem" IsSerializable="false">
+    <BinaryModifier TargetProperty="SystemProduction"		        Operation="Addition"		Left="10"   BinaryOperation="Multiplication" Right="$(OwnedPlanets)"		    Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <Modifier       TargetProperty="SystemProduction"	Operation="Addition"	    Value="10"		Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
+    <BinaryModifier TargetProperty="SystemProduction"	Operation="Addition"		Left="10"       BinaryOperation="Multiplication" Right="$(OwnedHotPlanets)"		Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <!-- FEEDBACK FOR SCAN VIEW -->
+    <BinaryModifier TargetProperty="BonusHeroSystemIndustry"		    Operation="Addition"		Left="10"    BinaryOperation="Multiplication" Right="$(OwnedPlanets)"		Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
+    <BinaryModifier TargetProperty="BonusHeroSystemIndustry"		    Operation="Addition"		Left="10"    BinaryOperation="Multiplication" Right="$(OwnedHotPlanets)"		Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
   </SimulationDescriptor>
 
-  <!-- Passing trade routes bonus -->
-  <SimulationDescriptor Name="HeroSkillSystem100_TradeCompanies_Percent_4" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="TradingRoutesBonus_Growth"		Operation="Percent"					Value="5"		Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="TradingRoutesBonus_Production"	Operation="Percent"					Value="5"		Path="ClassColonizedStarSystem"/>
+  <SimulationDescriptor Name="HeroSkillSystem71_Industry_PerPlanetFlat_3" Type="HeroSkillSystem" IsSerializable="false">
+    <BinaryModifier TargetProperty="SystemProduction"		        Operation="Addition"		Left="20"   BinaryOperation="Multiplication" Right="$(OwnedPlanets)"		    Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <Modifier       TargetProperty="SystemProduction"	Operation="Addition"	    Value="20"		Path="../ClassEmpire,AffinityGameplayUmbralChoir/ClassColonizedStarSystem,ColonizedStarSystemStateGhost" TooltipHiddenIfPathInvalid="true"/>
+    <BinaryModifier TargetProperty="SystemProduction"	Operation="Addition"		Left="20"       BinaryOperation="Multiplication" Right="$(OwnedHotPlanets)"		Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <!-- FEEDBACK FOR SCAN VIEW -->
+    <BinaryModifier TargetProperty="BonusHeroSystemIndustry"		    Operation="Addition"		Left="20"    BinaryOperation="Multiplication" Right="$(OwnedPlanets)"		Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
+    <BinaryModifier TargetProperty="BonusHeroSystemIndustry"		    Operation="Addition"		Left="20"    BinaryOperation="Multiplication" Right="$(OwnedHotPlanets)"		Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
   </SimulationDescriptor>
-
-  <!-- ****************** -->
-  <!--  HISSHO SKILL TREE -->
-  <!-- ****************** -->
-
-  <!-- HeroSkill118 -->
-  <SimulationDescriptor Name="HeroSkillShip118_FleetDamage_Percent_4" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="CriticalHitChance" Operation="Addition" Value="0.1" Path="./ClassGarrisonFleet/ClassShip" SearchValueFromPath="true"/>
-    <BinaryModifier TargetProperty="Damage" Operation="Addition" Left="0.02" BinaryOperation="Multiplication" Right="$(ShipLevelForGUI)" Path="./ClassGarrisonFleet/ClassShip" SearchValueFromPath="true" Priority="2"/>
-  </SimulationDescriptor>
-
-  <!-- ****************** -->
-  <!-- NAKALIM SKILL TREE -->
-  <!-- ****************** -->
 
   <!-- Vision of the Lost -->
   <SimulationDescriptor Name="HeroSkillShip129_Vision_0" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="8" Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="VisionRange" Operation="Percent" Value="0.6" Path="./ClassGarrisonFleet,FleetOrbitingAcademyNode"/>
-    <Modifier TargetProperty="GarrisonMoneyUpkeep" Operation="Percent" Value="-0.6" Path="./ClassGarrisonFleet,FleetOrbitingAcademyNode"/>
+    <Modifier TargetProperty="VisionRange"           Operation="Addition"  Value="8"    Path="./ClassGarrisonFleet"/>
+    <Modifier TargetProperty="VisionRange"           Operation="Percent"  Value="0.6"    Path="./ClassGarrisonFleet,FleetOrbitingAcademyNode"/>
+    <Modifier TargetProperty="GarrisonMoneyUpkeep"   Operation="Percent"  Value="-0.6"   Path="./ClassGarrisonFleet,FleetOrbitingAcademyNode"/>
   </SimulationDescriptor>
 
-  <SimulationDescriptor Name="HeroSkillSenator122_FIDSI_0" Type="HeroSkillSenator" IsSerializable="false">
-    <Property Name="FIDSI_PerHeroLevel" BaseValue="0.02"/>
-    <Modifier TargetProperty="FIDSI_PerHeroLevel" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="SystemFIDSIPercent" Operation="Addition" Left="$(FIDSI_PerHeroLevel)" BinaryOperation="Multiplication" Right="$(AllianceCount)" Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
+  <!-- Sensitive Systems -->
+  <SimulationDescriptor Name="HeroSkillShip45_FleetExplorationFleetUpkeep_Percent_3" Type="HeroSkillShip" IsSerializable="false">
+    <Modifier TargetProperty="VisionRange"										Operation="Addition"		Value="4"		Path="./ClassGarrisonFleet"/>
+    <Modifier TargetProperty="GarrisonMoneyUpkeep"								Operation="Percent"			Value="-0.2"	Path="./ClassGarrisonFleet"/>
+    <Modifier TargetProperty="ShipMaximumMovement"									Operation="Addition"		Value="1"		Path="./ClassGarrisonFleet" />
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="HeroSkillShip45_FleetExplorationFleetUpkeep_Percent_4" Type="HeroSkillShip" IsSerializable="false">
+    <Modifier TargetProperty="VisionRange"										Operation="Addition"		Value="8"		 Path="./ClassGarrisonFleet"/>
+    <Modifier TargetProperty="GarrisonMoneyUpkeep"						Operation="Percent"			Value="-0.4" Path="./ClassGarrisonFleet"/>
+    <Modifier TargetProperty="ShipMaximumMovement"						Operation="Addition"		Value="2"		 Path="./ClassGarrisonFleet" />
   </SimulationDescriptor>
 
-  <!-- ****************** -->
-  <!-- HORATIO SKILL TREE -->
-  <!-- ****************** -->
-
-  <!--Horatic Curiosity-->
-  <SimulationDescriptor Name="HeroSkillShip39_FleetExploration_PercentFlat_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="1" Path="./ClassGarrisonFleet/ClassShip,ShipRoleHero" />
-    <Modifier TargetProperty="NetShipProbe" Operation="Addition" Value="0.50" Path="./ClassGarrisonFleet/ClassShip,ShipRoleHero" />
-    <Modifier TargetProperty="ShipMaximumMovement" Operation="Addition" Value="1" Path="./ClassGarrisonFleet" />
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip39_FleetExploration_PercentFlat_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="2" />
-    <Modifier TargetProperty="NetShipProbe" Operation="Addition" Value="0.50" />
-    <Modifier TargetProperty="ShipMaximumMovement" Operation="Addition" Value="2" Path="./ClassGarrisonFleet" />
+  <!-- Conscription Genius -->
+  <SimulationDescriptor Name="HeroSkillSenator4_EmpireManpower_Percent" Type="HeroSkillSenator" IsSerializable="false">
+    <Property Name="EmpireManpower_Percent" BaseValue="0.25"/>
+    <Modifier TargetProperty="EmpireManpower_Percent" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Percent" Value="$(EmpireManpower_Percent)" Path="../ClassEmpire"/>
+    <Modifier TargetProperty="MaximumSystemManpower" Operation="Addition" Value="50" Path="../ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
 
-  <!--Clone Wares-->
-  
-  <SimulationDescriptor Name="HeroSkillSystem70_ApprovalFood_PercentFlat_1" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemGrowth" Operation="Addition" Value="10" Path="ClassColonizedStarSystem"/>
-    <BinaryModifier TargetProperty="SystemGrowth" Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSenate_ApprovalFood_PercentFlat_1" Type="HeroSkillSenator" IsSerializable="false">
-    <Property Name="FoodToSys" BaseValue="2"/>
-    <Modifier TargetProperty="FoodToSys" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="SystemGrowth"			Operation="Addition"	Left="$(FoodToSys)"	BinaryOperation="Multiplication"	Right="$(Level)"	Path="../ClassEmpire/ClassColonizedStarSystem"/>
+  <SimulationDescriptor Name="HeroSkillSenator4_EmpireManpower_2Percent" Type="HeroSkillSenator" IsSerializable="false">
+    <Property Name="EmpireManpower_Percent" BaseValue="0.25"/>
+    <Modifier TargetProperty="EmpireManpower_Percent" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Percent" Value="$(EmpireManpower_Percent)" Path="../ClassEmpire"/>
+    <Modifier TargetProperty="MaximumSystemManpower" Operation="Addition" Value="100" Path="../ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
 
-  <SimulationDescriptor Name="HeroSkillSystem70_ApprovalFood_PercentFlat_2" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemGrowth" Operation="Addition" Value="20" Path="ClassColonizedStarSystem"/>
-    <BinaryModifier TargetProperty="SystemGrowth" Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSenate_ApprovalFood_PercentFlat_2" Type="HeroSkillSenator" IsSerializable="false">
-    <Property Name="FoodToSys" BaseValue="4"/>
-    <Modifier TargetProperty="FoodToSys" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="SystemGrowth"			Operation="Addition"	Left="$(FoodToSys)"	BinaryOperation="Multiplication"	Right="$(Level)"	Path="../ClassEmpire/ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
+  <!-- Person of Means -->
+  <SimulationDescriptor Name="HeroSkillSystem58_Dust_PerPlanetFlat_1" Type="HeroSkillSystem" IsSerializable="false">
+    <Modifier TargetProperty="PlanetRawDust" Operation="Addition"	Value="2"	Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <Modifier TargetProperty="PlanetRawDust" Operation="Addition"	Value="2"	Path="ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeMeager"/>
 
-  <!--Lucky Windfall-->
-  <SimulationDescriptor Name="HeroSkillSystemHoratio_Influence_Percent_PerPop_1" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemEmpirePoint" Operation="Percent" Value="0.1" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="PlanetRawPrestige" Operation="Addition" Value="1.5" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystemHoratio_Influence_Percent_PerPop_2" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemEmpirePoint" Operation="Percent" Value="0.2" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="PlanetRawPrestige" Operation="Addition" Value="3" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
-  </SimulationDescriptor>
-
-  <!--mp horatio skill-->
-  <SimulationDescriptor Name="HeroSkillSystemHoratio_MpAbsorption_CrewDamageBonus_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="MaximumDamageBonusFromManpower" Operation="Addition" Value="0.15" Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="ShipManpowerKillAbsorption" Operation="Percent" Value="0.25" Path="./ClassGarrisonFleet/ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystemHoratio_MpAbsorption_CrewDamageBonus_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="MaximumDamageBonusFromManpower" Operation="Addition" Value="0.3" Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="ShipManpowerKillAbsorption" Operation="Percent" Value="0.5" Path="./ClassGarrisonFleet/ClassShip"/>
-  </SimulationDescriptor>
-
-  <!--food to IDSI horatio skill-->
-  <SimulationDescriptor Name="HeroSkillSystemHoratio_FoodToIDSI_1" Type="HeroSkillSystem" IsSerializable="false">
-    <Property Name="Temp_Food" BaseValue="0"/>
-    <BinaryModifier TargetProperty="Temp_Food" Operation="Addition" Left="$(SystemLevel)" BinaryOperation="Multiplication" Right="$(SystemGrowth)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%HoratioFoodToIDSI_ToolTipOverride_1" />
-    <BinaryModifier TargetProperty="NetSystemProduction" Operation="Addition" Left="0.025" BinaryOperation="Multiplication" Right="$(Temp_Food)" Path="ClassColonizedStarSystem" />
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="0.025" BinaryOperation="Multiplication" Right="$(Temp_Food)" Path="ClassColonizedStarSystem" />
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="0.025" BinaryOperation="Multiplication" Right="$(Temp_Food)" Path="ClassColonizedStarSystem" />
-    <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Left="0.025" BinaryOperation="Multiplication" Right="$(Temp_Food)" Path="ClassColonizedStarSystem" />
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystemHoratio_FoodToIDSI_2" Type="HeroSkillSystem" IsSerializable="false">
-    <Property Name="Temp_Food" BaseValue="0"/>
-    <BinaryModifier TargetProperty="Temp_Food" Operation="Addition" Left="$(SystemLevel)" BinaryOperation="Multiplication" Right="$(SystemGrowth)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%HoratioFoodToIDSI_ToolTipOverride_2" />
-    <BinaryModifier TargetProperty="NetSystemProduction" Operation="Addition" Left="0.05" BinaryOperation="Multiplication" Right="$(Temp_Food)" Path="ClassColonizedStarSystem" />
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="0.05" BinaryOperation="Multiplication" Right="$(Temp_Food)" Path="ClassColonizedStarSystem" />
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="0.05" BinaryOperation="Multiplication" Right="$(Temp_Food)" Path="ClassColonizedStarSystem" />
-    <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Left="0.05" BinaryOperation="Multiplication" Right="$(Temp_Food)" Path="ClassColonizedStarSystem" />
-  </SimulationDescriptor>
-
-  <!--luxury horatio skill-->
-  <SimulationDescriptor Name="HeroSkillSystem86_Luxury_Flat_3" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="DepositValue" Operation="Addition" Value="3" Path="ClassColonizedStarSystem/ClassPlanet/ClassResourceDeposit,ResourceTypeLuxury" />
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystem86_Luxury_Flat_4" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="DepositValue" Operation="Addition" Value="6" Path="ClassColonizedStarSystem/ClassPlanet/ClassResourceDeposit,ResourceTypeLuxury" />
-  </SimulationDescriptor>
-
-  <!--Absorption horatio skill-->
-  <SimulationDescriptor Name="HeroSkillSystemHoratio_AbsorptionAll_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ShipShieldAbsorptionPercent"									Operation="Addition"			Value="0.2"			Path="./ClassGarrisonFleet" />
-    <Modifier TargetProperty="ShipHullPlatingAbsorptionPercent"							Operation="Addition"			Value="0.1"		Path="./ClassGarrisonFleet" />
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystemHoratio_AbsorptionAll_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ShipShieldAbsorptionPercent"									Operation="Addition"			Value="0.4"			Path="./ClassGarrisonFleet" />
-    <Modifier TargetProperty="ShipHullPlatingAbsorptionPercent"							Operation="Addition"			Value="0.2"		Path="./ClassGarrisonFleet" />
-  </SimulationDescriptor>
-
-  <!--Horatio ship cost increase -->
-  <SimulationDescriptor Name="HeroSkillSystemHoratio_ShipStats_1" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="ShipProductionCostReduction" Operation="Addition" Value="0.50" Path="ClassColonizedStarSystem" Priority="-5" TooltipOverride="%HoratioShipStats_1_ToolTipOverride"/>
-  </SimulationDescriptor>
-
-  <!-- ****************** -->
-  <!-- ENDLESS SKILL TREE -->
-  <!-- ****************** -->
-
-  <!-- Endless Starting Skills (upkeep and XP nerfs) -->
-  <SimulationDescriptor Name="HeroSkillEndlessUpkeep_1" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="Upkeep"               Operation="Percent"	   Value="0.5"	Path="ClassColonizedStarSystem/ClassHero"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillEndlessUpkeep_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="Upkeep"               Operation="Percent"	   Value="0.5"	Path="./ClassGarrisonFleet/ClassHero"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillEndlessXP_1" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="ExperienceMultiplier" Operation="Subtraction"	Value="0.5"	Path="ClassColonizedStarSystem/ClassHero"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillEndlessXP_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ExperienceMultiplier" Operation="Subtraction"	Value="0.5"	Path="./ClassGarrisonFleet/ClassHero"/>
-  </SimulationDescriptor>
-
-  <!-- Endless Dust -->
-  <SimulationDescriptor Name="HeroSkillEndlessDust_1" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="EmpireMoney" Operation="Addition" Left="20"   BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="../ClassEmpire"/>
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Percent"  Left="0.01" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillEndlessDust_2" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="EmpireMoney" Operation="Addition" Left="20"   BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="../ClassEmpire"/>
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Percent"  Left="0.02" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-
-  <!-- Endless Defense -->
-  <SimulationDescriptor Name="HeroSkillEndlessDefense_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="FleetMaximumHealth" Operation="Addition" Value="0.1"  Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="FleetMaximumShield" Operation="Addition" Value="0.1"  Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="RepairAfterBattle"  Operation="Addition" Value="0.05" Path="../ClassEmpire//ClassGarrisonFleet/ClassShip" TooltipOverride="%EndlessRepairToolTipOverride"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillEndlessDefense_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="FleetMaximumHealth" Operation="Addition" Value="0.2"  Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="FleetMaximumShield" Operation="Addition" Value="0.2"  Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="RepairAfterBattle"  Operation="Addition" Value="0.05" Path="../ClassEmpire//ClassGarrisonFleet/ClassShip" TooltipOverride="%EndlessRepairToolTipOverride"/>
-  </SimulationDescriptor>
-
-  <!-- Endless Science -->
-  <SimulationDescriptor Name="HeroSkillEndlessScience_1" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="EmpireResearch" Operation="Addition" Left="20"  BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="../ClassEmpire"/>
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Percent"  Left="0.01" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillEndlessScience_2" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="EmpireResearch" Operation="Addition" Left="20"  BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="../ClassEmpire"/>
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Percent"  Left="0.02" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-
-  <!-- Endless Offense -->
-  <SimulationDescriptor Name="HeroSkillEndlessOffense_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ShieldPenetrationFactor"       Operation="Addition"		Value="0.1"		Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="HullPlatingPenetrationFactor"	 Operation="Addition"		Value="0.1"		Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="Accuracy"	                     Operation="Addition"   Value="0.05"  Path="../ClassEmpire//ClassGarrisonFleet/ClassShip" TooltipOverride="%EndlessAccuracyToolTipOverride"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillEndlessOffense_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ShieldPenetrationFactor"       Operation="Addition"		Value="0.2"		Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="HullPlatingPenetrationFactor"	 Operation="Addition"		Value="0.2"		Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="Accuracy"	                     Operation="Addition"   Value="0.05"	Path="../ClassEmpire//ClassGarrisonFleet/ClassShip" TooltipOverride="%EndlessAccuracyToolTipOverride"/>
-  </SimulationDescriptor>
-
-  <!-- Endless Influence -->
-  <SimulationDescriptor Name="HeroSkillEndlessInfluence_1" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="EmpireEmpirePoint" Operation="Addition" Left="20"   BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="../ClassEmpire"/>
-    <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Percent"  Left="0.01" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillEndlessInfluence_2" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="EmpireEmpirePoint" Operation="Addition" Left="20"   BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="../ClassEmpire"/>
-    <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Percent"  Left="0.02" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-
-  <!-- Endless Exploration -->
-  <SimulationDescriptor Name="HeroSkillEndlessExploration_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="VisionRange"      Operation="Addition"		Value="2"		Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="MaximumMovement"	Operation="Addition"		Value="2"		Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="MaximumMovement"	Operation="Addition"		Value="1"		Path="../ClassEmpire//ClassGarrisonFleet/ClassShip" TooltipOverride="%EndlessMovementToolTipOverride"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillEndlessExploration_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="VisionRange"      Operation="Addition"		Value="4"		Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="MaximumMovement"	Operation="Addition"		Value="4"		Path="./ClassGarrisonFleet/ClassShip"/>
-    <Modifier TargetProperty="MaximumMovement"	Operation="Addition"		Value="1"		Path="../ClassEmpire//ClassGarrisonFleet/ClassShip" TooltipOverride="%EndlessMovementToolTipOverride"/>
-  </SimulationDescriptor>
-
-  <!-- Endless SD Cost -->
-  <SimulationDescriptor Name="HeroSkillEndlessSDCost_1" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="RecipeCostMultiplier" Operation="Addition" Left="-0.01"  BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="../ClassEmpire" Priority="1" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="RecipeCostMultiplier" Operation="Percent"  Left="-0.01"  BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="false/../ClassEmpire" Priority="1" TooltipOverride="%EndlessSDCostToolTipOverride"/>
-  </SimulationDescriptor>
-
-  <!-- ********************* -->
-  <!-- PRIMITIVES SKILL TREE -->
-  <!-- ********************* -->
-
-  <!-- HeroSkill21 -->
-  <SimulationDescriptor Name="HeroSkillShip21_FleetDamage_PerCommandPoint_0" Type="HeroSkillShip" IsSerializable="false">
-    <BinaryModifier TargetProperty="ShipDamage" Operation="Addition" Left="0.005" BinaryOperation="Multiplication" Right="$(CommandPoints)" Path="./ClassGarrisonFleet" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip21_FleetDamage_PerCommandPoint_1" Type="HeroSkillShip" IsSerializable="false">
-    <BinaryModifier TargetProperty="ShipDamage" Operation="Addition" Left="0.003" BinaryOperation="Multiplication" Right="$(CommandPoints)" Path="./ClassGarrisonFleet" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip21_FleetDamage_PerCommandPoint_2" Type="HeroSkillShip" IsSerializable="false">
-    <BinaryModifier TargetProperty="ShipDamage" Operation="Addition" Left="0.005" BinaryOperation="Multiplication" Right="$(CommandPoints)" Path="./ClassGarrisonFleet" SearchValueFromPath="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip21_FleetDamage_PerCommandPoint_3" Type="HeroSkillShip" IsSerializable="false">
-    <BinaryModifier TargetProperty="ShipDamage" Operation="Addition" Left="0.008" BinaryOperation="Multiplication" Right="$(CommandPoints)" Path="./ClassGarrisonFleet" SearchValueFromPath="true"/>
-    <Modifier TargetProperty="PreventsEnemyRetreat" Operation="Addition" Value="1" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%HeroSkillTractorBeamEffectTooltipOverride"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip21_FleetDamage_PerCommandPoint_4" Type="HeroSkillShip" IsSerializable="false">
-    <BinaryModifier TargetProperty="ShipDamage" Operation="Addition" Left="0.01" BinaryOperation="Multiplication" Right="$(CommandPoints)" Path="./ClassGarrisonFleet" SearchValueFromPath="true"/>
-    <Modifier TargetProperty="PreventsEnemyRetreat" Operation="Addition" Value="1" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%HeroSkillTractorBeamEffectTooltipOverride"/>
-  </SimulationDescriptor>
-
-  <!-- HeroSkill8 -->
-  <SimulationDescriptor Name="HeroSkillShip8_SystemManpower_Percent_0" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="MaximumShipManpower" Operation="Percent" Value="0.10" Path="./ClassGarrisonFleet/ClassShip" Priority="1"/>
-    <Modifier TargetProperty="SiegePower" Operation="Percent" Value="0.025" Path="./ClassGarrisonFleet" TooltipOverride="%HeroSkillSiegePower0a"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip8_SystemManpower_Percent_3" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="MaximumShipManpower" Operation="Percent" Value="0.25" Path="./ClassGarrisonFleet/ClassShip" Priority="1"/>
-    <Modifier TargetProperty="SiegePower" Operation="Percent" Value="0.1" Path="./ClassGarrisonFleet" TooltipOverride="%HeroSkillSiegePower1a"/>
-    <Modifier TargetProperty="PreventsEnemyRetreat" Operation="Addition" Value="1" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%HeroSkillTractorBeamEffectTooltipOverride"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShip8_SystemManpower_Percent_4" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="MaximumShipManpower" Operation="Percent" Value="0.5" Path="./ClassGarrisonFleet/ClassShip" Priority="1"/>
-    <Modifier TargetProperty="SiegePower" Operation="Percent" Value="0.2" Path="./ClassGarrisonFleet" TooltipOverride="%HeroSkillSiegePower2a"/>
-    <Modifier TargetProperty="PreventsEnemyRetreat" Operation="Addition" Value="1" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%HeroSkillTractorBeamEffectTooltipOverride"/>
-  </SimulationDescriptor>
-
-  <!-- *********************** -->
-  <!-- TECHNOLOGIST SKILL TREE -->
-  <!-- *********************** -->
-
-  <!--Science per SD -->
-  <SimulationDescriptor Name="HeroSkillScienceperSD_1" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="15" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
     <!-- FEEDBACK FOR SCAN VIEW -->
-    <BinaryModifier TargetProperty="BonusHeroSystemScience" Operation="Addition" Left="15" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
+    <Modifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Value="2"	Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true"/>
+    <Modifier TargetProperty="BonusHeroSystemDust" Operation="Addition"	Value="2"	Path="ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeMeager" TooltipHidden="true"/>
   </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillScienceperSD_2" Type="HeroSkillSystem" IsSerializable="false">
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
+
+  <SimulationDescriptor Name="HeroSkillSystem58_Dust_PerPlanetFlat_2" Type="HeroSkillSystem" IsSerializable="false">
+    <Modifier TargetProperty="PlanetRawDust" Operation="Addition"	Value="4" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <Modifier TargetProperty="PlanetRawDust" Operation="Addition" Value="4"	Path="ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeMeager"/>
+
     <!-- FEEDBACK FOR SCAN VIEW -->
-    <BinaryModifier TargetProperty="BonusHeroSystemScience" Operation="Addition" Left="30" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
+    <Modifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Value="4" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true"/>
+    <Modifier TargetProperty="BonusHeroSystemDust" Operation="Addition" Value="4" Path="ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeMeager" TooltipHidden="true"/>
   </SimulationDescriptor>
 
-  <!--Exotic Weapon Proficiency -->
-  <SimulationDescriptor Name="HeroSkillExoticWeaponProficiency_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="EMPDurationForWeapons"  Operation="Percent"     Value="0.5" Path="./ClassGarrisonFleet//ClassModule" TooltipOverride="%HeroSkillExoticWeaponProficiency_1TooltipOverride"/>
-    <Modifier TargetProperty="EMPDurationForShields"  Operation="Percent"     Value="0.5" Path="./ClassGarrisonFleet//ClassModule" TooltipHidden="true"/>
-    <Modifier TargetProperty="TurnsBeforeDestruction" Operation="Subtraction" Value="1"   Path="./ClassGarrisonFleet//ClassModuleDestruction" TooltipOverride="%HeroSkillExoticWeaponProficiency_3TooltipOverride"/>
+  <!-- Public Relations Expert -->
+  <SimulationDescriptor Name="HeroSkillSystem81_Influence_PercentFlat_2" Type="HeroSkillSystem" IsSerializable="false">
+    <BinaryModifier TargetProperty="SystemEmpirePoint"		        Operation="Addition"		Left="10"   BinaryOperation="Multiplication" Right="$(OwnedPlanets)"		    Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <Modifier TargetProperty="SystemEmpirePoint"								Operation="Percent"				Value="0.05"		Path="ClassColonizedStarSystem" />
+    <!-- FEEDBACK FOR SCAN VIEW -->
+    <BinaryModifier TargetProperty="BonusHeroSystemPrestige"		    Operation="Addition"		Left="10"    BinaryOperation="Multiplication" Right="$(OwnedPlanets)"		Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
+    <!-- Percent TODO -->
   </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillExoticWeaponProficiency_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="EMPDurationForWeapons"  Operation="Percent"     Value="1" Path="./ClassGarrisonFleet//ClassModule" TooltipOverride="%HeroSkillExoticWeaponProficiency_2TooltipOverride"/>
-    <Modifier TargetProperty="EMPDurationForShields"  Operation="Percent"     Value="1" Path="./ClassGarrisonFleet//ClassModule" TooltipHidden="true"/>
-    <Modifier TargetProperty="TurnsBeforeDestruction" Operation="Subtraction" Value="1"   Path="./ClassGarrisonFleet//ClassModuleDestruction" TooltipOverride="%HeroSkillExoticWeaponProficiency_3TooltipOverride"/>
-  </SimulationDescriptor>
-
-  <!--Science Bonus -->
-  <SimulationDescriptor Name="HeroSkillSystem89_Science_Percent_3_5" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="SystemResearch" Operation="Percent" Value="0.45" Path="ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-
-  <!--Tech costs -->
-  <SimulationDescriptor Name="HeroSkillSenatorTechCost" Type="HeroSkillSenator" IsSerializable="false">
-    <Property Name="TechCostReduction_Local" BaseValue="-0.05" MinValue="Negative"/>
-    <Modifier TargetProperty="TechCostReduction_Local" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
-    <Modifier TargetProperty="TechnologyCostModifier" Operation="Percent" Value="$(TechCostReduction_Local)" Path="../ClassEmpire/ClassResearch" TooltipOverride="%HeroSkillSenatorTechCostTooltipOverride"/>
+  <SimulationDescriptor Name="HeroSkillSystem81_Influence_PercentFlat_3" Type="HeroSkillSystem" IsSerializable="false">
+    <BinaryModifier TargetProperty="SystemEmpirePoint"		        Operation="Addition"		Left="20"   BinaryOperation="Multiplication" Right="$(OwnedPlanets)"		    Path="ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <Modifier TargetProperty="SystemEmpirePoint"								Operation="Percent"				Value="0.10"			Path="ClassColonizedStarSystem" />
+    <!-- FEEDBACK FOR SCAN VIEW -->
+    <BinaryModifier TargetProperty="BonusHeroSystemPrestige"		    Operation="Addition"		Left="20"    BinaryOperation="Multiplication" Right="$(OwnedPlanets)"		Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
+    <!-- Percent TODO -->
   </SimulationDescriptor>
 
-  <!-- ********************* -->
-  <!--  SCAVENGER SKILL TREE -->
-  <!-- ********************* -->
-
-  <!--Boarding Pods -->
-  <SimulationDescriptor Name="HeroSkillShipBoardingPodDamage_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ManpowerDamageOverTime" Operation="Percent" Value="0.2" Path="./ClassGarrisonFleet//ClassModule" TooltipOverride="%HeroSkillShipBoardingPodDamage_1TooltipOverride"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShipBoardingPodDamage_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="ManpowerDamageOverTime" Operation="Percent" Value="0.4" Path="./ClassGarrisonFleet//ClassModule" TooltipOverride="%HeroSkillShipBoardingPodDamage_2TooltipOverride"/>
+  <!-- Market Master -->
+  <SimulationDescriptor Name="HeroSkillSystem_Corporate_08_01" Type="HeroSkillSystem" IsSerializable="false">
+    <Modifier TargetProperty="TradingRouteIncomeModifier" Operation="Percent" Value="0.15" Path="./ClassColonizedStarSystem"/>
   </SimulationDescriptor>
 
-  <!--Movement + Recycling -->
-  <SimulationDescriptor Name="HeroSkillShipRecycling_1" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="2" Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="AdditionalOpponentRecyclingDustPerCP" Operation="Addition" Value="25"  Path="./ClassGarrisonFleet/ClassShip"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillShipRecycling_2" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="4" Path="./ClassGarrisonFleet"/>
-    <Modifier TargetProperty="AdditionalOpponentRecyclingDustPerCP" Operation="Addition" Value="50"  Path="./ClassGarrisonFleet/ClassShip"/>
+  <SimulationDescriptor Name="HeroSkillSystem_Corporate_08_02" Type="HeroSkillSystem" IsSerializable="false">
+    <Modifier TargetProperty="TradingRouteIncomeModifier" Operation="Percent" Value="0.25" Path="./ClassColonizedStarSystem"/>
   </SimulationDescriptor>
 
-  <!--Planet Initial FIDS -->
-  <SimulationDescriptor Name="HeroSkillSystemPlanetInitialFIDS_1" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="PlanetInitialFood" Operation="Percent" Value="0.15" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipOverride="%HeroSkillSystemPlanetInitialFIDS_1"/>
-    <Modifier TargetProperty="PlanetInitialIndustry" Operation="Percent" Value="0.15" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true"/>
-    <Modifier TargetProperty="PlanetInitialDust" Operation="Percent" Value="0.15" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true"/>
-    <Modifier TargetProperty="PlanetInitialScience" Operation="Percent" Value="0.15" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="HeroSkillSystemPlanetInitialFIDS_2" Type="HeroSkillSystem" IsSerializable="false">
-    <Modifier TargetProperty="PlanetInitialFood" Operation="Percent" Value="0.3" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipOverride="%HeroSkillSystemPlanetInitialFIDS_2"/>
-    <Modifier TargetProperty="PlanetInitialIndustry" Operation="Percent" Value="0.3" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true"/>
-    <Modifier TargetProperty="PlanetInitialDust" Operation="Percent" Value="0.3" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true"/>
-    <Modifier TargetProperty="PlanetInitialScience" Operation="Percent" Value="0.3" Path="ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true"/>
+  <SimulationDescriptor Name="HeroSkillSenate_Corporate_08_01" Type="HeroSkillSenator" IsSerializable="false">
+    <Property Name="TradeCompanies_Percent" BaseValue="0.1"/>
+    <Modifier TargetProperty="TradeCompanies_Percent" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <Modifier TargetProperty="TradingRouteIncomeModifier" Operation="Percent" Value="$(TradeCompanies_Percent)" Path="../ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
 
-  <!-- ********************* -->
-  <!--  EUSOCIAL SKILL TREE  -->
-  <!-- ********************* -->
-
-  <!--Squadrons -->
-  <SimulationDescriptor Name="HeroSkillShipSquadronBonus" Type="HeroSkillShip" IsSerializable="false">
-    <Modifier TargetProperty="Damage" Operation="Percent" Value="0.3" Path="./ClassGarrisonFleet/ClassShip/ClassSection/ClassModuleSquadron" Priority="1"/>
-    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.3" Path="./ClassGarrisonFleet/ClassShip/ClassSection/ClassModuleSquadron" Priority="1"/>
+  <SimulationDescriptor Name="HeroSkillSenate_Corporate_08_02" Type="HeroSkillSenator" IsSerializable="false">
+    <Property Name="TradeCompanies_Percent" BaseValue="0.15"/>
+    <Modifier TargetProperty="TradeCompanies_Percent" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <Modifier TargetProperty="TradingRouteIncomeModifier" Operation="Percent" Value="$(TradeCompanies_Percent)" Path="../ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
-
 </Datatable>
