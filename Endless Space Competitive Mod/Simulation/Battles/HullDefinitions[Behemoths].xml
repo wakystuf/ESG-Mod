@@ -1,0 +1,860 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/HullDefinition.xsd">
+  <!-- Juggernaut -->
+  <HullDefinition Name="HullJuggernaut01Juggernauts" ScoreProvider="WarShipConstructed" Category="CategoryHull" SubCategory="SubCategoryShipDesign" ModuleCostMultiplierProperty="JuggernautModuleCostMultiplier">
+    <Tags>HiddenInFactionPreview</Tags>
+    <CustomCost ResourceName="SystemProduction">360 + 360 * 1.25 * Property(StockLocation, @'../ClassEmpire', ShipRoleJuggernautBuilt) ^ 1.2</CustomCost>
+
+    <PathPrerequisite Flags="Prerequisite,Discard">ClassColonizedStarSystem,ColonizedStarSystemStateColony</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Edition,Technology,Discard">TechnologyJuggernautUnlock</TechnologyPrerequisite>
+    <DownloadableContentPrerequisite Flags="Discard,Edition">DLCHisshos</DownloadableContentPrerequisite>
+
+    <!-- This flag doesn't have Prerequisite but it has Enqueue: if it fails, the ship cannot be queued, but it will still be finished if already in a queue. -->
+    <InterpreterPrerequisite Flags="MaximumJuggernautsReached,Enqueue">Property(Context, @'../ClassEmpire', JuggernautCountIncludingQueuedOnes) lt Floor(Property(Context, @'../ClassEmpire', MaximumJuggernauts))</InterpreterPrerequisite>
+    <PathPrerequisite Flags="JuggernautInQueue,Enqueue" Inverted="true">../ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateColony,BuildingJuggernaut</PathPrerequisite>
+
+    <!-- This flag has Prerequisite: even ships that are queued will fail. -->
+    <InterpreterPrerequisite Flags="Prerequisite,MaximumJuggernautsReached">Property(Context, @'../ClassEmpire', JuggernautCount) lt Floor(Property(Context, @'../ClassEmpire', MaximumJuggernauts))</InterpreterPrerequisite>
+
+    <SimulationDescriptorReference Name="ShipSizeJuggernaut"/>
+    <SimulationDescriptorReference Name="ShipHull01"/>
+    <SimulationDescriptorReference Name="ShipFactionJuggernauts"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityKinetic"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityBeam"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityLaser"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityMissile"/>
+
+    <!-- encounter-specific flags -->
+    <SimulationDescriptorReference Name="UseEmpireAffinityForUnitSpawn"/>
+    <SimulationDescriptorReference Name="IgnoreAsObstacle"/>
+
+    <ShipDesignLayout>
+      <ShipRoleReference Name="ShipRoleJuggernaut"/>
+      <SectionPattern_Eight>
+        <!-- Core Section -->
+        <CoreSection Name="CoreSection">
+          <VisualSectionName>Core</VisualSectionName>
+          <SimulationDescriptorReference Name="ClassSectionCore"/>
+          <SimulationDescriptorReference Name="ClassSectionCoreJuggernaut"/>
+          <Slot Name="Support01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UICore10</UISlotName>
+          </Slot>
+          <Slot Name="DefenseSupport01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UICore12</UISlotName>
+          </Slot>
+        </CoreSection>
+
+        <!-- Forward Section -->
+        <Section Name="SectionN">
+          <VisualSectionName>Front</VisualSectionName>
+          <Slot Name="Support01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UIFront01</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Forward/Right Section -->
+        <Section Name="SectionNE">
+          <VisualSectionName>FrontRight</VisualSectionName>
+          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="45">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Squadron</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_04"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_05"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_06"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_07"></VisualSlot>
+            </LineOfSight>
+            <LineOfSight>
+              <Direction X="-1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_04"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_05"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_06"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_07"></VisualSlot>
+            </LineOfSight>
+            <UISlotName>UIFrontRightWeapon03</UISlotName>
+          </Slot>
+          <Slot Name="Defense01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <UISlotName>UIFrontRight04</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Right Section -->
+        <Section Name="SectionE">
+          <VisualSectionName>Right</VisualSectionName>
+          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="0">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Squadron</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_08"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_09"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_10"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_11"></VisualSlot>
+            </LineOfSight>
+            <LineOfSight>
+              <Direction X="-1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_08"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_09"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_10"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_11"></VisualSlot>
+            </LineOfSight>
+            <UISlotName>UIRightWeapon05</UISlotName>
+          </Slot>
+          <Slot Name="Defense01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <UISlotName>UIRight06</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back/Right Section -->
+        <Section Name="SectionSE">
+          <VisualSectionName>BackRight</VisualSectionName>
+          <Slot Name="Support01">
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyJuggernautSupportSlots1</TechnologyPrerequisite>
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <UISlotName>UIBackRight08</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back Section -->
+        <Section Name="SectionS">
+          <VisualSectionName>Back</VisualSectionName>
+          <Slot Name="Support01">
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyJuggernautSupportSlots1</TechnologyPrerequisite>
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UIBack09</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back/Left Section -->
+        <Section Name="SectionSW">
+          <VisualSectionName>BackLeft</VisualSectionName>
+        </Section>
+
+        <!-- Left Section -->
+        <Section Name="SectionW">
+          <VisualSectionName>Left</VisualSectionName>
+        </Section>
+
+        <!-- Forward/Left Section -->
+        <Section Name="SectionNW">
+          <VisualSectionName>FrontLeft</VisualSectionName>
+        </Section>
+      </SectionPattern_Eight>
+    </ShipDesignLayout>
+
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterAttack"/>
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterDamage"/>
+    <BattleActionReference Name="Ship_Healing"/>
+    <BattleActionReference Name="Ship_OnDestruction"/>
+
+    <LevelUpRuleReference Name="ShipLevelUpRule"/>
+
+    <QueuedSimulationDescriptorReference Name="BuildingJuggernaut"/>
+  </HullDefinition>
+
+  <!-- Juggernaut Military -->
+  <HullDefinition Name="HullJuggernaut01bisJuggernauts" ScoreProvider="WarShipConstructed" Category="CategoryHull" SubCategory="SubCategoryShipDesign" ModuleCostMultiplierProperty="JuggernautModuleCostMultiplier">
+    <Tags>HiddenInFactionPreview</Tags>
+    <CustomCost ResourceName="SystemProduction">360 + 360 * 1.25 * Property(StockLocation, @'../ClassEmpire', ShipRoleJuggernautBuilt) ^ 1.2</CustomCost>
+
+    <InterpreterPrerequisite Flags="Edition,UnlockAvailability">false</InterpreterPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard">ClassColonizedStarSystem,ColonizedStarSystemStateColony</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Edition,Technology,Discard">TechnologyJuggernautUnlock</TechnologyPrerequisite>
+    <DownloadableContentPrerequisite Flags="Discard,Edition">DLCHisshos</DownloadableContentPrerequisite>
+
+    <!-- This flag doesn't have Prerequisite but it has Enqueue: if it fails, the ship cannot be queued, but it will still be finished if already in a queue. -->
+    <InterpreterPrerequisite Flags="MaximumJuggernautsReached,Enqueue">Property(Context, @'../ClassEmpire', JuggernautCountIncludingQueuedOnes) lt Floor(Property(Context, @'../ClassEmpire', MaximumJuggernauts))</InterpreterPrerequisite>
+    <PathPrerequisite Flags="JuggernautInQueue,Enqueue" Inverted="true">../ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateColony,BuildingJuggernaut</PathPrerequisite>
+
+    <!-- This flag has Prerequisite: even ships that are queued will fail. -->
+    <InterpreterPrerequisite Flags="Prerequisite,MaximumJuggernautsReached">Property(Context, @'../ClassEmpire', JuggernautCount) lt Floor(Property(Context, @'../ClassEmpire', MaximumJuggernauts))</InterpreterPrerequisite>
+
+    <SimulationDescriptorReference Name="ShipSizeJuggernaut"/>
+    <SimulationDescriptorReference Name="ShipHull01"/>
+    <SimulationDescriptorReference Name="ShipFactionJuggernauts"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityKinetic"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityBeam"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityLaser"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityMissile"/>
+
+    <!-- encounter-specific flags -->
+    <SimulationDescriptorReference Name="UseEmpireAffinityForUnitSpawn"/>
+    <SimulationDescriptorReference Name="IgnoreAsObstacle"/>
+
+    <ShipDesignLayout>
+      <ShipRoleReference Name="ShipRoleJuggernaut"/>
+      <SectionPattern_Eight>
+        <!-- Core Section -->
+        <CoreSection Name="CoreSection">
+          <VisualSectionName>Core</VisualSectionName>
+          <SimulationDescriptorReference Name="ClassSectionCore"/>
+          <SimulationDescriptorReference Name="ClassSectionCoreJuggernaut"/>
+          <Slot Name="LargeWeapon01" IsLargeSlot="true" ShowPositionMarker="true" PositionMarkerAngle="0" ModuleCostMultiplier="2">
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyJuggernautMilitarySlots1</TechnologyPrerequisite>
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>AOE</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="0" Z="1"/>
+              <Angle>270</Angle>
+              <VisualSlot Name="MDL_Wp_Medium_Up_00"></VisualSlot>
+            </LineOfSight>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="TopWeapon"/>
+              <SimulationDescriptorReference Name="LargeWeapon"/>
+            </ModuleModifier>
+            <UISlotName>UICoreWeapon11</UISlotName>
+          </Slot>
+          <Slot Name="DefenseSupport01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UICore12</UISlotName>
+          </Slot>
+        </CoreSection>
+
+        <!-- Forward Section -->
+        <Section Name="SectionN">
+          <VisualSectionName>Front</VisualSectionName>
+          <Slot Name="Defense01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UIFront01</UISlotName>
+          </Slot>
+          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="0">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Squadron</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="0" Z="1"/>
+              <Angle>270</Angle>
+              <VisualSlot Name="MDL_Wp_Small_Up_00"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_01"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_02"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_03"></VisualSlot>
+            </LineOfSight>
+            <UISlotName>UIFrontWeapon02</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Forward/Right Section -->
+        <Section Name="SectionNE">
+          <VisualSectionName>FrontRight</VisualSectionName>
+          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="45">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Squadron</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_04"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_05"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_06"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_07"></VisualSlot>
+            </LineOfSight>
+            <LineOfSight>
+              <Direction X="-1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_04"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_05"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_06"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_07"></VisualSlot>
+            </LineOfSight>
+            <UISlotName>UIFrontRightWeapon03</UISlotName>
+          </Slot>
+          <Slot Name="Defense01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <UISlotName>UIFrontRight04</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Right Section -->
+        <Section Name="SectionE">
+          <VisualSectionName>Right</VisualSectionName>
+          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="0">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Squadron</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_08"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_09"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_10"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_11"></VisualSlot>
+            </LineOfSight>
+            <LineOfSight>
+              <Direction X="-1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_08"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_09"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_10"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_11"></VisualSlot>
+            </LineOfSight>
+            <UISlotName>UIRightWeapon05</UISlotName>
+          </Slot>
+          <Slot Name="Defense01">
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyJuggernautMilitarySlots1</TechnologyPrerequisite>
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <UISlotName>UIRight06</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back/Right Section -->
+        <Section Name="SectionSE">
+          <VisualSectionName>BackRight</VisualSectionName>
+          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="315">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Squadron</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_00"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_01"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_02"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_03"></VisualSlot>
+            </LineOfSight>
+            <LineOfSight>
+              <Direction X="-1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_00"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_01"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_02"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_03"></VisualSlot>
+            </LineOfSight>
+            <UISlotName>UIBackRightWeapon07</UISlotName>
+          </Slot>
+          <Slot Name="Defense01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <UISlotName>UIBackRight08</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back Section -->
+        <Section Name="SectionS">
+          <VisualSectionName>Back</VisualSectionName>
+          <Slot Name="Support01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <UISlotName>UIBack09</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back/Left Section -->
+        <Section Name="SectionSW">
+          <VisualSectionName>BackLeft</VisualSectionName>
+        </Section>
+
+        <!-- Left Section -->
+        <Section Name="SectionW">
+          <VisualSectionName>Left</VisualSectionName>
+        </Section>
+
+        <!-- Forward/Left Section -->
+        <Section Name="SectionNW">
+          <VisualSectionName>FrontLeft</VisualSectionName>
+        </Section>
+      </SectionPattern_Eight>
+    </ShipDesignLayout>
+
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterAttack"/>
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterDamage"/>
+    <BattleActionReference Name="Ship_Healing"/>
+    <BattleActionReference Name="Ship_OnDestruction"/>
+
+    <LevelUpRuleReference Name="ShipLevelUpRule"/>
+
+    <QueuedSimulationDescriptorReference Name="BuildingJuggernaut"/>
+  </HullDefinition>
+
+  <!-- Battleship -->
+  <HullDefinition Name="HullJuggernaut02Juggernauts" ScoreProvider="WarShipConstructed" Category="CategoryHull" SubCategory="SubCategoryShipDesign" ModuleCostMultiplier="8">
+    <Tags>HiddenInFactionPreview</Tags>
+    <CustomCost ResourceName="SystemProduction">1500</CustomCost>
+    <Cost Instant="true" ResourceName="Strategic3">5</Cost>
+    <Cost Instant="true" ResourceName="Strategic4">5</Cost>
+
+    <!-- Cannot create a new design with this hull, cannot build it in a system. -->
+    <InterpreterPrerequisite Flags="Prerequisite,Edition,Discard">false</InterpreterPrerequisite>
+    <!-- for faction choice window-->
+    <DownloadableContentPrerequisite Flags="Discard,Edition">DLCHisshos</DownloadableContentPrerequisite>
+
+    <SimulationDescriptorReference Name="ShipSizeJuggernaut"/>
+    <SimulationDescriptorReference Name="ShipHull02"/>
+    <SimulationDescriptorReference Name="ShipFactionJuggernauts"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityKinetic"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityBeam"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityLaser"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityMissile"/>
+
+    <!-- encounter-specific flags -->
+    <SimulationDescriptorReference Name="UseEmpireAffinityForUnitSpawn"/>
+    <SimulationDescriptorReference Name="IgnoreAsObstacle"/>
+
+    <ShipDesignLayout>
+      <ShipRoleReference Name="ShipRoleBattleship"/>
+      <SectionPattern_Eight>
+        <!-- Core Section -->
+        <CoreSection Name="CoreSection">
+          <VisualSectionName>Core</VisualSectionName>
+          <SimulationDescriptorReference Name="ClassSectionCore"/>
+          <SimulationDescriptorReference Name="ClassSectionCoreBattleship"/>
+          <Slot Name="LargeWeapon01" IsLargeSlot="true" ShowPositionMarker="true" PositionMarkerAngle="225" ModuleCostMultiplier="2">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>AOE</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="0" Z="1"/>
+              <Angle>270</Angle>
+              <VisualSlot Name="MDL_Wp_Medium_Up_00"></VisualSlot>
+            </LineOfSight>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="TopWeapon"/>
+              <SimulationDescriptorReference Name="LargeWeapon"/>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UICoreWeapon10</UISlotName>
+          </Slot>
+          <Slot Name="Weapon01" ShowPositionMarker="false" PositionMarkerAngle="0">
+            <RestrictedModuleCategory>Squadron</RestrictedModuleCategory>
+            <LineOfSight>
+              <Direction X="0" Z="1"/>
+              <Angle>270</Angle>
+              <VisualSlot Name="MDL_Wp_Small_Up_08"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_09"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_10"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_11"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_12"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_13"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_14"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_15"></VisualSlot>
+            </LineOfSight>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="TopWeapon"/>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UICoreWeapon11</UISlotName>
+          </Slot>
+          <Slot Name="Support01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UICore12</UISlotName>
+          </Slot>
+          <Slot Name="DefenseSupport01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UICore13</UISlotName>
+          </Slot>
+        </CoreSection>
+
+        <!-- Forward Section -->
+        <Section Name="SectionN">
+          <VisualSectionName>Front</VisualSectionName>
+          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="0">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Squadron</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="0" Z="1"/>
+              <Angle>270</Angle>
+              <VisualSlot Name="MDL_Wp_Small_Up_16"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_17"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_18"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_19"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_20"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_21"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_22"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_Small_Up_23"></VisualSlot>
+            </LineOfSight>
+
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="TopWeapon"/>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UIFrontWeapon01</UISlotName>
+          </Slot>
+          <Slot Name="Defense01">
+            <Cost ResourceName="Strategic6" Instant="true">1</Cost>
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UIFront02</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Forward/Right Section -->
+        <Section Name="SectionNE">
+          <VisualSectionName>FrontRight</VisualSectionName>
+          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="0">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Squadron</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_24"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_25"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_26"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_27"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_28"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_29"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_30"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_31"></VisualSlot>
+            </LineOfSight>
+            <LineOfSight>
+              <Direction X="-1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_24"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_25"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_26"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_27"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_28"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_29"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_30"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_31"></VisualSlot>
+            </LineOfSight>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UIFrontRightWeapon03</UISlotName>
+          </Slot>
+          <Slot Name="Defense01">
+            <Cost ResourceName="Strategic6" Instant="true">1</Cost>
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UIFrontRight04</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Right Section -->
+        <Section Name="SectionE">
+          <VisualSectionName>Right</VisualSectionName>
+          <Slot Name="LargeWeapon01" IsLargeSlot="true" ShowPositionMarker="true" PositionMarkerAngle="90" ModuleCostMultiplier="2">
+            <Cost ResourceName="Strategic6" Instant="true">2</Cost>
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyJuggernautBattleshipMilitarySlots1</TechnologyPrerequisite>
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>AOE</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_Medium_Right_00"></VisualSlot>
+            </LineOfSight>
+            <LineOfSight>
+              <Direction X="-1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_Medium_Left_00"></VisualSlot>
+            </LineOfSight>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="LargeWeapon"/>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UIRightWeapon05</UISlotName>
+          </Slot>
+          <Slot Name="Weapon01" ShowPositionMarker="true" PositionMarkerAngle="0">
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Squadron</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>BoardingPod</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_32"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_33"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_34"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_35"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_36"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_37"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_38"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Right_39"></VisualSlot>
+            </LineOfSight>
+            <LineOfSight>
+              <Direction X="-1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_32"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_33"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_34"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_35"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_36"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_37"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_38"></VisualSlot>
+              <VisualSlot Name="MDL_Wp_SmallSide_Left_39"></VisualSlot>
+            </LineOfSight>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UIRightWeapon06</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back/Right Section -->
+        <Section Name="SectionSE">
+          <VisualSectionName>BackRight</VisualSectionName>
+          <Slot Name="LargeWeapon01" IsLargeSlot="true" ShowPositionMarker="true" PositionMarkerAngle="90" ModuleCostMultiplier="2">
+            <Cost ResourceName="Strategic6" Instant="true">2</Cost>
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyJuggernautBattleshipMilitarySlots1</TechnologyPrerequisite>
+            <RestrictedModuleCategory>Weapon</RestrictedModuleCategory>
+            <RestrictedWeaponType>Kinetic</RestrictedWeaponType>
+            <RestrictedWeaponType>Missile</RestrictedWeaponType>
+            <RestrictedWeaponType>Laser</RestrictedWeaponType>
+            <RestrictedWeaponType>Beam</RestrictedWeaponType>
+            <RestrictedWeaponType>KineticRailgun</RestrictedWeaponType>
+            <RestrictedWeaponType>AOE</RestrictedWeaponType>
+            <LineOfSight>
+              <Direction X="1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_Medium_Right_01"></VisualSlot>
+            </LineOfSight>
+            <LineOfSight>
+              <Direction X="-1" Z="0"/>
+              <Angle>120</Angle>
+              <VisualSlot Name="MDL_Wp_Medium_Left_01"></VisualSlot>
+            </LineOfSight>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="LargeWeapon"/>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UIBackRightWeapon07</UISlotName>
+          </Slot>
+          <Slot Name="Defense01">
+            <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyJuggernautBattleshipMilitarySlots1</TechnologyPrerequisite>
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <Direction X="1" Z="0"/>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UIBackRight08</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back Section -->
+        <Section Name="SectionS">
+          <VisualSectionName>Back</VisualSectionName>
+          <Slot Name="Support01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UIBack09</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back/Left Section -->
+        <Section Name="SectionSW">
+          <VisualSectionName>BackLeft</VisualSectionName>
+        </Section>
+
+        <!-- Left Section -->
+        <Section Name="SectionW">
+          <VisualSectionName>Left</VisualSectionName>
+        </Section>
+
+        <!-- Forward/Left Section -->
+        <Section Name="SectionNW">
+          <VisualSectionName>FrontLeft</VisualSectionName>
+        </Section>
+      </SectionPattern_Eight>
+    </ShipDesignLayout>
+
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterAttack"/>
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterDamage"/>
+    <BattleActionReference Name="Ship_Healing"/>
+    <BattleActionReference Name="Ship_OnDestruction"/>
+    <BattleActionReference Name="Ship_DeactivateAllWeapons"/>
+
+    <LevelUpRuleReference Name="ShipLevelUpRule"/>
+  </HullDefinition>
+
+  <!-- Obliterator -->
+  <HullDefinition Name="HullJuggernaut03Juggernauts" ScoreProvider="WarShipConstructed" Category="CategoryHull" SubCategory="SubCategoryShipDesign" ModuleCostMultiplier="8">
+    <Tags>HiddenInFactionPreview</Tags>
+    <CustomCost ResourceName="SystemProduction">1500</CustomCost>
+
+    <!-- Cannot create a new design with this hull, cannot build it in a system. -->
+    <InterpreterPrerequisite Flags="Prerequisite,Edition,Discard">false</InterpreterPrerequisite>
+    <!-- for faction choice window-->
+    <DownloadableContentPrerequisite Flags="Discard,Edition">DLCHisshos</DownloadableContentPrerequisite>
+
+    <SimulationDescriptorReference Name="ShipSizeJuggernaut"/>
+    <SimulationDescriptorReference Name="ShipHull03"/>
+    <SimulationDescriptorReference Name="ShipFactionJuggernauts"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityKinetic"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityBeam"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityLaser"/>
+    <SimulationDescriptorReference Name="WeaponAvailabilityMissile"/>
+    <SimulationDescriptorReference Name="CannotHaveWeapon"/>
+
+    <!-- encounter-specific flags -->
+    <SimulationDescriptorReference Name="UseEmpireAffinityForUnitSpawn"/>
+    <SimulationDescriptorReference Name="IgnoreAsObstacle"/>
+
+    <ShipDesignLayout>
+      <ShipRoleReference Name="ShipRoleObliterator"/>
+      <SectionPattern_Eight>
+        <!-- Core Section -->
+        <CoreSection Name="CoreSection">
+          <VisualSectionName>Core</VisualSectionName>
+          <SimulationDescriptorReference Name="ClassSectionCore"/>
+          <SimulationDescriptorReference Name="ClassSectionCoreObliterator"/>
+          <Slot Name="DefenseSupport01">
+            <RestrictedModuleCategory>Defense</RestrictedModuleCategory>
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UICore02</UISlotName>
+          </Slot>
+        </CoreSection>
+
+        <!-- Forward Section -->
+        <Section Name="SectionN">
+          <VisualSectionName>Front</VisualSectionName>
+        </Section>
+
+        <!-- Forward/Right Section -->
+        <Section Name="SectionNE">
+          <VisualSectionName>FrontRight</VisualSectionName>
+        </Section>
+
+        <!-- Right Section -->
+        <Section Name="SectionE">
+          <VisualSectionName>Right</VisualSectionName>
+        </Section>
+
+        <!-- Back/Right Section -->
+        <Section Name="SectionSE">
+          <VisualSectionName>BackRight</VisualSectionName>
+        </Section>
+
+        <!-- Back Section -->
+        <Section Name="SectionS">
+          <VisualSectionName>Back</VisualSectionName>
+          <Slot Name="Support01">
+            <RestrictedModuleCategory>Support</RestrictedModuleCategory>
+            <Direction X="0" Z="1"/>
+            <ModuleModifier>
+              <SimulationDescriptorReference Name="MultiplierX8"/>
+            </ModuleModifier>
+            <UISlotName>UIBack01</UISlotName>
+          </Slot>
+        </Section>
+
+        <!-- Back/Left Section -->
+        <Section Name="SectionSW">
+          <VisualSectionName>BackLeft</VisualSectionName>
+        </Section>
+
+        <!-- Left Section -->
+        <Section Name="SectionW">
+          <VisualSectionName>Left</VisualSectionName>
+        </Section>
+
+        <!-- Forward/Left Section -->
+        <Section Name="SectionNW">
+          <VisualSectionName>FrontLeft</VisualSectionName>
+        </Section>
+      </SectionPattern_Eight>
+    </ShipDesignLayout>
+
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterAttack"/>
+    <BattleActionReference Name="Ship_UpdateMedalScoreAfterDamage"/>
+    <BattleActionReference Name="Ship_Healing"/>
+    <BattleActionReference Name="Ship_OnDestruction"/>
+
+    <LevelUpRuleReference Name="ShipLevelUpRule"/>
+  </HullDefinition>
+</Datatable>

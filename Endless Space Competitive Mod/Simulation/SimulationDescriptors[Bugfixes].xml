@@ -1,0 +1,426 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+  <SimulationDescriptor Name="HeroSkillSenator122_FIDSI_0" Type="HeroSkillSenator" IsSerializable="false">
+    <Property Name="FIDSI_PerHeroLevel" BaseValue="0.02"/>
+    <Modifier TargetProperty="FIDSI_PerHeroLevel" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemFIDSIPercent"  Operation="Addition"        Left="$(FIDSI_PerHeroLevel)" BinaryOperation="Multiplication"  Right="$(AllianceCount)"  Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="EmpireTypeMajor" Type="EmpireType">
+
+    <!--  ######################## -->
+    <!--  ######  PROPERTY  ###### -->
+    <!--  ######################## -->
+
+    <!-- Gameplay Unlock & special gameplay effects unlocked via sim -->
+
+    <Property Name="MinorFactionsGameplayUnlocked"  BaseValue="0" MaxValue="1" MinValue="0"/>
+    <Property Name="MilitaryScreenGameplayUnlocked" BaseValue="1"  MinValue="0"/>
+    <Property Name="GovernmentGameplayUnlocked"     BaseValue="0" MaxValue="1" MinValue="0"/>
+    <Property Name="GovernmentGameplayLocked"       BaseValue="0" MaxValue="1" MinValue="0"/>
+    <Property Name="TerraformationGameplayUnlocked" BaseValue="0" MaxValue="1" MinValue="0"/>
+    <Property Name="HeroRecruitmentUnlocked"        BaseValue="0" MaxValue="1" MinValue="0"/>
+    <Property Name="HeroRecruitmentLocked"          BaseValue="0" MaxValue="1" MinValue="0"/>
+    <Property Name="HeroHealingLocked"              BaseValue="0" MaxValue="1" MinValue="0"/>
+    <Property Name="HeroPurchaseLocked"             BaseValue="0" MaxValue="1" MinValue="0"/>
+    <Property Name="HeroPurchaseInvisible"          BaseValue="0" MaxValue="1" MinValue="0"/>
+    <Property Name="AcademyRestored"                BaseValue="0" MaxValue="1" MinValue="0"/>
+    <Property Name="AcademyDestroyed"               BaseValue="0" MaxValue="1" MinValue="0"/>
+    <Property Name="TerraformationModifier"         BaseValue="1" MinValue="0.1"/>
+
+    <Property Name="UsesDemocracyLawsDiversity"      BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="DemocracyLawsDiversityHasIndustrialist" BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="DemocracyLawsDiversityHasScientist"     BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="DemocracyLawsDiversityHasPacifist"      BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="DemocracyLawsDiversityHasEcologist"     BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="DemocracyLawsDiversityHasReligious"     BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="DemocracyLawsDiversityHasMilitarist"    BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="DemocracyLawsDiversityHasNeutral"       BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="DemocracyLawsCostBonus"                 BaseValue="0" MinValue="Negative"/>
+
+
+
+    <Property Name="IgnoresColdWarRules"            BaseValue="0"/>
+    <Property Name="HasPopulationDiversityEffect"   BaseValue="0"/>
+
+    <!-- Trade routes will ignore nodes with systems with this property set to 1 when computing soft (fleet) blockade -->
+    <Property Name="IgnoresColdWarTradingRouteBlockade" BaseValue="0" RoundingFunction="Round"/>
+    <Property Name="IgnoresTradingRouteBlockade"        BaseValue="0" RoundingFunction="Round"/>
+
+    <!-- Score -->
+    <Property Name="EmpireGlobalScore" RoundingFunction="Round"/>
+    <Property Name="MilitaryVictoryScore" RoundingFunction="Round"/>
+    <Property Name="Lifetime" IsSealed="true"/>
+    <Property Name="VictoryEconomicRanking" IsSealed="true"/>
+
+    <!-- NOTE: This value does NOT define the duration of the game, it exists only for calculation purposes. See ClassVictoryManager for the actual value -->
+    <Property Name="LastTurn" BaseValue="300" RoundingFunction="Ceil"/>
+
+    <!-- Happiness -->
+    <Property Name="Happiness" BaseValue="0" MinValue="0" MaxValue="100"/>
+    <Property Name="HappinessSum" BaseValue="0"/>
+    <Property Name="GovernmentChangeHappinessMultiplier" BaseValue="1" MinValue="0"/>
+    <!-- Gui Empire Happiness-->
+    <Property Name="GUIHappinessModifiersHolder" BaseValue="0"/>
+    <Property Name="GUIStarSystemsHappinessSum" BaseValue="0"/>
+    <Property Name="GUIStarSystemsPopulationSum" BaseValue="0"/>
+    <Property Name="GUIStarSystemsHappinessAvg" BaseValue="0"/>
+    <Property Name="GUIHappinessMothershipsDelta" BaseValue="0" MinValue="Negative"/>
+
+    <!-- Obedience -->
+    <Property Name="Obedience" BaseValue="0" MinValue="0" MaxValue="100"/>
+
+    <!-- Trading routes-->
+    <Property Name="CanHaveTradingCompanies"    BaseValue="0"/>
+    <Property Name="HasAccessToMarketplace"     BaseValue="0"/>
+    <Property Name="TaxRateBuyoutMultiplier"    BaseValue="1"/>
+    <Property Name="TaxRateSelloutMultiplier"   BaseValue="1"/>
+
+    <Property Name="NumberOfTradingCompanies"   BaseValue="0"/>
+    <Property Name="TotalTradingRoutesCount"    BaseValue="0"/>
+
+    <Property Name="AvailableNumberOfTradingCompanyHeadquarters" IsSealed="true"/>
+    <Property Name="TradingCompanyLevelUpMultiplier"  BaseValue="1" MinValue="0"/>
+    <Property Name="MaximumNumberOfTradingCompanyHeadquarters" BaseValue="0"/>
+    <Property Name="NumberOfTradingCompanyHeadquarters" IsSealed="true" IsSerializable="true"/>
+
+    <Property Name="MaximumNumberOfTradingCompanySubsidiaries" BaseValue="0"/>
+    <Property Name="NumberOfTradingCompanySubsidiaries" IsSealed="true" IsSerializable="true"/>
+
+    <Property Name="TradingRoutesIncomeAccumulator"         IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRoutesIncomeThreshold"           IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRoutesIncomePreviousThreshold"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncomeEmpireModifier" BaseValue="1"/>
+
+    <!-- all trading routes income are set by code -->
+    <Property Name="TradingRouteIncome_EmpireMoney"    IsSealed="true"  IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_EmpireResearch" IsSealed="true"  IsSerializable="true"/>
+
+
+    <!-- all trading routes income are set by code -->
+    <Property Name="TradingRouteIncome_Luxury1"    IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury2"    IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury3"    IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury4"    IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury5"    IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury6"    IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury7"    IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury8"    IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury9"    IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury10"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury11"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury12"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury13"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury14"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury15"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury16"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury17"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury18"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury19"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury20"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury21"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury22"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury23"   IsSealed="true" IsSerializable="true"/>
+    <Property Name="TradingRouteIncome_Luxury24"   IsSealed="true" IsSerializable="true"/>
+
+    <Property Name="TradingRouteLeech_EmpireMoney"      Composition="None"/>
+    <Property Name="TradingRouteLeech_EmpireResearch"   Composition="None"/>
+
+    <Property Name="TradingRouteLeech_Luxury1"          Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury2"          Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury3"          Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury4"          Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury5"          Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury6"          Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury7"          Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury8"          Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury9"          Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury10"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury11"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury12"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury13"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury14"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury15"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury16"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury17"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury18"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury19"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury20"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury21"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury22"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury23"         Composition="None"/>
+    <Property Name="TradingRouteLeech_Luxury24"         Composition="None"/>
+
+    <Property Name="TutorialLevel" BaseValue="0"/>
+    <Property Name="AdditionalMinimumTurnForQuests" BaseValue="0"/>
+    <Property Name="CanRootSystems" BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="HasSuperColonizer" BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="HasGhostSystems" BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="HasHiddenHomeSystem" BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="FleetsSpawnInvisible" BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="CanUseStrategicForRecipe" BaseValue="0" MinValue="0" MaxValue="1"/>
+
+    <!-- Military power -->
+    <!--<Property Name="TotalOffensiveMilitaryPower"/>
+        <Property Name="TotalDefensiveMilitaryPower"/>-->
+    <Property Name="OffensiveMilitaryPower" Composition="Sum"/>
+    <Property Name="DefensiveMilitaryPower" Composition="Sum"/>
+
+    <!-- Scores -->
+    <Property Name="EmpirePopulationScore"/>
+    <Property Name="EmpireResearchScore"/>
+    <Property Name="EmpireTradeScore"/>
+    <Property Name="EmpireHappinessScore"/>
+    <Property Name="EmpireHonorScore"/>
+    <Property Name="EmpireExpansionScore"/>
+    <Property Name="EmpireHeroesScore"/>
+    <Property Name="EmpireMilitaryScore"/>
+
+    <Property Name="ResearchScienceAgreementBonus"       BaseValue="0" MinValue="Negative"/>
+
+
+    <!-- research -->
+    <Property Name="TechnologyQuadrantEmpireDevelopmentActualStageNumber" Composition="Sum"/>
+
+    <Property Name="TechnologyQuadrantScienceAndExplorationActualStageNumber"   Composition="Sum"/>
+
+    <Property Name="TechnologyQuadrantEconomyAndTradeActualStageNumber"   Composition="Sum"/>
+
+    <Property Name="TechnologyQuadrantMilitaryActualStageNumber"  Composition="Sum"/>
+
+
+    <!-- collection bonus -->
+    <Property Name="TotalPopulationCollectionBonus"     BaseValue="0" />
+
+    <Property Name="LawUpkeep"/>
+    <Property Name="LawUpkeepMultiplier" BaseValue="1"/>
+
+    <Property Name="TreatiesUpkeep" BaseValue="0" MinValue="0"/>
+    <!-- For the UI -->
+    <Property Name="ScienceAgreementUpkeep" BaseValue="0" MinValue="0"/>
+    <Property Name="TradeAgreementUpkeep" BaseValue="0" MinValue="0"/>
+    <Property Name="ObliteratorMalus" BaseValue="0" MinValue="0"/>
+
+    <Property Name="ShipCount" Composition="Sum" />
+
+    <Property Name="NumberOfNonEliminatedMajorEmpires" IsSealed="true"/>
+
+    <!-- Pirate marks -->
+    <Property Name="PirateMarksStock" IsSealed="true" BaseValue="0"/>
+    <Property Name="NetPirateMarks"/>
+    <Property Name="ActivePirateMarks"/>
+    <Property Name="TotalPirateMarks"/>
+    <Property Name="EmpireMoneyCostOfLastPirateMarks" IsSealed="true"/>
+
+    <Property Name="PirateLairsDestroyed" IsSealed="true"/>
+    <Property Name="PirateMarksBought" IsSealed="true"/>
+
+    <Property Name="PirateLairLootMultiplier" BaseValue="1"/>
+
+    <Property Name="HasAffinityGeneHunter"/>
+
+    <Property Name="TurnsBeforeNextPVEHack" BaseValue="0"/>
+    <Property Name="NetTurnsBeforeNextPVEHack" BaseValue="-1" MinValue="Negative"/>
+    <Property Name="MinimumTurnsBeforeNextPVEHack" BaseValue="0"/>
+    <Property Name="MaximumTurnsBeforeNextPVEHack" BaseValue="15"/>
+
+    <Property Name="ColonyBaseAntivisionStrength" BaseValue="0"/>
+
+    <!-- ### ACADEMY ###-->
+    <Property Name="NoContributionSpree" 			          BaseValue="0" IsSealed="true"/>
+
+
+    <!--  ######################## -->
+    <!--  #####  MODIFIERS  ###### -->
+    <!--  ######################## -->
+
+    <Modifier       TargetProperty="EmpireEmpirePointUpkeep"     Operation="Addition"            Value="$(LawUpkeep)"   />
+    <Modifier       TargetProperty="EmpireEmpirePointUpkeep"     Operation="Addition"            Value="$(ScienceAgreementUpkeep)"   />
+    <Modifier       TargetProperty="EmpireEmpirePointUpkeep"     Operation="Addition"            Value="$(TradeAgreementUpkeep)"   />
+    <Modifier       TargetProperty="EmpireEmpirePointUpkeep"     Operation="Addition"            Value="$(ObliteratorMalus)"   />
+    <Modifier       TargetProperty="TotalShipCount"              Operation="Addition"           Value="$(ShipCount)"   Path="ClassEmpire/ClassColonizedStarSystem" />
+
+
+    <!-- Pressure -->
+    <Modifier TargetProperty="BasePressure"   Operation="Addition"    Value="$(EmpireGlobalScore)"     Path="ClassEmpire/ClassDiplomacy"/>
+
+    <!-- Content Tracking -->
+    <!-- ...SCORE CALCULATIONS... -->
+    <!--EXPLORE-->
+    <!--EXPAND-->
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(NonVampirilisPopulation)"         BinaryOperation="Multiplication" Right="3"  Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(VampirilisPopulation)"            BinaryOperation="Multiplication" Right="6"  Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(MothershipCount)"                 BinaryOperation="Multiplication" Right="9"  Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(MinorTraitsAssimilated)"          BinaryOperation="Multiplication" Right="5"  Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(JuggernautCount)"                 BinaryOperation="Multiplication" Right="4"  Path="ClassEmpire"/>
+    <!--EXPLOIT-->
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(SystemLevelSum)"                  BinaryOperation="Multiplication" Right="6"  Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(TradingCompanyEmpireCount)"       BinaryOperation="Multiplication" Right="7"  Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(TradingCompanyLevelCount)"        BinaryOperation="Multiplication" Right="5"  Path="ClassEmpire"/>
+    <Modifier       TargetProperty="EmpireGlobalScore"       Operation="Addition"    Value="$(EmpireTechScore)"                Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(HeroLevelCount)"                  BinaryOperation="Multiplication" Right="2"   Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(WonderBuiltCount)"                BinaryOperation="Multiplication" Right="20" Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(ActiveLawsCount)"                 BinaryOperation="Multiplication" Right="3"  Path="ClassEmpire"/>
+    <!-- Academy Provide 16 additional points -->
+    <!--EXTERMINATE-->
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(EmpireBattleWonStock)"            BinaryOperation="Multiplication" Right="2"  Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(WarsWon)"                         BinaryOperation="Multiplication" Right="5"  Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="EmpireGlobalScore"       Operation="Addition"    Left="$(QuestsCompleted)"                 BinaryOperation="Multiplication" Right="4"  Path="ClassEmpire"/>
+
+
+
+
+    <Modifier TargetProperty="MilitaryVictoryScore" Operation="Addition"    Value="$(CommandPoints)"                Path="ClassEmpire"/>
+    <Modifier TargetProperty="MilitaryVictoryScore" Operation="Addition"    Value="$(Lifetime)"                     Path="ClassEmpire"/>
+    <Modifier TargetProperty="MilitaryVictoryScore" Operation="Addition"    Value="$(EmpireMilitaryScore)"          Path="ClassEmpire"/>
+    <Modifier TargetProperty="MilitaryVictoryScore" Operation="Addition"    Value="$(SystemCount)"                  Path="ClassEmpire"/>
+
+    <Modifier TargetProperty="Happiness" Operation="Division" Value="$(HappinessSum)" Priority="1"/>
+
+    <Modifier TargetProperty="MaximumNumberOfTradingCompanySubsidiaries" Operation="Addition" Value="$(NumberOfTradingCompanyHeadquarters)"/>
+
+    <Modifier TargetProperty="BaseEmpireMoney" Operation="Multiplication" Value="$(TradingRouteIncomeEmpireModifier)" Path="ClassEmpire/DepartmentOfCommerce/ClassTradingCompany"/>
+
+    <Modifier TargetProperty="NetEmpireMoney" Operation="Addition" Value="$(TradingRouteIncome_EmpireMoney)" TooltipHidden="true"/>
+    <Modifier TargetProperty="NetEmpireResearch" Operation="Addition" Value="$(TradingRouteIncome_EmpireResearch)"/>
+
+    <Modifier TargetProperty="NetLuxury1" Operation="Addition" Value="$(TradingRouteIncome_Luxury1)"/>
+    <Modifier TargetProperty="NetLuxury2" Operation="Addition" Value="$(TradingRouteIncome_Luxury2)"/>
+    <Modifier TargetProperty="NetLuxury3" Operation="Addition" Value="$(TradingRouteIncome_Luxury3)"/>
+    <Modifier TargetProperty="NetLuxury4" Operation="Addition" Value="$(TradingRouteIncome_Luxury4)"/>
+    <Modifier TargetProperty="NetLuxury5" Operation="Addition" Value="$(TradingRouteIncome_Luxury5)"/>
+    <Modifier TargetProperty="NetLuxury6" Operation="Addition" Value="$(TradingRouteIncome_Luxury6)"/>
+    <Modifier TargetProperty="NetLuxury7" Operation="Addition" Value="$(TradingRouteIncome_Luxury7)"/>
+    <Modifier TargetProperty="NetLuxury8" Operation="Addition" Value="$(TradingRouteIncome_Luxury8)"/>
+    <Modifier TargetProperty="NetLuxury9" Operation="Addition" Value="$(TradingRouteIncome_Luxury9)"/>
+    <Modifier TargetProperty="NetLuxury10" Operation="Addition" Value="$(TradingRouteIncome_Luxury10)"/>
+    <Modifier TargetProperty="NetLuxury11" Operation="Addition" Value="$(TradingRouteIncome_Luxury11)"/>
+    <Modifier TargetProperty="NetLuxury12" Operation="Addition" Value="$(TradingRouteIncome_Luxury12)"/>
+    <Modifier TargetProperty="NetLuxury13" Operation="Addition" Value="$(TradingRouteIncome_Luxury13)"/>
+    <Modifier TargetProperty="NetLuxury14" Operation="Addition" Value="$(TradingRouteIncome_Luxury14)"/>
+    <Modifier TargetProperty="NetLuxury15" Operation="Addition" Value="$(TradingRouteIncome_Luxury15)"/>
+    <Modifier TargetProperty="NetLuxury16" Operation="Addition" Value="$(TradingRouteIncome_Luxury16)"/>
+    <Modifier TargetProperty="NetLuxury17" Operation="Addition" Value="$(TradingRouteIncome_Luxury17)"/>
+    <Modifier TargetProperty="NetLuxury18" Operation="Addition" Value="$(TradingRouteIncome_Luxury18)"/>
+    <Modifier TargetProperty="NetLuxury19" Operation="Addition" Value="$(TradingRouteIncome_Luxury19)"/>
+    <Modifier TargetProperty="NetLuxury20" Operation="Addition" Value="$(TradingRouteIncome_Luxury20)"/>
+    <Modifier TargetProperty="NetLuxury21" Operation="Addition" Value="$(TradingRouteIncome_Luxury21)"/>
+    <Modifier TargetProperty="NetLuxury22" Operation="Addition" Value="$(TradingRouteIncome_Luxury22)"/>
+    <Modifier TargetProperty="NetLuxury23" Operation="Addition" Value="$(TradingRouteIncome_Luxury23)"/>
+    <Modifier TargetProperty="NetLuxury24" Operation="Addition" Value="$(TradingRouteIncome_Luxury24)"/>
+
+    <Modifier TargetProperty="NetEmpireMoney" Operation="Addition" Value="$(TradingRouteLeech_EmpireMoney)" TooltipHidden="true"/>
+    <Modifier TargetProperty="NetEmpireResearch" Operation="Addition" Value="$(TradingRouteLeech_EmpireResearch)"/>
+
+    <Modifier TargetProperty="NetLuxury1" Operation="Addition" Value="$(TradingRouteLeech_Luxury1)"/>
+    <Modifier TargetProperty="NetLuxury2" Operation="Addition" Value="$(TradingRouteLeech_Luxury2)"/>
+    <Modifier TargetProperty="NetLuxury3" Operation="Addition" Value="$(TradingRouteLeech_Luxury3)"/>
+    <Modifier TargetProperty="NetLuxury4" Operation="Addition" Value="$(TradingRouteLeech_Luxury4)"/>
+    <Modifier TargetProperty="NetLuxury5" Operation="Addition" Value="$(TradingRouteLeech_Luxury5)"/>
+    <Modifier TargetProperty="NetLuxury6" Operation="Addition" Value="$(TradingRouteLeech_Luxury6)"/>
+    <Modifier TargetProperty="NetLuxury7" Operation="Addition" Value="$(TradingRouteLeech_Luxury7)"/>
+    <Modifier TargetProperty="NetLuxury8" Operation="Addition" Value="$(TradingRouteLeech_Luxury8)"/>
+    <Modifier TargetProperty="NetLuxury9" Operation="Addition" Value="$(TradingRouteLeech_Luxury9)"/>
+    <Modifier TargetProperty="NetLuxury10" Operation="Addition" Value="$(TradingRouteLeech_Luxury10)"/>
+    <Modifier TargetProperty="NetLuxury11" Operation="Addition" Value="$(TradingRouteLeech_Luxury11)"/>
+    <Modifier TargetProperty="NetLuxury12" Operation="Addition" Value="$(TradingRouteLeech_Luxury12)"/>
+    <Modifier TargetProperty="NetLuxury13" Operation="Addition" Value="$(TradingRouteLeech_Luxury13)"/>
+    <Modifier TargetProperty="NetLuxury14" Operation="Addition" Value="$(TradingRouteLeech_Luxury14)"/>
+    <Modifier TargetProperty="NetLuxury15" Operation="Addition" Value="$(TradingRouteLeech_Luxury15)"/>
+    <Modifier TargetProperty="NetLuxury16" Operation="Addition" Value="$(TradingRouteLeech_Luxury16)"/>
+    <Modifier TargetProperty="NetLuxury17" Operation="Addition" Value="$(TradingRouteLeech_Luxury17)"/>
+    <Modifier TargetProperty="NetLuxury18" Operation="Addition" Value="$(TradingRouteLeech_Luxury18)"/>
+    <Modifier TargetProperty="NetLuxury19" Operation="Addition" Value="$(TradingRouteLeech_Luxury19)"/>
+    <Modifier TargetProperty="NetLuxury20" Operation="Addition" Value="$(TradingRouteLeech_Luxury20)"/>
+    <Modifier TargetProperty="NetLuxury21" Operation="Addition" Value="$(TradingRouteLeech_Luxury21)"/>
+    <Modifier TargetProperty="NetLuxury22" Operation="Addition" Value="$(TradingRouteLeech_Luxury22)"/>
+    <Modifier TargetProperty="NetLuxury23" Operation="Addition" Value="$(TradingRouteLeech_Luxury23)"/>
+    <Modifier TargetProperty="NetLuxury24" Operation="Addition" Value="$(TradingRouteLeech_Luxury24)"/>
+
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury1Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury2Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury3Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury4Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury5Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury6Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury7Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury8Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury9Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury10Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury11Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury12Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury13Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury14Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury15Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury16Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury17Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury18Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury19Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury20Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury21Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury22Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury23Stock)"/>
+    <Modifier TargetProperty="AllLuxuriesStock" Operation="Addition" Value="$(Luxury24Stock)"/>
+
+    <!-- Scores Modifier -->
+    <Modifier TargetProperty="EmpirePopulationScore"       Operation="Addition"    Value="$(Population)"     Path="ClassEmpire"/>
+    <Modifier TargetProperty="EmpirePopulationScore"       Operation="Addition"    Value="$(PopulationTypeCount)"     Path="ClassEmpire"/>
+
+    <Modifier TargetProperty="EmpireResearchScore"       Operation="Addition"    Value="$(EmpireResearch)"     Path="ClassEmpire"/>
+    <Modifier TargetProperty="EmpireResearchScore"       Operation="Addition"    Value="$(TotalTechnology)"     Path="ClassEmpire"/>
+
+    <Modifier TargetProperty="EmpireTradeScore"       Operation="Addition"    Value="$(TradingRouteIncome_EmpireMoney)"     Path="ClassEmpire"/>
+    <Modifier TargetProperty="EmpireTradeScore"       Operation="Addition"    Value="$(TradingRouteIncome_EmpireResearch)"     Path="ClassEmpire"/>
+
+    <BinaryModifier TargetProperty="EmpireHappinessScore" Operation="Addition"  Left="$(Happiness)"  BinaryOperation="Multiplication"  Right="$(CannotUseHonor)"  Path="ClassEmpire"/>
+
+    <Modifier TargetProperty="EmpireHonorScore"       Operation="Addition"    Value="$(EmpireHonorStock)"     Path="ClassEmpire"/>
+
+    <!-- TODO SystemPlanetCount does not exist... -->
+    <!--<Modifier TargetProperty="EmpireExpansionScore"       Operation="Addition"    Value="$(SystemPlanetCount)"     Path="ClassEmpire"/>-->
+    <Modifier TargetProperty="EmpireExpansionScore"       Operation="Addition"    Value="$(SystemCount)"     Path="ClassEmpire"/>
+
+
+    <Modifier TargetProperty="EmpireHeroesScore"       Operation="Addition"    Value="$(HeroLevelCount)"     Path="ClassEmpire"/>
+    <Modifier TargetProperty="EmpireHeroesScore"       Operation="Addition"    Value="$(HeroCount)"     Path="ClassEmpire"/>
+
+    <!-- TODO Post-battle value? -->
+    <!--<Modifier TargetProperty="EmpireMilitaryScore"       Operation="Addition"    Value="$(TotalOffensiveMilitaryPower)"     Path="ClassEmpire"/>
+        <Modifier TargetProperty="EmpireMilitaryScore"       Operation="Addition"    Value="$(TotalDefensiveMilitaryPower)"     Path="ClassEmpire"/>-->
+    <Modifier TargetProperty="EmpireMilitaryScore"       Operation="Addition"    Value="$(OffensiveMilitaryPower)"     Path="ClassEmpire"/>
+    <Modifier TargetProperty="EmpireMilitaryScore"       Operation="Addition"    Value="$(DefensiveMilitaryPower)"     Path="ClassEmpire"/>
+    <Modifier TargetProperty="EmpireMilitaryScore"       Operation="Addition"    Value="$(EmpireManpowerTotal)"             Path="ClassEmpire"/>
+
+
+    <Modifier       TargetProperty="NetEmpireResearch"              Operation="Addition"    Value="$(ResearchScienceAgreementBonus)"/>
+
+    <Modifier TargetProperty="CurrentTurn" Operation="Addition"    Value="$(Lifetime)"      Path="ClassEmpire/ClassDiplomacy/DiplomaticAbilityEffectScienceAgreement"/>
+
+    <Modifier       TargetProperty="TotalTradingRoutesCount"              Operation="Division"    Value="$(NumberOfTradingCompanies)"/>
+
+    <!-- Transfer empire properties to the children-->
+    <Modifier TargetProperty="NumberOfTradingCompanies"     Operation="Addition" Value="$(NumberOfTradingCompanies)"    Path="ClassEmpire/ClassSenate" />
+    <Modifier TargetProperty="NumberOfTradingCompanies"     Operation="Addition" Value="$(NumberOfTradingCompanies)"    Path="ClassEmpire/ClassColonizedStarSystem" />
+    <Modifier TargetProperty="VictoryEconomicRanking"       Operation="Addition" Value="$(VictoryEconomicRanking)"      Path="ClassEmpire/ClassColonizedStarSystem" />
+
+    <Modifier TargetProperty="LawUpkeep"                    Operation="Multiplication" Value="$(LawUpkeepMultiplier)"/>
+
+    <!-- Pirate marks -->
+    <Modifier TargetProperty="TotalPirateMarks" Operation="Addition" Value="$(PirateMarksStock)"/>
+    <Modifier TargetProperty="TotalPirateMarks" Operation="Addition" Value="$(ActivePirateMarks)"/>
+
+    <!-- Honor & Obedience -->
+    <Modifier TargetProperty="Obedience" Operation="Addition" Value="$(EmpireHonorStock)"/>
+
+    <Modifier TargetProperty="SystemObedience" Operation="Addition" Value="$(Obedience)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+
+    <Modifier TargetProperty="AntivisionStrength" Operation="Addition" Value="$(ColonyBaseAntivisionStrength)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+
+    <!-- Gui Empire Happiness-->
+    <BinaryModifier TargetProperty="GUIStarSystemsHappinessAvg" Operation="Force" Left="$(GUIStarSystemsHappinessSum)" BinaryOperation="Division" Right="$(GUIStarSystemsPopulationSum)" Priority="100"/>
+    <BinaryModifier TargetProperty="GUIHappinessMothershipsDelta" Operation="Force" Left="$(GUIStarSystemsHappinessAvg)" BinaryOperation="Subtraction" Right="$(Happiness)" Priority="101"/>
+    <Modifier TargetProperty="GUIHappinessModifiersHolder" Operation="Addition" Value="$(GUIStarSystemsHappinessAvg)" Priority="102"/>
+    <Modifier TargetProperty="GUIHappinessModifiersHolder" Operation="Subtraction" Value="$(GUIHappinessMothershipsDelta)" Priority="103"/>
+
+  </SimulationDescriptor>
+</Datatable>
