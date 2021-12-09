@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/BattleEffectDefinition.xsd">
   <!-- Shield Regeneration -->
-	<!-- Flat -->
-	<BattleEffect_SetPropertyValue Name="Ship_ReloadRegeneratePerSecond" PropertyName="Shield" Operation="Set" InterpreterFormula="Min(Property(Target, @ClassShip, Shield) + Property(Target, @ClassShip, ShieldRegeneratePerSecond), Property(Target, @ClassShip, MaximumShield))" Duration="-1" Frequency="1">
+  <!-- Flat -->
+  <BattleEffect_SetPropertyValue Name="Ship_ReloadRegeneratePerSecond" PropertyName="Shield" Operation="Set" InterpreterFormula="Min(Property(Target, @ClassShip, Shield) + Property(Target, @ClassShip, ShieldRegeneratePerSecond), Property(Target, @ClassShip, MaximumShield))" Duration="-1" Frequency="1">
     <CancellationEventPrerequisite EventType="LastPhaseStart"/>
   </BattleEffect_SetPropertyValue>
 
-	<!-- Dynamic -->
+  <!-- Dynamic -->
   <BattleEffect_SetPropertyValue Name="Ship_ReloadRegeneratePerSecondDynamic" PropertyName="Shield" Operation="Set" InterpreterFormula="Min(Property(Target, @ClassShip, Shield) + Max(Property(Target, @ClassShip, ShieldRegeneratePerSecondDynamic) * Property(Target, @ClassShip, MaximumShield), 0), Property(Target, @ClassShip, MaximumShield))" Duration="-1" Frequency="1">
     <CancellationEventPrerequisite EventType="LastPhaseStart"/>
   </BattleEffect_SetPropertyValue>
 
-	<!-- Manpower per CP -->
-	<BattleEffect_EmpireReward_Resource Name="Group_OpponentRecyclingManpowerGainReward"            ResourceName="EmpireManpower"          InterpreterFormula="Property(Owner, @ClassGroup, OpponentRecyclingManpowerPerCP) * Property(Owner, @ClassGroup, DestroyedCP)" />
-	
-	<!-- Hull Plating Absorption -->
+  <!-- Manpower per CP -->
+  <BattleEffect_EmpireReward_Resource Name="Group_OpponentRecyclingManpowerGainReward"            ResourceName="EmpireManpower"          InterpreterFormula="Property(Owner, @ClassGroup, OpponentRecyclingManpowerPerCP) * Property(Owner, @ClassGroup, DestroyedCP)" />
+
+  <!-- Hull Plating Absorption -->
   <BattleEffect_SetPropertyValue Name="Salvo_ComputeDamageAbsorbedByHullPlating" PropertyName="DamageAbsorbedByHullPlating" Operation="Addition" InterpreterFormula="Min(Property(Initiator, @ClassSalvo, HullPlatingAbsorptionValue) * (Property(InitiatorTarget, @../ClassShip, HullPlatingAbsorption) / (Property(InitiatorTarget, @../ClassShip, HullPlatingAbsorption) + Property(InitiatorTarget, @../ClassShip, HullWeakness))) * Property(InitiatorTarget, @../ClassShip, HullPlatingAbsorptionPercent), Property(Initiator, @ClassSalvo, HullPlatingAbsorptionValue))"/>
   <BattleEffect_SetPropertyValue Name="Squadron_ComputeDamageAbsorbedByHullPlating" PropertyName="DamageAbsorbedByHullPlating" Operation="Set" InterpreterFormula="Min(Property(Initiator, @ClassModuleSquadron, HullPlatingAbsorptionValue) * (Property(InitiatorTarget, @ClassShip, HullPlatingAbsorption) / (Property(InitiatorTarget, @ClassShip, HullPlatingAbsorption) + Property(InitiatorTarget, @ClassShip, HullWeakness))) * Property(InitiatorTarget, @ClassShip, HullPlatingAbsorptionPercent), Property(Initiator, @ClassModuleSquadron, HullPlatingAbsorptionValue))"/>
 
@@ -22,7 +22,7 @@
   <BattleEffect_SetPropertyValue Name="Salvo_ComputeDamageToApplyToFlotillaShield" PropertyName="DamageAbsorbedByLastShield" Operation="Set" InterpreterFormula="Min(Property(Initiator, @ClassSalvo, ShieldAbsorptionValue) * (Property(InitiatorTarget, @ClassFlotilla, ShieldAbsorption) / (Property(InitiatorTarget, @ClassFlotilla, ShieldAbsorption) + Property(InitiatorTarget, @ClassFlotilla, HullWeakness)) * Property(InitiatorTarget, @ClassFlotilla, ShieldAbsorptionPercent)), Property(InitiatorTarget, @ClassFlotilla, Shield), Property(Initiator, @ClassSalvo, ShieldAbsorptionValue))"/>
   <BattleEffect_SetPropertyValue Name="Salvo_ComputeDamageToApplyToShipShield" PropertyName="DamageAbsorbedByLastShield" Operation="Set" InterpreterFormula="Min(Property(Initiator, @ClassSalvo, ShieldAbsorptionValue) * (Property(InitiatorTarget, @ClassShip, ShieldAbsorption) / (Property(InitiatorTarget, @ClassShip, ShieldAbsorption) + Property(InitiatorTarget, @ClassShip, HullWeakness)) * Property(InitiatorTarget, @ClassShip, ShieldAbsorptionPercent)), Property(InitiatorTarget, @ClassShip, Shield), Property(Initiator, @ClassSalvo, ShieldAbsorptionValue))"/>
   <BattleEffect_SetPropertyValue Name="Squadron_ComputeDamageToApplyToShipShield" PropertyName="DamageAbsorbedByLastShield" Operation="Set" InterpreterFormula="Min(Property(Initiator, @ClassModuleSquadron, ShieldAbsorptionValue) * (Property(InitiatorTarget, @ClassShip, ShieldAbsorption) / (Property(InitiatorTarget, @ClassShip, ShieldAbsorption) + Property(InitiatorTarget, @ClassShip, HullWeakness)) * Property(InitiatorTarget, @ClassShip, ShieldAbsorptionPercent)), Property(InitiatorTarget, @ClassShip, Shield), Property(Initiator, @ClassModuleSquadron, ShieldAbsorptionValue))"/>
-  
+
   <!-- Coilgun -->
   <BattleEffect_SetPropertyValue Name="Ship_SetArmorDestructionFromOpponentCoilgun"             PropertyName="CoilgunArmorDescructionPercentFromOpponent"        Operation="Set" InterpreterFormula="Property(Initiator, @ClassSalvo, ArmorDestructionDynamic)" />
 
