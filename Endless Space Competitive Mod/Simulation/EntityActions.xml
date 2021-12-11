@@ -323,11 +323,27 @@
 
     <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
     <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
-    <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
 
     <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 100 </RelationInterpreterPrerequisite>
 
     <MinorEmpireInterpreterPrerequisite Flags="OwnershipType">$(OwnershipType) lt 2 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
+    <PopulationEventOnSelf>PopulationPoliticalEventMinorBrainWash</PopulationEventOnSelf>
+    <ScoreProviderEventOnSelf>MinorEmpirePeaceDeclared</ScoreProviderEventOnSelf>
+  </CreateAllianceEmpireAction>
+
+  <CreateAllianceEmpireAction Name="ForceAllianceEmpireAction" ResultingDiplomaticRelationState="DiplomaticRelationStateMinorAdvancedBrainwashed">
+    <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * 200 * Property(StockLocation,@ClassEmpire,PeacefulTreatyCostReduction) * Max(Property(StockLocation,@ClassEmpire,SystemCount), 1)</CustomCost>
+
+    <PathPrerequisite Flags="Prerequisite,Discard" >ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
+
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
+    <StatePrerequisite Inverted="false" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
+
+    <RelationPathPrerequisite Inverted="false" Flags="IsNotLeeched">ClassMinorRelationWithMajor,MinorRelationLeeched</RelationPathPrerequisite>
+    <MinorEmpireInterpreterPrerequisite Flags="RemainingManpower">Property(Context, @'ClassEmpire/ClassColonizedStarSystem,MinorHomeSystem',SystemManpowerStock,true) lt 1</MinorEmpireInterpreterPrerequisite>
+
     <PopulationEventOnSelf>PopulationPoliticalEventMinorBrainWash</PopulationEventOnSelf>
     <ScoreProviderEventOnSelf>MinorEmpirePeaceDeclared</ScoreProviderEventOnSelf>
   </CreateAllianceEmpireAction>
@@ -505,7 +521,7 @@
     <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
     <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
     <RelationInterpreterPrerequisite   Flags="Prerequisite,MustBeFriendlyRelation">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 50</RelationInterpreterPrerequisite>
-
+ 
     <MinorEmpireInterpreterPrerequisite Inverted="true" Flags="Discard">$(OwnershipType) eq 2 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
     <MinorEmpireInterpreterPrerequisite Flags="OwnershipType">$(OwnershipType) lt 2 or $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
 
