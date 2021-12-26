@@ -66,9 +66,12 @@
 
   <!-- Econ Module: Local Government Bureau -->
   <SimulationDescriptor Name="ModuleSupportJuggernautSystemSupportFIDSDynamic" Type="ModuleSupportJuggernautSystemSupport">
+    <Property Name="MaximumMovement" BaseValue="0"/>
     <Modifier TargetProperty="SystemGrowthJuggernautFlat"        Operation="Addition" Value="5"/>
     <Modifier TargetProperty="SystemProductionJuggernautFlat"    Operation="Addition" Value="5"/>
     <Modifier TargetProperty="BuildingProductionCostReduction"      Operation="Addition" Value="0.05"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="3"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="$(MaximumMovement)" Path="../ClassShip"/>
   </SimulationDescriptor>
 
   <!--Advanced Node Analyzer-->
@@ -133,7 +136,6 @@
     <Property Name="MiningProbeDepletionPointsOnPlanet"/>
     <Property Name="MiningProbeDepositValueMultiplier"/>
     <Property Name="MiningProbePlanetStatsMultiplier"/>
-    <Property Name="GameSpeedMultiplier" BaseValue="1"/>
     <Modifier TargetProperty="NetShipMiningProbe" Operation="Addition" Value="$(NetShipMiningProbe)" Path="../ClassShip"/>
     <Modifier TargetProperty="MiningProbeDepletionPointsOnPlanet" Operation="Addition" Value="$(MiningProbeDepletionPointsOnPlanet)" Path="../ClassGarrison"/>
     <Modifier TargetProperty="MaximumShipMiningProbeStock" Operation="Addition" Value="$(MaximumShipMiningProbeStock)" Path="../ClassShip"/>
@@ -285,7 +287,7 @@
   <!-- Cravers Science per Depletion -->
   <SimulationDescriptor Name="ModuleSupportJuggernautRejuvenatorCravers1" Type="ModuleSupportJuggernautRejuvenator">
     <Modifier TargetProperty="NetRestorationProduction"         Operation="Addition"    Value="80"/>
-    <Modifier TargetProperty="EmpireResearchPerDepletionPoint"  Operation="Addition"    Value="0.5"/>
+    <BinaryModifier TargetProperty="EmpireResearchPerDepletionPoint"  Operation="Addition"    Left="0.5"  BinaryOperation="Division"  Right="$(GameSpeedMultiplier)"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
 

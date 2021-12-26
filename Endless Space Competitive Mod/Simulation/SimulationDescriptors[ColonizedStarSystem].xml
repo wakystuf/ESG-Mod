@@ -25,9 +25,11 @@
 		<!-- Food rework -->
 		<Property Name="SystemGrowthStockNextTurn"					BaseValue="0" MinValue="0"/>
 		<Property Name="SystemGrowthStockRequiredForNextPop" BaseValue="0" MinValue="0"/>
-		<Property Name="WastedGrowth"				 								BaseValue="0" MinValue="0"/>
-		<Property Name="CurrentTurn" 												BaseValue="1"/>
-		<Property Name="GameSettingFoodReworkEnabled"				BaseValue="1" MinValue="0" MaxValue="1"/>
+		<Property Name="MaximumUsefulSystemGrowthStock" 	  BaseValue="0" MinValue="0"/>
+		<Property Name="SystemGrowthStockAdjustmentToMaximum" BaseValue="0" MinValue="0"/>
+		<Property Name="WastedGrowth"				 		            BaseValue="0" MinValue="0"/>
+		<Property Name="CurrentTurn" 						            BaseValue="1"/>
+		<Property Name="GameSettingFoodReworkEnabled"		    BaseValue="1" MinValue="0" MaxValue="1"/>
 		<Property Name="GameSettingFoodReworkScalingEnabled" BaseValue="1" MinValue="0" MaxValue="1"/>
 		<Property Name="CanConvertWastedFoodtoDust1"				BaseValue="0" MinValue="0" MaxValue="1"/>
 		<Property Name="CanConvertWastedFoodtoDust2"				BaseValue="0" MinValue="0" MaxValue="1"/>
@@ -89,8 +91,10 @@
 		<Property Name="SystemEmpirePointVenetians"         BaseValue="0"/>
 		
 		<!-- Essence Explication in GUI -->
-		<Property Name="SystemLifeforceFromP05L01"					BaseValue="0"/>
-		<Property Name="SystemLifeforceFromLux"							BaseValue="0"/>
+		<Property Name="SystemLifeforceFromP05L01"          BaseValue="0"/>
+		<Property Name="SystemLifeforceFromP04L01"          BaseValue="0"/>
+		<Property Name="SystemLifeforceFromP01L01"          BaseValue="0"/>
+		<Property Name="SystemLifeforceFromLux"             BaseValue="0"/>
 
 		<!-- Utopian Architecture -->
 		<Property Name="UtopianUnhappyReduction"						BaseValue="0" MinValue="Negative"/>
@@ -943,6 +947,9 @@
 		<Modifier TargetProperty="ColonyShipProductionCostReduction"    Operation="Multiplication" Value="-1" TooltipHidden="true"  Priority="10"/>
 		<Modifier TargetProperty="MilitaryShipProductionCostReduction"  Operation="Multiplication" Value="-1" TooltipHidden="true"  Priority="10"/>
 		<Modifier TargetProperty="JuggernautShipProductionCostReduction"  Operation="Multiplication" Value="-1" TooltipHidden="true"  Priority="10"/>
+		<BinaryModifier TargetProperty="JuggernautShipProductionCostReductionAdj"  Operation="Division" Left="1" BinaryOperation="Subtraction" Right="$(ShipProductionCostReduction)" TooltipHidden="true"  Priority="11"/>
+		<Modifier TargetProperty="JuggernautShipProductionCostReductionAdj"  Operation="Subtraction" Value="1" TooltipHidden="true"  Priority="12"/>
+		<Modifier TargetProperty="JuggernautShipProductionCostReduction"  Operation="Subtraction" Value="$(JuggernautShipProductionCostReductionAdj)" TooltipHidden="true"  Priority="13"/>
 
 		<!-- GROUND BATTLE -->
 		<Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMin"          Operation="Addition" Value="$(GroundBattleBombardmentAttackerDamages)" />
@@ -1186,7 +1193,7 @@
 
 		<!-- Desired formula:   (exp(level / 2.5) - 1) * lengthModifier -->
 		<!-- Equivalent:        (2.7 ^ (level / 2.5) - 1) * lengthModifier -->
-		<Modifier       TargetProperty="TradingRoutesSystemOutputBonus" Operation="Addition" Value="3.5" Priority="1"/>
+		<Modifier       TargetProperty="TradingRoutesSystemOutputBonus" Operation="Addition" Value="5" Priority="1"/>
 		<BinaryModifier TargetProperty="TradingRoutesSystemOutputBonus" Operation="Power" Left="$(SystemLevel)" BinaryOperation="Division" Right="3" Priority="2"/>
 		<Modifier       TargetProperty="TradingRoutesSystemOutputBonus" Operation="Subtraction" Value="1" Priority="3"/>
 		<Modifier       TargetProperty="TradingRoutesSystemOutputBonus" Operation="Multiplication" Value="$(TradingRoutesCumulatedLengthModifiers)" Priority="4"/>
@@ -1398,27 +1405,30 @@
 		<BinaryModifier TargetProperty="SystemGrowthStockRequiredForNextPop"  Operation="Addition" Left="$(Population)" BinaryOperation="Multiplication" Right="305" Priority="4"/>
 		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Value="610" Priority="4"/><!-- Note: 2 x 305  -->
 		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="5"/>
+		<BinaryModifier TargetProperty="SystemGrowthStockAdjustmentToMaximum" Operation="Addition" Left="$(SystemGrowthStockRequiredForNextPop)" BinaryOperation="Subtraction" Right="$(MaximumSystemGrowthStock)" Priority="6"/>
+		<BinaryModifier TargetProperty="MaximumUsefulSystemGrowthStock" Operation="Addition" Left="$(SystemGrowthStockRequiredForNextPop)" BinaryOperation="Subtraction" Right="$(SystemGrowthStockAdjustmentToMaximum)" Priority="7"/>
 
 		<!-- Calculate amount of food that will be wasted and filter for GameSetting and whether conversion is unlocked -->
-		<BinaryModifier TargetProperty="WastedGrowth"  Operation="Addition" Left="$(SystemGrowthStockNextTurn)" BinaryOperation="Subtraction" Right="$(SystemGrowthStockRequiredForNextPop)" Priority="6"/>
-		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(GameSettingFoodReworkEnabled)" Priority="7"/>
+		<BinaryModifier TargetProperty="WastedGrowth"  Operation="Addition" Left="$(SystemGrowthStockNextTurn)" BinaryOperation="Subtraction" Right="$(MaximumUsefulSystemGrowthStock)" Priority="8"/>
+		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(GameSettingFoodReworkEnabled)" Priority="9"/>
+		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(DisableFoodConversion)" Priority="9"/>
 
 		<!-- Convert food as appropriate (using separate intermediate variables so that it shows up clearly in the GUI) -->
 		<BinaryModifier TargetProperty="WastedFoodtoDust"  Operation="Addition" Left="$(CanConvertWastedFoodtoDust1)" BinaryOperation="Addition" Right="$(CanConvertWastedFoodtoDust2)" Priority="1"/>
 		<Modifier 		TargetProperty="WastedFoodtoDust"  Operation="Division" Value="4" 																								Priority="2"/>
-		<Modifier 		TargetProperty="WastedFoodtoDust"  Operation="Multiplication" Value="$(WastedGrowth)"																			Priority="8"/>
+		<Modifier 		TargetProperty="WastedFoodtoDust"  Operation="Multiplication" Value="$(WastedGrowth)"																			Priority="10"/>
 
 		<BinaryModifier TargetProperty="WastedFoodtoMP"    Operation="Addition" Left="$(CanConvertWastedFoodtoMP1)" BinaryOperation="Addition" Right="$(CanConvertWastedFoodtoMP2)" 	Priority="1"/>
 		<Modifier 		TargetProperty="WastedFoodtoMP"    Operation="Division" Value="4" 																								Priority="2"/>
-		<Modifier 		TargetProperty="WastedFoodtoMP"    Operation="Multiplication" Value="$(WastedGrowth)"																			Priority="8"/>
+		<Modifier 		TargetProperty="WastedFoodtoMP"    Operation="Multiplication" Value="$(WastedGrowth)"																			Priority="10"/>
 
 		<!-- Convert food as appropriate (using separate intermediate variables so that it shows up clearly in the GUI)
 		<BinaryModifier TargetProperty="WastedFoodtoApproval" Operation="Addition" Left="$(CanConvertWastedFoodtoApproval)" BinaryOperation="Multiplication" Right="$(WastedGrowth)" 	Priority="8"/>
 		<Modifier 		TargetProperty="WastedFoodtoApproval"    Operation="Multiplication" Value="999"																					Priority="8"/>-->
 
-		<Modifier 		TargetProperty="NetSystemGrowth"   Operation="Subtraction" Value="$(WastedGrowth)" 	       Priority="8" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem,!ColonizedStarSystemStateOutpost,!NodeTypeSpecialNode"/>
-		<Modifier 		TargetProperty="NetSystemMoney"    Operation="Addition"    Value="$(WastedFoodtoDust)" 	   Priority="9"/>
-		<Modifier 		TargetProperty="EmpireManpower"    Operation="Addition"    Value="$(WastedFoodtoMP)" 	   Priority="9" Path="../ClassEmpire"/>
+		<Modifier 		TargetProperty="NetSystemGrowth"   Operation="Subtraction" Value="$(WastedGrowth)" 	       Priority="10" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem,!ColonizedStarSystemStateOutpost,!NodeTypeSpecialNode"/>
+		<Modifier 		TargetProperty="NetSystemMoney"    Operation="Addition"    Value="$(WastedFoodtoDust)" 	   Priority="11"/>
+		<Modifier 		TargetProperty="EmpireManpower"    Operation="Addition"    Value="$(WastedFoodtoMP)" 	   Priority="11" Path="../ClassEmpire"/>
 		<!--<Modifier 		TargetProperty="Happiness"    	   Operation="Addition"    Value="$(WastedFoodtoApproval)" Priority="9"/>-->
 
 		<!-- Determine whether pop is allowed to grow this turn based on turn, presence of trait and gamespeed, and apply adjustment if needed -->
@@ -1640,6 +1650,7 @@
 		<Property Name="ProbesProductionCostReduction" MaxValue="0.75"/>
 		<Property Name="MothershipProductionCostReduction" BaseValue="1"/>
 		<Property Name="JuggernautShipProductionCostReduction" MinValue="Negative" MaxValue="0.75"/>
+		<Property Name="JuggernautShipProductionCostReductionAdj" BaseValue="1" MinValue="Negative"/>
 
 		<!-- Buyout bonus -->
 		<Property Name="WonderBuyoutReduction"      MaxValue="0.75"/>
@@ -1835,6 +1846,8 @@
 		<Modifier TargetProperty="NetSystemLifeforce"                 Operation="Addition" Value="$(NetSystemLifeforce)"                 Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
 		<Modifier TargetProperty="EmpireLifeforceFromMoneyConversion" Operation="Addition" Value="$(SystemLifeforceFromMoneyConversion)" Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
 		<Modifier TargetProperty="EmpireLifeforceFromP05L01"          Operation="Addition" Value="$(SystemLifeforceFromP05L01)"          Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+		<Modifier TargetProperty="EmpireLifeforceFromP04L01"          Operation="Addition" Value="$(SystemLifeforceFromP04L01)"          Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
+		<Modifier TargetProperty="EmpireLifeforceFromP01L01"          Operation="Addition" Value="$(SystemLifeforceFromP01L01)"          Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
 		<Modifier TargetProperty="EmpireLifeforceFromLux"          	  Operation="Addition" Value="$(SystemLifeforceFromLux)"          	 Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
 
 		<Modifier TargetProperty="NetSystemGrowth"          Operation="Addition" Value="$(NetSystemGrowth)"         Path="!ColonizedStarSystemStateGhost/../ClassEmpire"/>
