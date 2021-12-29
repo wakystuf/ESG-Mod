@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+  <QuestDefinition Name="QuestDebugEliminateCurrentEmpire" IsInstant="true" Category="Debug" SubCategory="Elimination" TriggeringProbability="1" MinimumTurn="0">
+    <Tags>Hidden,BeginTurn</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$Trait" StringValue="FactionTraitOvercolonizationCapThree"/>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <PathPrerequisite>false</PathPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="EliminateEmpire">
+            <Sequence>
+              <Action_EliminateEmpire>
+                <Input_Empire VarName="$CurrentEmpire"/>
+              </Action_EliminateEmpire>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+</Datatable>
