@@ -162,6 +162,21 @@
     <NextUpgradeName>StarSystemImprovementQuestTimeLords07</NextUpgradeName>
   </StarSystemPopulationTransformImprovementDefinition>
 
+  <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementCloneMajorPopulationWithFood" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt" PopulationDestination="Major"  PopulationToTransformCount="1" CreateIfNotAvailable="true">
+    <AIGain RessourceName="PopulationGain" Inverted="false"></AIGain>
+    <SupervisorGain Name="Industry" Weight="0.15"/>
+    <SupervisorGain Name="Food"     Weight="0.15"/>
+    <SupervisorGain Name="Dust"     Weight="0.15"/>
+    <SupervisorGain Name="Science"  Weight="0.15"/>
+    <Tags>NoBuyout</Tags>
+    <QueuedSimulationDescriptorReference Name="QueuedDescriptorIncreasePopulation"/>
+    <CustomCost ResourceName="SystemProduction">50 * Property(StockLocation, @../ClassEmpire, GameSpeedMultiplier, true)</CustomCost>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">ClassColonizedStarSystem</PathPrerequisite>
+    <InterpreterPrerequisite Flags="MaximumPopulationSystem,Enqueue">(Property(Context,@ClassColonizedStarSystem, MaximumPopulation) ge (1 + Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))</InterpreterPrerequisite>
+    <InterpreterPrerequisite Flags="Prerequisite">(Property(Context,@ClassColonizedStarSystem, MaximumPopulation) ge (Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))</InterpreterPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementCreateMajorPopulation"/>
+  </StarSystemPopulationTransformImprovementDefinition>
+
   <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementCreateMajorPopulationUmbralChoir" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt"
                                                     PopulationDestination="Major"  PopulationToTransformCount="1" CreateIfNotAvailable="true">
     <AIGain RessourceName="PopulationGain" Inverted="false"></AIGain>
