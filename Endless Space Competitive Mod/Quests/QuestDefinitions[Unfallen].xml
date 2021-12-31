@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
 
 
@@ -11,18 +11,16 @@
         <!--============ TAGS ============-->
         <Tags>Hidden, BeginTurn</Tags>
 
-        <QuestContextSolo/>
-        <RepetitionRules  NumberOfOccurrencesPerGame="0"
-                          NumberOfOccurrencesPerEmpire="1"
-                          NumberOfConcurrentInstances="0"/>
+        <QuestContextSolo />
+        <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0" />
 
         <!--============ VARIABLES ============-->
         <Vars>
             <Var VarName="$CurrentEmpire">
-                <From Source="$Empire"/>
+                <From Source="$Empire" />
             </Var>
             <Var VarName="$HomeSystem">
-                <From Source="$CurrentEmpire.$StartingNode"/>
+                <From Source="$CurrentEmpire.$StartingNode" />
             </Var>
             <Var VarName="$AllStarSystems">
                 <From Source="$Constellations.$StarSystems">
@@ -35,13 +33,13 @@
                 <First>
                     <From Source="$AllStarSystems">
                         <OrderBy>
-                            <SortSystemByDistance OriginVarName="$HomeSystem" SortBy="Nearest" MinimumDistance="1" MinimumCandidateCount="1" ConsiderFreeMovement="true"/>
+                            <SortSystemByDistance OriginVarName="$HomeSystem" SortBy="Nearest" MinimumDistance="1" MinimumCandidateCount="1" ConsiderFreeMovement="true" />
                         </OrderBy>
                     </From>
                 </First>
             </Var>
-            <Var VarName="$NewSystemName" StringValue="%UnfallenQuest-Chapter0System_Title"/>
-            <Var VarName="$DefinitionName" StringValue="QuestNodeUnfallen"/>
+            <Var VarName="$NewSystemName" StringValue="%UnfallenQuest-Chapter0System_Title" />
+            <Var VarName="$DefinitionName" StringValue="QuestNodeUnfallen" />
             <InterpretedVar VarName="$Four" Target="$(Empire)">
                 <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*4</Expression>
             </InterpretedVar>
@@ -61,24 +59,144 @@
                     <Objective Name="Step1_Objective1">
                         <Sequence>
                             <Action_ApplyStarSystemDefinition>
-                                <Input_DefinitionName VarName="$DefinitionName"/>
-                                <Input_StarSystemNode VarName="$LavaSystem"/>
+                                <Input_DefinitionName VarName="$DefinitionName" />
+                                <Input_StarSystemNode VarName="$LavaSystem" />
                             </Action_ApplyStarSystemDefinition>
                             <Action_RenameSystem>
-                                <Input_Empire VarName="$CurrentEmpire"/>
-                                <Input_System VarName="$LavaSystem"/>
-                                <Input_Name VarName="$NewSystemName"/>
+                                <Input_Empire VarName="$CurrentEmpire" />
+                                <Input_System VarName="$LavaSystem" />
+                                <Input_Name VarName="$NewSystemName" />
                             </Action_RenameSystem>
                             <Loop>
-                                <Decorator_BeginTurn/>
-                                <Input_Count VarName="$Four"/>
-                            </Loop>                            
-                        </Sequence>                        
+                                <Decorator_BeginTurn />
+                                <Input_Count VarName="$Four" />
+                            </Loop>
+                        </Sequence>
                     </Objective>
                 </ObjectiveSet>
             </Step>
         </Steps>
     </QuestDefinition>
-    
+
+    <!--  #############################################  -->
+    <!--  ######### UNFALLEN QUEST - CHAPTER 3 ########  -->
+    <!--  #############################################  -->
+    <QuestDefinition Name="UnfallenQuest-Chapter3-Part1" Category="MajorQuest" SubCategory="Unfallen" MinimumTurn="1">
+        <!-- ============ TAGS ============ -->
+        <Tags>UnfallenQuest-Chapter3-Part1</Tags>
+        <!-- ============ CONTEXT ============ -->
+        <QuestContextSolo />
+        <!-- ============ OCCURRENCE RULES ============ -->
+        <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0" />
+        <!-- ============ VARIABLES ============ -->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire" />
+            </Var>
+            <InterpretedVar VarName="$Amount00" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire', NetEmpireResearch)</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire', NetEmpireResearch) + 200</Expression>
+            </InterpretedVar>
+            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire', NetEmpireResearch) ge $(Amount01)" />
+            <Var VarName="$PoliticalEffectScience" StringValue="PopulationEventUnfallen04-Science" />
+            <Var VarName="$PoliticalEffectEcologist" StringValue="PopulationEventUnfallen04-Ecologist" />
+            <Var VarName="$Amount02" IntValue="70" />
+            <InterpretedVar VarName="$Amount03" Target="$(Empire)">
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*16</Expression>
+            </InterpretedVar>
+            <!-- ScienceObjective -->
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01" />
+            <!-- EcologistObjective -->
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02" />
+            <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03" />
+        </Vars>
+        <!-- ============ STEPS ============ -->
+        <Steps>
+            <Step Name="Step1">
+                <!-- ============ STEP 0 - Choose ============ -->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0" />
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+                <!-- ============ Choice Index 0: Science ============ -->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire" />
+                            <Input_Target VarName="$CurrentEmpire" />
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectScience" />
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Scientist">
+                        <!--  TODO  -->
+                        <AIHint Category="MaximizeResource" Motivation="0.5">
+                            <Resource>Science</Resource>
+                        </AIHint>
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_CheckInterpreter>
+                                    <Input_Context VarName="$CurrentEmpire" />
+                                    <Input_Expression VarName="$Expression01" />
+                                </Condition_CheckInterpreter>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1" />
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>UnfallenQuest-Chapter3-Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistPrestigeEra4" Picks="1" />
+                </ObjectiveSet>
+                <!-- ============ Choice Index 1: Ecologist ============ -->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire" />
+                            <Input_Target VarName="$CurrentEmpire" />
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectEcologist" />
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Ecologist" StartValue="0" EndValue="$Amount03">
+                        <!--  TODO  -->
+                        <AIHint Category="MaximizeResource" Motivation="0.5">
+                            <Resource>Approval</Resource>
+                        </AIHint>
+                        <Sequence>
+                            <Loop>
+                                <Decorator_BeginTurn ProgressionIncrement="1">
+                                    <Condition_HasHappiness>
+                                        <Input_Empire VarName="$CurrentEmpire" />
+                                        <Input_MinimumAmount VarName="$Amount02" />
+                                    </Condition_HasHappiness>
+                                </Decorator_BeginTurn>
+                                <Input_Count VarName="$Amount03" />
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1" />
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>UnfallenQuest-Chapter3-Part2</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistMinorRewardsEra4" Picks="1" />
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
 
 </Datatable>
