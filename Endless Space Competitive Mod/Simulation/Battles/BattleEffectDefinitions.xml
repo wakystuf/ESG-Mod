@@ -11,7 +11,15 @@
     <CancellationEventPrerequisite EventType="LastPhaseStart"/>
   </BattleEffect_SetPropertyValue>
 
-	<!-- Manpower per CP -->
+  <!-- Dynamic Health Regen -->
+  <BattleEffect_SetPropertyValue Name="Ship_HealthRegeneratePerSecondDynamic" PropertyName="Health" Operation="Set" InterpreterFormula="Min(Property(Target, @ClassSectionCore, Health) + Max(Property(Target, @ClassShip, HPPerSecondDynamic) * Property(Target, @ClassSectionCore, MaximumHealth), 0), Property(Target, @ClassSectionCore, MaximumHealth))" Duration="-1" Frequency="1">
+    <CancellationEventPrerequisite EventType="LastPhaseStart"/>
+  </BattleEffect_SetPropertyValue>
+
+  <BattleEffect_SetPropertyValue Name="Core_HealDynamicPerSecond"     PropertyName="Health" Operation="Set"      InterpreterFormula="Min(Property(Target, @ClassSectionCore, Health) + Max(Property(Target, @ClassShip, HPPerSecondDynamic) * Property(Target, @ClassSectionCore, MaximumHealth), 0), Property(Target, @ClassSectionCore, MaximumHealth))" Duration="-1" Frequency="1" >
+    <CancellationEventPrerequisite EventType="LastPhaseStart"/>
+  </BattleEffect_SetPropertyValue>
+  <!-- Manpower per CP -->
 	<BattleEffect_EmpireReward_Resource Name="Group_OpponentRecyclingManpowerGainReward"            ResourceName="EmpireManpower"          InterpreterFormula="Property(Owner, @ClassGroup, OpponentRecyclingManpowerPerCP) * Property(Owner, @ClassGroup, DestroyedCP)" />
 	
 	<!-- Hull Plating Absorption -->
