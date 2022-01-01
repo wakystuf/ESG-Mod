@@ -76,4 +76,162 @@
     <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">0</DiplomaticCustomCost>
     <DiplomaticPressureEffectDefinitionReference Name="PrepareForWar"/>
   </DiplomaticTermPressureEffectDefinition>
+
+  <!-- *************************** -->
+  <!-- ***** Pressure Demands **** -->
+  <!-- *************************** -->
+
+  <!--  Demand tier 1  -->
+  <ContextualDiplomaticTermDefinition Name="LevelOneDemand" IsSubterm="false" CancelOnWarDeclaration="SenderOnly" AutoSelectedProviderDynamicEffect="RefusalPenaltyFIDSEffect">
+    <DiplomaticRelationStatePrerequisite Flags="Discard" Inverted="true">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
+    <!--  Pressure must be greater or equal to min, strictly less than max. Default max is "no max"  -->
+    <Condition_Pressure Minimum="60" Maximum="100" />
+    <Choice Name="LevelOneDemandAccept" IsPositive="true">
+      <!--  Choice becomes unavailable when a war has been declared (but it is already cancelled when sender declares the war because CancelOnWarDeclaration is set to SenderOnly)  -->
+      <DiplomaticRelationStatePrerequisite Flags="WarForbidsAcceptingDemand" Inverted="true">DiplomaticRelationStateWar</DiplomaticRelationStatePrerequisite>
+      <Effect_TransferDiplomaticResource Target="EmpireWithChoice" Amount="-1" ResourceName="ForceableContextualTerms" />
+      <Effect_ResetPressure Hidden="true" />
+      <!--  Dynamic effects have a sublist of effects which can be picked by the player. ApplicationMethod says where the effects are listed in the window.  -->
+      <DynamicEffect Name="DynamicEffectLevelOneDemandAccept" ApplicationMethod="ReceiverOnly">
+        <Effect_DiplomaticTerm Name="ResourceDealEffect" GuiCategory="CategoryResource">
+          <DiplomaticTermReference Name="ResourceDealDemand" />
+        </Effect_DiplomaticTerm>
+      </DynamicEffect>
+    </Choice>
+    <Choice Name="LevelOneDemandRefuse" IsPositive="false">
+      <InterpreterPrerequisite Flags="HackingPreventsRefusingAChoice">Property(Relation,ForceableContextualTerms) lt 1</InterpreterPrerequisite>
+      <Effect_ResetPressure Hidden="true" />
+      <!--  Penalties were supposed to be optional but now they're automatic.  -->
+      <DynamicEffect Name="DynamicEffectLevelOneDemandPenalty" ApplicationMethod="ProviderOnly">
+        <Effect_TemporaryEffect Name="RefusalPenaltyEmpirePointEffect" Target="CurrentEmpire" GuiCategory="CategoryContextualTerm">
+          <TemporaryEffectReference Name="EmpirePointMalusFromDemand" />
+        </Effect_TemporaryEffect>
+        <Effect_TemporaryEffect Name="RefusalPenaltyFIDSEffect" Target="CurrentEmpire" GuiCategory="CategoryContextualTerm">
+          <TemporaryEffectReference Name="FIDSMalusFromDemand" />
+        </Effect_TemporaryEffect>
+        <Effect_TemporaryEffect Name="RefusalPenaltyShipCostEffect" Target="CurrentEmpire" GuiCategory="CategoryContextualTerm">
+          <TemporaryEffectReference Name="MilitaryShipCostIncreaseFromDemand" />
+        </Effect_TemporaryEffect>
+      </DynamicEffect>
+    </Choice>
+    <DiplomaticAbilityWhenActive Name="DemandInProgress" ApplyOn="Symmetrical" />
+  </ContextualDiplomaticTermDefinition>
+
+  <!--  Demand tier 2  -->
+  <ContextualDiplomaticTermDefinition Name="LevelTwoDemand" IsSubterm="false" CancelOnWarDeclaration="SenderOnly" AutoSelectedProviderDynamicEffect="RefusalPenaltyFIDSEffect">
+    <PathPrerequisite Flags="Prerequisite,Discard">../ClassEmpire,!AffinityGameplayTemplars</PathPrerequisite>
+    <DiplomaticRelationStatePrerequisite Flags="Discard" Inverted="true">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
+    <Condition_Pressure Minimum="100" />
+    <!--  Not changing the name of the choice and dynamic effects because same names are displayed.  -->
+    <Choice Name="LevelOneDemandAccept" IsPositive="true">
+      <DiplomaticRelationStatePrerequisite Flags="WarForbidsAcceptingDemand" Inverted="true">DiplomaticRelationStateWar</DiplomaticRelationStatePrerequisite>
+      <Effect_TransferDiplomaticResource Target="EmpireWithChoice" Amount="-1" ResourceName="ForceableContextualTerms" />
+      <Effect_ResetPressure Hidden="true" />
+      <DynamicEffect Name="DynamicEffectLevelOneDemandAccept" ApplicationMethod="ReceiverOnly">
+        <Effect_DiplomaticTerm Name="ResourceDealEffect" GuiCategory="CategoryResource">
+          <DiplomaticTermReference Name="ResourceDealDemand" />
+        </Effect_DiplomaticTerm>
+      </DynamicEffect>
+      <!--  Second effect has another name.  -->
+      <DynamicEffect Name="DynamicEffectLevelTwoDemandAccept" ApplicationMethod="ReceiverOnly">
+        <!--  Commented for AI on 06/11/17 // Uncomment after AI supports the terms  -->
+        <!-- <Effect_DiplomaticTerm>
+                        <DiplomaticTermReference Name="BreakAllianceDemand"/>
+                        <DiplomaticTermReference Name="ProposeColdWarRelationDemand"/>
+                        <DiplomaticTermReference Name="ProposeCancelTradeAgreementDemand"/>
+                        <DiplomaticTermReference Name="ProposeCancelScienceAgreementDemand"/>
+                    </Effect_DiplomaticTerm> -->
+        <Effect_DiplomaticTerm Name="TechnologyDealEffect" GuiCategory="CategoryTechnology">
+          <DiplomaticTermReference Name="TechnologyDealDemand" />
+        </Effect_DiplomaticTerm>
+        <Effect_DiplomaticTribute Name="TributeEffect" Duration="10" GuiCategory="CategoryResource">
+          <Tribute ResourceName="EmpireMoney" Percentage="35" />
+          <Tribute ResourceName="EmpireResearch" Percentage="35" />
+        </Effect_DiplomaticTribute>
+        <Effect_HeroLock Name="HeroLockEffect" Duration="10" GuiCategory="CategoryTreaty" />
+        <Effect_MinorFactionTransfer Name="MinorFactionTransferEffect" GuiCategory="CategoryTreaty" />
+        <Effect_PopulationMigration Name="PopulationMigrationEffect" PopulationCount="3" GuiCategory="CategoryTreaty" />
+      </DynamicEffect>
+      <Effect_ApplyDiplomaticEffect Name="WarDeclarationForbiddenEffect" Target="CurrentEmpire" GuiCategory="CategoryTreaty">
+        <DiplomaticPressureEffectReference Name="WarDeclarationForbidden" />
+      </Effect_ApplyDiplomaticEffect>
+    </Choice>
+    <Choice Name="LevelOneDemandRefuse" IsPositive="false">
+      <InterpreterPrerequisite Flags="HackingPreventsRefusingAChoice">Property(Relation,ForceableContextualTerms) lt 1</InterpreterPrerequisite>
+      <Effect_ResetPressure Hidden="true" />
+      <DynamicEffect Name="DynamicEffectLevelOneDemandPenalty" ApplicationMethod="ProviderOnly">
+        <Effect_TemporaryEffect Name="RefusalPenaltyEmpirePointEffect" Target="CurrentEmpire" GuiCategory="CategoryContextualTerm">
+          <TemporaryEffectReference Name="EmpirePointMalusFromDemand2" />
+        </Effect_TemporaryEffect>
+        <Effect_TemporaryEffect Name="RefusalPenaltyFIDSEffect" Target="CurrentEmpire" GuiCategory="CategoryContextualTerm">
+          <TemporaryEffectReference Name="FIDSMalusFromDemand2" />
+        </Effect_TemporaryEffect>
+        <Effect_TemporaryEffect Name="RefusalPenaltyShipCostEffect" Target="CurrentEmpire" GuiCategory="CategoryContextualTerm">
+          <TemporaryEffectReference Name="MilitaryShipCostIncreaseFromDemand2" />
+        </Effect_TemporaryEffect>
+        <Effect_TemporaryEffect Name="RefusalPenaltyShipMovementEffect" Target="CurrentEmpire" GuiCategory="CategoryContextualTerm">
+          <TemporaryEffectReference Name="MilitaryShipMovementReductionFromDemand" />
+        </Effect_TemporaryEffect>
+      </DynamicEffect>
+    </Choice>
+    <DiplomaticAbilityWhenActive Name="DemandInProgress" ApplyOn="Symmetrical" />
+  </ContextualDiplomaticTermDefinition>
+
+  <!--  Demand tier 2 Templars (without tech demand) -->
+  <ContextualDiplomaticTermDefinition Name="LevelTwoDemandTemplars" IsSubterm="false" CancelOnWarDeclaration="SenderOnly" AutoSelectedProviderDynamicEffect="RefusalPenaltyFIDSEffect">
+    <PathPrerequisite Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayTemplars</PathPrerequisite>
+    <DiplomaticRelationStatePrerequisite Flags="Discard" Inverted="true">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
+    <Condition_Pressure Minimum="100" />
+    <!--  Not changing the name of the choice and dynamic effects because same names are displayed.  -->
+    <Choice Name="LevelOneDemandAccept" IsPositive="true">
+      <DiplomaticRelationStatePrerequisite Flags="WarForbidsAcceptingDemand" Inverted="true">DiplomaticRelationStateWar</DiplomaticRelationStatePrerequisite>
+      <Effect_TransferDiplomaticResource Target="EmpireWithChoice" Amount="-1" ResourceName="ForceableContextualTerms" />
+      <Effect_ResetPressure Hidden="true" />
+      <DynamicEffect Name="DynamicEffectLevelOneDemandAccept" ApplicationMethod="ReceiverOnly">
+        <Effect_DiplomaticTerm Name="ResourceDealEffect" GuiCategory="CategoryResource">
+          <DiplomaticTermReference Name="ResourceDealDemand" />
+        </Effect_DiplomaticTerm>
+      </DynamicEffect>
+      <!--  Second effect has another name.  -->
+      <DynamicEffect Name="DynamicEffectLevelTwoTemplarsDemandAccept" ApplicationMethod="ReceiverOnly">
+        <!--  Commented for AI on 06/11/17 // Uncomment after AI supports the terms  -->
+        <!-- <Effect_DiplomaticTerm>
+                        <DiplomaticTermReference Name="BreakAllianceDemand"/>
+                        <DiplomaticTermReference Name="ProposeColdWarRelationDemand"/>
+                        <DiplomaticTermReference Name="ProposeCancelTradeAgreementDemand"/>
+                        <DiplomaticTermReference Name="ProposeCancelScienceAgreementDemand"/>
+                    </Effect_DiplomaticTerm> -->
+        <Effect_DiplomaticTribute Name="TributeEffect" Duration="10" GuiCategory="CategoryResource">
+          <Tribute ResourceName="EmpireMoney" Percentage="35" />
+          <Tribute ResourceName="EmpireResearch" Percentage="35" />
+        </Effect_DiplomaticTribute>
+        <Effect_HeroLock Name="HeroLockEffect" Duration="10" GuiCategory="CategoryTreaty" />
+        <Effect_MinorFactionTransfer Name="MinorFactionTransferEffect" GuiCategory="CategoryTreaty" />
+        <Effect_PopulationMigration Name="PopulationMigrationEffect" PopulationCount="3" GuiCategory="CategoryTreaty" />
+      </DynamicEffect>
+      <Effect_ApplyDiplomaticEffect Name="WarDeclarationForbiddenEffect" Target="CurrentEmpire" GuiCategory="CategoryTreaty">
+        <DiplomaticPressureEffectReference Name="WarDeclarationForbidden" />
+      </Effect_ApplyDiplomaticEffect>
+    </Choice>
+    <Choice Name="LevelOneDemandRefuse" IsPositive="false">
+      <InterpreterPrerequisite Flags="HackingPreventsRefusingAChoice">Property(Relation,ForceableContextualTerms) lt 1</InterpreterPrerequisite>
+      <Effect_ResetPressure Hidden="true" />
+      <DynamicEffect Name="DynamicEffectLevelOneDemandPenalty" ApplicationMethod="ProviderOnly">
+        <Effect_TemporaryEffect Name="RefusalPenaltyEmpirePointEffect" Target="CurrentEmpire" GuiCategory="CategoryContextualTerm">
+          <TemporaryEffectReference Name="EmpirePointMalusFromDemand2" />
+        </Effect_TemporaryEffect>
+        <Effect_TemporaryEffect Name="RefusalPenaltyFIDSEffect" Target="CurrentEmpire" GuiCategory="CategoryContextualTerm">
+          <TemporaryEffectReference Name="FIDSMalusFromDemand2" />
+        </Effect_TemporaryEffect>
+        <Effect_TemporaryEffect Name="RefusalPenaltyShipCostEffect" Target="CurrentEmpire" GuiCategory="CategoryContextualTerm">
+          <TemporaryEffectReference Name="MilitaryShipCostIncreaseFromDemand2" />
+        </Effect_TemporaryEffect>
+        <Effect_TemporaryEffect Name="RefusalPenaltyShipMovementEffect" Target="CurrentEmpire" GuiCategory="CategoryContextualTerm">
+          <TemporaryEffectReference Name="MilitaryShipMovementReductionFromDemand" />
+        </Effect_TemporaryEffect>
+      </DynamicEffect>
+    </Choice>
+    <DiplomaticAbilityWhenActive Name="DemandInProgress" ApplyOn="Symmetrical" />
+  </ContextualDiplomaticTermDefinition>
+
 </Datatable>
