@@ -11,10 +11,20 @@
     <CancellationEventPrerequisite EventType="LastPhaseStart"/>
   </BattleEffect_SetPropertyValue>
 
-  <!-- Manpower per CP -->
-  <BattleEffect_EmpireReward_Resource Name="Group_OpponentRecyclingManpowerGainReward"            ResourceName="EmpireManpower"          InterpreterFormula="Property(Owner, @ClassGroup, OpponentRecyclingManpowerPerCP) * Property(Owner, @ClassGroup, DestroyedCP)" />
 
-  <!-- Hull Plating Absorption -->
+  <!-- Dynamic Health Regen -->
+  <BattleEffect_SetPropertyValue Name="Ship_HealthRegeneratePerSecondDynamic" PropertyName="Health" Operation="Set" InterpreterFormula="Min(Property(Target, @ClassSectionCore, Health) + Max(Property(Target, @ClassShip, HPPerSecondDynamic) * Property(Target, @ClassSectionCore, MaximumHealth), 0), Property(Target, @ClassSectionCore, MaximumHealth))" Duration="-1" Frequency="1">
+    <CancellationEventPrerequisite EventType="LastPhaseStart"/>
+  </BattleEffect_SetPropertyValue>
+
+  <BattleEffect_SetPropertyValue Name="Core_HealDynamicPerSecond"     PropertyName="Health" Operation="Set"      InterpreterFormula="Min(Property(Target, @ClassSectionCore, Health) + Max(Property(Target, @ClassShip, HPPerSecondDynamic) * Property(Target, @ClassSectionCore, MaximumHealth), 0), Property(Target, @ClassSectionCore, MaximumHealth))" Duration="-1" Frequency="1" >
+    <CancellationEventPrerequisite EventType="LastPhaseStart"/>
+  </BattleEffect_SetPropertyValue>
+
+  <!-- Manpower per CP -->
+	<BattleEffect_EmpireReward_Resource Name="Group_OpponentRecyclingManpowerGainReward"            ResourceName="EmpireManpower"          InterpreterFormula="Property(Owner, @ClassGroup, OpponentRecyclingManpowerPerCP) * Property(Owner, @ClassGroup, DestroyedCP)" />
+	
+	<!-- Hull Plating Absorption -->
   <BattleEffect_SetPropertyValue Name="Salvo_ComputeDamageAbsorbedByHullPlating" PropertyName="DamageAbsorbedByHullPlating" Operation="Addition" InterpreterFormula="Min(Property(Initiator, @ClassSalvo, HullPlatingAbsorptionValue) * (Property(InitiatorTarget, @../ClassShip, HullPlatingAbsorption) / (Property(InitiatorTarget, @../ClassShip, HullPlatingAbsorption) + Property(InitiatorTarget, @../ClassShip, HullWeakness))) * Property(InitiatorTarget, @../ClassShip, HullPlatingAbsorptionPercent), Property(Initiator, @ClassSalvo, HullPlatingAbsorptionValue))"/>
   <BattleEffect_SetPropertyValue Name="Squadron_ComputeDamageAbsorbedByHullPlating" PropertyName="DamageAbsorbedByHullPlating" Operation="Set" InterpreterFormula="Min(Property(Initiator, @ClassModuleSquadron, HullPlatingAbsorptionValue) * (Property(InitiatorTarget, @ClassShip, HullPlatingAbsorption) / (Property(InitiatorTarget, @ClassShip, HullPlatingAbsorption) + Property(InitiatorTarget, @ClassShip, HullWeakness))) * Property(InitiatorTarget, @ClassShip, HullPlatingAbsorptionPercent), Property(Initiator, @ClassModuleSquadron, HullPlatingAbsorptionValue))"/>
 

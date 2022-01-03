@@ -241,4 +241,30 @@
 			<BattleEffectReference Name="Ship_AddBattleActionGain"/>
 		</BattleEffectApplicationContext>
 	</BattleAction>
+
+  <BattleAction Name="Ship_HealthRegenerationPerSecondDynamic">
+    <EventPrerequisite EventType="Spawned"/>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Initiator">
+          <InterpreterPrerequisite>Property(Context,@ClassShip,HPPerSecondDynamic) gt 0</InterpreterPrerequisite>
+        </EntityFilter>
+      </TargetFilter>
+      <BattleEffectReference Name="Ship_HealthRegeneratePerSecondDynamic"/>
+    </BattleEffectApplicationContext>
+
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Initiator">
+          <InterpreterPrerequisite>Property(Context,@ClassShip,HPPerSecondDynamic, true) gt 0</InterpreterPrerequisite>
+        </EntityFilter>
+        <SubEntityFilter SelectionMethod="All">
+          <EntityFilter EntityType="ShipSection" EntityTags="SameShip">
+            <PathPrerequisite Inverted="false">ClassSectionCore</PathPrerequisite>
+          </EntityFilter>
+        </SubEntityFilter>
+      </TargetFilter>
+      <BattleEffectReference Name="Core_HealDynamicPerSecond"/>
+    </BattleEffectApplicationContext>
+  </BattleAction>
 </Datatable>
