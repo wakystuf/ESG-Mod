@@ -1,22 +1,44 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
-  <!-- Bombard -->
+  <!-- Offensive -->
+  <!-- Orbital Bombard -->
+  <SimulationDescriptor Name="GroundBattleAttackerStrategy3" Type="GroundBattleAttackerStrategy">
+    <Modifier       TargetProperty="GroundBattleAttackerManpowerLimitBonus" Operation="Percent"     Value="-0.25" Priority="-5" />
+    <BinaryModifier TargetProperty="GroundBattleAttackerManpowerLimitBonus" Operation="Addition"    Left="-0.25" BinaryOperation="Multiplication" Right="$(GroundBattleAttackerManpowerLimit)" TooltipHidden="true" />
+    <Modifier TargetProperty="GroundBattleBombardmentDefenderDamagesMin" Operation="Addition" Value="400" TooltipOverride="%GroundBattleAttackerStrategy3EffectOverride"/>
+    <Modifier TargetProperty="GroundBattleBombardmentDefenderDamagesMax" Operation="Addition" Value="800" TooltipHidden="true"/>
+    <Modifier TargetProperty="GroundBattleBombardmentImprovementDestructionProbability" Operation="Addition" Value="0.50" />
+    <Modifier TargetProperty="GroundBattleBombardmentPopulationDestructionProbability"  Operation="Addition" Value="0.50" />
+  </SimulationDescriptor>
+
   <SimulationDescriptor Name="GroundBattleAttackerStrategy3Templars" Type="GroundBattleAttackerStrategy">
     <Modifier       TargetProperty="GroundBattleAttackerManpowerLimitBonus" Operation="Percent"     Value="-0.2" Priority="-5" />
     <BinaryModifier TargetProperty="GroundBattleAttackerManpowerLimitBonus" Operation="Addition"    Left="-0.2" BinaryOperation="Multiplication" Right="$(GroundBattleAttackerManpowerLimit)" TooltipHidden="true" />
-
-    <Modifier TargetProperty="GroundBattleBombardmentDefenderDamagesMin" Operation="Addition" Value="800" />
-    <Modifier TargetProperty="GroundBattleBombardmentDefenderDamagesMax" Operation="Addition" Value="1200" />
+    <Modifier TargetProperty="GroundBattleBombardmentDefenderDamagesMin" Operation="Addition" Value="800" TooltipOverride="%GroundBattleAttackerStrategy3TemplarsEffectOverride"/>
+    <Modifier TargetProperty="GroundBattleBombardmentDefenderDamagesMax" Operation="Addition" Value="1200" TooltipHidden="true"/>
     <Modifier TargetProperty="GroundBattleBombardmentImprovementDestructionProbability" Operation="Addition" Value="0.5" />
     <Modifier TargetProperty="GroundBattleBombardmentPopulationDestructionProbability"  Operation="Addition" Value="0.5" />
   </SimulationDescriptor>
 
   <!-- Guerilla -->
+  <SimulationDescriptor Name="GroundBattleAttackerStrategy1" Type="GroundBattleAttackerStrategy">
+    <Modifier TargetProperty="GroundBattleAttackerTroopsMaxHealthMultiplier" Operation="Addition" Value="0.33" />
+    <Modifier TargetProperty="GroundBattleAttackerTroopsDamageMultiplier" Operation="Percent" Value="-0.33" />
+    <Modifier TargetProperty="GroundBattleBombardmentImprovementDestructionProbability" Operation="Subtraction" Value="0.5" />
+    <Modifier TargetProperty="GroundBattleBombardmentPopulationDestructionProbability"  Operation="Subtraction" Value="0.5" />
+    <Modifier TargetProperty="GroundBattleBombardmentDefensiveDamageReduction" Operation="Subtraction" Value="0.75" />
+  </SimulationDescriptor>
+
+  <!-- Nakalim Guerilla -->
   <SimulationDescriptor Name="GroundBattleAttackerStrategy1Templars" Type="GroundBattleAttackerStrategy">
     <Modifier TargetProperty="GroundBattleAttackerTroopsMaxHealthMultiplier" Operation="Addition" Value="0.5" />
-    <Modifier TargetProperty="GroundBattleAttackerTroopsDamageMultiplier" Operation="Percent" Value="-0.1" />
+    <Modifier TargetProperty="GroundBattleAttackerTroopsDamageMultiplier" Operation="Percent" Value="-0.2" />
+    <Modifier TargetProperty="GroundBattleBombardmentImprovementDestructionProbability" Operation="Subtraction" Value="0.5" />
+    <Modifier TargetProperty="GroundBattleBombardmentPopulationDestructionProbability"  Operation="Subtraction" Value="0.5" />
+    <Modifier TargetProperty="GroundBattleBombardmentDefensiveDamageReduction" Operation="Subtraction" Value="1" />
   </SimulationDescriptor>
-  
+
+  <!-- Defensive -->
   <!-- Draft -->
   <!-- Mutual Understanding I -->
   <!-- Standard -->
@@ -63,5 +85,73 @@
     <Modifier TargetProperty="GroundBattlePopulationPermanentConversionCount"                   Operation="Addition"    Value="2" TooltipOverride="%GroundBattleDefenderStrategy1GhostTooltipEffect1" />
     <BinaryModifier TargetProperty="GroundBattlePopulationToManpowerPermanentConversionRate"    Operation="Addition"    Left="300" BinaryOperation="Multiplication" Right="$(Ownership)" TooltipOverride="%GroundBattleDefenderStrategy1GhostTooltipEffect2ImprovedII" />
     <BinaryModifier TargetProperty="GroundBattleDefenderManpowerLimitBonus"                     Operation="Addition"    Left="300" BinaryOperation="Multiplication" Right="$(Ownership)" TooltipHidden="true" />
+  </SimulationDescriptor>
+
+  <!-- Protect System -->
+  <SimulationDescriptor Name="GroundBattleDefenderStrategy2" Type="GroundBattleDefenderStrategy">
+    <Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Addition" Value="0.3"/>
+    <Modifier TargetProperty="GroundBattleBombardmentImprovementDestructionProbability" Operation="Subtraction" Value="0.5" />
+    <Modifier TargetProperty="GroundBattleBombardmentPopulationDestructionProbability"  Operation="Subtraction" Value="0.5" />
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamageReduction" Operation="Subtraction" Value="0.5" />
+  </SimulationDescriptor>
+
+  <!-- Gnashast Protect System -->
+  <SimulationDescriptor Name="GroundBattleDefenderStrategy2Gnashasts" Type="GroundBattleDefenderStrategy">
+		<Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Addition" Value="0.5"/>
+		<Modifier TargetProperty="GroundBattleBombardmentImprovementDestructionProbability" Operation="Subtraction" Value="0.75" />
+		<Modifier TargetProperty="GroundBattleBombardmentPopulationDestructionProbability"  Operation="Subtraction" Value="0.75" />
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamageReduction" Operation="Subtraction" Value="0.5" />
+	</SimulationDescriptor>
+
+  <!-- Hissho Protect System (Sacred Ground) -->
+  <!-- Direct -->
+  <SimulationDescriptor Name="GroundBattleDefenderStrategyHisshosHonor" Type="GroundBattleDefenderStrategy">
+    <Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Addition" Value="0.5"/>
+    <Modifier TargetProperty="GroundBattleBombardmentImprovementDestructionProbability" Operation="Subtraction" Value="1" />
+    <Modifier TargetProperty="GroundBattleBombardmentPopulationDestructionProbability"  Operation="Subtraction" Value="1" />
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMin" Operation="Addition" Value="1000" />
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMax" Operation="Addition" Value="1500" />
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamageReduction" Operation="Subtraction" Value="0.5" />
+  </SimulationDescriptor>
+
+  <!-- Indirect -->
+  <SimulationDescriptor Name="GroundBattleDefenderStrategyZoneEffectHisshosHonor" Type="GroundBattleDefenderStrategy">
+    <Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Addition" Value="0.40"/>
+    <Modifier TargetProperty="GroundBattleBombardmentImprovementDestructionProbability" Operation="Subtraction" Value="0.75" />
+    <Modifier TargetProperty="GroundBattleBombardmentPopulationDestructionProbability"  Operation="Subtraction" Value="0.75" />
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMin" Operation="Addition" Value="500" />
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMax" Operation="Addition" Value="1000" />
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamageReduction" Operation="Subtraction" Value="0.5" />
+  </SimulationDescriptor>
+
+  <!-- UC Protect System -->
+  <SimulationDescriptor Name="GroundBattleDefenderStrategy2Ghost" Type="GroundBattleDefenderStrategy">
+    <Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Addition" Value="0.3"/>
+    <Modifier TargetProperty="GroundBattleBombardmentImprovementDestructionProbability" Operation="Subtraction" Value="0.5" />
+    <Modifier TargetProperty="GroundBattleBombardmentPopulationDestructionProbability"  Operation="Subtraction" Value="0.5" />
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamageReduction" Operation="Subtraction" Value="0.5" />
+  </SimulationDescriptor>
+
+  <!-- Stampede -->
+  <SimulationDescriptor Name="GroundBattleDefenderStrategyHacked" Type="GroundBattleDefenderStrategy">
+    <Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier"  Operation="Percent" Value="-0.25"/>
+    <Modifier TargetProperty="GroundBattleDefenderTroopsDamageMultiplier"     Operation="Percent" Value="-0.25" />
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamageReduction" Operation="Addition" Value="0.5" />
+  </SimulationDescriptor>
+  
+  <!-- Raid -->
+  <SimulationDescriptor Name="GroundBattleAttackerStrategy4" Type="GroundBattleDefenderStrategy">
+    <Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier"  Operation="Percent" Value="-0.25"/>
+    <Modifier TargetProperty="GroundBattleDefenderTroopsDamageMultiplier"     Operation="Percent" Value="-0.25" />
+    <Modifier TargetProperty="GroundBattleBombardmentImprovementDestructionProbability" Operation="Addition" Value="10" />
+    <Modifier TargetProperty="GroundBattleBombardmentPopulationDestructionProbability"  Operation="Addition" Value="10" />
+  </SimulationDescriptor>
+
+  <!-- Rally -->
+  <SimulationDescriptor Name="GroundBattleDefenderStrategy4" Type="GroundBattleDefenderStrategy">
+    <Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier"  Operation="Percent" Value="-0.3"/>
+    <Modifier TargetProperty="GroundBattleDefenderTroopsDamageMultiplier"     Operation="Percent" Value="0.3" />
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMin" Operation="Addition" Value="1500" TooltipOverride="%GroundBattleDefenderStrategy4EffectOverride"/>
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMax" Operation="Addition" Value="2000" TooltipHidden="true"/>
   </SimulationDescriptor>
 </Datatable>
