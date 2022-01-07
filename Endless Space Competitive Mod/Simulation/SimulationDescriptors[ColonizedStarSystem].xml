@@ -111,6 +111,10 @@
 		<!-- Doesn't do anything, used for tooltips that can't use GUI elements -->
 		<Property Name="UselessForTooltip"  BaseValue="0" MaxValue="1"/>
 
+    <!-- New Ground Battle Variables -->
+    <Property Name="GroundBattleBombardmentAttackerDamageReduction"   BaseValue="0"/>
+    <Property Name="GroundBattleBombardmentDefensiveDamageReduction"  BaseValue="0"/>
+    
 		<!-- Population Control
          Assimilate -->
 		<Property Name="OnGoingZvali" BaseValue="0"/>
@@ -161,6 +165,7 @@
 
 		<!-- ELP -->
 		<Property Name="OnGoingLords" BaseValue="0"/>
+		<Property Name="OnGoingFomorian" BaseValue="0"/>
 
 		<!-- ########################################################## -->
 		<!-- ######################## PROPERTY ######################## -->
@@ -388,12 +393,12 @@
 		<Property Name="GroundBattleDefenderTroopsMaxHealthMultiplier"	BaseValue="1" />
 		<Property Name="GroundBattleAttackerTroopsDamageMultiplier"	BaseValue="1" />
 		<Property Name="GroundBattleDefenderTroopsDamageMultiplier"	BaseValue="1" />
-		<Property Name="GroundBattleBombardmentAttackerDamages"	    BaseValue="0" />
-		<Property Name="GroundBattleBombardmentAttackerDamagesMin"	BaseValue="0" />
-		<Property Name="GroundBattleBombardmentAttackerDamagesMax"	BaseValue="0" />
-		<Property Name="GroundBattleBombardmentDefenderDamages"	    BaseValue="0" />
-		<Property Name="GroundBattleBombardmentDefenderDamagesMin"	BaseValue="0" />
-		<Property Name="GroundBattleBombardmentDefenderDamagesMax"	BaseValue="0" />
+		<Property Name="GroundBattleBombardmentAttackerDamages"	    BaseValue="0" MinValue="0" />
+		<Property Name="GroundBattleBombardmentAttackerDamagesMin"	BaseValue="0" MinValue="0" />
+		<Property Name="GroundBattleBombardmentAttackerDamagesMax"	BaseValue="0" MinValue="0" />
+		<Property Name="GroundBattleBombardmentDefenderDamages"	    BaseValue="0" MinValue="0" />
+		<Property Name="GroundBattleBombardmentDefenderDamagesMin"	BaseValue="0" MinValue="0" />
+		<Property Name="GroundBattleBombardmentDefenderDamagesMax"	BaseValue="0" MinValue="0" />
 		<Property Name="GroundBattleBombardmentImprovementDestructionProbability"	BaseValue="0" MinValue="Negative"/>
 		<Property Name="GroundBattleBombardmentPopulationDestructionProbability"	BaseValue="0" MinValue="Negative"/>
 		<Property Name="GroundBattleRoundImprovementDestructionProbability"	BaseValue="0" MinValue="Negative"/>
@@ -1455,7 +1460,12 @@
 		<Modifier 			TargetProperty="CurrentTurnModuloNormal" 	   Operation="Multiplication" Value="$(GameSettingFoodReworkScalingEnabled)" Priority="3"/>
 		<BinaryModifier 	TargetProperty="ShouldPopulationGrow" 	   	   Operation="Subtraction" Left="$(CurrentTurnModuloNormal)" BinaryOperation="Multiplication" Right="999" Path="ClassColonizedStarSystem,ColonizedStarSystemStateColony/ClassPopulationStarSystem" Priority="999"/>
 
-	</SimulationDescriptor>
+    <!-- Ground Battle Modifiers -->
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMin"          Operation="Percent" Value="$(GroundBattleBombardmentAttackerDamageReduction)"  TooltipHidden="true"/>
+		<Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMax"          Operation="Percent" Value="$(GroundBattleBombardmentAttackerDamageReduction)"  TooltipHidden="true"/>
+		<Modifier TargetProperty="GroundBattleBombardmentDefenderDamagesMin"          Operation="Percent" Value="$(GroundBattleBombardmentDefensiveDamageReduction)" TooltipHidden="true"/>
+		<Modifier TargetProperty="GroundBattleBombardmentDefenderDamagesMax"          Operation="Percent" Value="$(GroundBattleBombardmentDefensiveDamageReduction)" TooltipHidden="true"/>
+  </SimulationDescriptor>
 
 	<SimulationDescriptor Name="ClassStarSystem" Type="Class">
 
@@ -2152,15 +2162,6 @@
 		<Modifier TargetProperty="Happiness" Operation="Addition" Value="$(HappinessFromExpansion)"/>
 	</SimulationDescriptor>
 
-	<!-- DEFENDER GNASHAST PROTECT SYSTEM -->
-	<SimulationDescriptor Name="GroundBattleDefenderStrategy2Gnashasts" Type="GroundBattleDefenderStrategy">
-	<Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Addition" Value="0.4"/>
-	<Modifier TargetProperty="GroundBattleBombardmentImprovementDestructionProbability" Operation="Subtraction" Value="0.25" />
-	<Modifier TargetProperty="GroundBattleBombardmentPopulationDestructionProbability"  Operation="Subtraction" Value="0.25" />
-	<Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMin" Operation="Addition" Value="1000" />
-	<Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMax" Operation="Addition" Value="1500" />
-	</SimulationDescriptor>
-
 	<!-- Vodyani Quest Resource Module -->
 	<SimulationDescriptor Name="StarSystemEffectFromMothershipResourceFactory" Type="StarSystemEffectFromMothership">
 		<Modifier TargetProperty="ResourceBonus" Operation="Addition" Value="1" Path="ClassColonizedStarSystem,ClassExploitedStarSystem/ClassColonizedPlanet/ClassResourceDeposit"/>
@@ -2175,6 +2176,8 @@
 	<SimulationDescriptor Name="HigherDepositValue" Type="HigherDepositValue">
 		<Modifier TargetProperty="DepositValue" Operation="Addition" Value="2" Path="ClassStarSystem/ClassPlanet/ClassResourceDeposit" TooltipHidden="true"/>
 	</SimulationDescriptor>
+  
+  <!-- Unfallen Vine States -->
   <SimulationDescriptor Name="ColonizedStarSystemInfluenceStateRootOwner" Type="ColonizedStarSystemInfluenceState">
     <Modifier TargetProperty="SystemManpowerLoss" Operation="Percent"  Value="-0.2"  Path="./ClassColonizedStarSystem,BesiegedColonizedStarSystem"   Priority="1"/>
   </SimulationDescriptor>
