@@ -168,14 +168,15 @@
     <SupervisorGain Name="Food"     Weight="0.15"/>
     <SupervisorGain Name="Dust"     Weight="0.15"/>
     <SupervisorGain Name="Science"  Weight="0.15"/>
-    <Tags>NoBuyout</Tags>
     <QueuedSimulationDescriptorReference Name="QueuedDescriptorIncreasePopulation"/>
-    <CustomCost ResourceName="SystemGrowth" Instant="true">((Property(Context, @../ClassEmpire, BaseFoodRequiredToGrowPop) + (10 * Property(Context,@ClassColonizedStarSystem, Population) + 5)) * Property(Context, @../ClassEmpire, GameSpeedMultiplier))</CustomCost>
+    <Cost ResourceName="SystemProduction">1</Cost>
+    <CustomCost ResourceName="SystemGrowth" Instant="true">(305 + (10 * (1 + Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))) * Property(Empire, GameSpeedMultiplier)</CustomCost>
     <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">ClassColonizedStarSystem</PathPrerequisite>
     <InterpreterPrerequisite Flags="MaximumPopulationSystem,Enqueue">(Property(Context,@ClassColonizedStarSystem, MaximumPopulation) ge (1 + Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))</InterpreterPrerequisite>
-    <InterpreterPrerequisite Flags="Prerequisite">((Property(Context,@ClassColonizedStarSystem, NetSystemGrowth) + Property(Context,@ClassColonizedStarSystem, WastedGrowth)) gt ((Property(Context,@ClassColonizedStarSystem, SystemGrowthStock) * (-1)) +  ((Property(Context,@ClassColonizedStarSystem, Population) * (Property(Context,@ClassColonizedStarSystem, Population)) / 2) * 10 * Property(Context, @../ClassEmpire, GameSpeedMultiplier) + (Property(Context,@ClassColonizedStarSystem, Population) * 300 * Property(Context, @../ClassEmpire, GameSpeedMultiplier)) )))</InterpreterPrerequisite>
+    <InterpreterPrerequisite Flags="NoExcessFood,Enqueue">Property(Context,@ClassColonizedStarSystem, WastedGrowth) gt 0 </InterpreterPrerequisite>
     <InterpreterPrerequisite Flags="Prerequisite">(Property(Context,@ClassColonizedStarSystem, MaximumPopulation) ge (Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))</InterpreterPrerequisite>
     <SimulationDescriptorReference Name="StarSystemImprovementCreateMajorPopulation"/>
+    <Resource Name="SystemGrowth">(305 + (10 * (1 + Property(Context,@ClassColonizedStarSystem, Population)))) * Property(Empire, GameSpeedMultiplier)</Resource>
   </StarSystemPopulationTransformImprovementDefinition>
 
   <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementCreateMajorPopulationUmbralChoir" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt"
