@@ -16,6 +16,15 @@
     <BinaryModifier TargetProperty="GroundBattleBombardmentAttackerDamages" Operation="Addition" Left="100"  BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%LawEffectP03L00_RepublicESGToolTipOverride3" TooltipHiddenIfPathInvalid="true"/>
   </SimulationDescriptor>
 
+  <!--Unfallen Quest Rewards-->
+  <SimulationDescriptor Name="EmpireImprovementQuestUnfallen98" Type="EmpireImprovement">
+    <Modifier TargetProperty="RawMaximumPopulation" Operation="Addition" Value="2"  Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetAnomaly"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="EmpireImprovementQuestUnfallen99" Type="EmpireImprovement">
+    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(TotalPopulationCollectionBonus)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="SystemResearch" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(TotalPopulationCollectionBonus)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
   <!--UE quest rewards-->
 
   <SimulationDescriptor Name="EmpireImprovementQuestUnitedEmpire01" Type="EmpireImprovement">
@@ -382,7 +391,7 @@
 
   <!--Innate Explorer Cloaking-->
   <SimulationDescriptor Name="EmpireImprovementExplorerInvisibility" Type="EmpireImprovement">
-    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="1" Path="ClassEmpire/ClassGarrisonFleet/ClassShip, ShipRoleExploration" Priority="-1"/>
+    <Modifier TargetProperty="AntiVisionStrengthForModule" Operation="Force" Value="1" Path="ClassEmpire/ClassGarrisonFleet/ClassShip, ShipRoleExploration" Priority="-1" TooltipOverride="%EmpireImprovementCloakedExplorersTooltipOverride"/>
   </SimulationDescriptor>
 
   <!--New Outpost/colony buffs-->
@@ -568,22 +577,14 @@
   </SimulationDescriptor>
  
   <SimulationDescriptor Name="EmpireImprovementQuestHoratioESG_5" Type="EmpireImprovement">
-    <BinaryModifier TargetProperty="SystemGrowth" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" />
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" />
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" />
-    <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" />
+    <BinaryModifier TargetProperty="SystemFIDSIPercent" Operation="Addition" Left="0.01" BinaryOperation="Multiplication" Right="$(AssignedHeroLevel)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
     <Modifier TargetProperty="Multiplier" Operation="Addition" Value="1" Path="ClassEmpire/ClassGarrisonFleet/ClassShip,ShipRoleHero/ClassSection/ClassModule" TooltipOverride="%EmpireImprovementQuestHoratioESG_5_TooltipEffect"/>
     <Modifier TargetProperty="TriggerEmpireImprovementReligiousHoratio" Operation="Force" Value="1" Path="ClassEmpire//ClassHero" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="EmpireImprovementQuestHoratioESG_6" Type="EmpireImprovement">
     <Modifier TargetProperty="PopulationGrowthUpkeep" Operation="Percent" Value="0.5" Path="ClassEmpire/ClassColonizedStarSystem" Priority="100"/>
-    <BinaryModifier TargetProperty="SystemGrowth" Operation="Percent" Left="0.04" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <BinaryModifier TargetProperty="SystemProduction" Operation="Percent" Left="0.04" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Percent" Left="0.04" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Percent" Left="0.04" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
-    <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Percent" Left="0.04" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="SystemFIDSIPercent" Operation="Addition" Left="0.04" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
   </SimulationDescriptor>
 
   <!-- Overcolonization-->
@@ -622,5 +623,25 @@
   <SimulationDescriptor Name="EmpireImprovementQuestVaultersManpowerFromScience" Type="EmpireImprovement">
     <BinaryModifier TargetProperty="EmpireManpower" Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(ScienceBuildingCount)" Path="ClassEmpire" SearchValueFromPath="true"/>
     <BinaryModifier TargetProperty="EmpireManpower" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(ScienceBuildingCount)" Path="ClassEmpire" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+  
+  <!-- Curio Exploration -->
+  <SimulationDescriptor Name="EmpireImprovementCuriosityLevel0"      Type="EmpireImprovement">
+    <Modifier TargetProperty="DetectionLevel"          Operation="Force"  Value="2"   Path="ClassEmpire"  Priority="1" TooltipHidden="true"/>
+    <Modifier TargetProperty="ExpeditionPower"         Operation="Force"  Value="1"   Path="ClassEmpire"  Priority="1" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="EmpireImprovementCuriosityLevel1"      Type="EmpireImprovement">
+    <Modifier TargetProperty="DetectionLevel"          Operation="Force"  Value="3"   Path="ClassEmpire"  Priority="2" TooltipHidden="true"/>
+    <Modifier TargetProperty="ExpeditionPower"         Operation="Force"  Value="2"   Path="ClassEmpire"  Priority="2" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="EmpireImprovementCuriosityLevel2" Type="EmpireImprovement">
+    <Modifier TargetProperty="DetectionLevel"          Operation="Force"  Value="4"   Path="ClassEmpire"  Priority="3" TooltipHidden="true"/>
+    <Modifier TargetProperty="ExpeditionPower"         Operation="Force"  Value="3"   Path="ClassEmpire"  Priority="3" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="EmpireImprovementCuriosityLevel3" Type="EmpireImprovement">
+    <Modifier TargetProperty="ExpeditionPower"         Operation="Force"  Value="4"   Path="ClassEmpire"  Priority="4" TooltipHidden="true"/>
   </SimulationDescriptor>
 </Datatable>

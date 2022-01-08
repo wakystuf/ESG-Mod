@@ -5,6 +5,12 @@
     <Property Name="LuxuryReworkEnabled"                BaseValue="0"/>
     <Property Name="LuxuryReworkDisabled"               BaseValue="0"/>
 
+    <Property Name="PlanetFoodDynamic"                  BaseValue="0" MinValue="Negative"/>
+    <Property Name="PlanetIndustryDynamic"              BaseValue="0" MinValue="Negative"/>
+    <Property Name="PlanetDustDynamic"                  BaseValue="0" MinValue="Negative"/>
+    <Property Name="PlanetScienceDynamic"               BaseValue="0" MinValue="Negative"/>
+    <Property Name="PlanetPrestigeDynamic"              BaseValue="0" MinValue="Negative"/>
+
     <!-- ########################################################## -->
     <!-- ######################## PROPERTY ######################## -->
     <!-- ########################################################## -->
@@ -199,11 +205,30 @@
 
     <Modifier TargetProperty="PlanetHasTemple" Operation="Force" Value="$(HasTemple)" Path="ClassPlanet/ClassPopulationPlanet" TooltipHidden="true"/>
 
-      <!-- For mothership -->
+    <!-- For mothership -->
     <BinaryModifier TargetProperty="ShouldOverrideBaseMaximumPopulation" Operation="Addition" Left="$(MaximumPopulationFromMothership)" BinaryOperation="Subtraction"  Right="$(RawMaximumPopulation)"/>
     <Modifier       TargetProperty="BaseMaximumPopulation"               Operation="Addition" Value="$(ShouldOverrideBaseMaximumPopulation)"/>
 
     <Modifier TargetProperty="Happiness"      Operation="Addition" Value="$(PotentialPlanetRawHappinessIfDeposit)" Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    
+    <!-- ESG -->
+    <Modifier TargetProperty="PlanetFood"                         Operation="Percent" Value="$(PlanetFoodDynamic)"           TooltipHidden="true" />
+    <Modifier TargetProperty="PlanetIndustry"                     Operation="Percent" Value="$(PlanetIndustryDynamic)"       TooltipHidden="true" />
+    <Modifier TargetProperty="PlanetDust"                         Operation="Percent" Value="$(PlanetDustDynamic)"           TooltipHidden="true" />
+    <Modifier TargetProperty="PlanetScience"                      Operation="Percent" Value="$(PlanetScienceDynamic)"        TooltipHidden="true" />
+    <Modifier TargetProperty="PlanetPrestige"                     Operation="Percent" Value="$(PlanetPrestigeDynamic)"       TooltipHidden="true" />
   </SimulationDescriptor>
 
+<SimulationDescriptor Name="ClassResourceDeposit" Type="Class">
+  <Property Name="LuxuryBoostingPopulation"           BaseValue="0" MinValue="0"/>
+  <Property Name="SplicedLuxuryBoostingPopulation"    BaseValue="0" MinValue="0"/>
+  <Property Name="StrategicBoostingPopulation"        BaseValue="0" MinValue="0"/>
+  <Property Name="SplicedStrategicBoostingPopulation" BaseValue="0" MinValue="0"/>
+  <!-- ABOVE IS ESG -->
+  <Property Name="DepositValue"                       BaseValue="0"/>
+  <Property Name="ResourceBonus"/>
+  <Modifier TargetProperty="DepositValue" Operation="Addition" Value="$(ResourceBonus)" Priority="5"/>
+</SimulationDescriptor>
+
+  <SimulationDescriptor Name="ClassColonizedResourceDeposit" Type="ClassColonizedResourceDeposit"/>
 </Datatable>
