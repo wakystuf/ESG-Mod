@@ -1408,6 +1408,7 @@
 
 		<!-- Calculate amount of food that will be wasted and filter for GameSetting and whether conversion is unlocked -->
 		<BinaryModifier TargetProperty="WastedGrowth"  Operation="Addition" Left="$(SystemGrowthStockNextTurn)" BinaryOperation="Subtraction" Right="$(MaximumUsefulSystemGrowthStock)" Priority="8"/>
+		<Modifier TargetProperty="WastedGrowth"  Operation="Subtraction" Value="1" Priority="8"/> <!-- this tweak exists to round down, solving floating point exception issues -->
 		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(GameSettingFoodReworkEnabled)" Priority="9"/>
 		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(DisableFoodConversion)" Priority="9"/>
 
@@ -1424,7 +1425,7 @@
 		<BinaryModifier TargetProperty="WastedFoodtoApproval" Operation="Addition" Left="$(CanConvertWastedFoodtoApproval)" BinaryOperation="Multiplication" Right="$(WastedGrowth)" 	Priority="8"/>
 		<Modifier 		TargetProperty="WastedFoodtoApproval"    Operation="Multiplication" Value="999"																					Priority="8"/>-->
 
-		<Modifier 		TargetProperty="NetSystemGrowth"   Operation="Subtraction" Value="$(WastedGrowth)" 	       Priority="10" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem,!ColonizedStarSystemStateOutpost,!NodeTypeSpecialNode"/>
+		<Modifier 		TargetProperty="NetSystemGrowth"   Operation="Subtraction" Value="$(WastedGrowth)" 	       Priority="10" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem,!ColonizedStarSystemStateOutpost,!NodeTypeSpecialNode, !ColonizedStarSystemStateGhost"/>
 		<Modifier 		TargetProperty="NetSystemMoney"    Operation="Addition"    Value="$(WastedFoodtoDust)" 	   Priority="11"/>
 		<Modifier 		TargetProperty="EmpireManpower"    Operation="Addition"    Value="$(WastedFoodtoMP)" 	   Priority="11" Path="../ClassEmpire"/>
 		<!--<Modifier 		TargetProperty="Happiness"    	   Operation="Addition"    Value="$(WastedFoodtoApproval)" Priority="9"/>-->
