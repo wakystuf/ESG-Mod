@@ -162,6 +162,26 @@
     <NextUpgradeName>StarSystemImprovementQuestTimeLords07</NextUpgradeName>
   </StarSystemPopulationTransformImprovementDefinition>
 
+  <!-- Uncapped Pop Growth -->
+  <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementCloneMajorPopulationWithFood" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt" PopulationDestination="Major"  PopulationToTransformCount="1" CreateIfNotAvailable="true">
+    <AIGain RessourceName="PopulationGain" Inverted="false"></AIGain>
+    <SupervisorGain Name="Industry" Weight="0.15"/>
+    <SupervisorGain Name="Food"     Weight="0.15"/>
+    <SupervisorGain Name="Dust"     Weight="0.15"/>
+    <SupervisorGain Name="Science"  Weight="0.15"/>
+    <QueuedSimulationDescriptorReference Name="QueuedDescriptorIncreasePopulation"/>
+    <Cost ResourceName="SystemProduction">1</Cost>
+    <CustomCost ResourceName="SystemGrowth" Instant="true">(305 + (10 * (1 + Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))) * Property(Empire, GameSpeedMultiplier)</CustomCost>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">ClassColonizedStarSystem</PathPrerequisite>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire,!FactionTraitDisableFoodRework,!FactionTraitPartialFoodRework</PathPrerequisite>
+    <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire,!AffinityGameplayUmbralChoir,!AffinityGameplayTimeLords,!AffinityGameplayVampirilis,!AffinityGameplayCravers,!AffinityGameplayMajorHisshos</PathPrerequisite>
+    <InterpreterPrerequisite Flags="MaximumPopulationSystem,Enqueue">(Property(Context,@ClassColonizedStarSystem, MaximumPopulation) ge (1 + Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))</InterpreterPrerequisite>
+    <InterpreterPrerequisite Flags="NoExcessFood,Enqueue">Property(Context,@ClassColonizedStarSystem, WastedGrowth) gt 0 </InterpreterPrerequisite>
+    <InterpreterPrerequisite Flags="Prerequisite">(Property(Context,@ClassColonizedStarSystem, MaximumPopulation) ge (Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))</InterpreterPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementCreateMajorPopulation"/>
+    <Resource Name="SystemGrowth">(305 + (10 * (1 + Property(Context,@ClassColonizedStarSystem, Population)) + (2 * Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))) * Property(Empire, GameSpeedMultiplier)</Resource>
+  </StarSystemPopulationTransformImprovementDefinition>
+
   <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementCreateMajorPopulationUmbralChoir" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt"
                                                     PopulationDestination="Major"  PopulationToTransformCount="1" CreateIfNotAvailable="true">
     <AIGain RessourceName="PopulationGain" Inverted="false"></AIGain>
@@ -443,8 +463,7 @@
 	<StarSystemResourceImprovementDefinition Name="StarSystemImprovementGrowthFromLifeforce" SubCategory="SubCategoryVampirilis" ScoreProvider="StarSystemImprovementBuilt">
 		<AIGain RessourceName="LifeForceGain" Inverted="true"/>
 		<AIGain RessourceName="FoodGain"/>
-		<Tags>NoBuyout</Tags>
-		<Cost ResourceName="SystemTurnBased">1</Cost>
+    <Cost ResourceName="SystemProduction">1</Cost>
 		<CustomCost ResourceName="EmpireLifeforce"      Instant="true">250 * Max(1,Property(StockLocation, @ClassExploitedStarSystem, PopulationOnMothership, true)) * Property(StockLocation, @../ClassEmpire,GameSpeedMultiplier)</CustomCost>
 		<PathPrerequisite Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
 		<InterpreterPrerequisite Flags="Prerequisite,Disable">Property(Context, Population) lt Property(Context, MaximumPopulation)</InterpreterPrerequisite>
@@ -567,6 +586,61 @@
   <!--**********************-->
   <!--***TIER 1 BUILDINGS***-->
   <!--**********************-->
+
+  <!-- Xeno-Industrial Infrastructure (Riftborn change) -->
+  <StarSystemImprovementDefinition Name="StarSystemImprovementIndustry1" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="Industry"/>
+    <Cost ResourceName="SystemProduction">280</Cost>
+    <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,!AffinityGameplayUmbralChoir,!AffinityGameplayTimeLords</PathPrerequisite>
+    <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementIndustry1,!FastForwardedImprovement</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementIndustry1Sophons,!FastForwardedImprovement</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyIndustry1</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementIndustry1"/>
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage1Normal"/>
+    <SimulationDescriptorReference Name="IsIndustryBuilding"/>
+    <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionIndustry1"/>
+  </StarSystemImprovementDefinition>
+  <StarSystemImprovementDefinition Name="StarSystemImprovementIndustry1TimeLords" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="Industry"/>
+    <Cost ResourceName="SystemProduction">280</Cost>
+    <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,AffinityGameplayTimeLords</PathPrerequisite>
+    <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementIndustry1TimeLords,!FastForwardedImprovement</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyIndustry1</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementIndustry1TimeLords"/>
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage1Normal"/>
+    <SimulationDescriptorReference Name="IsIndustryBuilding"/>
+    <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionIndustry1"/>
+  </StarSystemImprovementDefinition>
+
+  <!-- Public Private Partnerships (Riftborn Change) -->
+  <StarSystemImprovementDefinition Name="StarSystemImprovementScience1" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="Science"/>
+    <Cost ResourceName="SystemProduction">280</Cost>
+    <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,!AffinityGameplayUmbralChoir,!AffinityGameplayTimeLords</PathPrerequisite>
+    <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementScience1,!FastForwardedImprovement</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyScience1</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementScience1"/>
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage1Normal"/>
+    <SimulationDescriptorReference Name="IsScienceBuilding"/>
+    <SimulationDescriptorReference Name="ScienceConstruction"/>
+    <PopulationEvent Name="PopulationPoliticalEventScienceBuildingConstruction1"/>
+  </StarSystemImprovementDefinition>
+  <StarSystemImprovementDefinition Name="StarSystemImprovementScience1TimeLords" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="Science"/>
+    <Cost ResourceName="SystemProduction">280</Cost>
+    <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,AffinityGameplayTimeLords</PathPrerequisite>
+    <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementScience1TimeLords,!FastForwardedImprovement</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyScience1</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementScience1TimeLords"/>
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage1Normal"/>
+    <SimulationDescriptorReference Name="IsScienceBuilding"/>
+    <SimulationDescriptorReference Name="ScienceConstruction"/>
+    <PopulationEvent Name="PopulationPoliticalEventScienceBuildingConstruction1"/>
+  </StarSystemImprovementDefinition>
 
   <!--Infinite Supermarkets upkeep fixed (the building is T1, but upkeep was erroneously pulling T2 amount)-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementApproval1" SubCategory="SubCategoryApproval" ScoreProvider="StarSystemImprovementBuilt">
