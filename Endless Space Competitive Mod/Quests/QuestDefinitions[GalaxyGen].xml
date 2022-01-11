@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+    
+    <!-- ####################################### -->
+    <!--            GALAXY GENERATION            -->
+    <!-- ####################################### -->
+  
+
+    <!-- ##### GALAXY GEN QUEST 00: Redistribute 5-planet systems #####-->
+    <QuestDefinition Name="GalaxyGenerationQuest-Chapter0" Category="GalaxyGeneration" SubCategory="SystemNormalization" MinimumTurn="1">
+      <!--============ TAGS ============-->
+      <Tags>Hidden,BeginTurn</Tags>
+      <!--============ CONTEXT ============-->
+      <QuestContextMulti>
+        <Distribution Type="FreeForAll"/>
+      </QuestContextMulti>
+      <!--============ OCCURRENCE RULES ============-->
+      <RepetitionRules  NumberOfOccurrencesPerGame="1"/>
+      <!--============ VARIABLES ============-->
+      <Vars>
+        <Var VarName="$RandomEmpire" IsGlobal="true">
+          <Any>
+              <From Source="$Empires">
+              </From>
+          </Any>
+        </Var>
+
+        <!-- Find the Academy, just to have an objective frame of reference for this process-->
+        <Var VarName="$AcademySystem" IsGlobal="true">
+          <From Source="$Constellations.$StarSystems">
+              <Where>
+                  <PathPrerequisite Flags="Prerequisite">WorldAcademy</PathPrerequisite>
+              </Where>
+          </From>
+        </Var>
+        <Var VarName="$Constellation0" IsGlobal="true">
+          <From Source="$AcademySystem.$Constellation"/>
+        </Var>
+
+        <!-- Count the number of constellations and systems, calculate benchmarks -->
+        <Var VarName="$ConstellationCount" IsGlobal="true">
+          <Count>
+            <From Source="$Constellations"/>
+          </Count>
+        </Var>
+        <Var VarName="$SystemCount" IsGlobal="true">
+          <Count>
+            <From Source="$Constellations.$StarSystems"/>
+          </Count>
+        </Var>
+        <InterpretedVar VarName="$Expected5pSystems" IsGlobal="true">
+          <Expression>Floor(($(SystemCount)/$(ConstellationCount))/5)</Expression>
+        </InterpretedVar>
+
+        <!-- Build the index of constellations -->
+        <Var VarName="$ConstellationNearestAcademy" IsGlobal="true">
+          <From Source="$Constellations">
+            <OrderBy>
+              <SortConstellationByDistance OriginVarName="$Constellation0" SortBy="Nearest"/>
+            </OrderBy>
+          </From>
+        </Var>
+        <Var VarName="$Constellation1" IsGlobal="true">
+          <Select Index="0">
+            <From Source="$ConstellationNearestAcademy"/>
+          </Select>
+        </Var>
+        <Var VarName="$Constellation2" IsGlobal="true">
+          <Select Index="1">
+            <From Source="$ConstellationNearestAcademy"/>
+          </Select>
+        </Var>
+        <Var VarName="$Constellation3" IsGlobal="true">
+          <Select Index="2">
+            <From Source="$ConstellationNearestAcademy"/>
+          </Select>
+        </Var>
+        <Var VarName="$Constellation4" IsGlobal="true">
+          <Select Index="3">
+            <From Source="$ConstellationNearestAcademy"/>
+          </Select>
+        </Var>
+
+        <!-- Count the number of 5-planet systems in each constellation -->
+        <Var VarName="$Constellation0_5PlanetCount" IsGlobal="true">
+          <Count>
+            <From Source="$Constellation0.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>            
+              </Where>
+            </From>
+          </Count>
+        </Var>
+        <Var VarName="$Constellation1_5PlanetCount" IsGlobal="true">
+          <Count>
+            <From Source="$Constellation1.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>            
+              </Where>
+            </From>
+          </Count>
+        </Var>
+        <Var VarName="$Constellation2_5PlanetCount" IsGlobal="true">
+          <Count>
+            <From Source="$Constellation2.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>            
+              </Where>
+            </From>
+          </Count>
+        </Var>
+        <Var VarName="$Constellation3_5PlanetCount" IsGlobal="true">
+          <Count>
+            <From Source="$Constellation3.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>            
+              </Where>
+            </From>
+          </Count>
+        </Var>
+        <Var VarName="$Constellation4_5PlanetCount" IsGlobal="true">
+          <Count>
+            <From Source="$Constellation4.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>            
+              </Where>
+            </From>
+          </Count>
+        </Var>
+
+        <!-- Calculate performance relative to benchmarks -->
+        <InterpretedVar VarName="$Constellation0_5PlanetDeficit_Count" IsGlobal="true">
+          <Expression>Min(2,($(Expected5pSystems) - $(Constellation0_5PlanetCount)))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation1_5PlanetDeficit_Count" IsGlobal="true">
+          <Expression>($(Expected5pSystems) - $(Constellation1_5PlanetCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation2_5PlanetDeficit_Count" IsGlobal="true">
+          <Expression>($(Expected5pSystems) - $(Constellation2_5PlanetCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation3_5PlanetDeficit_Count" IsGlobal="true">
+          <Expression>($(Expected5pSystems) - $(Constellation3_5PlanetCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation4_5PlanetDeficit_Count" IsGlobal="true">
+          <Expression>($(Expected5pSystems) - $(Constellation4_5PlanetCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation0_5PlanetSurplus_Count" IsGlobal="true">
+          <Expression>($(Constellation0_5PlanetCount) - $(Expected5pSystems))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation1_5PlanetSurplus_Count" IsGlobal="true">
+          <Expression>($(Constellation1_5PlanetCount) - $(Expected5pSystems))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation2_5PlanetSurplus_Count" IsGlobal="true">
+          <Expression>($(Constellation2_5PlanetCount) - $(Expected5pSystems))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation3_5PlanetSurplus_Count" IsGlobal="true">
+          <Expression>($(Constellation3_5PlanetCount) - $(Expected5pSystems))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation4_5PlanetSurplus_Count" IsGlobal="true">
+          <Expression>($(Constellation4_5PlanetCount) - $(Expected5pSystems))</Expression>
+        </InterpretedVar>
+ 
+        <!-- Create interpreter tests for determining required adjustments -->
+        <Var VarName="$One" IntValue="1" IsGlobal="true"/>
+        <InterpretedVar VarName="$Two" IsGlobal="true">
+          <Expression>2</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Two2" IsGlobal="true">
+          <Expression>1+1</Expression>
+        </InterpretedVar>
+<!-- 
+        <Var VarName="$Constellation0_5PlanetDeficitA" StringValue="$(Constellation0_5PlanetDeficit_Count) ge 1"/>
+        <Var VarName="$Constellation0_5PlanetDeficitB" StringValue="$(Constellation0_5PlanetDeficit_Count) ge 2"/>
+        <Var VarName="$Constellation1_5PlanetDeficitA" StringValue="$(Constellation1_5PlanetDeficit_Count) ge 1"/>
+        <Var VarName="$Constellation1_5PlanetDeficitB" StringValue="$(Constellation1_5PlanetDeficit_Count) ge 2"/>
+        <Var VarName="$Constellation2_5PlanetDeficitA" StringValue="$(Constellation2_5PlanetDeficit_Count) ge 1"/>
+        <Var VarName="$Constellation2_5PlanetDeficitB" StringValue="$(Constellation2_5PlanetDeficit_Count) ge 2"/>
+        <Var VarName="$Constellation3_5PlanetDeficitA" StringValue="$(Constellation3_5PlanetDeficit_Count) ge 1"/>
+        <Var VarName="$Constellation3_5PlanetDeficitB" StringValue="$(Constellation3_5PlanetDeficit_Count) ge 2"/>
+        <Var VarName="$Constellation4_5PlanetDeficitA" StringValue="$(Constellation4_5PlanetDeficit_Count) ge 1"/>
+        <Var VarName="$Constellation4_5PlanetDeficitB" StringValue="$(Constellation4_5PlanetDeficit_Count) ge 2"/>
+        <Var VarName="$Constellation0_5PlanetSurplusA" StringValue="$(Constellation0_5PlanetSurplus_Count) ge 1"/>
+        <Var VarName="$Constellation0_5PlanetSurplusB" StringValue="$(Constellation0_5PlanetSurplus_Count) ge 2"/>
+        <Var VarName="$Constellation1_5PlanetSurplusA" StringValue="$(Constellation1_5PlanetSurplus_Count) ge 1"/>
+        <Var VarName="$Constellation1_5PlanetSurplusB" StringValue="$(Constellation1_5PlanetSurplus_Count) ge 2"/>
+        <Var VarName="$Constellation2_5PlanetSurplusA" StringValue="$(Constellation2_5PlanetSurplus_Count) ge 1"/>
+        <Var VarName="$Constellation2_5PlanetSurplusB" StringValue="$(Constellation2_5PlanetSurplus_Count) ge 2"/>
+        <Var VarName="$Constellation3_5PlanetSurplusA" StringValue="$(Constellation3_5PlanetSurplus_Count) ge 1"/>
+        <Var VarName="$Constellation3_5PlanetSurplusB" StringValue="$(Constellation3_5PlanetSurplus_Count) ge 2"/>
+        <Var VarName="$Constellation4_5PlanetSurplusA" StringValue="$(Constellation4_5PlanetSurplus_Count) ge 1"/>
+        <Var VarName="$Constellation4_5PlanetSurplusB" StringValue="$(Constellation4_5PlanetSurplus_Count) ge 2"/>
+-->
+        <!--Choose inferior systems to replace  -->
+        <Var VarName="$SystemsToUpgrade0">
+          <From Source="$Constellation0.$StarSystems">
+              <Where>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') eq 3</InterpreterPrerequisite>            
+              </Where>
+              <OrderBy>                        
+                  <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+              </OrderBy>
+          </From>
+        </Var>
+        <Var VarName="$SystemToUpgrade0A">
+          <Select Index="0">
+            <From Source="$SystemsToUpgrade0"/>
+          </Select>
+        </Var>
+        <Var VarName="$SystemToUpgrade0B">
+          <Select Index="1">
+            <From Source="$SystemsToUpgrade0"/>
+          </Select>
+        </Var>
+        <Var VarName="$SystemsToUpgrade1">
+          <From Source="$Constellation1.$StarSystems">
+              <Where>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') eq 3</InterpreterPrerequisite>            
+              </Where>
+              <OrderBy>                        
+                  <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+              </OrderBy>
+          </From>
+        </Var>
+        <Var VarName="$SystemToUpgrade1A">
+          <Select Index="0">
+            <From Source="$SystemsToUpgrade1"/>
+          </Select>
+        </Var>
+        <Var VarName="$SystemToUpgrade1B">
+          <Select Index="1">
+            <From Source="$SystemsToUpgrade1"/>
+          </Select>
+        </Var>
+        <Var VarName="$SystemsToUpgrade2">
+          <From Source="$Constellation2.$StarSystems">
+              <Where>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') eq 3</InterpreterPrerequisite>            
+              </Where>
+              <OrderBy>                        
+                  <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+              </OrderBy>
+          </From>
+        </Var>
+        <Var VarName="$SystemToUpgrade2A">
+          <Select Index="0">
+            <From Source="$SystemsToUpgrade2"/>
+          </Select>
+        </Var>
+        <Var VarName="$SystemToUpgrade2B">
+          <Select Index="1">
+            <From Source="$SystemsToUpgrade2"/>
+          </Select>
+        </Var>
+        <Var VarName="$SystemsToUpgrade3">
+          <From Source="$Constellation3.$StarSystems">
+              <Where>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') eq 3</InterpreterPrerequisite>            
+              </Where>
+              <OrderBy>                        
+                  <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+              </OrderBy>
+          </From>
+        </Var>
+        <Var VarName="$SystemToUpgrade3A">
+          <Select Index="0">
+            <From Source="$SystemsToUpgrade3"/>
+          </Select>
+        </Var>
+        <Var VarName="$SystemToUpgrade3B">
+          <Select Index="1">
+            <From Source="$SystemsToUpgrade3"/>
+          </Select>
+        </Var>
+        <Var VarName="$SystemsToUpgrade4">
+          <From Source="$Constellation4.$StarSystems">
+              <Where>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') eq 3</InterpreterPrerequisite>            
+              </Where>
+              <OrderBy>                        
+                  <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+              </OrderBy>
+          </From>
+        </Var>
+        <Var VarName="$SystemToUpgrade4A">
+          <Select Index="0">
+            <From Source="$SystemsToUpgrade4"/>
+          </Select>
+        </Var>
+        <Var VarName="$SystemToUpgrade4B">
+          <Select Index="1">
+            <From Source="$SystemsToUpgrade4"/>
+          </Select>
+        </Var>
+
+        <!-- Define the replacement notes -->
+        <Var VarName="$DefinitionName1" StringValue="Replacement5pNode1"/>
+        <Var VarName="$DefinitionName2" StringValue="Replacement5pNode2"/>
+        <Var VarName="$DefinitionName3" StringValue="Replacement5pNode3"/>
+        <Var VarName="$DefinitionName4" StringValue="Replacement5pNode4"/>
+        
+        <!-- 
+        <Var VarName="$DefinitionName99" StringValue="Replacement3pNode4"/>
+        <Var VarName="$DefinitionName98" StringValue="Replacement3pNode4"/>
+        <Var VarName="$DefinitionName97" StringValue="Replacement3pNode4"/>
+        <Var VarName="$DefinitionName96" StringValue="Replacement3pNode4"/>
+        -->
+
+      </Vars>
+      <!--============ PREREQUISITES ============-->
+      <Prerequisites Target="$(Empires)" AnyTarget="true">
+        <!-- Need to make this thing its own game setting -->
+          <GameSettingPrerequisite>CuriosityRewardsQuantity,1.5</GameSettingPrerequisite>
+      </Prerequisites>
+      <!--============ STEPS ============-->
+      <Steps>   
+          <Step Name="Step1">
+              <ObjectiveSet>
+                <Objective Name="Objective_Fake">
+                  <Sequence><!--
+                    Some additional functions that might be needed
+                    <Decorator_PostEndTurn></Decorator_PostEndTurn>
+                    <Decorator_QuestFinished></Decorator_QuestFinished>
+                    <Decorator_Wait></Decorator_Wait>
+                    <Decorator_BeginTurn>  
+                      <Condition_CheckInterpreter>
+                        <Input_Context VarName="$RandomEmpire"/>
+                        <Input_Expression VarName="$Constellation0_5PlanetDeficitA"/>
+                      </Condition_CheckInterpreter>
+                    </Decorator_BeginTurn>-->
+                    <Decorator_BeginTurn>
+                      <Condition_AreEqual>
+                        <Input_Variable1 VarName="$Constellation0_5PlanetDeficit_Count"/>
+                        <Input_Variable2 VarName="$Two"/>
+                      </Condition_AreEqual>
+                    </Decorator_BeginTurn>
+                    <Action_ApplyStarSystemDefinition>
+                      <Input_DefinitionName VarName="$DefinitionName1"/>
+                      <Input_StarSystemNode VarName="$SystemToUpgrade0A"/>
+                    </Action_ApplyStarSystemDefinition>
+                  </Sequence><!--
+                    Once the first one works this will need to be expanded  
+                  <Sequence>
+                    <Decorator_BeginTurn>
+                      <Condition_AreEqual>
+                        <Input_Variable1 VarName="$Constellation0_5PlanetDeficit_Count"/>
+                        <Input_Variable2 VarName="$Two"/>
+                      </Condition_AreEqual>
+                    </Decorator_BeginTurn>
+                    <Action_ApplyStarSystemDefinition>
+                      <Input_DefinitionName VarName="$DefinitionName1"/>
+                      <Input_StarSystemNode VarName="$SystemToUpgrade0A"/>
+                    </Action_ApplyStarSystemDefinition>
+                    <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName1"/>
+                        <Input_StarSystemNode VarName="$SystemToUpgrade0B"/>
+                    </Action_ApplyStarSystemDefinition>
+                  </Sequence>-->
+                  <Sequence>
+                    <Decorator_BeginTurn>
+                      <Condition_CheckInterpreter>
+                        <Input_Context VarName="$RandomEmpire"/>
+                        <Input_Expression VarName="$Constellation1_5PlanetDeficitA"/>
+                      </Condition_CheckInterpreter>
+                    </Decorator_BeginTurn>
+                    <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName1"/>
+                        <Input_StarSystemNode VarName="$SystemToUpgrade1A"/>
+                    </Action_ApplyStarSystemDefinition>
+                  </Sequence>
+                  <Sequence>
+                    <Decorator_BeginTurn>
+                      <Condition_CheckInterpreter>
+                        <Input_Context VarName="$RandomEmpire"/>
+                        <Input_Expression VarName="$Constellation1_5PlanetDeficitB"/>
+                      </Condition_CheckInterpreter>
+                    </Decorator_BeginTurn>
+                    <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName1"/>
+                        <Input_StarSystemNode VarName="$SystemToUpgrade1B"/>
+                    </Action_ApplyStarSystemDefinition>
+                  </Sequence>
+                  <Sequence>
+                    <Decorator_BeginTurn>
+                      <Condition_CheckInterpreter>
+                        <Input_Context VarName="$RandomEmpire"/>
+                        <Input_Expression VarName="$Constellation2_5PlanetDeficitA"/>
+                      </Condition_CheckInterpreter>
+                    </Decorator_BeginTurn>
+                    <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName1"/>
+                        <Input_StarSystemNode VarName="$SystemToUpgrade2A"/>
+                    </Action_ApplyStarSystemDefinition>
+                  </Sequence>
+                  <Sequence>
+                    <Decorator_BeginTurn>
+                      <Condition_CheckInterpreter>
+                        <Input_Context VarName="$RandomEmpire"/>
+                        <Input_Expression VarName="$Constellation2_5PlanetDeficitB"/>
+                      </Condition_CheckInterpreter>
+                    </Decorator_BeginTurn>
+                    <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName1"/>
+                        <Input_StarSystemNode VarName="$SystemToUpgrade2B"/>
+                    </Action_ApplyStarSystemDefinition>
+                  </Sequence>
+                  <Sequence>
+                    <Decorator_BeginTurn>
+                      <Condition_CheckInterpreter>
+                        <Input_Context VarName="$RandomEmpire"/>
+                        <Input_Expression VarName="$Constellation3_5PlanetDeficitA"/>
+                      </Condition_CheckInterpreter>
+                    </Decorator_BeginTurn>
+                    <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName1"/>
+                        <Input_StarSystemNode VarName="$SystemToUpgrade3A"/>
+                    </Action_ApplyStarSystemDefinition>
+                  </Sequence>
+                  <Sequence>
+                    <Decorator_BeginTurn>
+                      <Condition_CheckInterpreter>
+                        <Input_Context VarName="$RandomEmpire"/>
+                        <Input_Expression VarName="$Constellation3_5PlanetDeficitB"/>
+                      </Condition_CheckInterpreter>
+                    </Decorator_BeginTurn>
+                    <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName1"/>
+                        <Input_StarSystemNode VarName="$SystemToUpgrade3B"/>
+                    </Action_ApplyStarSystemDefinition>
+                  </Sequence>
+                  <Sequence>
+                    <Decorator_BeginTurn>
+                      <Condition_CheckInterpreter>
+                        <Input_Context VarName="$RandomEmpire"/>
+                        <Input_Expression VarName="$Constellation4_5PlanetDeficitA"/>
+                      </Condition_CheckInterpreter>
+                    </Decorator_BeginTurn>
+                    <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName1"/>
+                        <Input_StarSystemNode VarName="$SystemToUpgrade4A"/>
+                    </Action_ApplyStarSystemDefinition>
+                  </Sequence>
+                  <Sequence>
+                    <Decorator_BeginTurn>
+                      <Condition_CheckInterpreter>
+                        <Input_Context VarName="$RandomEmpire"/>
+                        <Input_Expression VarName="$Constellation4_5PlanetDeficitB"/>
+                      </Condition_CheckInterpreter>
+                    </Decorator_BeginTurn>
+                    <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName1"/>
+                        <Input_StarSystemNode VarName="$SystemToUpgrade4B"/>
+                    </Action_ApplyStarSystemDefinition>
+                  </Sequence>
+                </Objective>
+              </ObjectiveSet>
+          </Step>
+      </Steps>
+  </QuestDefinition>
+
+</Datatable>
