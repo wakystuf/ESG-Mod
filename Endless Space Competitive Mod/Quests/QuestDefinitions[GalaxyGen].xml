@@ -7,7 +7,7 @@
   
 
     <!-- ##### GALAXY GEN QUEST 00: Redistribute 5-planet systems #####-->
-    <QuestDefinition Name="GalaxyGenerationQuest-Chapter0" Category="GalaxyGeneration" SubCategory="SystemNormalization" MinimumTurn="1">
+    <QuestDefinition Name="GalaxyGenerationQuest-Chapter0" Category="GalaxyGeneration" SubCategory="SystemNormalization" IsInstant="true">
       <!--============ TAGS ============-->
       <Tags>Hidden,BeginTurn</Tags>
       <!--============ CONTEXT ============-->
@@ -171,14 +171,6 @@
         </InterpretedVar>
  
         <!-- Create interpreter tests for determining required adjustments -->
-        <Var VarName="$One" IntValue="1" IsGlobal="true"/>
-        <InterpretedVar VarName="$Two" IsGlobal="true">
-          <Expression>2</Expression>
-        </InterpretedVar>
-        <InterpretedVar VarName="$Two2" IsGlobal="true">
-          <Expression>1+1</Expression>
-        </InterpretedVar>
-
         <Var VarName="$Constellation0_5PlanetDeficitA" StringValue="$(Constellation0_5PlanetDeficit_Count) ge 1"/>
         <Var VarName="$Constellation0_5PlanetDeficitB" StringValue="$(Constellation0_5PlanetDeficit_Count) ge 2"/>
         <Var VarName="$Constellation1_5PlanetDeficitA" StringValue="$(Constellation1_5PlanetDeficit_Count) ge 1"/>
@@ -329,148 +321,139 @@
       <!--============ PREREQUISITES ============-->
       <Prerequisites Target="$(Empires)" AnyTarget="true">
         <!-- Need to make this thing its own game setting -->
-          <GameSettingPrerequisite>CuriosityRewardsQuantity,1.5</GameSettingPrerequisite>
+          <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
       </Prerequisites>
       <!--============ STEPS ============-->
       <Steps>   
           <Step Name="Step1">
               <ObjectiveSet>
                 <Objective Name="Objective_Fake">
-                  <Sequence><!--
-                    Some additional functions that might be needed
-                    <Decorator_PostEndTurn></Decorator_PostEndTurn>
-                    <Decorator_QuestFinished></Decorator_QuestFinished>
-                    <Decorator_Wait></Decorator_Wait>
-                    <Decorator_BeginTurn>  
-                      <Condition_CheckInterpreter>
-                        <Input_Context VarName="$RandomEmpire"/>
-                        <Input_Expression VarName="$Constellation0_5PlanetDeficitA"/>
-                      </Condition_CheckInterpreter>
-                    </Decorator_BeginTurn>-->
-                    <Decorator_BeginTurn>
-                      <Condition_AreEqual>
-                        <Input_Variable1 VarName="$Constellation0_5PlanetDeficit_Count"/>
-                        <Input_Variable2 VarName="$Two"/>
-                      </Condition_AreEqual>
-                    </Decorator_BeginTurn>
-                    <Action_ApplyStarSystemDefinition>
-                      <Input_DefinitionName VarName="$DefinitionName1"/>
-                      <Input_StarSystemNode VarName="$SystemToUpgrade0A"/>
-                    </Action_ApplyStarSystemDefinition>
-                  </Sequence><!--
-                    Once the first one works this will need to be expanded  
-                  <Sequence>
-                    <Decorator_BeginTurn>
-                      <Condition_AreEqual>
-                        <Input_Variable1 VarName="$Constellation0_5PlanetDeficit_Count"/>
-                        <Input_Variable2 VarName="$Two"/>
-                      </Condition_AreEqual>
-                    </Decorator_BeginTurn>
-                    <Action_ApplyStarSystemDefinition>
-                      <Input_DefinitionName VarName="$DefinitionName1"/>
-                      <Input_StarSystemNode VarName="$SystemToUpgrade0A"/>
-                    </Action_ApplyStarSystemDefinition>
-                    <Action_ApplyStarSystemDefinition>
+                  <Parallel CompletionPolicy="All">
+                    <Sequence><!--
+                      Some additional functions that might be needed
+                      <Decorator_PostEndTurn></Decorator_PostEndTurn>
+                      <Decorator_QuestFinished></Decorator_QuestFinished>
+                      <Decorator_Wait></Decorator_Wait>-->
+                      <Decorator_BeginTurn>  
+                        <Condition_CheckInterpreter>
+                          <Input_Context VarName="$RandomEmpire"/>
+                          <Input_Expression VarName="$Constellation0_5PlanetDeficitA"/>
+                        </Condition_CheckInterpreter>
+                      </Decorator_BeginTurn>  
+                      <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName1"/>
+                        <Input_StarSystemNode VarName="$SystemToUpgrade0A"/>
+                      </Action_ApplyStarSystemDefinition>
+                    </Sequence>
+                    <Sequence>
+                      <Decorator_BeginTurn>  
+                        <Condition_CheckInterpreter>
+                          <Input_Context VarName="$RandomEmpire"/>
+                          <Input_Expression VarName="$Constellation0_5PlanetDeficitB"/>
+                        </Condition_CheckInterpreter>
+                      </Decorator_BeginTurn>  
+                      <Action_ApplyStarSystemDefinition>
                         <Input_DefinitionName VarName="$DefinitionName1"/>
                         <Input_StarSystemNode VarName="$SystemToUpgrade0B"/>
-                    </Action_ApplyStarSystemDefinition>
-                  </Sequence>-->
-                  <Sequence>
-                    <Decorator_BeginTurn>
-                      <Condition_CheckInterpreter>
-                        <Input_Context VarName="$RandomEmpire"/>
-                        <Input_Expression VarName="$Constellation1_5PlanetDeficitA"/>
-                      </Condition_CheckInterpreter>
-                    </Decorator_BeginTurn>
-                    <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName1"/>
-                        <Input_StarSystemNode VarName="$SystemToUpgrade1A"/>
-                    </Action_ApplyStarSystemDefinition>
-                  </Sequence>
-                  <Sequence>
-                    <Decorator_BeginTurn>
-                      <Condition_CheckInterpreter>
-                        <Input_Context VarName="$RandomEmpire"/>
-                        <Input_Expression VarName="$Constellation1_5PlanetDeficitB"/>
-                      </Condition_CheckInterpreter>
-                    </Decorator_BeginTurn>
-                    <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName1"/>
-                        <Input_StarSystemNode VarName="$SystemToUpgrade1B"/>
-                    </Action_ApplyStarSystemDefinition>
-                  </Sequence>
-                  <Sequence>
-                    <Decorator_BeginTurn>
-                      <Condition_CheckInterpreter>
-                        <Input_Context VarName="$RandomEmpire"/>
-                        <Input_Expression VarName="$Constellation2_5PlanetDeficitA"/>
-                      </Condition_CheckInterpreter>
-                    </Decorator_BeginTurn>
-                    <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName1"/>
-                        <Input_StarSystemNode VarName="$SystemToUpgrade2A"/>
-                    </Action_ApplyStarSystemDefinition>
-                  </Sequence>
-                  <Sequence>
-                    <Decorator_BeginTurn>
-                      <Condition_CheckInterpreter>
-                        <Input_Context VarName="$RandomEmpire"/>
-                        <Input_Expression VarName="$Constellation2_5PlanetDeficitB"/>
-                      </Condition_CheckInterpreter>
-                    </Decorator_BeginTurn>
-                    <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName1"/>
-                        <Input_StarSystemNode VarName="$SystemToUpgrade2B"/>
-                    </Action_ApplyStarSystemDefinition>
-                  </Sequence>
-                  <Sequence>
-                    <Decorator_BeginTurn>
-                      <Condition_CheckInterpreter>
-                        <Input_Context VarName="$RandomEmpire"/>
-                        <Input_Expression VarName="$Constellation3_5PlanetDeficitA"/>
-                      </Condition_CheckInterpreter>
-                    </Decorator_BeginTurn>
-                    <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName1"/>
-                        <Input_StarSystemNode VarName="$SystemToUpgrade3A"/>
-                    </Action_ApplyStarSystemDefinition>
-                  </Sequence>
-                  <Sequence>
-                    <Decorator_BeginTurn>
-                      <Condition_CheckInterpreter>
-                        <Input_Context VarName="$RandomEmpire"/>
-                        <Input_Expression VarName="$Constellation3_5PlanetDeficitB"/>
-                      </Condition_CheckInterpreter>
-                    </Decorator_BeginTurn>
-                    <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName1"/>
-                        <Input_StarSystemNode VarName="$SystemToUpgrade3B"/>
-                    </Action_ApplyStarSystemDefinition>
-                  </Sequence>
-                  <Sequence>
-                    <Decorator_BeginTurn>
-                      <Condition_CheckInterpreter>
-                        <Input_Context VarName="$RandomEmpire"/>
-                        <Input_Expression VarName="$Constellation4_5PlanetDeficitA"/>
-                      </Condition_CheckInterpreter>
-                    </Decorator_BeginTurn>
-                    <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName1"/>
-                        <Input_StarSystemNode VarName="$SystemToUpgrade4A"/>
-                    </Action_ApplyStarSystemDefinition>
-                  </Sequence>
-                  <Sequence>
-                    <Decorator_BeginTurn>
-                      <Condition_CheckInterpreter>
-                        <Input_Context VarName="$RandomEmpire"/>
-                        <Input_Expression VarName="$Constellation4_5PlanetDeficitB"/>
-                      </Condition_CheckInterpreter>
-                    </Decorator_BeginTurn>
-                    <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName1"/>
-                        <Input_StarSystemNode VarName="$SystemToUpgrade4B"/>
-                    </Action_ApplyStarSystemDefinition>
-                  </Sequence>
+                      </Action_ApplyStarSystemDefinition>
+                    </Sequence>
+                    <Sequence>
+                      <Decorator_BeginTurn>
+                        <Condition_CheckInterpreter>
+                          <Input_Context VarName="$RandomEmpire"/>
+                          <Input_Expression VarName="$Constellation1_5PlanetDeficitA"/>
+                        </Condition_CheckInterpreter>
+                      </Decorator_BeginTurn>
+                      <Action_ApplyStarSystemDefinition>
+                          <Input_DefinitionName VarName="$DefinitionName1"/>
+                          <Input_StarSystemNode VarName="$SystemToUpgrade1A"/>
+                      </Action_ApplyStarSystemDefinition>
+                    </Sequence>
+                    <Sequence>
+                      <Decorator_BeginTurn>
+                        <Condition_CheckInterpreter>
+                          <Input_Context VarName="$RandomEmpire"/>
+                          <Input_Expression VarName="$Constellation1_5PlanetDeficitB"/>
+                        </Condition_CheckInterpreter>
+                      </Decorator_BeginTurn>
+                      <Action_ApplyStarSystemDefinition>
+                          <Input_DefinitionName VarName="$DefinitionName1"/>
+                          <Input_StarSystemNode VarName="$SystemToUpgrade1B"/>
+                      </Action_ApplyStarSystemDefinition>
+                    </Sequence>
+                    <Sequence>
+                      <Decorator_BeginTurn>
+                        <Condition_CheckInterpreter>
+                          <Input_Context VarName="$RandomEmpire"/>
+                          <Input_Expression VarName="$Constellation2_5PlanetDeficitA"/>
+                        </Condition_CheckInterpreter>
+                      </Decorator_BeginTurn>
+                      <Action_ApplyStarSystemDefinition>
+                          <Input_DefinitionName VarName="$DefinitionName1"/>
+                          <Input_StarSystemNode VarName="$SystemToUpgrade2A"/>
+                      </Action_ApplyStarSystemDefinition>
+                    </Sequence>
+                    <Sequence>
+                      <Decorator_BeginTurn>
+                        <Condition_CheckInterpreter>
+                          <Input_Context VarName="$RandomEmpire"/>
+                          <Input_Expression VarName="$Constellation2_5PlanetDeficitB"/>
+                        </Condition_CheckInterpreter>
+                      </Decorator_BeginTurn>
+                      <Action_ApplyStarSystemDefinition>
+                          <Input_DefinitionName VarName="$DefinitionName1"/>
+                          <Input_StarSystemNode VarName="$SystemToUpgrade2B"/>
+                      </Action_ApplyStarSystemDefinition>
+                    </Sequence>
+                    <Sequence>
+                      <Decorator_BeginTurn>
+                        <Condition_CheckInterpreter>
+                          <Input_Context VarName="$RandomEmpire"/>
+                          <Input_Expression VarName="$Constellation3_5PlanetDeficitA"/>
+                        </Condition_CheckInterpreter>
+                      </Decorator_BeginTurn>
+                      <Action_ApplyStarSystemDefinition>
+                          <Input_DefinitionName VarName="$DefinitionName1"/>
+                          <Input_StarSystemNode VarName="$SystemToUpgrade3A"/>
+                      </Action_ApplyStarSystemDefinition>
+                    </Sequence>
+                    <Sequence>
+                      <Decorator_BeginTurn>
+                        <Condition_CheckInterpreter>
+                          <Input_Context VarName="$RandomEmpire"/>
+                          <Input_Expression VarName="$Constellation3_5PlanetDeficitB"/>
+                        </Condition_CheckInterpreter>
+                      </Decorator_BeginTurn>
+                      <Action_ApplyStarSystemDefinition>
+                          <Input_DefinitionName VarName="$DefinitionName1"/>
+                          <Input_StarSystemNode VarName="$SystemToUpgrade3B"/>
+                      </Action_ApplyStarSystemDefinition>
+                    </Sequence>
+                    <Sequence>
+                      <Decorator_BeginTurn>
+                        <Condition_CheckInterpreter>
+                          <Input_Context VarName="$RandomEmpire"/>
+                          <Input_Expression VarName="$Constellation4_5PlanetDeficitA"/>
+                        </Condition_CheckInterpreter>
+                      </Decorator_BeginTurn>
+                      <Action_ApplyStarSystemDefinition>
+                          <Input_DefinitionName VarName="$DefinitionName1"/>
+                          <Input_StarSystemNode VarName="$SystemToUpgrade4A"/>
+                      </Action_ApplyStarSystemDefinition>
+                    </Sequence>
+                    <Sequence>
+                      <Decorator_BeginTurn>
+                        <Condition_CheckInterpreter>
+                          <Input_Context VarName="$RandomEmpire"/>
+                          <Input_Expression VarName="$Constellation4_5PlanetDeficitB"/>
+                        </Condition_CheckInterpreter>
+                      </Decorator_BeginTurn>
+                      <Action_ApplyStarSystemDefinition>
+                          <Input_DefinitionName VarName="$DefinitionName1"/>
+                          <Input_StarSystemNode VarName="$SystemToUpgrade4B"/>
+                      </Action_ApplyStarSystemDefinition>
+                    </Sequence>
+                  </Parallel>
                 </Objective>
               </ObjectiveSet>
           </Step>
