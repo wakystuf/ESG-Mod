@@ -92,6 +92,7 @@
 
   <SimulationDescriptor Name="StarSystemImprovementScience2Templars" Type="StarSystemImprovement">
     <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="$(AnomalyCount)" BinaryOperation="Multiplication" Right="$(SystemResearchRelics)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementScience2TemplarsTooltipEffect"/>
+    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedColdPlanets)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="StarSystemImprovementScience4Templars" Type="StarSystemImprovement">
@@ -107,33 +108,6 @@
   <SimulationDescriptor Name="StarSystemImprovementUniqueTemplars" Type="StarSystemImprovement">
     <BinaryModifier TargetProperty="SystemFIDSIPercentFromImprovementUniqueTemplars" Operation="Addition" Left="0.05" BinaryOperation="Multiplication" Right="$(TotalNumberOfTemples)" SearchValueFromPath="true" Path="./ClassColonizedStarSystem"/>
     <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(TotalNumberOfTemples)" SearchValueFromPath="true" Path="./ClassColonizedStarSystem" />
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="PlanetImprovementTemple1Descriptor" Type="PlanetImprovement">
-
-    <Property Name="TemplePlanetPopulation" BaseValue="0"/>
-    <Property Name="ModifierA" BaseValue="1"/>
-    <Property Name="ModifierC" BaseValue="1"/>
-    <Property Name="TempleMalus" BaseValue="0.5"/>
-    <Modifier TargetProperty="PlanetFood" Operation="Multiplication" Value="$(TempleMalus)" Path="./ClassColonizedPlanet" TooltipHidden="false"/>
-    <Modifier TargetProperty="PlanetIndustry" Operation="Multiplication" Value="$(TempleMalus)" Path="./ClassColonizedPlanet" TooltipHidden="false"/>
-    <Modifier TargetProperty="PlanetScience" Operation="Multiplication" Value="$(TempleMalus)" Path="./ClassColonizedPlanet" TooltipHidden="false"/>
-    <Modifier TargetProperty="PlanetDust" Operation="Multiplication" Value="$(TempleMalus)" Path="./ClassColonizedPlanet" TooltipHidden="false"/>
-    <Modifier TargetProperty="NumberOfTemples" Operation="Addition" Value="1" Path="../ClassColonizedStarSystem" TooltipHidden="false"/>
-
-    <Modifier TargetProperty="TemplePopulationCount" Operation="Addition" Value="$(Population)" Path="./ClassColonizedPlanet" TooltipHidden="false" SearchValueFromPath="true"/>
-
-    <Modifier TargetProperty="TemplePlanetPopulation" Operation="Force" Value="$(Population)" Path="./ClassColonizedPlanet" TooltipHidden="false" SearchValueFromPath="true"/>
-
-
-    <Modifier TargetProperty="EcologistVoicesModifier" Operation="Force" Value="1" Path="../ClassColonizedStarSystem" TooltipHidden="false"/>
-    <Modifier TargetProperty="PlanetRawPrestige" Operation="Addition" Value="10" Path="./ClassColonizedPlanet" TooltipOverride="%PlanetImprovementTemple1TooltipOverride"/>
-    <Modifier TargetProperty="PlanetRawPrestige" Operation="Addition" Value="5" Path="./ClassColonizedPlanet,PlanetGameplayTypeCold" TooltipHidden="false"/>
-
-    <Modifier TargetProperty="RawMaximumPopulation" Operation="Addition" Value="1" Path="./ClassColonizedPlanet"/>
-    <Modifier TargetProperty="CanConvertSystem" Value="1" Operation="Addition" Path="../ClassEmpire" TooltipHidden="true"/>
-    <Modifier TargetProperty="HasTemple" Operation="Addition" Value="1" Path="./ClassColonizedPlanet" TooltipHidden="true"/>
-
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="EmpireImprovementTemplarsFinalQuest1" Type="EmpireImprovement">
@@ -403,6 +377,7 @@
   <SimulationDescriptor Name="StarSystemImprovementScience2" Type="StarSystemImprovement">
     <Modifier TargetProperty="PlanetRawScience" Operation="Addition" Value="1" Path="./ClassColonizedStarSystem/ClassColonizedPlanet"/>
     <Modifier TargetProperty="PlanetRawScience" Operation="Addition" Value="2" Path="./ClassColonizedStarSystem/ClassColonizedPlanet,PlanetAnomaly"/>
+    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(OwnedColdPlanets)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
   </SimulationDescriptor>
 
   <!-- Xenotourism Agencies -->
@@ -516,6 +491,19 @@
     <BinaryModifier TargetProperty="SystemProduction" Operation="Addition" Left="0.05" BinaryOperation="Multiplication" Right="$(SystemManpowerStock)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementCuriosity2BOverrideEffect"/>
   </SimulationDescriptor>
 
+  <!-- Graviton-shielded Laboratories -->
+  <SimulationDescriptor Name="StarSystemImprovementScience4" Type="StarSystemImprovement">
+    <Modifier TargetProperty="SystemResearch" Operation="Addition" Value="30" Path="./ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="PlanetRawScience" Operation="Addition" Value="2"  Path="./ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <Modifier TargetProperty="PlanetRawScience" Operation="Addition" Value="2" Path="./ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeCold"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="StarSystemImprovementScience4Sophons" Type="StarSystemImprovement">
+    <Modifier TargetProperty="SystemResearch" Operation="Addition" Value="50" Path="./ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="PlanetRawScience" Operation="Addition" Value="3"  Path="./ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <Modifier TargetProperty="PlanetRawScience" Operation="Addition" Value="3" Path="./ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeCold"/>
+  </SimulationDescriptor>
+  
   <!-- ############################################################################# -->
   <!-- #################################  Tier 4   ################################# -->
   <!-- ############################################################################# -->
@@ -593,7 +581,13 @@
   <SimulationDescriptor Name="StarSystemImprovementDust6" Type="StarSystemImprovement">
     <Modifier TargetProperty="ResourceBonus" Operation="Addition" Value="2" Path="./ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeLuxury"/>
   </SimulationDescriptor>
-
+  
+  <!-- Borer's Guild Bourse -->
+  <SimulationDescriptor Name="StarSystemImprovementTrade3" Type="StarSystemImprovement">
+		<Modifier TargetProperty="TradingRouteIncomeModifier" Operation="Percent"   Value="0.25" Path="./ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="PlanetRawDust"              Operation="Addition"  Value="5" Path="./ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeTemperate"/>
+	</SimulationDescriptor>
+  
   <!-- ############################################################################# -->
   <!-- #################################  Tier 5   ################################# -->
   <!-- ############################################################################# -->
