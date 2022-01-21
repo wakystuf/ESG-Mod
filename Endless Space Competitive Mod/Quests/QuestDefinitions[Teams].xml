@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+  <!-- Empire 0 -->
+  <QuestDefinition Name="QuestDecidePreTeam0" IsInstant="true" Category="GameSetting" SubCategory="PreTeams" TriggeringProbability="1" MinimumTurn="0">
+    <Tags>Hidden,BeginTurn</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerGame="1"/>
+    <Vars>
+      <Var VarName="$Trait" StringValue="FactionTraitIsEmpire0"/>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,FactionTraitIsEmpire0</PathPrerequisite>
+       <GameSettingPrerequisite Inverted="true">PreTeams,0</GameSettingPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Add_Trait">
+            <Sequence>
+              <Action_ApplyDescriptor LogAction="false">
+                <Input_DescriptorName VarName="$Trait"/>
+                <Input_Targets VarName="$Player"/>
+              </Action_ApplyDescriptor>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+</Datatable>
