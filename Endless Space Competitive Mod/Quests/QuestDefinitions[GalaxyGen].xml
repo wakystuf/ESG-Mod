@@ -6,11 +6,9 @@
     <!-- ####################################### -->
   
     <!-- ##### Work in progress. To Do's: #####
-    * Make the system selection exclude Academy
-    * Prevent the filtration for downgrade systems from preventing the quest from launching
+    * Prevent the filtration for viable systems from preventing the quest from launching if there are 0 eligible candidates
     * Add downgrade functionality
     * Build out list of replacement nodes so that they aren't all the same
-    * Expand somewhat to adapt to diffrent galaxy configs
     -->
 
     <!-- ##### GALAXY GEN QUEST 00: Redistribute 5-planet systems #####-->
@@ -150,31 +148,31 @@
           <Expression>Min(2,($(Expected5pSystems) - $(Constellation0_5PlanetCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$Constellation1_5PlanetDeficit_Count" IsGlobal="true">
-          <Expression>($(Expected5pSystems) - $(Constellation1_5PlanetCount))</Expression>
+          <Expression>Min(2,($(Expected5pSystems) - $(Constellation1_5PlanetCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$Constellation2_5PlanetDeficit_Count" IsGlobal="true">
-          <Expression>($(Expected5pSystems) - $(Constellation2_5PlanetCount))</Expression>
+          <Expression>Min(2,($(Expected5pSystems) - $(Constellation2_5PlanetCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$Constellation3_5PlanetDeficit_Count" IsGlobal="true">
-          <Expression>($(Expected5pSystems) - $(Constellation3_5PlanetCount))</Expression>
+          <Expression>Min(2,($(Expected5pSystems) - $(Constellation3_5PlanetCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$Constellation4_5PlanetDeficit_Count" IsGlobal="true">
-          <Expression>($(Expected5pSystems) - $(Constellation4_5PlanetCount))</Expression>
+          <Expression>Min(2,($(Expected5pSystems) - $(Constellation4_5PlanetCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$Constellation0_5PlanetSurplus_Count" IsGlobal="true">
-          <Expression>($(Constellation0_5PlanetCount) - $(Expected5pSystems))</Expression>
+          <Expression>Min(2,($(Constellation0_5PlanetCount) - $(Expected5pSystems)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$Constellation1_5PlanetSurplus_Count" IsGlobal="true">
-          <Expression>($(Constellation1_5PlanetCount) - $(Expected5pSystems))</Expression>
+          <Expression>Min(2,($(Constellation1_5PlanetCount) - $(Expected5pSystems)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$Constellation2_5PlanetSurplus_Count" IsGlobal="true">
-          <Expression>($(Constellation2_5PlanetCount) - $(Expected5pSystems))</Expression>
+          <Expression>Min(2,($(Constellation2_5PlanetCount) - $(Expected5pSystems)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$Constellation3_5PlanetSurplus_Count" IsGlobal="true">
-          <Expression>($(Constellation3_5PlanetCount) - $(Expected5pSystems))</Expression>
+          <Expression>Min(2,($(Constellation3_5PlanetCount) - $(Expected5pSystems)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$Constellation4_5PlanetSurplus_Count" IsGlobal="true">
-          <Expression>($(Constellation4_5PlanetCount) - $(Expected5pSystems))</Expression>
+          <Expression>Min(2,($(Constellation4_5PlanetCount) - $(Expected5pSystems)))</Expression>
         </InterpretedVar>
  
         <!-- Create interpreter tests for determining required adjustments -->
@@ -205,7 +203,7 @@
               <Where>
                   <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
                   <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') eq 3</InterpreterPrerequisite>            
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>            
               </Where>
               <OrderBy>                        
                   <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
@@ -227,7 +225,7 @@
               <Where>
                   <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
                   <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') eq 3</InterpreterPrerequisite>            
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>            
               </Where>
               <OrderBy>                        
                   <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
@@ -249,7 +247,7 @@
               <Where>
                   <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
                   <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') eq 3</InterpreterPrerequisite>            
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>            
               </Where>
               <OrderBy>                        
                   <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
@@ -271,7 +269,7 @@
               <Where>
                   <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
                   <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') eq 3</InterpreterPrerequisite>            
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>            
               </Where>
               <OrderBy>                        
                   <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
@@ -293,7 +291,7 @@
               <Where>
                   <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
                   <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') eq 3</InterpreterPrerequisite>            
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>            
               </Where>
               <OrderBy>                        
                   <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
@@ -311,27 +309,27 @@
           </Select>
         </Var>
 
-         <!--Choose surplus systems to replace  
+         <!--Choose surplus systems to replace  --> 
          <Var VarName="$SystemsToDowngrade0">
           <From Source="$Constellation0.$StarSystems">
               <Where>
                   <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
                   <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') eq 5</InterpreterPrerequisite>            
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') eq 5</InterpreterPrerequisite>
               </Where>
               <OrderBy>                        
                   <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
               </OrderBy>
           </From>
-        </Var>
+        </Var> 
         <Var VarName="$SystemToDowngrade0A">
           <Select Index="0">
-            <From Source="$SystemToDowngrade0"/>
+            <From Source="$SystemsToDowngrade0"/>
           </Select>
         </Var>
         <Var VarName="$SystemToDowngrade0B">
           <Select Index="1">
-            <From Source="$SystemToDowngrade0"/>
+            <From Source="$SystemsToDowngrade0"/>
           </Select>
         </Var>
         <Var VarName="$SystemsToDowngrade1">
@@ -348,12 +346,12 @@
         </Var>
         <Var VarName="$SystemToDowngrade1A">
           <Select Index="0">
-            <From Source="$SystemToDowngrade1"/>
+            <From Source="$SystemsToDowngrade1"/>
           </Select>
         </Var>
         <Var VarName="$SystemToDowngrade1B">
           <Select Index="1">
-            <From Source="$SystemToDowngrade1"/>
+            <From Source="$SystemsToDowngrade1"/>
           </Select>
         </Var>
         <Var VarName="$SystemsToDowngrade2">
@@ -370,12 +368,12 @@
         </Var>
         <Var VarName="$SystemToDowngrade2A">
           <Select Index="0">
-            <From Source="$SystemToDowngrade2"/>
+            <From Source="$SystemsToDowngrade2"/>
           </Select>
         </Var>
         <Var VarName="$SystemToDowngrade2B">
           <Select Index="1">
-            <From Source="$SystemToDowngrade2"/>
+            <From Source="$SystemsToDowngrade2"/>
           </Select>
         </Var>
         <Var VarName="$SystemsToDowngrade3">
@@ -392,12 +390,12 @@
         </Var>
         <Var VarName="$SystemToDowngrade3A">
           <Select Index="0">
-            <From Source="$SystemToDowngrade3"/>
+            <From Source="$SystemsToDowngrade3"/>
           </Select>
         </Var>
         <Var VarName="$SystemToDowngrade3B">
           <Select Index="1">
-            <From Source="$SystemToDowngrade3"/>
+            <From Source="$SystemsToDowngrade3"/>
           </Select>
         </Var>
         <Var VarName="$SystemsToDowngrade4">
@@ -414,15 +412,15 @@
         </Var>
         <Var VarName="$SystemToDowngrade4A">
           <Select Index="0">
-            <From Source="$SystemToDowngrade4"/>
+            <From Source="$SystemsToDowngrade4"/>
           </Select>
         </Var>
         <Var VarName="$SystemToDowngrade4B">
           <Select Index="1">
-            <From Source="$SystemToDowngrade4"/>
+            <From Source="$SystemsToDowngrade4"/>
           </Select>
         </Var>
--->
+
         <!-- Define the replacement nodes -->
         <Var VarName="$DefinitionName1"  StringValue="Replacement5pNode1"/>
         <Var VarName="$DefinitionName2"  StringValue="Replacement5pNode2"/>
