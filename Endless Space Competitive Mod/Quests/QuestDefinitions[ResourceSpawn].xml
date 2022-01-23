@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+    
+    <!-- ####################################### -->
+    <!--           RESOURCE GENERATION           -->
+    <!-- ####################################### -->
+  
+    <!-- ##### Work in progress. To Do's: #####
+    * Scan in from galaxy size the number of deposits that should exist of each tier/type
+    * 0 deposit value issue
+    * Expand to other constellations
+    * Expand to other resources
+    * Figure out why luxes aren't affected by weight tables
+    -->
+
+    <!-- ##### GALAXY GEN QUEST Constellation 0 Step 0: Determine position of Constellation 0 (Deficit, Surplus or Balance) #####-->
+    <QuestDefinition Name="ResourceGenerationQuest_C0S0" Category="GalaxyGeneration" SubCategory="ResourceNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="true" MinimumTurn="0">
+      <!--============ TAGS ============-->
+      <Tags>Hidden, BeginTurn</Tags>
+      <!--============ CONTEXT ============-->
+      <QuestContextMulti/>
+      <!--============ OCCURRENCE RULES ============-->
+      <RepetitionRules  NumberOfOccurrencesPerGame="1"
+                        NumberOfOccurrencesPerEmpire="0"
+                        NumberOfConcurrentInstances="0"/>
+      <!--============ VARIABLES ============-->
+      <Vars>
+        
+        <!-- Choose an Empire, so that it can be fed into the context (no impact on anything; simply needs to be non-null)-->
+        <Var VarName="$LivingEmpires">
+          <From Source="$Participants"/>
+        </Var>
+        <Var VarName="$ChosenEmpire">
+          <Select Index="0">
+            <From Source="$LivingEmpires"/>
+          </Select>
+        </Var>
+
+        <!-- Find the Academy, just to have an objective frame of reference for this process-->
+        <Var VarName="$AcademySystem">
+          <From Source="$Constellations.$StarSystems">
+              <Where>
+                  <PathPrerequisite Flags="Prerequisite">WorldAcademy</PathPrerequisite>
+              </Where>
+          </From>
+        </Var>
+        <Var VarName="$Constellation0">
+          <From Source="$AcademySystem.$Constellation"/>
+        </Var>
+
+        <!-- Build the index of constellations -->
+        <Var VarName="$ConstellationNearestAcademy">
+          <From Source="$Constellations">
+            <OrderBy>
+              <SortConstellationByDistance OriginVarName="$Constellation0" SortBy="Nearest"/>
+            </OrderBy>
+          </From>
+        </Var>
+        <Var VarName="$Constellation1">
+          <Select Index="0">
+            <From Source="$ConstellationNearestAcademy"/>
+          </Select>
+        </Var>
+        <Var VarName="$Constellation2">
+          <Select Index="1">
+            <From Source="$ConstellationNearestAcademy"/>
+          </Select>
+        </Var>
+        <Var VarName="$Constellation3">
+          <Select Index="2">
+            <From Source="$ConstellationNearestAcademy"/>
+          </Select>
+        </Var>
+        <Var VarName="$Constellation4">
+          <Select Index="3">
+            <From Source="$ConstellationNearestAcademy"/>
+          </Select>
+        </Var>
+
+        <!-- Calculate number of deposits to spawn for each resource (Note: need to read in the real size index at some point) -->
+        <Var VarName="$ConstellationCount">
+          <Count>
+            <From Source="$Constellations"/>
+          </Count>
+        </Var>
+        <InterpretedVar VarName="$GalaxySize">
+          <Expression>4</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$StrategicT1Count">
+          <Expression>Ceil(5 * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$StrategicT2Count">
+          <Expression>Ceil(3.5 * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$StrategicT3Count">
+          <Expression>Ceil(2.5 * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+
+        <!-- Separate planets by constellation and type -->
+        <Var VarName="$Constellation0T1Planets">
+          <Randomize>
+            <From Source="$Constellation0.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeBarren,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeAsh,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeDestroyed</PathPrerequisite>
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+
+
+        <!-- Define curiosity types -->
+        <Var VarName="$Strategic1" StringValue="Curiosity_PlanetResource_Strategic01"/>
+        <Var VarName="$Strategic2" StringValue="Curiosity_PlanetResource_Strategic02"/>
+        <Var VarName="$Strategic3" StringValue="Curiosity_PlanetResource_Strategic03"/>
+        <Var VarName="$Strategic4" StringValue="Curiosity_PlanetResource_Strategic04"/>
+        <Var VarName="$Strategic5" StringValue="Curiosity_PlanetResource_Strategic05"/>
+        <Var VarName="$Strategic6" StringValue="Curiosity_PlanetResource_Strategic06"/>
+
+      </Vars>
+      <!--============ PREREQUISITES ============-->
+      <Prerequisites Target="$(Empires)" AnyTarget="true">
+          <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
+      </Prerequisites>
+      <!--============ STEPS ============-->
+      <Steps>   
+          <Step Name="Step1">
+              <ObjectiveSet> 
+                <StartActions>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$Constellation0T1Planets"/>
+                    <Input_Count VarName="$StrategicT1Count"/>
+                    <Input_CuriosityDefinition VarName="$Strategic1"/>
+                  </Action_SpawnCuriosity>
+                </StartActions>
+                <Objective Name="Objective_Fake">
+                  <Sequence>
+                    <Decorator_BeginTurn/>
+                  </Sequence>
+                </Objective>
+              </ObjectiveSet>
+          </Step>
+      </Steps>
+  </QuestDefinition>
+
+</Datatable>
