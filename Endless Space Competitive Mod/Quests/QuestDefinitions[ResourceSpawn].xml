@@ -6,10 +6,10 @@
     <!-- ####################################### -->
   
     <!-- ##### Work in progress. To Do's: #####
-    * Make start automatically from prior quest
-    * Scan in from galaxy size the number of deposits that should exist of each tier/type
+    * Tighten up filters that currently cause the quest to sometimes not start 
+    * Scan in from galaxy size the size index
+    * Remove beginturn placeholder once no longer need to inspect variables
     * 0 deposit value issue
-    * Treat the middle differently
     -->
 
     <!-- ##### GALAXY GEN QUEST Spawn strategic resources in a way that is evenly distributed among constellations  #####-->
@@ -76,23 +76,142 @@
           </Select>
         </Var>
 
-        <!-- Calculate number of deposits to spawn for each resource (Note: need to read in the real size index at some point) -->
+        <!-- Calculate number of planets in each constellation -->
+        <Var VarName="$Constellation0_SystemCount">
+          <Count>
+            <From Source="$Constellation0.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Count>
+        </Var>
+        <Var VarName="$Constellation1_SystemCount">
+          <Count>
+            <From Source="$Constellation1.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Count>
+        </Var>
+        <Var VarName="$Constellation2_SystemCount">
+          <Count>
+            <From Source="$Constellation2.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Count>
+        </Var>
+        <Var VarName="$Constellation3_SystemCount">
+          <Count>
+            <From Source="$Constellation3.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Count>
+        </Var>
+        <Var VarName="$Constellation4_SystemCount">
+          <Count>
+            <From Source="$Constellation4.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Count>
+        </Var>
+
+        <!-- Calculate benchmarks for a typical system -->
+        <Var VarName="$SystemCount">
+          <Count>
+            <From Source="$Constellations.$StarSystems"/>
+          </Count>
+        </Var>
         <Var VarName="$ConstellationCount">
           <Count>
             <From Source="$Constellations"/>
           </Count>
         </Var>
+        <InterpretedVar VarName="$ExpectedSystems">
+          <Expression>Floor($(SystemCount)/$(ConstellationCount))</Expression>
+        </InterpretedVar>
+
+        <!-- Calculate relative performance to find the rump constellation -->
+        <InterpretedVar VarName="$Constellation0_RumpBoolean">
+          <Expression>1-Round(($(Constellation0_SystemCount)/$(ExpectedSystems)))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation1_RumpBoolean">
+          <Expression>1-Round(($(Constellation1_SystemCount)/$(ExpectedSystems)))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation2_RumpBoolean">
+          <Expression>1-Round(($(Constellation2_SystemCount)/$(ExpectedSystems)))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation3_RumpBoolean">
+          <Expression>1-Round(($(Constellation3_SystemCount)/$(ExpectedSystems)))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation4_RumpBoolean">
+          <Expression>1-Round(($(Constellation4_SystemCount)/$(ExpectedSystems)))</Expression>
+        </InterpretedVar>
+
+        <!-- Calculate number of deposits to spawn for each resource (Note: need to read in the real size index) -->
         <InterpretedVar VarName="$GalaxySize">
           <Expression>4</Expression>
         </InterpretedVar>
-        <InterpretedVar VarName="$StrategicT1Count">
-          <Expression>Ceil(5 * $(GalaxySize) / $(ConstellationCount))</Expression>
+        <!-- For some reason this causes crashes since it can't read ChosenEmpire?
+        <InterpretedVar VarName="$GalaxySize_test" Target="$(ChosenEmpire)">
+          <Expression>Property(Context, @../ClassEmpire, GalaxySize, true)</Expression>
+        </InterpretedVar>-->
+        <InterpretedVar VarName="$C0StrategicT1Count">
+          <Expression>Ceil((5 - (2.5 * $(Constellation0_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
         </InterpretedVar>
-        <InterpretedVar VarName="$StrategicT2Count">
-          <Expression>Ceil(3.5 * $(GalaxySize) / $(ConstellationCount))</Expression>
+        <InterpretedVar VarName="$C0StrategicT2Count">
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation0_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
         </InterpretedVar>
-        <InterpretedVar VarName="$StrategicT3Count">
-          <Expression>Ceil(2.5 * $(GalaxySize) / $(ConstellationCount))</Expression>
+        <InterpretedVar VarName="$C0StrategicT3Count">
+          <Expression>Ceil((2.5 - (1.25 * $(Constellation0_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C1StrategicT1Count">
+          <Expression>Ceil((5 - (2.5 * $(Constellation1_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C1StrategicT2Count">
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation1_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C1StrategicT3Count">
+          <Expression>Ceil((2.5 - (1.25 * $(Constellation1_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C2StrategicT1Count">
+          <Expression>Ceil((5 - (2.5 * $(Constellation2_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C2StrategicT2Count">
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation2_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C2StrategicT3Count">
+          <Expression>Ceil((2.5 - (1.25 * $(Constellation2_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C3StrategicT1Count">
+          <Expression>Ceil((5 - (2.5 * $(Constellation3_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C3StrategicT2Count">
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation3_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C3StrategicT3Count">
+          <Expression>Ceil((2.5 - (1.25 * $(Constellation3_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C4StrategicT1Count">
+          <Expression>Ceil((5 - (2.5 * $(Constellation4_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C4StrategicT2Count">
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation4_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C4StrategicT3Count">
+          <Expression>Ceil((2.5 - (1.25 * $(Constellation4_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
         </InterpretedVar>
 
         <!-- Separate planets by constellation and type (we sample twice from each section to get 2 separate randomized sets so that different resources of the same tier spawn independently) -->
@@ -415,158 +534,164 @@
           <Step Name="Step1">
               <ObjectiveSet> 
                 <Objective Name="Objective_Fake">
+                  <Parallel CompletionPolicy="All">
                   <Sequence>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation0T1R1Planets"/>
-                      <Input_Count VarName="$StrategicT1Count"/>
+                      <Input_Count VarName="$C0StrategicT1Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic1"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation0T1R2Planets"/>
-                      <Input_Count VarName="$StrategicT1Count"/>
+                      <Input_Count VarName="$C0StrategicT1Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic2"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation0T2R3Planets"/>
-                      <Input_Count VarName="$StrategicT2Count"/>
+                      <Input_Count VarName="$C0StrategicT2Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic3"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation0T2R4Planets"/>
-                      <Input_Count VarName="$StrategicT2Count"/>
+                      <Input_Count VarName="$C0StrategicT2Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic4"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation0T3R5Planets"/>
-                      <Input_Count VarName="$StrategicT3Count"/>
+                      <Input_Count VarName="$C0StrategicT3Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic5"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation0T3R6Planets"/>
-                      <Input_Count VarName="$StrategicT3Count"/>
+                      <Input_Count VarName="$C0StrategicT3Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic6"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation1T1R1Planets"/>
-                      <Input_Count VarName="$StrategicT1Count"/>
+                      <Input_Count VarName="$C1StrategicT1Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic1"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation1T1R2Planets"/>
-                      <Input_Count VarName="$StrategicT1Count"/>
+                      <Input_Count VarName="$C1StrategicT1Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic2"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation1T2R3Planets"/>
-                      <Input_Count VarName="$StrategicT2Count"/>
+                      <Input_Count VarName="$C1StrategicT2Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic3"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation1T2R4Planets"/>
-                      <Input_Count VarName="$StrategicT2Count"/>
+                      <Input_Count VarName="$C1StrategicT2Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic4"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation1T3R5Planets"/>
-                      <Input_Count VarName="$StrategicT3Count"/>
+                      <Input_Count VarName="$C1StrategicT3Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic5"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation1T3R6Planets"/>
-                      <Input_Count VarName="$StrategicT3Count"/>
+                      <Input_Count VarName="$C1StrategicT3Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic6"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation2T1R1Planets"/>
-                      <Input_Count VarName="$StrategicT1Count"/>
+                      <Input_Count VarName="$C2StrategicT1Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic1"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation2T1R2Planets"/>
-                      <Input_Count VarName="$StrategicT1Count"/>
+                      <Input_Count VarName="$C2StrategicT1Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic2"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation2T2R3Planets"/>
-                      <Input_Count VarName="$StrategicT2Count"/>
+                      <Input_Count VarName="$C2StrategicT2Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic3"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation2T2R4Planets"/>
-                      <Input_Count VarName="$StrategicT2Count"/>
+                      <Input_Count VarName="$C2StrategicT2Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic4"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation2T3R5Planets"/>
-                      <Input_Count VarName="$StrategicT3Count"/>
+                      <Input_Count VarName="$C2StrategicT3Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic5"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation2T3R6Planets"/>
-                      <Input_Count VarName="$StrategicT3Count"/>
+                      <Input_Count VarName="$C2StrategicT3Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic6"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation3T1R1Planets"/>
-                      <Input_Count VarName="$StrategicT1Count"/>
+                      <Input_Count VarName="$C3StrategicT1Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic1"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation3T1R2Planets"/>
-                      <Input_Count VarName="$StrategicT1Count"/>
+                      <Input_Count VarName="$C3StrategicT1Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic2"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation3T2R3Planets"/>
-                      <Input_Count VarName="$StrategicT2Count"/>
+                      <Input_Count VarName="$C3StrategicT2Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic3"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation3T2R4Planets"/>
-                      <Input_Count VarName="$StrategicT2Count"/>
+                      <Input_Count VarName="$C3StrategicT2Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic4"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation3T3R5Planets"/>
-                      <Input_Count VarName="$StrategicT3Count"/>
+                      <Input_Count VarName="$C3StrategicT3Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic5"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation3T3R6Planets"/>
-                      <Input_Count VarName="$StrategicT3Count"/>
+                      <Input_Count VarName="$C3StrategicT3Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic6"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation4T1R1Planets"/>
-                      <Input_Count VarName="$StrategicT1Count"/>
+                      <Input_Count VarName="$C4StrategicT1Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic1"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation4T1R2Planets"/>
-                      <Input_Count VarName="$StrategicT1Count"/>
+                      <Input_Count VarName="$C4StrategicT1Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic2"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation4T2R3Planets"/>
-                      <Input_Count VarName="$StrategicT2Count"/>
+                      <Input_Count VarName="$C4StrategicT2Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic3"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation4T2R4Planets"/>
-                      <Input_Count VarName="$StrategicT2Count"/>
+                      <Input_Count VarName="$C4StrategicT2Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic4"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation4T3R5Planets"/>
-                      <Input_Count VarName="$StrategicT3Count"/>
+                      <Input_Count VarName="$C4StrategicT3Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic5"/>
                     </Action_SpawnCuriosity>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation4T3R6Planets"/>
-                      <Input_Count VarName="$StrategicT3Count"/>
+                      <Input_Count VarName="$C4StrategicT3Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic6"/>
                     </Action_SpawnCuriosity>
+                    <Action_ChooseOutcome Name="Outcome1"/>
                   </Sequence>
+                  <Sequence>
+                    <Decorator_BeginTurn/>
+                  </Sequence>
+                </Parallel>
                   <Outcome Name="Outcome1">
                     <Triggers Weight="1">
                       <QuestTrigger>
@@ -646,15 +771,140 @@
         </Select>
       </Var>
 
-      <!-- Calculate number of deposits to spawn for each resource (Note: need to read in the real size index at some point) -->
+      <!-- Calculate number of planets in each constellation -->
+      <Var VarName="$Constellation0_SystemCount">
+        <Count>
+          <From Source="$Constellation0.$StarSystems">
+            <Where>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Count>
+      </Var>
+      <Var VarName="$Constellation1_SystemCount">
+        <Count>
+          <From Source="$Constellation1.$StarSystems">
+            <Where>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Count>
+      </Var>
+      <Var VarName="$Constellation2_SystemCount">
+        <Count>
+          <From Source="$Constellation2.$StarSystems">
+            <Where>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Count>
+      </Var>
+      <Var VarName="$Constellation3_SystemCount">
+        <Count>
+          <From Source="$Constellation3.$StarSystems">
+            <Where>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Count>
+      </Var>
+      <Var VarName="$Constellation4_SystemCount">
+        <Count>
+          <From Source="$Constellation4.$StarSystems">
+            <Where>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Count>
+      </Var>
+
+      <!-- Calculate benchmarks for a typical system -->
+      <Var VarName="$SystemCount">
+        <Count>
+          <From Source="$Constellations.$StarSystems"/>
+        </Count>
+      </Var>
       <Var VarName="$ConstellationCount">
         <Count>
           <From Source="$Constellations"/>
         </Count>
       </Var>
+      <InterpretedVar VarName="$ExpectedSystems">
+        <Expression>Floor($(SystemCount)/$(ConstellationCount))</Expression>
+      </InterpretedVar>
+
+      <!-- Calculate relative performance to find the rump constellation -->
+      <InterpretedVar VarName="$Constellation0_RumpBoolean">
+        <Expression>1-Round(($(Constellation0_SystemCount)/$(ExpectedSystems)))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Constellation1_RumpBoolean">
+        <Expression>1-Round(($(Constellation1_SystemCount)/$(ExpectedSystems)))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Constellation2_RumpBoolean">
+        <Expression>1-Round(($(Constellation2_SystemCount)/$(ExpectedSystems)))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Constellation3_RumpBoolean">
+        <Expression>1-Round(($(Constellation3_SystemCount)/$(ExpectedSystems)))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Constellation4_RumpBoolean">
+        <Expression>1-Round(($(Constellation4_SystemCount)/$(ExpectedSystems)))</Expression>
+      </InterpretedVar>
+
+      <!-- Calculate number of deposits to spawn for each resource (Note: need to read in the real size index at some point) -->
       <InterpretedVar VarName="$GalaxySize">
         <Expression>4</Expression>
       </InterpretedVar>
+      <InterpretedVar VarName="$C0LuxuryT2v0Count">
+        <Expression>Ceil((2 - (1 * $(Constellation0_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C0LuxuryT2v1Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation0_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C0LuxuryT3Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation0_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C1LuxuryT2v0Count">
+        <Expression>Ceil((2 - (1 * $(Constellation1_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C1LuxuryT2v1Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation1_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C1LuxuryT3Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation1_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C2LuxuryT2v0Count">
+        <Expression>Ceil((2 - (1 * $(Constellation2_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C2LuxuryT2v1Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation2_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C2LuxuryT3Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation2_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C3LuxuryT2v0Count">
+        <Expression>Ceil((2 - (1 * $(Constellation3_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C3LuxuryT2v1Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation3_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C3LuxuryT3Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation3_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C4LuxuryT2v0Count">
+        <Expression>Ceil((2 - (1 * $(Constellation4_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C4LuxuryT2v1Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation4_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C4LuxuryT3Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation4_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <!-- Need to figure out what to do about this and eventually likely remove -->
       <InterpretedVar VarName="$LuxuryT2v0Count">
         <Expression>Ceil(2 * $(GalaxySize))</Expression>
       </InterpretedVar>
@@ -767,7 +1017,7 @@
         </Randomize>
       </Var>
 
-      <!-- Find planets that may already have T3 resources, so that they can be excluded -->
+      <!-- Find planets that may already have T3 resources, so that they can be excluded (ideally would also filter for curiosity level, but that line causes crashes)-->
       <Var VarName="$T3R17Planets_Excluded">
         <From Source="$Constellations.$StarSystems.$Planets">
           <Where>
@@ -777,15 +1027,14 @@
  <!--            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassPlanet', CuriositiesLevel4Count) gt 0</InterpreterPrerequisite>-->
           </Where>
         </From>
-      </Var> 
+      </Var>
       <Var VarName="$T3R18Planets_Excluded">
         <From Source="$Constellations.$StarSystems.$Planets">
           <Where>
             <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeRuins"/>
             <PathPrerequisite Flags="Prerequisite">PlanetTypeSwamp</PathPrerequisite>
             <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
- <!--            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassPlanet', CuriositiesLevel4Count) gt 0</InterpreterPrerequisite>-->
-</Where>
+          </Where>
         </From>
       </Var>
       <Var VarName="$T3R19Planets_Excluded">
@@ -794,8 +1043,7 @@
             <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeRuins"/>
             <PathPrerequisite Flags="Prerequisite">PlanetTypeIce</PathPrerequisite>
             <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
- <!--            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassPlanet', CuriositiesLevel4Count) gt 0</InterpreterPrerequisite>-->
-</Where>
+          </Where>
         </From>
       </Var>
       <Var VarName="$T3R20Planets_Excluded">
@@ -804,8 +1052,7 @@
             <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeLifeform"/>
             <PathPrerequisite Flags="Prerequisite">PlanetTypeDesert</PathPrerequisite>
             <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
- <!--            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassPlanet', CuriositiesLevel4Count) gt 0</InterpreterPrerequisite>-->
-</Where>
+          </Where>
         </From>
       </Var>
       <Var VarName="$T3R21Planets_Excluded">
@@ -814,8 +1061,7 @@
             <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeUnderground"/>
             <PathPrerequisite Flags="Prerequisite">PlanetTypeBarren</PathPrerequisite>
             <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
- <!--            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassPlanet', CuriositiesLevel4Count) gt 0</InterpreterPrerequisite>-->
-</Where>
+          </Where>
         </From>
       </Var>
       <Var VarName="$T3R22Planets_Excluded">
@@ -824,8 +1070,7 @@
             <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeLifeform"/>
             <PathPrerequisite Flags="Prerequisite">PlanetTypeLava</PathPrerequisite>
             <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
- <!--            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassPlanet', CuriositiesLevel4Count) gt 0</InterpreterPrerequisite>-->
-</Where>
+          </Where>
         </From>
       </Var>
       <Var VarName="$T3R23Planets_Excluded">
@@ -834,8 +1079,7 @@
             <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeRuins"/>
             <PathPrerequisite Flags="Prerequisite">PlanetTypeAsh</PathPrerequisite>
             <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
- <!--            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassPlanet', CuriositiesLevel4Count) gt 0</InterpreterPrerequisite>-->
-</Where>
+          </Where>
         </From>
       </Var>
       <Var VarName="$T3R24Planets_Excluded">
@@ -844,12 +1088,12 @@
             <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeLifeform"/>
             <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeSwamp,!PlanetTypeAsh,!PlanetTypeBarren,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
             <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
- <!--            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassPlanet', CuriositiesLevel4Count) gt 0</InterpreterPrerequisite>-->
-</Where>
+          </Where>
         </From>
       </Var>
 
       <!-- Assign T3 luxuries to planets by constellation and type, filtering for exclusions -->
+       
       <Var VarName="$T3R17Planets">
         <Randomize>
           <From Source="$Constellations.$StarSystems.$Planets"> 
@@ -865,18 +1109,18 @@
         <Randomize>
           <From Source="$Constellations.$StarSystems.$Planets"> 
             <Where>
-              <IsNot EntityVarName="$T3R18Planets_Excluded"/>
+              <!--<IsNot EntityVarName="$T3R18Planets_Excluded"/>-->
               <PathPrerequisite Flags="Prerequisite">PlanetTypeSwamp</PathPrerequisite>
               <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
             </Where>
           </From>
         </Randomize>
-      </Var>
+      </Var> 
       <Var VarName="$T3R19Planets">
         <Randomize>
           <From Source="$Constellations.$StarSystems.$Planets"> 
             <Where>
-              <IsNot EntityVarName="$T3R19Planets_Excluded"/>
+              <!--<IsNot EntityVarName="$T3R19Planets_Excluded"/>-->
               <PathPrerequisite Flags="Prerequisite">PlanetTypeIce</PathPrerequisite>
               <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
             </Where>
@@ -887,7 +1131,7 @@
         <Randomize>
           <From Source="$Constellations.$StarSystems.$Planets"> 
             <Where>
-              <IsNot EntityVarName="$T3R20Planets_Excluded"/>
+              <!--<IsNot EntityVarName="$T3R20Planets_Excluded"/>-->
               <PathPrerequisite Flags="Prerequisite">PlanetTypeDesert</PathPrerequisite>
               <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
             </Where>
@@ -967,62 +1211,62 @@
         <Step Name="Step1">
             <ObjectiveSet> 
               <Objective Name="Objective_Fake">
-                <Sequence>
+                <Sequence> 
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T2R9Planets"/>
-                    <Input_Count VarName="$LuxuryT2v0Count"/>
+                    <Input_Count VarName="$C0LuxuryT2v0Count"/>
                     <Input_CuriosityDefinition VarName="$Luxury9"/>
                   </Action_SpawnCuriosity>
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T2R10Planets"/>
-                    <Input_Count VarName="$LuxuryT2v0Count"/>
+                    <Input_Count VarName="$C1LuxuryT2v0Count"/>
                     <Input_CuriosityDefinition VarName="$Luxury10"/>
                   </Action_SpawnCuriosity>
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T2R11Planets"/>
-                    <Input_Count VarName="$LuxuryT2v0Count"/>
+                    <Input_Count VarName="$C2LuxuryT2v0Count"/>
                     <Input_CuriosityDefinition VarName="$Luxury11"/>
                   </Action_SpawnCuriosity>
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T2R12Planets"/>
-                    <Input_Count VarName="$LuxuryT2v0Count"/>
+                    <Input_Count VarName="$C3LuxuryT2v0Count"/>
                     <Input_CuriosityDefinition VarName="$Luxury12"/>
                   </Action_SpawnCuriosity>
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T2R13Planets"/>
-                    <Input_Count VarName="$LuxuryT2v0Count"/>
+                    <Input_Count VarName="$C4LuxuryT2v0Count"/>
                     <Input_CuriosityDefinition VarName="$Luxury13"/>
                   </Action_SpawnCuriosity>
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T2R14v0Planets"/>
-                    <Input_Count VarName="$LuxuryT2v1Count"/>
+                    <Input_Count VarName="$C0LuxuryT2v1Count"/>
                     <Input_CuriosityDefinition VarName="$Luxury14"/>
                   </Action_SpawnCuriosity>
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T2R14v1Planets"/>
-                    <Input_Count VarName="$LuxuryT2v1Count"/>
+                    <Input_Count VarName="$C1LuxuryT2v1Count"/>
                     <Input_CuriosityDefinition VarName="$Luxury14"/>
                   </Action_SpawnCuriosity>
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T2R15v0Planets"/>
-                    <Input_Count VarName="$LuxuryT2v1Count"/>
+                    <Input_Count VarName="$C2LuxuryT2v1Count"/>
                     <Input_CuriosityDefinition VarName="$Luxury15"/>
                   </Action_SpawnCuriosity>
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T2R15v1Planets"/>
-                    <Input_Count VarName="$LuxuryT2v1Count"/>
+                    <Input_Count VarName="$C3LuxuryT2v1Count"/>
                     <Input_CuriosityDefinition VarName="$Luxury15"/>
                   </Action_SpawnCuriosity>
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T2R16Planets"/>
-                    <Input_Count VarName="$LuxuryT2v1Count"/>
+                    <Input_Count VarName="$C4LuxuryT2v1Count"/>
                     <Input_CuriosityDefinition VarName="$Luxury16"/>
                   </Action_SpawnCuriosity>
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T3R17Planets"/>
                     <Input_Count VarName="$LuxuryT3Count"/>
                     <Input_CuriosityDefinition VarName="$Luxury17"/>
-                  </Action_SpawnCuriosity> 
+                  </Action_SpawnCuriosity>
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T3R18Planets"/>
                     <Input_Count VarName="$LuxuryT3Count"/>
@@ -1058,6 +1302,7 @@
                     <Input_Count VarName="$LuxuryT3Count"/>
                     <Input_CuriosityDefinition VarName="$Luxury24"/>
                   </Action_SpawnCuriosity>
+                  <Decorator_BeginTurn/>
                 </Sequence>
               </Objective>
             </ObjectiveSet>
