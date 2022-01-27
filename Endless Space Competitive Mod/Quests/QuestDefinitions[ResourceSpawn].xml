@@ -6,8 +6,7 @@
     <!-- ####################################### -->
   
     <!-- ##### Work in progress. To Do's: #####
-    * Tighten up filters that currently cause the quest to sometimes not start 
-    * Scan in from galaxy size the size index
+    * Tighten up filters that currently cause the quest to sometimes not start
     * Remove beginturn placeholder once no longer need to inspect variables
     * 0 deposit value issue
     -->
@@ -17,7 +16,7 @@
       <!--============ TAGS ============-->
       <Tags>Hidden, BeginTurn</Tags>
       <!--============ CONTEXT ============-->
-      <QuestContextMulti/>
+      <QuestContextSolo/>
       <!--============ OCCURRENCE RULES ============-->
       <RepetitionRules  NumberOfOccurrencesPerGame="1"
                         NumberOfOccurrencesPerEmpire="0"
@@ -26,15 +25,10 @@
       <Vars>
         
         <!-- Choose an Empire, so that it can be fed into the context (no impact on anything; simply needs to be non-null)-->
-        <Var VarName="$LivingEmpires">
-          <From Source="$Participants"/>
-        </Var>
         <Var VarName="$ChosenEmpire">
-          <Select Index="0">
-            <From Source="$LivingEmpires"/>
-          </Select>
+          <From Source="$Empire"/>
         </Var>
-
+ 
         <!-- Find the Academy, just to have an objective frame of reference for this process-->
         <Var VarName="$AcademySystem">
           <From Source="$Constellations.$StarSystems">
@@ -161,13 +155,9 @@
         </InterpretedVar>
 
         <!-- Calculate number of deposits to spawn for each resource (Note: need to read in the real size index) -->
-        <InterpretedVar VarName="$GalaxySize">
-          <Expression>4</Expression>
-        </InterpretedVar>
-        <!-- For some reason this causes crashes since it can't read ChosenEmpire?
-        <InterpretedVar VarName="$GalaxySize_test" Target="$(ChosenEmpire)">
+        <InterpretedVar VarName="$GalaxySize" Target="$(Empire)">
           <Expression>Property(Context, @../ClassEmpire, GalaxySize, true)</Expression>
-        </InterpretedVar>-->
+        </InterpretedVar>
         <InterpretedVar VarName="$C0StrategicT1Count">
           <Expression>Ceil((5 - (2.5 * $(Constellation0_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
         </InterpretedVar>
@@ -696,7 +686,7 @@
                     <Triggers Weight="1">
                       <QuestTrigger>
                         <Tags>LuxuryResourceGenerationQuest</Tags>
-                        <QuestContextMulti ParticipantsVarName="$LivingEmpires"/>
+                        <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
                       </QuestTrigger>
                     </Triggers>
                   </Outcome>
@@ -712,7 +702,7 @@
     <!--============ TAGS ============-->
     <Tags>Hidden, LuxuryResourceGenerationQuest</Tags>
     <!--============ CONTEXT ============-->
-    <QuestContextMulti/>
+    <QuestContextSolo/>
     <!--============ OCCURRENCE RULES ============-->
     <RepetitionRules  NumberOfOccurrencesPerGame="1"
                       NumberOfOccurrencesPerEmpire="0"
@@ -721,13 +711,8 @@
     <Vars>
       
       <!-- Choose an Empire, so that it can be fed into the context (no impact on anything; simply needs to be non-null)-->
-      <Var VarName="$LivingEmpires">
-        <From Source="$Participants"/>
-      </Var>
       <Var VarName="$ChosenEmpire">
-        <Select Index="0">
-          <From Source="$LivingEmpires"/>
-        </Select>
+        <From Source="$Empire"/>
       </Var>
 
       <!-- Find the Academy, just to have an objective frame of reference for this process-->
