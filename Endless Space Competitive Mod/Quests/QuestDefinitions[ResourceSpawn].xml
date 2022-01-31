@@ -7,14 +7,13 @@
   
     <!-- ##### Work in progress. To Do's: #####
     * Tighten up filters that currently cause the quest to sometimes not start
-    * Remove beginturn placeholder once no longer need to inspect variables
-    * 0 deposit value issue
+    * Think about T3 spawns and how to balance by constellation without null results
     -->
 
     <!-- ##### GALAXY GEN QUEST Spawn strategic resources in a way that is evenly distributed among constellations  #####-->
     <QuestDefinition Name="StrategicResourceGenerationQuest" Category="GalaxyGeneration" SubCategory="ResourceNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="true" MinimumTurn="0">
       <!--============ TAGS ============-->
-      <Tags>Hidden, BeginTurn</Tags>
+      <Tags>Hidden, StrategicResourceGenerationQuest</Tags>
       <!--============ CONTEXT ============-->
       <QuestContextSolo/>
       <!--============ OCCURRENCE RULES ============-->
@@ -524,7 +523,6 @@
           <Step Name="Step1">
               <ObjectiveSet> 
                 <Objective Name="Objective_Fake">
-                  <Parallel CompletionPolicy="All">
                   <Sequence>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation0T1R1Planets"/>
@@ -678,10 +676,6 @@
                     </Action_SpawnCuriosity>
                     <Action_ChooseOutcome Name="Outcome1"/>
                   </Sequence>
-                  <Sequence>
-                    <Decorator_BeginTurn/>
-                  </Sequence>
-                </Parallel>
                   <Outcome Name="Outcome1">
                     <Triggers Weight="1">
                       <QuestTrigger>
@@ -1287,7 +1281,6 @@
                     <Input_Count VarName="$LuxuryT3Count"/>
                     <Input_CuriosityDefinition VarName="$Luxury24"/>
                   </Action_SpawnCuriosity>
-                  <Decorator_BeginTurn/>
                 </Sequence>
               </Objective>
             </ObjectiveSet>
