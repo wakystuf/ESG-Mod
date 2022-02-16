@@ -2156,7 +2156,7 @@
     </QuestDefinition>
 
     <QuestDefinition Name="MinorFactionQuest16" Category="MinorFactionQuest" SubCategory="">
-        
+         
         <!--============ TAGS ============-->
         <Tags>MinorFactionQuest</Tags>
 
@@ -2178,16 +2178,12 @@
             <Var VarName="$MinorHomeSystem">
                 <From Source="$MinorEmpire.$HomeStarSystem"/>
             </Var>
-            <Var VarName="$Amount01" IntValue="2"/>
             <Var VarName="$ByAtWarWithMinor" StringValue="DiplomaticRelationStateMinorAdvancedWar"/>
             <Var VarName="$DiplomaticRelationStateName" StringValue="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
 
-            <!--Military Politic-->
-            <Var VarName="$PoliticsName" StringValue="Politics06"/>
-            <!--Percentage = 20% -->
-            <Var VarName="$MinimumPercentage" IntValue="20"/>
-            <!--In X Systems -->
-            <Var VarName="$MinimumSystemAmount" IntValue="1"/>
+            <!--4 Defense buildings-->
+            <Var VarName="$DefenseBuildings"  StringValue="SubCategoryDefense"/>
+            <Var VarName="$Amount01" IntValue="4"/>
             
             <LocalizationVar LocalizationKey="$MinorFactionName" Source="$MinorEmpire"/>
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
@@ -2213,14 +2209,13 @@
                         <AIHint Category="Minimal" MinAutoResolutionTurn="17" MaxAutoResolutionTurn="25" AutoResolutionProbability="0.5" />
                         <Parallel CompletionPolicy="First">
                             <Sequence>
-                                <Decorator_BeginTurn>
-                                <Condition_HasPoliticsScore>
-                                    <Input_Empire VarName="$CurrentEmpire"/>
-                                    <Input_PoliticsName VarName="$PoliticsName"/>
-                                    <Input_MinimumPercentage VarName="$MinimumPercentage"/>
-                                    <Input_MinimumSystemAmount VarName="$MinimumSystemAmount"/>
-                                </Condition_HasPoliticsScore>
-                            </Decorator_BeginTurn>
+                                <Loop>
+                                    <Decorator_ConstructionCompleted Initiator="Empire" ProgressionIncrement="1">                                   
+                                        <Input_ConstructionSubCategory VarName="$DefenseBuildings"/>
+                                        <Input_ValidType>Building</Input_ValidType>
+                                    </Decorator_ConstructionCompleted>
+                                    <Input_Count VarName="$Amount01"/>
+                                </Loop>
                                 <Action_AssimilateMinorEmpire>
                                     <Input_Empire VarName="$CurrentEmpire"/>
                                     <Input_MinorEmpire VarName="$MinorEmpire"/>
@@ -2288,7 +2283,7 @@
             <Var VarName="$DiplomaticRelationStateName" StringValue="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
           
             <InterpretedVar VarName="$Amount01" Target="$(Empire)">
-                <Expression>Min(95, Property(Context, @../ClassEmpire, Happiness)+5)</Expression>
+                <Expression>Max(95, Property(Context, @../ClassEmpire, Happiness)+5)</Expression>
             </InterpretedVar>
 
             <InterpretedVar VarName="$Amount02" Target="$(Empire)">
