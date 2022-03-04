@@ -69,6 +69,7 @@
   <!-- Alliance -->
   <DiplomaticTermDiplomaticRelationStateDefinition Name="AllianceRelation" Hidden="true" PropositionMethod="Declaration" ApplicationMethod="Symmetrical" Category="CategoryTreaty" SubCategory="SubCategoryDiplomaticTerm" Alignment="Good">
     <GameSettingPrerequisite Flags="Prerequisite,Discard">EnableAlliances,True</GameSettingPrerequisite>
+    <GameSettingPrerequisite Flags="Prerequisite,Discard,ForcedTeams">PreTeams,Standard</GameSettingPrerequisite>
     <DiplomaticRelationStateEmpirePrerequisite Inverted="false" Flags="Prerequisite,Discard" Responsible="EmpireWhichProvides">
       <InterpreterPrerequisite Flags="Prerequisite,Discard">Path(Context,@'../ClassEmpire,!FactionTraitEternalWar') or Path(Context,@'../ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassLaw,LawEffectP03L00') or Path(Context,@'../ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics03')</InterpreterPrerequisite>
     </DiplomaticRelationStateEmpirePrerequisite>
@@ -81,8 +82,9 @@
   </DiplomaticTermDiplomaticRelationStateDefinition>
 
   <DiplomaticTermAllianceDefinition Name="AskAlliance" PropositionMethod="Negotiation" ApplicationMethod="Symmetrical" Category="CategoryTreaty" SubCategory="SubCategoryDiplomaticTerm" Alignment="Good" AssociatedPolitics="Politics03">
-    <PathPrerequisite Flags="Prerequisite,Discard,Technology">../ClassEmpire/ClassResearch,TechnologyDiplomacyAlliance</PathPrerequisite>
     <GameSettingPrerequisite Flags="Prerequisite,Discard">EnableAlliances,True</GameSettingPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard,Technology">../ClassEmpire/ClassResearch,TechnologyDiplomacyAlliance</PathPrerequisite>
+    <GameSettingPrerequisite Flags="Prerequisite,Discard,ForcedTeams">PreTeams,Standard</GameSettingPrerequisite>
     <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard" Responsible="EmpireWhichReceives" Inverted="true">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
     <DiplomaticRelationStateEmpirePrerequisite Inverted="false" Flags="Prerequisite,Discard" Responsible="EmpireWhichProvides">
       <InterpreterPrerequisite Flags="Prerequisite,Discard">Path(Context,@'../ClassEmpire,!FactionTraitEternalWar') or Path(Context,@'../ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassLaw,LawEffectP03L00') or Path(Context,@'../ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics03')</InterpreterPrerequisite>
@@ -100,4 +102,44 @@
     <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireHonor">$(ProposerIsProvider) * Property(EmpireWhichProposes, @ClassEmpire, CanUseHonor) * 20 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,PeacefulTreatyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,AllianceCostReduction) * Property(EmpireWhichProposes,@ClassEmpire,PeacefulTreatyCostReduction) * (1 + (Property(EmpireWhichProposes,@ClassEmpire,SystemCount) / 10) * 1.25) * (0.5 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyReworkDisabled))</DiplomaticCustomCost>
     <DiplomaticRelationStateReference>DiplomaticRelationStateAlliance</DiplomaticRelationStateReference>
   </DiplomaticTermAllianceDefinition>
+
+  <!-- LeaveAlliance -->
+  <DiplomaticTermBreakAllianceDefinition Name="LeaveAlliance" PropositionMethod="Declaration" ApplicationMethod="Symmetrical" Category="CategoryTreaty" SubCategory="SubCategoryDiplomaticTerm" Alignment="Bad">
+    <GameSettingPrerequisite Flags="Prerequisite,Discard">EnableAlliances,True</GameSettingPrerequisite>
+    <GameSettingPrerequisite Flags="Prerequisite,Discard,ForcedTeams">PreTeams,Standard</GameSettingPrerequisite>
+    <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard">DiplomaticRelationStateAlliance</DiplomaticRelationStatePrerequisite>
+    <DiplomaticCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">0</DiplomaticCost>
+    <DiplomaticRelationStateReference>DiplomaticRelationStateColdWar</DiplomaticRelationStateReference>
+  </DiplomaticTermBreakAllianceDefinition>
+
+  <!-- Renounce Alliance (in case of war declaration) -->
+  <DiplomaticTermRenounceAllianceDefinition Name="RenounceAlliance" PropositionMethod="Declaration" ApplicationMethod="ProviderOnly" Category="CategoryTreaty" SubCategory="SubCategoryDiplomaticTerm" Alignment="Bad">
+    <GameSettingPrerequisite Flags="Prerequisite,Discard">EnableAlliances,True</GameSettingPrerequisite>
+    <GameSettingPrerequisite Flags="Prerequisite,Discard,ForcedTeams">PreTeams,Standard</GameSettingPrerequisite>
+    <DiplomaticAbilityPrerequisite Flags="Prerequisite,Discard" TargetRelation="ProviderToReceiver">CanRenounceAlliance</DiplomaticAbilityPrerequisite>
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">0</DiplomaticCustomCost>
+    <DiplomaticRelationStateReference>DiplomaticRelationStateColdWar</DiplomaticRelationStateReference>
+  </DiplomaticTermRenounceAllianceDefinition>
+
+  <!-- BreakAlliance -->
+  <DiplomaticTermBreakAllianceDefinition Name="BreakAlliance" Hidden="true" PropositionMethod="Negotiation" ApplicationMethod="ReceiverOnly" Category="CategoryTreaty" SubCategory="SubCategoryDiplomaticTerm" Alignment="Bad">
+    <GameSettingPrerequisite Flags="Prerequisite,Discard">EnableAlliances,True</GameSettingPrerequisite>
+    <GameSettingPrerequisite Flags="Prerequisite,Discard,ForcedTeams">PreTeams,Standard</GameSettingPrerequisite>
+    <DiplomaticRelationStateReference>DiplomaticRelationStatePeace</DiplomaticRelationStateReference>
+  </DiplomaticTermBreakAllianceDefinition>
+
+  <!-- ProposeAlliance -->
+  <DiplomaticTermProposalDefinition Name="ProposeAllianceRelation" Hidden="true" PropositionMethod="Negotiation" ApplicationMethod="ProviderOnly" Category="CategoryTreaty" SubCategory="SubCategoryDiplomaticTerm" Alignment="Neutral">
+    <GameSettingPrerequisite Flags="Prerequisite,Discard">EnableAlliances,True</GameSettingPrerequisite>
+    <GameSettingPrerequisite Flags="Prerequisite,Discard,ForcedTeams">PreTeams,Standard</GameSettingPrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Inverted="false" Flags="Prerequisite,Discard" Responsible="EmpireWhichProvides">
+      <InterpreterPrerequisite Flags="Prerequisite,Discard">Path(Context,@'../ClassEmpire,!FactionTraitEternalWar') or Path(Context,@'../ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassLaw,LawEffectP03L00') or Path(Context,@'../ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics03')</InterpreterPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Inverted="false" Flags="Prerequisite,Discard" Responsible="EmpireWhichReceives">
+      <InterpreterPrerequisite Flags="Prerequisite,Discard">Path(Context,@'../ClassEmpire,!FactionTraitEternalWar') or Path(Context,@'../ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassLaw,LawEffectP03L00') or Path(Context,@'../ClassEmpire,FactionTraitEternalWar/ClassSenate/ClassSenator,Politics03')</InterpreterPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
+    <AllowedTreaties>
+      <AllowedTreaty Name="AllianceRelation"/>
+    </AllowedTreaties>
+  </DiplomaticTermProposalDefinition>
 </Datatable>

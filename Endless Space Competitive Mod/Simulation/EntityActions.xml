@@ -548,4 +548,27 @@
 
     <PopulationEventOnSelf>PopulationPoliticalEventMinorQuestEmpireAction</PopulationEventOnSelf>
   </AskForMinorQuestEmpireActionDefinition>
+
+  <!-- Create Mobile Portal -->
+  <CreatePortalFleetAction Name="CreatePortalFleetAction" Flags="CancelOnMovement,CancelOnRetreat">
+
+    <EntityPrerequisites Location="Self">
+      <!--<PathPrerequisite               Flags="Discard">ClassGarrisonFleet/ClassShip,ShipRoleSuperColonizer</PathPrerequisite>-->
+      <InterpreterPrerequisite        Flags="Prerequisite,Discard">
+        (Path(Context, @'ClassGarrisonFleet/ClassShip,ShipRoleSuperColonizer') and Path(Context, @'../ClassEmpire,EmpireImprovementVaultersArgosyEnhancement'))
+        or  Path(Context, @'ClassGarrisonFleet/ClassShip,ShipRoleJuggernaut/ClassSection/ClassModule,ModuleSupportJuggernautVaulters')
+      </InterpreterPrerequisite>
+      <!--<PathPrerequisite Flags="Prerequisite,Discard">../ClassEmpire,EmpireImprovementUnique11SuperColonizer</PathPrerequisite>-->
+      <PathPrerequisite   Inverted="true" Flags="UnderEnemyInfluence">ClassGarrisonFleet,FleetInfluenceStateHostile</PathPrerequisite>
+      <PathPrerequisite   Inverted="true" Flags="EncounterInProgress">FleetActionAttack</PathPrerequisite>
+    </EntityPrerequisites>
+
+    <EntityModifiers Location="Self">
+      <SimulationAlteration DescriptorReference="FleetActionBusy"/>
+      <SimulationAlteration DescriptorReference="FleetActionCreatingPortal"/>
+    </EntityModifiers>
+
+    <CancelActions Flags="CancelOnAnything" SameContext="false" SameInitiator="true"/>
+
+  </CreatePortalFleetAction>
 </Datatable>

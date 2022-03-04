@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/GovernmentDefinition.xsd">
+  <!-- Autocracy -->
+  <GovernmentDefinition Name="GovernmentDictatorshipCravers" RequiredHappiness="50" InitialRepresentativeCount="4" InitialGovernmentCost="5" Fixed="true">
+
+    <SimulationDescriptorReference Name="GovernmentDictatorshipCravers"/>
+    <SimulationDescriptorReference Name="GovernmentDictatorshipCommon"/>
+
+    <RepresentativesElectionProcessReference Name="Dictatorship_Representatives"/>
+    <SenateElectionProcessReference          Name="Dictatorship_Senators"/>
+    <SurveyElectionProcessReference          Name="Dictatorship_Survey"/>
+
+    <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">300 * Property(StockLocation, @ClassEmpire,SystemCount) * Property(StockLocation, @ClassEmpire/ClassSenate, GovernmentDictatorshipCostMultiplier)</CustomCost>
+
+    <NextGovernmentReference Name="GovernmentDictatorshipCravers"/>
+    <AnarchyGovernmentReference Name="GovernmentAnarchy"/>
+
+    <OnStart>
+      <Action_ForceElection/>
+      <Action_Notify Class="EventGovernmentStarted"/>
+    </OnStart>
+
+    <OnEnd>
+      <Action_ClearLaws/>
+    </OnEnd>
+
+  </GovernmentDefinition>
+</Datatable>
