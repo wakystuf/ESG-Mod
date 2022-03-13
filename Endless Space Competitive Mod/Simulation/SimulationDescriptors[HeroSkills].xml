@@ -828,6 +828,17 @@
     <Modifier TargetProperty="PreventsEnemyRetreat" Operation="Addition" Value="1" Path="./ClassGarrisonFleet/ClassShip" TooltipOverride="%HeroSkillTractorBeamEffectTooltipOverride"/>
   </SimulationDescriptor>
 
+  <!-- Capstone -->
+  <SimulationDescriptor Name="HeroSkillSenator73_Industry_Perpop_4" Type="HeroSkillSenator" IsSerializable="false">
+    <Property Name="Industry_Perpop_Feedback" BaseValue="2"/>
+    <Property Name="Industry_Perpop" BaseValue="2"/>
+    <Modifier TargetProperty="Industry_Perpop" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetRawIndustry" Operation="Addition" Value="$(Industry_Perpop)" Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
+    <!--  FEEDBACK FOR SCAN VIEW  -->
+    <Modifier TargetProperty="Industry_Perpop_Feedback" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="BonusHeroPlanetIndustry" Operation="Addition" Left="$(Industry_Perpop_Feedback)" BinaryOperation="Multiplication" Right="$(Population)" Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
   <!-- *********************** -->
   <!-- TECHNOLOGIST SKILL TREE -->
   <!-- *********************** -->
@@ -932,11 +943,24 @@
     <BinaryModifier TargetProperty="NetLuxury24" Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(SD_Luxury24)" Path="ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true"/>
   </SimulationDescriptor>
 
-  
-
   <!-- ********************* -->
   <!--  EUSOCIAL SKILL TREE  -->
   <!-- ********************* -->
+
+  <!--Senator skill -->
+  <SimulationDescriptor Name="HeroSkillSenator_Influence_Approval" Type="HeroSkillSenator" IsSerializable="false">
+    <Property Name="ApprovalPerPop"        BaseValue="0.5"/>
+    <Property Name="FlatInfluenceHappy"    BaseValue="30"/>
+    <Property Name="FlatInfluenceEcstatic" BaseValue="50"/>
+
+    <Modifier TargetProperty="ApprovalPerPop"        Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <Modifier TargetProperty="FlatInfluenceHappy"    Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+    <Modifier TargetProperty="FlatInfluenceEcstatic" Operation="Multiplication" Value="$(SenatorSkillEffectDictatorshipMultiplier)" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="BonusHeroSystemApproval" Operation="Addition" Value="$(ApprovalPerPop)" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%HeroSkillSenator_Influence_ApprovalTooltipOverride0"/>
+    <Modifier TargetProperty="SystemEmpirePoint"       Operation="Addition" Value="$(FlatInfluenceHappy)" Path="../ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem3" TooltipOverride="%HeroSkillSenator_Influence_ApprovalTooltipOverride1"/>
+    <Modifier TargetProperty="SystemEmpirePoint"       Operation="Addition" Value="$(FlatInfluenceEcstatic)" Path="../ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem4" TooltipOverride="%HeroSkillSenator_Influence_ApprovalTooltipOverride2"/>
+  </SimulationDescriptor>
 
   <!--Squadrons -->
   <SimulationDescriptor Name="HeroSkillShipSquadronBonus" Type="HeroSkillShip" IsSerializable="false">

@@ -265,6 +265,7 @@
 		<Property Name="BonusHeroSystemDust"        BaseValue="0"/>
 		<Property Name="BonusHeroSystemScience"     BaseValue="0"/>
 		<Property Name="BonusHeroSystemPrestige"    BaseValue="0"/>
+		<Property Name="BonusHeroSystemApproval"    BaseValue="0"/>
 
 		<Property Name="AdditionalVisionRange" BaseValue="0" IsSealed="true"/>
 		<Property Name="VisionStrength" BaseValue="0"/>
@@ -366,7 +367,8 @@
 		<Property Name="OverPopulationPenalties"                        BaseValue="0"   MinValue="Negative"  />
 		<Property Name="OverPopulationPenaltiesReduction"               BaseValue="0"   MinValue="Negative"/>
 		<Property Name="OverColonizationPenalties"                      BaseValue="0"   MinValue="Negative"  />
-		<Property Name="ColonizationThresholdHappinessBonus"            BaseValue="0"   MinValue="0" MaxValue="10"  />
+		<Property Name="ColonizationThresholdHappinessBonus"            BaseValue="0"   MinValue="0" MaxValue="10"/>
+		<Property Name="IsUnderColonizationThreshold"            		BaseValue="0"   MinValue="0" MaxValue="1"/>
 
 		<Property Name="HappinessBonusMultiplier"                          BaseValue="1"/>
 		<Property Name="HappinessBonusFromFleetPresence"/>
@@ -1124,6 +1126,7 @@
 		<Modifier           TargetProperty="Happiness" Operation="Addition" Value="$(HappinessPerHomeSystem)"/>
 		<Modifier           TargetProperty="Happiness" Operation="Addition" Value="$(HappinessFromTraitors)"/>
 		<Modifier           TargetProperty="Happiness" Operation="Addition" Value="$(HappinessFromMinors)"/>
+		<BinaryModifier     TargetProperty="Happiness" Operation="Addition" Left="$(BonusHeroSystemApproval)" BinaryOperation="Multiplication" Right="$(Population)" />
 
 		<BinaryModifier     TargetProperty="Happiness" Operation="Addition" Left="$(RepresentativeWithPartyInSenateCount)" BinaryOperation="Multiplication" Right="$(HappinessBonusPerRepresentative)" />
 		<BinaryModifier     TargetProperty="Happiness" Operation="Subtraction" Left="$(RepresentativeWithoutPartyInSenateCount)" BinaryOperation="Multiplication" Right="$(HappinessPenaltyPerRepresentative)" />
