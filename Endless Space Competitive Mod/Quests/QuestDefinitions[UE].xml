@@ -4,6 +4,162 @@
 	<!--      UNITED EMPIRE QUEST Chapter1       -->
 	<!-- ####################################### -->
 
+
+	<QuestDefinition Name="UEQuest-Chapter00" Category="MajorQuest" SubCategory="Timelord">      
+
+        <!--============ TAGS ============-->
+        
+        <Tags>BeginTurn,Hidden</Tags>        
+
+        <!--============ CONTEXT ============-->
+        
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+           
+            <Var VarName="$HomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+            
+            <Var VarName="$DefinitionName1" StringValue="BalancedStartUE"/>     
+            <Var VarName="$PopulationAffinity" StringValue="AffinityTerrans"/> 
+            <Var VarName="$PopulationAffinity2" StringValue="AffinityHisshos"/> 
+            <Var VarName="$Amount" IntValue="-2"/> 
+            <Var VarName="$Amount2" IntValue="-1"/> 
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityTerrans,PopulationMajor</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityHisshos</PathPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Objective_Fake">
+                        <Sequence>
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_System VarName="$HomeSystem"/>
+                                <Input_Amount VarName="$Amount"/>
+                                <Input_PopulationAffinity VarName="$PopulationAffinity"/>
+                            </Action_SpawnPopulation>  
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_System VarName="$HomeSystem"/>
+                                <Input_Amount VarName="$Amount2"/>
+                                <Input_PopulationAffinity VarName="$PopulationAffinity2"/>
+                            </Action_SpawnPopulation>
+                            <Action_ApplyStarSystemDefinition>
+                                <Input_DefinitionName VarName="$DefinitionName1"/>
+                                <Input_StarSystemNode VarName="$HomeSystem"/>
+                            </Action_ApplyStarSystemDefinition>        
+                            <Action_ChooseOutcome Name="Outcome1"/>                 
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>UEQuest-Chapter01</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+  
+  <QuestDefinition Name="UEQuest-Chapter01" Category="MajorQuest" SubCategory="Timelord">
+
+        <Tags>UEQuest-Chapter01, Hidden</Tags> 
+
+        <QuestContextSolo/>  
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                            NumberOfOccurrencesPerEmpire="1"
+                            NumberOfConcurrentInstances="0"/> 
+
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+           
+            <Var VarName="$HomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+
+            <Var VarName="$HomePlanet">
+                <Any>
+                    <From Source="$HomeSystem.$Planets">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassPlanet,IsUniquePlanet</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var> 
+
+            <Var VarName="$Amount01" IntValue="2"/> 
+            <Var VarName="$Amount02" IntValue="1"/> 
+            <Var VarName="$PopulationAffinity" StringValue="AffinityTerrans"/> 
+            <Var VarName="$PopulationAffinity2" StringValue="AffinityHisshos"/> 
+        </Vars>
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityTerrans,PopulationMajor</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityHisshos</PathPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Objective_Fake">
+                        <Sequence>
+                            <Action_Colonize>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_Planet VarName="$HomePlanet"/>
+                            </Action_Colonize>  
+                            <!--<Decorator_EntityCreated>
+                                <Input_GUID VarName="$NewHomeGUID"/>
+                                <Output_Entity VarName="$NewHome"/>
+                            </Decorator_EntityCreated>   -->                     
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_System VarName="$HomeSystem"/>
+                                <Input_Amount VarName="$Amount01"/>
+                                <Input_PopulationAffinity VarName="$PopulationAffinity"/>
+                            </Action_SpawnPopulation>   
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_System VarName="$HomeSystem"/>
+                                <Input_Amount VarName="$Amount02"/>
+                                <Input_PopulationAffinity VarName="$PopulationAffinity2"/>
+                            </Action_SpawnPopulation>               
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+
+        
+    </QuestDefinition>
+
+
+
 	<QuestDefinition Name="UE_Quest-Chapter1.1" Category="MajorQuest" SubCategory="UE" MinimumTurn="5">
 
 		<!--============ TAGS ============-->

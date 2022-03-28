@@ -5,7 +5,7 @@
     <!-- ######### HORATIO QUEST - CHAPTER 0 ######### -->
     <!-- ############################################# -->
     
-    <QuestDefinition Name="HoratioQuest-Chapter0" Category="MajorQuest" SubCategory="Horatio">      
+    <QuestDefinition Name="HoratioQuest-Chapter00" Category="MajorQuest" SubCategory="Horatio">      
 
         <!--============ TAGS ============-->
         
@@ -29,6 +29,7 @@
             <Var VarName="$HomeSystem">
                 <From Source="$CurrentEmpire.$StartingNode"/>
             </Var>
+            
             <Var VarName="$AllStarSystems">
                 <From Source="$Constellations.$StarSystems">
                     <Where>
@@ -45,12 +46,21 @@
                     </From>
                 </First>
             </Var>
-            <Var VarName="$DefinitionName" StringValue="QuestNodeHoratio"/>          
+            <Var VarName="$DefinitionName" StringValue="QuestNodeHoratio"/>   
+            <Var VarName="$DefinitionName1" StringValue="BalancedStartHoratio"/>     
+            <Var VarName="$SystemControllerName" StringValue="%HoratioQuest-LesserEmpireName01"/> 
+            <Var VarName="$PopulationAffinity" StringValue="AffinityHoratio"/> 
+            <Var VarName="$PopulationAffinity2" StringValue="AffinityPulsos"/> 
+            <Var VarName="$PopulationAffinity3" StringValue="AffinityBhagabas"/>
+            <Var VarName="$Amount" IntValue="-2"/> 
+            <Var VarName="$Amount2" IntValue="-1"/> 
         </Vars>
 
         <!--============ PREREQUISITES ============-->
         <Prerequisites Target="$(Empire)">
             <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityHoratio,PopulationMajor</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityPulsos</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityBhagabas</PathPrerequisite>
         </Prerequisites>
 
         <!--============ STEPS ============-->
@@ -60,15 +70,34 @@
                 <ObjectiveSet>
                     <Objective Name="Objective_Fake">
                         <Sequence>
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_System VarName="$HomeSystem"/>
+                                <Input_Amount VarName="$Amount"/>
+                                <Input_PopulationAffinity VarName="$PopulationAffinity"/>
+                            </Action_SpawnPopulation>  
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_System VarName="$HomeSystem"/>
+                                <Input_Amount VarName="$Amount2"/>
+                                <Input_PopulationAffinity VarName="$PopulationAffinity2"/>
+                            </Action_SpawnPopulation>
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_System VarName="$HomeSystem"/>
+                                <Input_Amount VarName="$Amount2"/>
+                                <Input_PopulationAffinity VarName="$PopulationAffinity3"/>
+                            </Action_SpawnPopulation>  
                             <Action_ApplyStarSystemDefinition>
-                                <Input_DefinitionName VarName="$DefinitionName"/>
-                                <Input_StarSystemNode VarName="$QuestSystem"/>
-                            </Action_ApplyStarSystemDefinition>                           
+                                <Input_DefinitionName VarName="$DefinitionName1"/>
+                                <Input_StarSystemNode VarName="$HomeSystem"/>
+                            </Action_ApplyStarSystemDefinition>        
+                            <Action_ChooseOutcome Name="Outcome1"/>                 
                         </Sequence>
                         <Outcome Name="Outcome1">
                             <Triggers Weight="1">
                                 <QuestTrigger>
-                                    <Tags>HoratioQuest-Chapter1.Part1-Summary</Tags>
+                                    <Tags>HoratioQuest-Chapter01</Tags>
                                     <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
                                 </QuestTrigger>
                             </Triggers>
@@ -77,6 +106,90 @@
                 </ObjectiveSet>
             </Step>
         </Steps>
+    </QuestDefinition>
+
+    <QuestDefinition Name="HoratioQuest-Chapter01" Category="MajorQuest" SubCategory="Horatio">
+
+        <Tags>HoratioQuest-Chapter01, Hidden</Tags> 
+
+        <QuestContextSolo/>  
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                            NumberOfOccurrencesPerEmpire="1"
+                            NumberOfConcurrentInstances="0"/> 
+
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+           
+            <Var VarName="$HomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+
+            <Var VarName="$HomePlanet">
+                <Any>
+                    <From Source="$HomeSystem.$Planets">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassPlanet,IsUniquePlanet</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var> 
+
+            <Var VarName="$Amount01" IntValue="2"/> 
+            <Var VarName="$Amount02" IntValue="1"/> 
+            <Var VarName="$PopulationAffinity" StringValue="AffinityHoratio"/> 
+            <Var VarName="$PopulationAffinity2" StringValue="AffinityPulsos"/> 
+            <Var VarName="$PopulationAffinity3" StringValue="AffinityBhagabas"/>
+        </Vars>
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityHoratio,PopulationMajor</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityPulsos</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityBhagabas</PathPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Objective_Fake">
+                        <Sequence>
+                            <Action_Colonize>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_Planet VarName="$HomePlanet"/>
+                            </Action_Colonize>  
+                            <!--<Decorator_EntityCreated>
+                                <Input_GUID VarName="$NewHomeGUID"/>
+                                <Output_Entity VarName="$NewHome"/>
+                            </Decorator_EntityCreated>   -->                     
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_System VarName="$HomeSystem"/>
+                                <Input_Amount VarName="$Amount01"/>
+                                <Input_PopulationAffinity VarName="$PopulationAffinity"/>
+                            </Action_SpawnPopulation>   
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_System VarName="$HomeSystem"/>
+                                <Input_Amount VarName="$Amount02"/>
+                                <Input_PopulationAffinity VarName="$PopulationAffinity2"/>
+                            </Action_SpawnPopulation> 
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_System VarName="$HomeSystem"/>
+                                <Input_Amount VarName="$Amount02"/>
+                                <Input_PopulationAffinity VarName="$PopulationAffinity3"/>
+                            </Action_SpawnPopulation>                
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+
+        
     </QuestDefinition>
 
     
