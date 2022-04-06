@@ -2,8 +2,8 @@
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/IndustryConstructibleElement.xsd">
   
   <StarSystemImprovementDefinition Name="StarSystemImprovementHeroCravers" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementBuilt">
-        <SupervisorGain Name="Approval" />
-        <SupervisorGain Name="Prestige" />
+    <SupervisorGain Name="SApproval" />
+    <SupervisorGain Name="SPrestige" />
         <Tags>Indestructible</Tags>
         <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementHeroCravers"/>
         <Cost ResourceName="SystemProduction">1560</Cost>
@@ -22,7 +22,6 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementQuestRuinsCravers" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Dust" Weight=".025" />
     <Cost ResourceName="SystemProduction">560</Cost>
     <PathPrerequisite           Inverted="false"    Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
     <PathPrerequisite           Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementQuestRuinsCravers,!FastForwardedImprovement</PathPrerequisite>
@@ -32,7 +31,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementIndustryCravers" SubCategory="SubCategoryUnique" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Industry" />
+    <SupervisorGain Name="UniqueIndustry" />
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementIndustryCravers"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <PathPrerequisite           Inverted="false"    Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -51,8 +50,8 @@
 
   <!--INDUSTRY BUILDING ON SYSTEMS (UE)-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementQuestUnitedEmpire11" SubCategory="SubCategoryUnique" ScoreProvider="StarSystemImprovementUniqueBuilt">
-    <SupervisorGain Name="Prestige" />
-    <SupervisorGain Name="Industry" Weight="1.5" />
+    <SupervisorGain Name="UniquePrestige" />
+    <SupervisorGain Name="UniqueIndustry" Weight="1.5" />
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementQuestUnitedEmpire11"/>
     <Cost ResourceName="SystemProduction">6240</Cost>
     <Cost ResourceName="Strategic1" Instant="true">50</Cost>
@@ -161,6 +160,25 @@
     <UniqueTags>StarSystemImprovementSciencePopulation02</UniqueTags>
   </StarSystemImprovementDefinition>
 
+  <!--Sower Wonder-->
+  <StarSystemImprovementDefinition Name="StarSystemImprovementWonderSower" SubCategory="SubCategoryUnique" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="UniqueFood"     Weight="-0.5" />
+    <SupervisorGain Name="UniqueIndustry" Weight="1" />
+    <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementWonderSower"/>
+    <Cost ResourceName="SystemProduction">1560</Cost>
+    <Cost ResourceName="Strategic1" Instant="true">15</Cost>
+    <Cost ResourceName="Strategic2" Instant="true">15</Cost>
+    <PathPrerequisite           Inverted="false"    Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite           Inverted="true"     Flags="Prerequisite,Disable">ClassStarSystem,StarSystemImprovementLevel3,!FastForwardedImprovement</PathPrerequisite>
+    <PathPrerequisite           Inverted="true"     Flags="Prerequisite,Discard">../ClassEmpire/Uniques,StarSystemImprovementWonderSower</PathPrerequisite>
+    <InterpreterPrerequisite    Inverted="true"     Flags="Prerequisite,Discard">Path(Context,@'../ClassEmpire/ClassStarSystem,BuildingStarSystemImprovementWonderSower') and not(Path(Context,@'ClassStarSystem,StarSystemImprovementWonderSower'))</InterpreterPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyQuestPopulation02</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementWonderSower" />
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage2High"/>
+    <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionWonder2"/>
+    <UniqueTags>StarSystemImprovementWonderSower</UniqueTags>
+  </StarSystemImprovementDefinition>
+
   <!--Whapster-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementWonderPopulation02" SubCategory="SubCategoryApproval" ScoreProvider="StarSystemImprovementBuilt">
     <SupervisorGain Name="Approval" Weight="2" />
@@ -190,7 +208,6 @@
 
   <!--Vodyani: Resource Gen-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementQuestVampirilis06" SubCategory="SubCategoryUnique" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementQuestVampirilis06"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="EmpireEmpirePoint" Instant="true">2000</Cost>
@@ -224,7 +241,7 @@
 
   <!--Vodyani: Deprecated-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementQuestVampirilis08" SubCategory="SubCategoryUnique" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Prestige"/>
+    <SupervisorGain Name="UniquePrestige"/>
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementQuestVampirilis08"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic4" Instant="true">50</Cost>
@@ -241,7 +258,7 @@
 
   <!--Horatio quest buildings-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementQuestHoratio01"  Category="CategoryStarSystemImprovementUnique"  SubCategory="SubCategoryFood" ScoreProvider="StarSystemImprovementBuilt">
-        <SupervisorGain Name="Food" />
+        <SupervisorGain Name="UniqueFood" />
         <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementQuestHoratio01"/>
         <Cost ResourceName="SystemProduction">1560</Cost>
         <Cost ResourceName="Strategic1" Instant="true">10</Cost>
@@ -259,7 +276,7 @@
     </StarSystemImprovementDefinition>
 
     <StarSystemImprovementDefinition Name="StarSystemImprovementQuestHoratio02"  Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
-        <SupervisorGain Name="Prestige" />
+        <SupervisorGain Name="UniquePrestige" />
         <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementQuestHoratio02"/>
         <Cost ResourceName="SystemProduction">1560</Cost>
         <Cost ResourceName="Strategic1" Instant="true">10</Cost>
@@ -276,7 +293,7 @@
     </StarSystemImprovementDefinition>
 
     <StarSystemImprovementDefinition Name="StarSystemImprovementQuestHoratio03"  Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementBuilt">
-        <SupervisorGain Name="Industry" />
+        <SupervisorGain Name="UniqueIndustry" />
         <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementQuestHoratio03"/>
         <Cost ResourceName="SystemProduction">1560</Cost>
         <Cost ResourceName="Strategic1" Instant="true">10</Cost>
@@ -292,4 +309,47 @@
         <UniqueTags>StarSystemImprovementQuestHoratio03</UniqueTags>
     </StarSystemImprovementDefinition>
 
+  <!-- Competitive Quests -->
+  <!-- Gamma Analysis Platform -->
+  <StarSystemImprovementDefinition Name="StarSystemImprovementQuestGlobalCompet05" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="SScience" />
+    <Cost ResourceName="SystemProduction">1120</Cost>
+    <Cost ResourceName="Strategic2" Instant="true">5</Cost>
+    <PathPrerequisite           Inverted="false"    Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite           Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementQuestGlobalCompet05,!FastForwardedImprovement</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyQuestGlobalCompet05</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementQuestGlobalCompet05" />
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage3Normal" />
+    <SimulationDescriptorReference Name="ScienceConstruction" />
+  </StarSystemImprovementDefinition>
+
+  <!-- Mavros Skunkworks -->
+  <StarSystemImprovementDefinition Name="StarSystemImprovementQuestGlobalCompet09" Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryShip" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="UniqueScience" />
+    <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementQuestGlobalCompet09"/>
+    <Cost ResourceName="SystemProduction">2240</Cost>
+    <Cost ResourceName="EmpireMoney" Instant="true">150</Cost>
+    <PathPrerequisite           Inverted="false"    Flags="Prerequisite,Discard">../ClassEmpire/ClassQuests,CompletedQuestGlobalCompet09</PathPrerequisite>
+    <PathPrerequisite           Inverted="false"    Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite           Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementQuestGlobalCompet09,!FastForwardedImprovement</PathPrerequisite>
+    <PathPrerequisite           Inverted="true"     Flags="Prerequisite,Discard">../ClassEmpire/Uniques,StarSystemImprovementQuestGlobalCompet09</PathPrerequisite>
+    <InterpreterPrerequisite    Inverted="true"     Flags="Prerequisite,Discard">Path(Context,@'../ClassEmpire/ClassStarSystem,BuildingStarSystemImprovementQuestGlobalCompet09') and not(Path(Context,@'ClassStarSystem,BuildingStarSystemImprovementQuestGlobalCompet09'))</InterpreterPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementQuestGlobalCompet09" />
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage4Normal" />
+    <SimulationDescriptorReference Name="StarSystemImprovementOncePerEmpire" />
+    <UniqueTags>StarSystemImprovementQuestGlobalCompet09</UniqueTags>
+  </StarSystemImprovementDefinition>
+
+  <!-- Reanimator -->
+  <StarSystemImprovementDefinition Name="StarSystemImprovementQuestCoop10" SubCategory="SubCategoryDefense" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="SMilitary" />
+    <Cost ResourceName="SystemProduction">1120</Cost>
+    <Cost ResourceName="Strategic4" Instant="true">5</Cost>
+    <PathPrerequisite           Inverted="false"    Flags="Prerequisite,Discard">../ClassEmpire/ClassQuests,CompletedGlobalQuest10-Compet01</PathPrerequisite>
+    <PathPrerequisite           Inverted="false"    Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite           Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementQuestCoop10,!FastForwardedImprovement</PathPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementQuestCoop10" />
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage3Normal" />
+    <SimulationDescriptorReference Name="DefenseConstruction" />
+  </StarSystemImprovementDefinition>
 </Datatable>

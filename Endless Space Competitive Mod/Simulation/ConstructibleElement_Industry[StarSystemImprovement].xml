@@ -10,7 +10,7 @@
   <!-- #################### -->
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueMajorHisshos" SubCategory="SubCategoryHonor" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Industry"   Weight="2"  />
+    <SupervisorGain Name="SIndustry"   Weight="2"  />
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueMajorHisshos"/>
     <Cost ResourceName="SystemProduction">6240</Cost>
     <Cost ResourceName="Strategic3" Instant="true">15</Cost>
@@ -28,7 +28,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementScience4ScienceReduction" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementBuilt">
-        <SupervisorGain Name="Science" />
+        <SupervisorGain Name="SScience" />
         <Cost ResourceName="SystemProduction">1120</Cost>
 		    <Cost ResourceName="Strategic2" Instant="true">5</Cost>
         <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -104,7 +104,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueTemplars" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"    Weight="3"  />
+    <SupervisorGain Name="SScience"    Weight="3"  />
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueTemplars"/>
     <Cost ResourceName="SystemProduction">4240</Cost>
     <Cost ResourceName="Strategic4" Instant="true">30</Cost>
@@ -125,7 +125,7 @@
 
   <!--  Tower of Temporal Paradox -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueTimeLords" SubCategory="SubCategoryDust" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Dust"       Weight="3"  />
+    <SupervisorGain Name="SDust"       Weight="3"  />
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueTimeLords"/>
     <Cost ResourceName="SystemProduction">5040</Cost>
     <Cost ResourceName="Strategic3" Instant="true">25</Cost>
@@ -165,10 +165,10 @@
   <!-- Uncapped Pop Growth -->
   <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementCloneMajorPopulationWithFood" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt" PopulationDestination="Major"  PopulationToTransformCount="1" CreateIfNotAvailable="true">
     <AIGain RessourceName="PopulationGain" Inverted="false"></AIGain>
-    <SupervisorGain Name="Industry" Weight="0.15"/>
-    <SupervisorGain Name="Food"     Weight="0.15"/>
-    <SupervisorGain Name="Dust"     Weight="0.15"/>
-    <SupervisorGain Name="Science"  Weight="0.15"/>
+    <SupervisorGain Name="Industry" Weight="5"/>
+    <SupervisorGain Name="Food"     Weight="5"/>
+    <SupervisorGain Name="Dust"     Weight="5"/>
+    <SupervisorGain Name="Science"  Weight="5"/>
     <QueuedSimulationDescriptorReference Name="QueuedDescriptorIncreasePopulation"/>
     <Cost ResourceName="SystemProduction">1</Cost>
     <CustomCost ResourceName="SystemGrowth" Instant="true">(305 + (10 * (1 + Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))) * Property(Empire, GameSpeedMultiplier)</CustomCost>
@@ -206,6 +206,10 @@
 
   <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementQuestTimeLords05" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt" PopulationDestination="Major" PopulationToTransformCount="1" CreateIfNotAvailable="true">
     <AIGain RessourceName="PopulationGain" Inverted="false"></AIGain>
+    <SupervisorGain Name="Industry" Weight="0.15"/>
+    <SupervisorGain Name="Food"     Weight="0.15"/>
+    <SupervisorGain Name="Dust"     Weight="0.15"/>
+    <SupervisorGain Name="Science"  Weight="0.15"/>
     <Tags>NoBuyout</Tags>
     <QueuedSimulationDescriptorReference Name="QueuedDescriptorIncreaseVirtualPopulation"/>
     <CustomCost ResourceName="SystemProduction">((50 + Property(StockLocation,@ClassColonizedStarSystem,MajorPopulationCount) * 50) * Property(StockLocation, @../ClassEmpire, GameSpeedMultiplier, true))*0.5</CustomCost>
@@ -219,6 +223,10 @@
   
   <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementQuestTimeLords07" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt" PopulationDestination="Major" PopulationToTransformCount="1" CreateIfNotAvailable="true">
     <AIGain RessourceName="PopulationGain" Inverted="false"></AIGain>
+    <SupervisorGain Name="Industry" Weight="0.15"/>
+    <SupervisorGain Name="Food"     Weight="0.15"/>
+    <SupervisorGain Name="Dust"     Weight="0.15"/>
+    <SupervisorGain Name="Science"  Weight="0.15"/>
     <Tags>NoBuyout</Tags>
     <QueuedSimulationDescriptorReference Name="QueuedDescriptorIncreaseVirtualPopulation"/>
     <CustomCost ResourceName="SystemProduction">(50 + Property(StockLocation,@ClassColonizedStarSystem,MajorPopulationCount) * 50) * Property(StockLocation, @../ClassEmpire, GameSpeedMultiplier, true)*0.75</CustomCost>
@@ -236,6 +244,7 @@
 
   <!--Sacrifice Guardian as non-UF non-Hissho-->
   <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementSacrificeGuardian2" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt" PopulationSource="AffinityGuardians" IgnoreInvinciblePopulation="true">
+    <AIGain RessourceName="PopulationGain" Inverted="true"></AIGain>
     <Tags>NoBuyout</Tags>
     <QueuedSimulationDescriptorReference Name="StarSystemImprovementSacrificeGuardianQueued"/>
     <Cost ResourceName="SystemTurnBased">3</Cost>
@@ -250,6 +259,7 @@
 
   <!--Sacrifice Guardian as Hissho-->
   <StarSystemPopulationTransformImprovementDefinition Name="StarSystemImprovementSacrificeGuardian2MajorHisshos" SubCategory="SubCategoryApproval" ScoreProvider="StarSystemImprovementBuilt" PopulationSource="AffinityGuardians" IgnoreInvinciblePopulation="true">
+    <AIGain RessourceName="PopulationGain" Inverted="true"></AIGain>
     <Tags>NoBuyout</Tags>
     <QueuedSimulationDescriptorReference Name="StarSystemImprovementSacrificeGuardian2MajorHisshosQueued"/>
     <Cost ResourceName="SystemTurnBased">3</Cost>
@@ -264,7 +274,7 @@
 
   <!-- T4 Empire Unique Building -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueUnfallen" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Prestige" Weight="3"/>
+    <SupervisorGain Name="SPrestige" Weight="3"/>
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueUnfallen"/>
     <Cost ResourceName="SystemProduction">4080</Cost>
     <Cost ResourceName="Strategic3" Instant="true">10</Cost>
@@ -288,11 +298,11 @@
 
   <!-- T4 Empire Unique Building -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueVenetians" SubCategory="SubCategoryFIDSI" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Food" Weight="0.25"/>
-    <SupervisorGain Name="Industry" Weight="0.25"/>
-    <SupervisorGain Name="Science" Weight="0.25"/>
-    <SupervisorGain Name="Dust" Weight="0.25"/>
-    <SupervisorGain Name="Prestige" Weight="0.25"/>
+    <SupervisorGain Name="SFood" Weight="0.25"/>
+    <SupervisorGain Name="SIndustry" Weight="0.25"/>
+    <SupervisorGain Name="SScience" Weight="0.25"/>
+    <SupervisorGain Name="SDust" Weight="0.25"/>
+    <SupervisorGain Name="SPrestige" Weight="0.25"/>
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueVenetians"/>
     <Cost ResourceName="SystemProduction">4080</Cost>
     <Cost ResourceName="Strategic3" Instant="true">10</Cost>
@@ -350,7 +360,7 @@
 
   <!--System Science Station-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueVaulters" SubCategory="SubCategoryApproval" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Approval" />
+    <SupervisorGain Name="SApproval" />
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic3" Instant="true">10</Cost>
     <Cost ResourceName="Strategic4" Instant="true">10</Cost>
@@ -370,7 +380,7 @@
 
   <!--Sophons unique building-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueSophons" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science" Weight="3" />
+    <SupervisorGain Name="SScience" Weight="3" />
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueSophons"/>
     <Cost ResourceName="SystemProduction">4240</Cost>
     <Cost ResourceName="Strategic4" Instant="true">25</Cost>
@@ -387,13 +397,46 @@
     <UniqueTags>StarSystemImprovementUniqueSophons</UniqueTags>
   </StarSystemImprovementDefinition>
 
+  <StarSystemImprovementDefinition Name="StarSystemImprovementScience4Sophons" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="SScience" />
+    <Cost ResourceName="SystemProduction">1120</Cost>
+    <Cost ResourceName="Strategic2" Instant="true">5</Cost>
+    <PathPrerequisite       Inverted="false"    Flags="Prerequisite,Discard,UnlockAvailability">../ClassEmpire,!FactionTraitScienceReduction</PathPrerequisite>
+    <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementScience4Sophons,!FastForwardedImprovement</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementScience4,!FastForwardedImprovement</PathPrerequisite>
+    <PathPrerequisite       Inverted="false"    Flags="Prerequisite,Discard,UnlockAvailability">../ClassEmpire,!FactionTraitScienceReduction</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyScience4Sophons</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementScience4Sophons" />
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage3Normal" />
+    <SimulationDescriptorReference Name="IsScienceBuilding" />
+    <SimulationDescriptorReference Name="ScienceConstruction" />
+    <PopulationEvent Name="PopulationPoliticalEventScienceBuildingConstruction1"/>
+  </StarSystemImprovementDefinition>
+
+  <StarSystemImprovementDefinition Name="StarSystemImprovementScience4SophonsScienceReduction" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="SScience" />
+    <Cost ResourceName="SystemProduction">1120</Cost>
+    <Cost ResourceName="Strategic2" Instant="true">5</Cost>
+    <PathPrerequisite       Inverted="false"    Flags="Prerequisite,Discard,UnlockAvailability">../ClassEmpire,!FactionTraitScienceReduction</PathPrerequisite>
+    <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementScience4SophonsScienceReduction,!FastForwardedImprovement</PathPrerequisite>
+    <PathPrerequisite       Inverted="false"    Flags="Prerequisite,Discard,UnlockAvailability">../ClassEmpire,FactionTraitScienceReduction</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementScience4,!FastForwardedImprovement</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyScience4Sophons</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementScience4SophonsScienceReduction" />
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage3Normal" />
+    <SimulationDescriptorReference Name="IsScienceBuilding" />
+    <SimulationDescriptorReference Name="ScienceConstruction" />
+    <PopulationEvent Name="PopulationPoliticalEventScienceBuildingConstruction1"/>
+  </StarSystemImprovementDefinition>
+
   <!-- #################### -->
   <!-- ### UMBRAL CHOIR ### -->
   <!-- #################### -->
 
   <!-- UC-specific Resource Buildings -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementResourceFactory1UmbralChoir" SubCategory="SubCategoryResourceExploitation" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
     <Cost ResourceName="SystemProduction">560</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
     <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -406,7 +449,6 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementResourceFactory2UmbralChoir" SubCategory="SubCategoryResourceExploitation" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
     <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -419,7 +461,6 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementResourceFactory3UmbralChoir" SubCategory="SubCategoryResourceExploitation" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
     <Cost ResourceName="SystemProduction">4480</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
     <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -437,7 +478,7 @@
 
   <!-- T4 Empire Unique Building -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueUmbralChoir" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science" Weight="3"/>
+    <SupervisorGain Name="SScience" Weight="3"/>
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueUmbralChoir"/>
     <Cost ResourceName="SystemProduction">4080</Cost>
     <Cost ResourceName="Strategic3" Instant="true">10</Cost>
@@ -472,11 +513,11 @@
 
   <!-- T4 Empire Unique Building -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueVampirilis" SubCategory="SubCategoryHero" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Food" Weight="0.25"/>
-    <SupervisorGain Name="Industry" Weight="0.25"/>
-    <SupervisorGain Name="Science" Weight="0.25"/>
-    <SupervisorGain Name="Dust" Weight="0.25"/>
-    <SupervisorGain Name="Approval" Weight="0.25"/>
+    <SupervisorGain Name="SFood" Weight="0.25"/>
+    <SupervisorGain Name="SIndustry" Weight="0.25"/>
+    <SupervisorGain Name="SScience" Weight="0.25"/>
+    <SupervisorGain Name="SDust" Weight="0.25"/>
+    <SupervisorGain Name="SApproval" Weight="0.25"/>
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueVampirilis"/>
     <Cost ResourceName="SystemProduction">4080</Cost>
     <Cost ResourceName="Strategic3" Instant="true">15</Cost>
@@ -499,7 +540,7 @@
 
   <!-- T4 Empire Unique Building -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueCravers" SubCategory="SubCategoryApproval" ScoreProvider="StarSystemImprovementBuilt" Category="CategoryStarSystemImprovementUnique">
-    <SupervisorGain Name="Approval" Weight="3"/>
+    <SupervisorGain Name="SApproval" Weight="3"/>
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueCravers"/>
     <Cost ResourceName="SystemProduction">4080</Cost>
     <Cost ResourceName="Strategic3" Instant="true">25</Cost>
@@ -521,8 +562,13 @@
   <!--*************************-->
 
   <!-- THE VAULT OF GOVERNANCE -->
-  <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueCuriosity2"    Category="CategoryStarSystemImprovement" SubCategory="SubCategoryHero"
-									 ScoreProvider="StarSystemImprovementBuilt">
+  <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueCuriosity2" Category="CategoryStarSystemImprovement" SubCategory="SubCategoryHero" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="UniqueFood"     Weight="0.5"  />
+    <SupervisorGain Name="UniqueIndustry" Weight="0.5"  />
+    <SupervisorGain Name="UniqueScience"  Weight="0.5"  />
+    <SupervisorGain Name="UniqueDust"     Weight="0.5"  />
+    <SupervisorGain Name="UniqueApproval" Weight="0.5"  />
+    <SupervisorGain Name="UniqueMilitary" Weight="0.5"  />
     <QueuedSimulationDescriptorReference Name="StarSystemImprovementUniqueCuriosity2"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -535,9 +581,8 @@
   </StarSystemImprovementDefinition>
  
   <!-- THE REJUVENATION MAZE -->
-  <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueCuriosity3"    Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryShip"
-									 ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Military"/>
+  <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueCuriosity3"    Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryShip" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="SMilitary"/>
     <QueuedSimulationDescriptorReference Name="StarSystemImprovementUniqueCuriosity3"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <Cost ResourceName="Strategic1" Instant="true">10</Cost>
@@ -727,12 +772,12 @@
 
   <!-- Denarque University -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueStartingImprovement"  Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryFIDSI" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Food" />
-    <SupervisorGain Name="Industry" />
-    <SupervisorGain Name="Science" />
-    <SupervisorGain Name="Dust" />
-    <SupervisorGain Name="Prestige" />
-    <SupervisorGain Name="Approval" />
+    <SupervisorGain Name="SFood" />
+    <SupervisorGain Name="SIndustry" />
+    <SupervisorGain Name="SScience" />
+    <SupervisorGain Name="SDust" />
+    <SupervisorGain Name="SPrestige" />
+    <SupervisorGain Name="SApproval" />
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueStartingImprovement"/>
     <Cost ResourceName="SystemProduction">1040</Cost>
     <Cost ResourceName="Strategic1" Instant="true">5</Cost>
@@ -751,12 +796,12 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueStartingImprovementMajorHissho"  Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryFIDSI" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Food" />
-    <SupervisorGain Name="Industry" />
-    <SupervisorGain Name="Science" />
-    <SupervisorGain Name="Dust" />
-    <SupervisorGain Name="Prestige" />
-    <SupervisorGain Name="Approval" />
+    <SupervisorGain Name="SFood" />
+    <SupervisorGain Name="SIndustry" />
+    <SupervisorGain Name="SScience" />
+    <SupervisorGain Name="SDust" />
+    <SupervisorGain Name="SPrestige" />
+    <SupervisorGain Name="SApproval" />
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueStartingImprovement"/>
     <Cost ResourceName="SystemProduction">1040</Cost>
     <Cost ResourceName="Strategic1" Instant="true">5</Cost>
@@ -774,9 +819,102 @@
     <UniqueTags>StarSystemImprovementUniqueStartingImprovement</UniqueTags>
   </StarSystemImprovementDefinition>
 
+  <!-- Hissho -->
+  <!-- INFLUENCE -->
+  <StarSystemImprovementDefinition Name="StarSystemImprovementInfluenceQuestHisshos04" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="SPrestige" />
+    <Cost ResourceName="SystemProduction">1120</Cost>
+    <Cost ResourceName="Strategic2" Instant="true">7</Cost>
+    <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementInfluenceQuestHisshos04,!FastForwardedImprovement</PathPrerequisite>
+    <PathPrerequisite       Inverted="false"    Flags="Prerequisite,Discard">../ClassEmpire/ClassQuests,HisshosQuest-Chapter2-Part1Religious-Reward</PathPrerequisite>
+    <SimulationDescriptorReference Name="InfluenceConstruction" />
+    <SimulationDescriptorReference Name="StarSystemImprovementInfluenceQuestHisshos04" />
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage3Normal" />
+    <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionInfluence1"/>
+  </StarSystemImprovementDefinition>
+
+  <!-- INFLUENCE -->
+  <StarSystemImprovementDefinition Name="StarSystemImprovementInfluenceQuestHisshos04Bis" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="SPrestige" />
+    <Cost ResourceName="SystemProduction">1120</Cost>
+    <Cost ResourceName="Strategic2" Instant="true">7</Cost>
+    <PathPrerequisite  Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementInfluenceQuestHisshos04Bis,!FastForwardedImprovement</PathPrerequisite>
+    <PathPrerequisite   Flags="Prerequisite,Discard">../ClassEmpire/ClassQuests,HisshosQuest-Chapter2-Part1BisReligious-Reward</PathPrerequisite>
+    <SimulationDescriptorReference Name="InfluenceConstruction" />
+    <SimulationDescriptorReference Name="StarSystemImprovementInfluenceQuestHisshos04Bis" />
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage3Normal" />
+    <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionInfluence1"/>
+  </StarSystemImprovementDefinition>
+
+  <StarSystemImprovementDefinition Name="StarSystemImprovementHisshosZoneEffectHonor" SubCategory="SubCategoryHonor" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="SMilitary"/>
+    <SupervisorGain Name="SApproval"/>
+    <Cost ResourceName="SystemProduction">6240</Cost>
+    <Cost ResourceName="Strategic3" Instant="true">25</Cost>
+    <Cost ResourceName="Strategic4" Instant="true">25</Cost>
+
+    <PathPrerequisite                   Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
+    <PathPrerequisite Inverted="true"   Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementHisshosZoneEffectHonor,!FastForwardedImprovement</PathPrerequisite>
+
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyUnique1MajorHisshos</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="InfluenceConstruction"/>
+    <SimulationDescriptorReference Name="StarSystemImprovementHisshosZoneEffectHonor"/>
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage3Extreme" />
+  </StarSystemImprovementDefinition>
+
+  <StarSystemImprovementDefinition Name="StarSystemImprovementBoostHomeSystem" SubCategory="SubCategoryInfiniteFIDS" >
+    <AIGain RessourceName="ResourceConverter">
+      <Tag>IndustryConverter</Tag>
+    </AIGain>
+
+    <AIGain RessourceName="ScienceGain"/>
+    <SupervisorGain Name="InfiniteDust" />
+    <SupervisorGain Name="InfiniteScience" />
+    <Tags>NoBuyout</Tags>
+    <InProgressSimulationDescriptorReference Name="StarSystemImprovementBoostHomeSystemEffect" />
+    <InProgressSimulationDescriptorReference Name="StarSystemImprovementInfinite"/>
+    <InfiniteCost ResourceName="SystemTurnBased"/>
+    <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony,!BestSystem</PathPrerequisite>
+    <PathPrerequisite                           Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementBoostHomeSystem"/>
+  </StarSystemImprovementDefinition>
+
+  <StarSystemImprovementDefinition Name="StarSystemImprovementTrade2Hisshos" SubCategory="SubCategoryTradingCompanyStructure" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="SDust"     />
+    <Cost ResourceName="SystemProduction">2240</Cost>
+    <Cost ResourceName="Strategic3" Instant="true">10</Cost>
+    <Cost ResourceName="Strategic4" Instant="true">10</Cost>
+    <PathPrerequisite                           Flags="Prerequisite,Discard,UnlockAvailability,Faction,AffinityGameplayTechnologyMajorHisshos" Inverted="false">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
+    <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementTrade2Hisshos,!FastForwardedImprovement</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyTrade3</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementTrade2Hisshos" />
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage4Normal" />
+    <SimulationDescriptorReference Name="DustBuilding"/>
+    <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionTrade1"/>
+  </StarSystemImprovementDefinition>
+
+  <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueFood1"    Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryFood" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="UniqueFood" />
+    <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueFood1"/>
+    <Cost ResourceName="SystemProduction">780</Cost>
+    <PathPrerequisite       Inverted="false"    Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementUniqueFood1,!FastForwardedImprovement</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">../ClassEmpire/Uniques,StarSystemImprovementUniqueFood1</PathPrerequisite>
+    <InterpreterPrerequisite Inverted="true"    Flags="Prerequisite,Discard">Path(Context,@'../ClassEmpire/ClassStarSystem,BuildingStarSystemImprovementUniqueFood1') and not(Path(Context,@'ClassStarSystem,BuildingStarSystemImprovementUniqueFood1'))</InterpreterPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyUniqueFood1</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementUniqueFood1" />
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage1High" />
+    <SimulationDescriptorReference Name="StarSystemImprovementOncePerEmpire" />
+    <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionUniqueFood1"/>
+    <UniqueTags>StarSystemImprovementUniqueFood1</UniqueTags>
+  </StarSystemImprovementDefinition>
+
   <!-- Intergalactic Supermarket -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueDust1" Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryDust" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Dust"/>
+    <SupervisorGain Name="UniqueDust"/>
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueDust1"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -793,7 +931,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueDust1TimeLords" Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryDust" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Dust"/>
+    <SupervisorGain Name="UniqueDust"/>
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueDust1TimeLords1"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -881,12 +1019,12 @@
 
   <!-- Academy Embassy -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementAcademyEmbassy" Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryAcademy" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Food"     Weight="0.5"  />
-    <SupervisorGain Name="Industry" Weight="0.5"  />
-    <SupervisorGain Name="Science"  Weight="0.5"  />
-    <SupervisorGain Name="Dust"     Weight="0.5"  />
-    <SupervisorGain Name="Approval" Weight="0.5"  />
-    <SupervisorGain Name="Military" Weight="0.5"  />
+    <SupervisorGain Name="UniqueFood"     Weight="0.5"  />
+    <SupervisorGain Name="UniqueIndustry" Weight="0.5"  />
+    <SupervisorGain Name="UniqueScience"  Weight="0.5"  />
+    <SupervisorGain Name="UniqueDust"     Weight="0.5"  />
+    <SupervisorGain Name="UniqueApproval" Weight="0.5"  />
+    <SupervisorGain Name="UniqueMilitary" Weight="0.5"  />
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementAcademyEmbassy"/>
     <Cost ResourceName="SystemProduction">1560</Cost>
     <PathPrerequisite       Inverted="false"    Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -899,13 +1037,93 @@
     <UniqueTags>StarSystemImprovementAcademyEmbassy</UniqueTags>
   </StarSystemImprovementDefinition>
   
+      <StarSystemImprovementDefinition Name="StarSystemImprovementFoodToIndustry" SubCategory="SubCategoryFood" ScoreProvider="StarSystemImprovementBuilt">
+        <SupervisorGain Name="Industry" Weight="0.8"  />
+        <Cost ResourceName="SystemProduction">4480</Cost>
+        <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+        <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementFoodToIndustry,!FastForwardedImprovement</PathPrerequisite>
+        <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementFoodToIndustryUmbralChoir,!FastForwardedImprovement</PathPrerequisite>
+        <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementFoodToIndustryVenetians,!FastForwardedImprovement</PathPrerequisite>
+        <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyFoodToIndustryCommon</TechnologyPrerequisite>
+        <SimulationDescriptorReference Name="StarSystemImprovementFoodToIndustry" />
+        <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage5Normal" />
+        <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionFood1"/>
+    </StarSystemImprovementDefinition>
+
+    <!-- POPULATION -->
+    <StarSystemImprovementDefinition Name="StarSystemImprovementPopulation2" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt">
+		<SupervisorGain Name="Approval" />
+        <Cost ResourceName="SystemProduction">2240</Cost>
+        <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard,UnlockAvailability,Faction">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
+        <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+        <InterpreterPrerequisite                           Flags="Prerequisite,Discard">Path(Context,@ColonizedStarSystemStateColony/PlanetGameplayTypeMeager) or Path(Context,@ColonizedStarSystemStateColony/PlanetGameplayTypeTeeming)</InterpreterPrerequisite>
+        <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementPopulation2,!FastForwardedImprovement</PathPrerequisite>
+        <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyPopulation2</TechnologyPrerequisite>
+        <SimulationDescriptorReference Name="StarSystemImprovementPopulation2" />
+        <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage4Normal" />
+        <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionPopulationSlot1"/>
+    </StarSystemImprovementDefinition>
+
+    <StarSystemImprovementDefinition Name="StarSystemImprovementPopulation3" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt">
+		<SupervisorGain Name="Approval" />
+        <Cost ResourceName="SystemProduction">2240</Cost>
+        <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+        <InterpreterPrerequisite                           Flags="Prerequisite,Discard">Path(Context,@ColonizedStarSystemStateColony/PlanetGameplayTypeMeager)</InterpreterPrerequisite>
+        <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementPopulation3,!FastForwardedImprovement</PathPrerequisite>
+        <PathPrerequisite       Inverted="false"    Flags="Prerequisite,Discard,UnlockAvailability,Faction,AffinityGameplayTechnologyTimeLords">../ClassEmpire,AffinityGameplayTimeLords</PathPrerequisite>
+        <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyDiplomacy2</TechnologyPrerequisite>
+        <SimulationDescriptorReference Name="StarSystemImprovementPopulation3" />
+        <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage4Normal" />
+        <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionPopulationSlot1"/>
+    </StarSystemImprovementDefinition>
+  
+      <!--#################################-->
+    <!--####         METAPLOT       #####-->
+    <!--#################################-->
+
+    <StarSystemImprovementDefinition Name="StarSystemImprovementMetaplot01" SubCategory="SubCategoryFIDSI" ScoreProvider="StarSystemImprovementBuilt">
+        <SupervisorGain Name="SFood"       Weight="0.25"  />
+        <SupervisorGain Name="SIndustry"   Weight="0.25"  />
+        <SupervisorGain Name="SScience"    Weight="0.25"  />
+        <SupervisorGain Name="SDust"       Weight="0.25"  />
+        <SupervisorGain Name="SApproval"   Weight="0.25"  />
+        <Cost ResourceName="SystemProduction">6240</Cost>
+        <Cost ResourceName="Strategic5" Instant="true">10</Cost>
+        <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+        <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementMetaplot01,!FastForwardedImprovement</PathPrerequisite>     
+        <PathPrerequisite           Inverted="false"    Flags="Prerequisite,Discard">../ClassEmpire/ClassQuests,CompletedMetaplotQuestChapter1_Rank1</PathPrerequisite>
+        <SimulationDescriptorReference Name="StarSystemImprovementMetaplot01" />
+        <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage4High" />
+        <SimulationDescriptorReference Name="IsScienceBuilding" />
+        <SimulationDescriptorReference Name="ScienceConstruction" />
+    </StarSystemImprovementDefinition>
+
+    <!--#################################-->
+    <!--####          PORTAL        #####-->
+    <!--#################################-->
+    
+    <StarSystemImprovementDefinition Name="StarSystemImprovementPortal" SubCategory="SubCategoryStarting" ScoreProvider="StarSystemImprovementBuilt">
+        <SupervisorGain Name="SMilitary" />
+        <SupervisorGain Name="SScience" />
+        <CustomCost ResourceName="SystemProduction">Min(480, 160 + 80 * Property(StockLocation, @../ClassEmpire, PortalCount, true))</CustomCost>
+        <CustomCost ResourceName="Strategic1" Instant="true">5</CustomCost>
+        <CustomCost ResourceName="Strategic2" Instant="true">5</CustomCost>
+        <PathPrerequisite   Inverted="false"    Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayVaulters</PathPrerequisite>
+        <PathPrerequisite   Inverted="false"    Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+        <PathPrerequisite   Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementPortal,!FastForwardedImprovement</PathPrerequisite>
+
+        <!--<DownloadableContentPrerequisite Inverted="true" Flags="Prerequisite,Discard">DLCVaulters</DownloadableContentPrerequisite>-->
+        <SimulationDescriptorReference Name="StarSystemImprovementPortal" />
+        <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage3Normal" />
+    </StarSystemImprovementDefinition>
+  
   <!--**********************-->
   <!--***TIER 3 BUILDINGS***-->
   <!--**********************-->
 
   <!--National Museum upkeep fixed (devs erroneously listed in the Era 1 section with T1 upkeep) and added strat cost-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementInfluence1" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Prestige"/>
+    <SupervisorGain Name="SPrestige"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <Cost ResourceName="Strategic1" Instant="true">5</Cost>
     <Cost ResourceName="Strategic2" Instant="true">5</Cost>
@@ -919,7 +1137,7 @@
     <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionInfluence1"/>
   </StarSystemImprovementDefinition>
   <StarSystemImprovementDefinition Name="StarSystemImprovementInfluence1Cravers" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Prestige"/>
+    <SupervisorGain Name="SPrestige"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <Cost ResourceName="Strategic1" Instant="true">5</Cost>
     <Cost ResourceName="Strategic2" Instant="true">5</Cost>
@@ -935,7 +1153,7 @@
 
   <!--Culture Center cost rework-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueInfluence1" Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementUniqueBuilt">
-    <SupervisorGain Name="Prestige"/>
+    <SupervisorGain Name="UniquePrestige"/>
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueInfluence1"/>
     <Cost ResourceName="SystemProduction">2040</Cost>
     <Cost ResourceName="Strategic1" Instant="true">10</Cost>
@@ -954,7 +1172,7 @@
   </StarSystemImprovementDefinition>
 
     <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueInfluence1Vaulters" Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementUniqueBuilt">
-    <SupervisorGain Name="Prestige"/>
+    <SupervisorGain Name="UniquePrestige"/>
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueInfluence1Vaulters"/>
     <Cost ResourceName="SystemProduction">2040</Cost>
     <Cost ResourceName="Strategic1" Instant="true">10</Cost>
@@ -1015,7 +1233,7 @@
 
   <!--Predictive Logistics strat cost -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementIndustry3" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Industry"/>
+    <SupervisorGain Name="SIndustry"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <Cost ResourceName="Strategic1" Instant="true">10</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="true">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
@@ -1029,7 +1247,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementIndustry3UmbralChoir" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Industry"/>
+    <SupervisorGain Name="SIndustry"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <Cost ResourceName="Strategic1" Instant="true">10</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
@@ -1044,7 +1262,7 @@
 
   <!--AI Labor strat cost (now matches Predictive Logistics)-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementIndustry4" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Industry"/>
+    <SupervisorGain Name="SIndustry"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <Cost ResourceName="Strategic1" Instant="true">10</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -1059,7 +1277,7 @@
 
   <!--Graviton Labs strat cost -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementScience4" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
+    <SupervisorGain Name="SScience"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <Cost ResourceName="Strategic2" Instant="true">10</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -1076,7 +1294,7 @@
 
   <!--Optics Labs strat cost (now matches Graviton Labs)-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementScience3" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
+    <SupervisorGain Name="SScience"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <Cost ResourceName="Strategic2" Instant="true">10</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -1090,7 +1308,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementScience3Vaulters" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
+    <SupervisorGain Name="SScience"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <Cost ResourceName="Strategic2" Instant="true">10</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -1125,7 +1343,7 @@
 
   <!--Wellbeing Foundation strat cost rework-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementApproval3" SubCategory="SubCategoryApproval" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Approval"/>
+    <SupervisorGain Name="SApproval"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic3" Instant="true">10</Cost>
     <Cost ResourceName="Strategic4" Instant="true">10</Cost>
@@ -1140,7 +1358,7 @@
 
   <!--Body Language Institute strat cost rework-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementInfluence2" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
-        <SupervisorGain Name="Prestige" />
+        <SupervisorGain Name="SPrestige" />
         <Cost ResourceName="SystemProduction">2240</Cost>
         <Cost ResourceName="Strategic3" Instant="true">10</Cost>
 		    <Cost ResourceName="Strategic4" Instant="true">10</Cost>
@@ -1154,7 +1372,7 @@
         <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionInfluence1"/>
   </StarSystemImprovementDefinition>
   <StarSystemImprovementDefinition Name="StarSystemImprovementInfluence2Cravers" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Prestige" />
+    <SupervisorGain Name="SPrestige" />
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic3" Instant="true">10</Cost>
     <Cost ResourceName="Strategic4" Instant="true">10</Cost>
@@ -1170,7 +1388,7 @@
 
   <!--Farsighted Crops cost rework-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementFood6" SubCategory="SubCategoryFood" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Food"/>
+    <SupervisorGain Name="SFood"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <Cost ResourceName="Strategic3" Instant="true">10</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="true">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
@@ -1183,7 +1401,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementFood6UmbralChoir" SubCategory="SubCategoryFood" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Food"/>
+    <SupervisorGain Name="SFood"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic3" Instant="true">10</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
@@ -1197,7 +1415,7 @@
 
   <!--Dark Matter Institute cost rework-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueScience1" Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementUniqueBuilt">
-      <SupervisorGain Name="Science"     />
+      <SupervisorGain Name="UniqueScience" />
       <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueScience1"/>
       <Cost ResourceName="SystemProduction">4240</Cost>
       <Cost ResourceName="Strategic4" Instant="true">25</Cost>
@@ -1216,7 +1434,7 @@
 
   <!--F-Reality strat cost rework-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementScience7" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
+    <SupervisorGain Name="SScience"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic4" Instant="true">15</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -1261,7 +1479,7 @@
 
   <!--Careful Sweeping strat cost rework-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementDust2" SubCategory="SubCategoryDust" ScoreProvider="StarSystemImprovementBuilt">
-      <SupervisorGain Name="Dust" />
+      <SupervisorGain Name="SDust" />
       <Cost ResourceName="SystemProduction">2240</Cost>
   <Cost ResourceName="Strategic4" Instant="true">10</Cost>
       <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -1338,7 +1556,7 @@
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementTrade2UmbralChoir" SubCategory="SubCategoryTradingCompanyStructure" ScoreProvider="StarSystemImprovementBuilt">
     <AIGain RessourceName="DustGain"/>
-    <SupervisorGain Name="Dust"/>
+    <SupervisorGain Name="SDust"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic4" Instant="true">10</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
@@ -1364,7 +1582,7 @@
 
   <!--Fabrication License strat cost rework-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementIndustry6" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Industry"/>
+    <SupervisorGain Name="SIndustry"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic3" Instant="true">15</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -1376,6 +1594,23 @@
     <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionIndustry1"/>
   </StarSystemImprovementDefinition>
 
+      <StarSystemImprovementDefinition Name="StarSystemImprovementFIDSI1" SubCategory="SubCategoryFIDSI" ScoreProvider="StarSystemImprovementBuilt">
+        <SupervisorGain Name="SFood"       Weight="0.25"  />
+        <SupervisorGain Name="SIndustry"   Weight="0.25"  />
+        <SupervisorGain Name="SScience"    Weight="0.25"  />
+        <SupervisorGain Name="SDust"       Weight="0.25"  />
+        <SupervisorGain Name="SApproval"   Weight="0.25"  />
+        <Cost ResourceName="SystemProduction">2240</Cost>
+		<Cost ResourceName="Strategic3" Instant="true">10</Cost>
+		<Cost ResourceName="Strategic4" Instant="true">10</Cost>
+        <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+        <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementFIDSI1,!FastForwardedImprovement</PathPrerequisite>
+        <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyFIDSI1</TechnologyPrerequisite>
+        <SimulationDescriptorReference Name="StarSystemImprovementFIDSI1" />
+        <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage4Normal" />
+        <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionFood1"/>
+    </StarSystemImprovementDefinition>
+  
   <!--Autonomous Administration-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementOverExpansion1" SubCategory="SubCategoryApproval" ScoreProvider="StarSystemImprovementBuilt">
     <SupervisorGain Name="Approval"/>
@@ -1471,7 +1706,7 @@
 
   <!--High Serenity Program-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementApproval4" SubCategory="SubCategoryApproval" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Approval"/>
+    <SupervisorGain Name="SApproval"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic5" Instant="true">10</Cost>
     <Cost ResourceName="Strategic6" Instant="true">10</Cost>
@@ -1499,11 +1734,11 @@
   
   <!--Distributed Energy-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementFIDSI2" SubCategory="SubCategoryFIDSI" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Food" Weight="0.25"/>
-    <SupervisorGain Name="Industry" Weight="0.25"/>
-    <SupervisorGain Name="Science" Weight="0.25"/>
-    <SupervisorGain Name="Dust" Weight="0.25"/>
-    <SupervisorGain Name="Approval" Weight="0.25"/>
+    <SupervisorGain Name="SFood" Weight="0.25"/>
+    <SupervisorGain Name="SIndustry" Weight="0.25"/>
+    <SupervisorGain Name="SScience" Weight="0.25"/>
+    <SupervisorGain Name="SDust" Weight="0.25"/>
+    <SupervisorGain Name="SApproval" Weight="0.25"/>
     <Cost ResourceName="SystemProduction">4480</Cost>
     <Cost ResourceName="Strategic5" Instant="true">10</Cost>
     <Cost ResourceName="Strategic6" Instant="true">10</Cost>
@@ -1545,7 +1780,7 @@
   
   <!--Cultivation Institute-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementFood5" SubCategory="SubCategoryFood" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Food"/>
+    <SupervisorGain Name="SFood"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic5" Instant="true">15</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="true">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
@@ -1558,7 +1793,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementFood5UmbralChoir" SubCategory="SubCategoryFood" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Food"/>
+    <SupervisorGain Name="SFood"/>
     <Cost ResourceName="SystemProduction">4480</Cost>
     <Cost ResourceName="Strategic5" Instant="true">15</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
@@ -1572,7 +1807,7 @@
   
   <!--Hazardous Mining Facility-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementIndustry5" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Industry"/>
+    <SupervisorGain Name="SIndustry"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic5" Instant="true">15</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="true">../ClassEmpire,AffinityGameplayCravers</PathPrerequisite>
@@ -1585,7 +1820,7 @@
     <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionIndustry1"/>
   </StarSystemImprovementDefinition>
   <StarSystemImprovementDefinition Name="StarSystemImprovementIndustry5Cravers" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Industry"/>
+    <SupervisorGain Name="SIndustry"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic5" Instant="true">15</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,AffinityGameplayCravers</PathPrerequisite>
@@ -1600,7 +1835,7 @@
  
   <!--Intergalactic Lectures-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementInfluence3" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Prestige"/>
+    <SupervisorGain Name="SPrestige"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic5" Instant="true">10</Cost>
     <Cost ResourceName="Strategic6" Instant="true">10</Cost>
@@ -1614,7 +1849,7 @@
     <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionInfluence1"/>
   </StarSystemImprovementDefinition>
   <StarSystemImprovementDefinition Name="StarSystemImprovementInfluence3Cravers" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Prestige"/>
+    <SupervisorGain Name="SPrestige"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic5" Instant="true">10</Cost>
     <Cost ResourceName="Strategic6" Instant="true">10</Cost>
@@ -1630,7 +1865,7 @@
   
   <!--Battlefield Archaeology-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementScience5" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
+    <SupervisorGain Name="SScience"/>
     <Cost ResourceName="SystemProduction">4480</Cost>
     <Cost ResourceName="Strategic6" Instant="true">15</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -1674,7 +1909,7 @@
   
   <!--Shaft-to-Shelf System-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueIndustry1" Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementUniqueBuilt">
-    <SupervisorGain Name="Industry"/>
+    <SupervisorGain Name="UniqueIndustry"/>
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueIndustry1"/>
     <Cost ResourceName="SystemProduction">5040</Cost>
     <Cost ResourceName="Strategic5" Instant="true">25</Cost>
@@ -1692,7 +1927,7 @@
 
   <!--Dust Anti-Trafficking Center-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueTrade1"   Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryDust" ScoreProvider="StarSystemImprovementUniqueBuilt">
-      <SupervisorGain   Name="Dust"     />
+      <SupervisorGain   Name="UniqueDust"     />
       <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueTrade1"/>
       <Cost ResourceName="SystemProduction">5040</Cost>
       <Cost ResourceName="Strategic6" Instant="true">25</Cost>
@@ -1740,7 +1975,7 @@
 
   <!--Dust Bonanza-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementDust7" SubCategory="SubCategoryDust" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
+    <SupervisorGain Name="Dust"/>
     <Tags>NoBailiff</Tags>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="true">../ClassEmpire,AffinityGameplayCravers</PathPrerequisite>
@@ -1753,7 +1988,7 @@
     <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionPacifist"/>
   </StarSystemImprovementDefinition>
   <StarSystemImprovementDefinition Name="StarSystemImprovementDust7Cravers" SubCategory="SubCategoryDust" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
+    <SupervisorGain Name="Dust"/>
     <Tags>NoBailiff</Tags>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,AffinityGameplayCravers</PathPrerequisite>
@@ -1836,7 +2071,7 @@
 
   <!--Scientific-Military Complex-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementCitadelIndustryScience" SubCategory="SubCategoryDefense">
-    <SupervisorGain Name="Military"/>
+    <SupervisorGain Name="SMilitary"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic5" Instant="true">5</Cost>
     <Cost ResourceName="Strategic6" Instant="true">5</Cost>
@@ -1850,7 +2085,7 @@
 
   <!--Weaponized System-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementCitadelWeaponizedSystem" SubCategory="SubCategoryDefense">
-    <SupervisorGain Name="Military"/>
+    <SupervisorGain Name="SMilitary"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <Cost ResourceName="Strategic5" Instant="true">5</Cost>
     <TechnologyPrerequisite Flags="Prerequisite,Discard">TechnologyJuggernautCitadelSupportImprovements</TechnologyPrerequisite>
@@ -1863,8 +2098,8 @@
 
   <!--Zelevas Incarnate-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueTerrans" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Industry"   Weight="2"  />
-    <SupervisorGain Name="Dust"       Weight="2"  />
+    <SupervisorGain Name="SIndustry"   Weight="2"  />
+    <SupervisorGain Name="SDust"       Weight="2"  />
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueTerrans"/>
     <Cost ResourceName="SystemProduction">5040</Cost>
     <Cost ResourceName="Strategic3" Instant="true">20</Cost>
@@ -1884,7 +2119,7 @@
 
   <!--Multi-Mind Combat-->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueDefense1" Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryDefense" ScoreProvider="StarSystemImprovementUniqueBuilt">
-    <SupervisorGain   Name="Military"     />
+    <SupervisorGain   Name="UniqueMilitary"     />
     <Tags>Indestructible</Tags>
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueDefense1"/>
     <Cost ResourceName="SystemProduction">6240</Cost>
@@ -1917,7 +2152,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementDeeds02" Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Industry" />
+    <SupervisorGain Name="UniqueIndustry" />
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementDeeds02"/>
     <Cost ResourceName="SystemProduction">2240</Cost>
     <PathPrerequisite           Inverted="false"    Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -1933,7 +2168,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementDeeds03" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Dust" />
+    <SupervisorGain Name="SDust" />
     <Cost ResourceName="SystemProduction">1120</Cost>
     <Cost ResourceName="Strategic3" Instant="true">10</Cost>
     <PathPrerequisite           Inverted="false"    Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -1945,7 +2180,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementDeeds04" SubCategory="SubCategoryDust" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Dust" />
+    <SupervisorGain Name="SDust" />
     <Cost ResourceName="SystemProduction">1120</Cost>
     <Cost ResourceName="Strategic4" Instant="true">10</Cost>
     <PathPrerequisite           Inverted="false"    Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -1958,7 +2193,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueShip1"    Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryShip" ScoreProvider="StarSystemImprovementUniqueBuilt">
-    <SupervisorGain   Name="Military"     />
+    <SupervisorGain   Name="UniqueMilitary"     />
     <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueShip1"/>
     <Cost ResourceName="SystemProduction">6240</Cost>
     <Cost ResourceName="Strategic5" Instant="true">30</Cost>
@@ -1977,7 +2212,7 @@
 
   <!-- Resource Buildings (Excluding UC from building them) -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementResourceFactory1" SubCategory="SubCategoryResourceExploitation" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
+    <SupervisorGain Name="Industry"/>
     <Cost ResourceName="SystemProduction">560</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction">../ClassEmpire,!AffinityGameplayUmbralChoir</PathPrerequisite>
     <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -1990,7 +2225,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementResourceFactory2" SubCategory="SubCategoryResourceExploitation" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
+    <SupervisorGain Name="Industry"/>
     <Cost ResourceName="SystemProduction">1120</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction">../ClassEmpire,!AffinityGameplayUmbralChoir</PathPrerequisite>
     <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
@@ -2003,7 +2238,7 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementResourceFactory3" SubCategory="SubCategoryResourceExploitation" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="Science"/>
+    <SupervisorGain Name="Industry"/>
     <Cost ResourceName="SystemProduction">4480</Cost>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction">../ClassEmpire,!AffinityGameplayUmbralChoir</PathPrerequisite>
     <PathPrerequisite Inverted="false" Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
