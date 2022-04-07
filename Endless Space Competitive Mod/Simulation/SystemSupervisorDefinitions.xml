@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/SystemSupervisorDefinition.xsd">
+
+  <!-- DEV NOTES:
+  TRADE COMPANIES AND UNIQUE BUILDINGS ARE FORBIDDEN FROM BEING BUILT
+  MILITARY IS FORBIDDEN FROM ALL AUTOMATION PLANS EXCEPT FOR BALANCED, WHICH WILL PUT IT LAST
+  NO AUTOMATION PLANS CAN BUILD SHIPS
+  POPULATION AUTOMATION PLAN CANNOT BUILD IMPROVEMENTS, IT CAN ONLY MOVE POPULATION
+  IT IS NOT POSSIBLE TO ADD ANY ADDITIONAL AUTOMATION PLANS, AS THE UI FREAKS OUT AND BECOMES UNUSABLE
+  
+  KEY:
+  - FOCUSES (Focuses include Planet Specializations)
+  /- Food (Food Buildings that do not cost Strategics and Population with Food Bonuses)
+  /- Industry (Industry Buildings that do not cost Strategics and Population with Industry Bonuses)
+  /- Science (Science Buildings that do not cost Strategics and Population with Science Bonuses)
+  /- Dust (Dust Buildings that do not Cost Strategics and Population with Science Bonuses)
+  /- Prestige (Influence Buildings that do not Cost Strategics and Population with Influence Bonuses)
+  /- Military (Military Buildings that do not Cost Strategics and Population with Influence Bonuses)
+  /- Deposit (Resource Generation Buildings and Population with Resource Generation Bonuses)
+  
+  - T1
+  /- TFood (Specific T1 Strategic Food Buildings that should be excluded from SFood because they are too good)
+  /- TIndustry (Specific T1 Strategic Industry Buildings that should be excluded from SIndustry because they are too good)
+  /- TScience (Specific T1 Strategic Science Buildings that should be excluded from SScience because they are too good)
+  /- TDust (Specific T1 Strategic Dust Buildings that should be excluded from SDust because they are too good)
+  /- TPrestige (Specific T1 Strategic Influence Buildings that should be excluded from SPrestige because they are too good)
+  
+  - Strategic
+  /- SFood (Food Buildings that cost Strategics)
+  /- SIndustry (Industry Buildings that cost Strategics)
+  /- SDust (Dust Buildings that cost Strategics)
+  /- SScience (Science Buildings that cost Strategics)
+  /- SPrestige (Influence Buildings that cost Strategics)
+  /- SApproval (Approval Buildings that cost Strategics)
+  /- SMilitary (Military Buildings that cost Strategics)
+  
+  - Unique
+  /- UniqueFood (Unique Food Buildings)
+  /- UniqueIndustry (Unique Industry Buildings)
+  /- UniqueDust (Unique Dust Buildings)
+  /- UniqueScience (Unique Science Buildings)
+  /- UniquePrestige (Unique Influence Buildings)
+  /- UniqueApproval (Unique Approval Buildings)
+  /- UniqueMilitary (Unique Military Buildings)
+  
+  - Infinite Improvements
+  /- InfiniteDust (Industry -> Dust)
+  /- InfiniteScience (Industry -> Science)
+  /- InfiniteMilitary (Industry -> Manpower)
+  
+  -->
+
+  <!-- Balanced -->
+  <SystemSupervisorDefinition Name="SystemSupervisorBalanced">
+    <Policy CanQueueConstructions="true" CanMovePopulations="true" />
+    <Gains>
+      <!-- Focuses -->
+      <Gain Name="Food"      Weight="0.9" />
+      <Gain Name="Industry"  Weight="1.1" />
+      <Gain Name="Science"      Weight="0.8" />
+      <Gain Name="Dust"   Weight="0.7" />
+      <Gain Name="Prestige"  Weight="0.6" />
+      <Gain Name="Approval"  Weight="0.6" />
+      <Gain Name="Military"  Weight="0.4" />
+      <Gain Name="Deposit"  Weight="1" />
+      
+      <!-- T1 Strategic FIDSI Buildings -->
+      <Gain Name="TFood"      Weight="0.9" />
+      <Gain Name="TIndustry"  Weight="1.1" />
+      <Gain Name="TScience"      Weight="0.8" />
+      <Gain Name="TDust"   Weight="0.7" />
+      <Gain Name="TPrestige"  Weight="0.6" />
+      
+      <!-- Strategic Buildings -->
+      <Gain Name="SFood"      Weight="-1" />
+      <Gain Name="SIndustry"  Weight="-1" />
+      <Gain Name="SDust"      Weight="-1" />
+      <Gain Name="SScience"   Weight="-1" />
+      <Gain Name="SPrestige"  Weight="-1" />
+      <Gain Name="SApproval"  Weight="-1" />
+      <Gain Name="SMilitary"  Weight="-1" />
+
+      <!-- Unique Improvements -->
+      <Gain Name="UniqueFood"  Weight="-1" />
+      <Gain Name="UniqueIndustry"  Weight="-1" />
+      <Gain Name="UniqueScience"  Weight="-1" />
+      <Gain Name="UniqueDust"  Weight="-1" />
+      <Gain Name="UniquePrestige"  Weight="-1" />
+      <Gain Name="UniqueApproval"  Weight="-1" />
+      <Gain Name="UniqueMilitary"  Weight="-1" />
+      
+      <!-- Infinite Improvements -->
+      <Gain Name="InfiniteDust"  Weight="0.3" />
+      <Gain Name="InfiniteScience"  Weight="0.4" />
+      <Gain Name="InfiniteMilitary"  Weight="0.3" />
+    </Gains>
+  </SystemSupervisorDefinition>
+
+  <!-- FOOD -->
+  <SystemSupervisorDefinition Name="SystemSupervisorFood">
+    <Policy CanQueueConstructions="true" CanMovePopulations="true" />
+    <Gains>
+      <!-- Focuses -->
+      <Gain Name="Food"      Weight="1.2" />
+      <Gain Name="Industry"  Weight="1.0" />
+      <Gain Name="Science"      Weight="0.8" />
+      <Gain Name="Dust"   Weight="0.7" />
+      <Gain Name="Prestige"  Weight="0.6" />
+      <Gain Name="Approval"  Weight="0.6" />
+      <Gain Name="Military"  Weight="-1" />
+      <Gain Name="Deposit"  Weight="1" />
+
+      <!-- T1 Strategic FIDSI Buildings -->
+      <Gain Name="TFood"      Weight="1.1" />
+      <Gain Name="TIndustry"  Weight="1.0" />
+      <Gain Name="TScience"      Weight="0.8" />
+      <Gain Name="TDust"   Weight="0.7" />
+      <Gain Name="TPrestige"  Weight="0.6" />
+
+      <!-- Strategic Buildings -->
+      <Gain Name="SFood"      Weight="1.0" />
+      <Gain Name="SIndustry"  Weight="-1" />
+      <Gain Name="SDust"      Weight="-1" />
+      <Gain Name="SScience"   Weight="-1" />
+      <Gain Name="SPrestige"  Weight="-1" />
+      <Gain Name="SApproval"  Weight="-1" />
+      <Gain Name="SMilitary"  Weight="-1" />
+
+      <!-- Unique Improvements -->
+      <Gain Name="UniqueFood"  Weight="-1" />
+      <Gain Name="UniqueIndustry"  Weight="-1" />
+      <Gain Name="UniqueScience"  Weight="-1" />
+      <Gain Name="UniqueDust"  Weight="-1" />
+      <Gain Name="UniquePrestige"  Weight="-1" />
+      <Gain Name="UniqueApproval"  Weight="-1" />
+      <Gain Name="UniqueMilitary"  Weight="-1" />
+
+      <!-- Infinite Improvements -->
+      <Gain Name="InfiniteDust"  Weight="0.4" />
+      <Gain Name="InfiniteScience"  Weight="0.5" />
+      <Gain Name="InfiniteMilitary"  Weight="0.4" />
+    </Gains>
+  </SystemSupervisorDefinition>
+
+  <!-- Industry -->
+  <SystemSupervisorDefinition Name="SystemSupervisorIndustry">
+    <Policy CanQueueConstructions="true" CanMovePopulations="true" />
+    <Gains>
+      <!-- Focuses -->
+      <Gain Name="Food"      Weight="0.9" />
+      <Gain Name="Industry"  Weight="1.2" />
+      <Gain Name="Science"      Weight="0.8" />
+      <Gain Name="Dust"   Weight="0.7" />
+      <Gain Name="Prestige"  Weight="0.6" />
+      <Gain Name="Approval"  Weight="0.6" />
+      <Gain Name="Military"  Weight="-1" />
+      <Gain Name="Deposit"  Weight="1" />
+
+      <!-- T1 Strategic FIDSI Buildings -->
+      <Gain Name="TFood"      Weight="0.9" />
+      <Gain Name="TIndustry"  Weight="1.1" />
+      <Gain Name="TScience"      Weight="0.8" />
+      <Gain Name="TDust"   Weight="0.7" />
+      <Gain Name="TPrestige"  Weight="0.6" />
+
+      <!-- Strategic Buildings -->
+      <Gain Name="SFood"      Weight="-1" />
+      <Gain Name="SIndustry"  Weight="1.0" />
+      <Gain Name="SDust"      Weight="-1" />
+      <Gain Name="SScience"   Weight="-1" />
+      <Gain Name="SPrestige"  Weight="-1" />
+      <Gain Name="SApproval"  Weight="-1" />
+      <Gain Name="SMilitary"  Weight="-1" />
+
+      <!-- Unique Improvements -->
+      <Gain Name="UniqueFood"  Weight="-1" />
+      <Gain Name="UniqueIndustry"  Weight="-1" />
+      <Gain Name="UniqueDust"  Weight="-1" />
+      <Gain Name="UniqueScience"  Weight="-1" />
+      <Gain Name="UniquePrestige"  Weight="-1" />
+      <Gain Name="UniqueApproval"  Weight="-1" />
+      <Gain Name="UniqueMilitary"  Weight="-1" />
+
+      <!-- Infinite Improvements -->
+      <Gain Name="InfiniteDust"  Weight="0.4" />
+      <Gain Name="InfiniteScience"  Weight="0.5" />
+      <Gain Name="InfiniteMilitary"  Weight="0.4" />
+    </Gains>
+  </SystemSupervisorDefinition>
+
+  <!-- DUST -->
+  <SystemSupervisorDefinition Name="SystemSupervisorDust">
+    <Policy CanQueueConstructions="true" CanMovePopulations="true" />
+    <Gains>
+      <!-- Focuses -->
+      <Gain Name="Food"      Weight="0.9" />
+      <Gain Name="Industry"  Weight="1.0" />
+      <Gain Name="Science"      Weight="0.8" />
+      <Gain Name="Dust"   Weight="1.2" />
+      <Gain Name="Prestige"  Weight="0.6" />
+      <Gain Name="Approval"  Weight="0.6" />
+      <Gain Name="Military"  Weight="-1" />
+      <Gain Name="Deposit"  Weight="1" />
+
+      <!-- T1 Strategic FIDSI Buildings -->
+      <Gain Name="TFood"      Weight="0.9" />
+      <Gain Name="TIndustry"  Weight="1.0" />
+      <Gain Name="TScience"      Weight="0.8" />
+      <Gain Name="TDust"   Weight="1.1" />
+      <Gain Name="TPrestige"  Weight="0.6" />
+
+      <!-- Strategic Buildings -->
+      <Gain Name="SFood"      Weight="-1" />
+      <Gain Name="SIndustry"  Weight="-1" />
+      <Gain Name="SDust"      Weight="1.0" />
+      <Gain Name="SScience"   Weight="-1" />
+      <Gain Name="SPrestige"  Weight="-1" />
+      <Gain Name="SApproval"  Weight="-1" />
+      <Gain Name="SMilitary"  Weight="-1" />
+
+      <!-- Unique Improvements -->
+      <Gain Name="UniqueFood"  Weight="-1" />
+      <Gain Name="UniqueIndustry"  Weight="-1" />
+      <Gain Name="UniqueScience"  Weight="-1" />
+      <Gain Name="UniqueDust"  Weight="-1" />
+      <Gain Name="UniquePrestige"  Weight="-1" />
+      <Gain Name="UniqueApproval"  Weight="-1" />
+      <Gain Name="UniqueMilitary"  Weight="-1" />
+
+      <!-- Infinite Improvements -->
+      <Gain Name="InfiniteDust"  Weight="0.5" />
+      <Gain Name="InfiniteScience"  Weight="0.4" />
+      <Gain Name="InfiniteMilitary"  Weight="0.4" />
+    </Gains>
+  </SystemSupervisorDefinition>
+
+  <!-- SCIENCE -->
+  <SystemSupervisorDefinition Name="SystemSupervisorScience">
+    <Policy CanQueueConstructions="true" CanMovePopulations="true" />
+    <Gains>
+      <!-- Focuses -->
+      <Gain Name="Food"      Weight="0.9" />
+      <Gain Name="Industry"  Weight="1" />
+      <Gain Name="Science"      Weight="1.2" />
+      <Gain Name="Dust"   Weight="0.7" />
+      <Gain Name="Prestige"  Weight="0.6" />
+      <Gain Name="Approval"  Weight="0.6" />
+      <Gain Name="Military"  Weight="-1" />
+      <Gain Name="Deposit"  Weight="1" />
+
+      <!-- T1 Strategic FIDSI Buildings -->
+      <Gain Name="TFood"      Weight="0.9" />
+      <Gain Name="TIndustry"  Weight="1" />
+      <Gain Name="TScience"      Weight="1.1" />
+      <Gain Name="TDust"   Weight="0.7" />
+      <Gain Name="TPrestige"  Weight="0.6" />
+
+      <!-- Strategic Buildings -->
+      <Gain Name="SFood"      Weight="-1" />
+      <Gain Name="SIndustry"  Weight="-1" />
+      <Gain Name="SDust"      Weight="-1" />
+      <Gain Name="SScience"   Weight="1.0" />
+      <Gain Name="SPrestige"  Weight="-1" />
+      <Gain Name="SApproval"  Weight="-1" />
+      <Gain Name="SMilitary"  Weight="-1" />
+
+      <!-- Unique Improvements -->
+      <Gain Name="UniqueFood"  Weight="-1" />
+      <Gain Name="UniqueIndustry"  Weight="-1" />
+      <Gain Name="UniqueScience"  Weight="-1" />
+      <Gain Name="UniqueDust"  Weight="-1" />
+      <Gain Name="UniquePrestige"  Weight="-1" />
+      <Gain Name="UniqueApproval"  Weight="-1" />
+      <Gain Name="UniqueMilitary"  Weight="-1" />
+
+      <!-- Infinite Improvements -->
+      <Gain Name="InfiniteDust"  Weight="0.4" />
+      <Gain Name="InfiniteScience"  Weight="0.5" />
+      <Gain Name="InfiniteMilitary"  Weight="0.4" />
+    </Gains>
+  </SystemSupervisorDefinition>
+
+  <!-- INFLUENCE -->
+  <SystemSupervisorDefinition Name="SystemSupervisorInfluence">
+    <Policy CanQueueConstructions="true" CanMovePopulations="true" />
+    <Gains>
+      <!-- Focuses -->
+      <Gain Name="Food"      Weight="0.9" />
+      <Gain Name="Industry"  Weight="1" />
+      <Gain Name="Science"      Weight="0.8" />
+      <Gain Name="Dust"   Weight="0.7" />
+      <Gain Name="Prestige"  Weight="1.2" />
+      <Gain Name="Approval"  Weight="0.6" />
+      <Gain Name="Military"  Weight="-1" />
+      <Gain Name="Deposit"  Weight="1" />
+
+      <!-- T1 Strategic FIDSI Buildings -->
+      <Gain Name="TFood"      Weight="0.9" />
+      <Gain Name="TIndustry"  Weight="1" />
+      <Gain Name="TScience"      Weight="0.8" />
+      <Gain Name="TDust"   Weight="0.7" />
+      <Gain Name="TPrestige"  Weight="1.1" />
+
+      <!-- Strategic Buildings -->
+      <Gain Name="SFood"      Weight="-1" />
+      <Gain Name="SIndustry"  Weight="-1" />
+      <Gain Name="SDust"      Weight="-1" />
+      <Gain Name="SScience"   Weight="-1" />
+      <Gain Name="SPrestige"  Weight="1.0" />
+      <Gain Name="SApproval"  Weight="-1" />
+      <Gain Name="SMilitary"  Weight="-1" />
+
+      <!-- Unique Improvements -->
+      <Gain Name="UniqueFood"  Weight="-1" />
+      <Gain Name="UniqueIndustry"  Weight="-1" />
+      <Gain Name="UniqueScience"  Weight="-1" />
+      <Gain Name="UniqueDust"  Weight="-1" />
+      <Gain Name="UniquePrestige"  Weight="-1" />
+      <Gain Name="UniqueApproval"  Weight="-1" />
+      <Gain Name="UniqueMilitary"  Weight="-1" />
+
+      <!-- Infinite Improvements -->
+      <Gain Name="InfiniteDust"  Weight="0.4" />
+      <Gain Name="InfiniteScience"  Weight="0.5" />
+      <Gain Name="InfiniteMilitary"  Weight="0.4" />
+    </Gains>
+  </SystemSupervisorDefinition>
+
+  <!-- APPROVAL -->
+  <SystemSupervisorDefinition Name="SystemSupervisorApproval">
+    <Policy CanQueueConstructions="true" CanMovePopulations="true" />
+    <Gains>
+      <!-- Focuses -->
+      <Gain Name="Food"      Weight="0.9" />
+      <Gain Name="Industry"  Weight="1.1" />
+      <Gain Name="Science"      Weight="0.8" />
+      <Gain Name="Dust"   Weight="0.7" />
+      <Gain Name="Prestige"  Weight="0.6" />
+      <Gain Name="Approval"  Weight="1.2" />
+      <Gain Name="Military"  Weight="-1" />
+      <Gain Name="Deposit"  Weight="1" />
+
+      <!-- T1 Strategic FIDSI Buildings -->
+      <Gain Name="TFood"      Weight="0.9" />
+      <Gain Name="TIndustry"  Weight="1.1" />
+      <Gain Name="TScience"      Weight="0.8" />
+      <Gain Name="TDust"   Weight="0.7" />
+      <Gain Name="TPrestige"  Weight="0.6" />
+
+      <!-- Strategic Buildings -->
+      <Gain Name="SFood"      Weight="-1" />
+      <Gain Name="SIndustry"  Weight="-1" />
+      <Gain Name="SDust"      Weight="-1" />
+      <Gain Name="SScience"   Weight="-1" />
+      <Gain Name="SPrestige"  Weight="-1" />
+      <Gain Name="SApproval"  Weight="1.1" />
+      <Gain Name="SMilitary"  Weight="-1" />
+
+      <!-- Unique Improvements -->
+      <Gain Name="UniqueFood"  Weight="-1" />
+      <Gain Name="UniqueIndustry"  Weight="-1" />
+      <Gain Name="UniqueScience"  Weight="-1" />
+      <Gain Name="UniqueDust"  Weight="-1" />
+      <Gain Name="UniquePrestige"  Weight="-1" />
+      <Gain Name="UniqueApproval"  Weight="-1" />
+      <Gain Name="UniqueMilitary"  Weight="-1" />
+
+      <!-- Infinite Improvements -->
+      <Gain Name="InfiniteDust"  Weight="0.4" />
+      <Gain Name="InfiniteScience"  Weight="0.5" />
+      <Gain Name="InfiniteMilitary"  Weight="0.4" />
+    </Gains>
+    <InterpreterPrerequisite>Property(Context, CanUseHonor) lt 1</InterpreterPrerequisite>
+  </SystemSupervisorDefinition>
+
+  <!-- Population -->
+  <SystemSupervisorDefinition Name="SystemSupervisorAIBalancedPopulation">
+    <Policy CanQueueConstructions="false" CanMovePopulations="true" />
+    <Gains>
+      <!-- Focuses -->
+      <Gain Name="Food"      Weight="1" />
+      <Gain Name="Industry"  Weight="1" />
+      <Gain Name="Science"      Weight="1" />
+      <Gain Name="Dust"   Weight="1" />
+      <Gain Name="Prestige"  Weight="1" />
+      <Gain Name="Approval"  Weight="1" />
+      <Gain Name="Military"  Weight="1" />
+      <Gain Name="Deposit"  Weight="1" />
+
+      <!-- T1 Strategic FIDSI Buildings -->
+      <Gain Name="TFood"      Weight="1" />
+      <Gain Name="TIndustry"  Weight="1" />
+      <Gain Name="TScience"      Weight="1" />
+      <Gain Name="TDust"   Weight="1" />
+      <Gain Name="TPrestige"  Weight="1" />
+
+      <!-- Strategic Buildings -->
+      <Gain Name="SFood"      Weight="1" />
+      <Gain Name="SIndustry"  Weight="1" />
+      <Gain Name="SDust"      Weight="1" />
+      <Gain Name="SScience"   Weight="1" />
+      <Gain Name="SPrestige"  Weight="1" />
+      <Gain Name="SApproval"  Weight="1" />
+      <Gain Name="SMilitary"  Weight="1" />
+
+      <!-- Unique Improvements -->
+      <Gain Name="UniqueFood"  Weight="1" />
+      <Gain Name="UniqueIndustry"  Weight="1" />
+      <Gain Name="UniqueScience"  Weight="1" />
+      <Gain Name="UniqueDust"  Weight="1" />
+      <Gain Name="UniquePrestige"  Weight="1" />
+      <Gain Name="UniqueApproval"  Weight="1" />
+      <Gain Name="UniqueMilitary"  Weight="1" />
+
+      <!-- Infinite Improvements -->
+      <Gain Name="InfiniteDust"  Weight="1" />
+      <Gain Name="InfiniteScience"  Weight="1" />
+      <Gain Name="InfiniteMilitary"  Weight="1" />
+    </Gains>
+  </SystemSupervisorDefinition>
+</Datatable>
