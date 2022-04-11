@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
+
+    <SimulationDescriptor Name="ClassTradingCompany" Type="Class">
+
+        <!-- PROPERTIES -->
+
+        <!-- Base income -->
+        <Property Name="BaseEmpireMoney"    BaseValue="100"/>
+        <Property Name="BaseEmpireResearch" BaseValue="10"/>
+        
+        <!-- Income -->
+        <Property Name="EmpireMoney"    IsSealed="true"/>
+        <Property Name="EmpireResearch" IsSealed="true"/>
+      
+        <Property Name="Luxury1"        IsSealed="true"/>
+        <Property Name="Luxury2"        IsSealed="true"/>
+        <Property Name="Luxury3"        IsSealed="true"/>
+        <Property Name="Luxury4"        IsSealed="true"/>
+        <Property Name="Luxury5"        IsSealed="true"/>
+        <Property Name="Luxury6"        IsSealed="true"/>
+        <Property Name="Luxury7"        IsSealed="true"/>
+        <Property Name="Luxury8"        IsSealed="true"/>
+        <Property Name="Luxury9"        IsSealed="true"/>
+        <Property Name="Luxury10"       IsSealed="true"/>
+        <Property Name="Luxury11"       IsSealed="true"/>
+        <Property Name="Luxury12"       IsSealed="true"/>
+        <Property Name="Luxury13"       IsSealed="true"/>
+        <Property Name="Luxury14"       IsSealed="true"/>
+        <Property Name="Luxury15"       IsSealed="true"/>
+        <Property Name="Luxury16"       IsSealed="true"/>
+        <Property Name="Luxury17"       IsSealed="true"/>
+        <Property Name="Luxury18"       IsSealed="true"/>
+        <Property Name="Luxury19"       IsSealed="true"/>
+        <Property Name="Luxury20"       IsSealed="true"/>
+        <Property Name="Luxury21"       IsSealed="true"/>
+        <Property Name="Luxury22"       IsSealed="true"/>
+        <Property Name="Luxury23"       IsSealed="true"/>
+        <Property Name="Luxury24"       IsSealed="true"/>
+
+        <!-- Income multipliers -->
+        <Property Name="TradingRouteIncomeEfficiency_EmpireMoney"       BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_EmpireResearch"    BaseValue="1"/>
+
+        <Property Name="TradingRouteIncomeEfficiency_Luxury1"           BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury2"           BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury3"           BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury4"           BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury5"           BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury6"           BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury7"           BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury8"           BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury9"           BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury10"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury11"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury12"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury13"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury14"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury15"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury16"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury17"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury18"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury19"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury20"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury21"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury22"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury23"          BaseValue="1"/>
+        <Property Name="TradingRouteIncomeEfficiency_Luxury24"          BaseValue="1"/>
+        
+        <!-- Counts -->
+        <Property Name="NumberOfTradingRoutes" BaseValue="0" IsSealed="true"/>
+        <Property Name="NumberOfExternalTradingRoutes" BaseValue="0" IsSealed="true"/>
+        <Property Name="NumberOfTradingCompaniesInEmpire" BaseValue="0"/> <!-- deprecated -->
+
+        <!-- Improvements: values modified by creating TradingCompanyImprovementDefinitions -->
+        <Property Name="DustImprovementCount"       BaseValue="0"   IsSealed="true"/>
+        <Property Name="LuxuryImprovementCount"     BaseValue="0"   IsSealed="true"/>
+        <Property Name="AverageImprovementCount"    BaseValue="0"/>
+
+        <!-- XP & Levels -->
+        <Property Name="Level" IsSealed="true"/>
+        <Property Name="TradingRoutesExperience" IsSealed="true"/>
+        <Property Name="TradingRoutesExperienceThreshold" IsSealed="true"/>
+        <Property Name="TradingRoutesPreviousExperienceThreshold" IsSealed="true"/>
+        
+        <!-- MODIFIERS -->
+        
+        <!-- Count (on empire) -->
+        <Modifier TargetProperty="NumberOfTradingCompanies"         Operation="Addition" Value="1"          Path="../ClassEmpire,EmpireTypeMajor"/>
+        <Modifier TargetProperty="TradingCompanyLevelCount"         Operation="Addition" Value="$(Level)"   Path="./ClassEmpire"/>
+        
+        <Modifier TargetProperty="TradingCompanyEmpireCount"        Operation="Addition" Value="$(NumberOfTradingCompaniesInEmpire)"    Path="./ClassEmpire"/>
+        <Modifier TargetProperty="TradingRoutesEmpireCount"         Operation="Addition" Value="$(NumberOfTradingRoutes)"               Path="./ClassEmpire"/>
+        
+        <Modifier TargetProperty="TotalTradingRoutesCount"         Operation="Addition" Value="$(NumberOfTradingRoutes)"               Path="../ClassEmpire,EmpireTypeMajor"/>
+        <Modifier TargetProperty="TotalTradingRoutesCount"         Operation="Addition" Value="$(NumberOfExternalTradingRoutes)"       Path="../ClassEmpire,EmpireTypeMajor"/>
+       
+        <!-- Efficiency -->
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_EmpireMoney" Operation="Addition" Left="$(DustImprovementCount)" BinaryOperation="Multiplication" Right="0.1"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_EmpireResearch" Operation="Addition" Left="$(AverageImprovementCount)" BinaryOperation="Multiplication" Right="0.05"/>
+
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury1" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury2" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury3" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury4" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury5" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury6" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury7" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury8" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury9" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury10" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury11" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury12" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury13" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury14" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury15" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury16" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury17" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury18" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury19" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury20" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury21" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury22" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury23" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+        <BinaryModifier TargetProperty="TradingRouteIncomeEfficiency_Luxury24" Operation="Addition" Left="$(LuxuryImprovementCount)" BinaryOperation="Multiplication" Right="0.0250"/>
+
+        <Modifier TargetProperty="AverageImprovementCount" Operation="Addition" Value="$(DustImprovementCount)"/>
+        <Modifier TargetProperty="AverageImprovementCount" Operation="Addition" Value="$(LuxuryImprovementCount)"/>
+        <Modifier TargetProperty="AverageImprovementCount" Operation="Division" Value="2"/>
+        
+    </SimulationDescriptor>
+
+</Datatable>
