@@ -1013,6 +1013,45 @@
     <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionBuyout1"/>
   </StarSystemImprovementDefinition>
 
+  <!--Trade HQ -->
+  <TradeCompanyHeadquartersStarSystemImprovementDefinition Name="StarSystemImprovementTradingCompanyHeadquarters" SubCategory="SubCategoryTradingCompanyStructure" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="Dust" />
+    <Tags>ImmuneToBombardmentAndDecay,NonTransferable</Tags>
+    <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementTradingCompanyHeadquarters" />
+    <Cost ResourceName="SystemProduction">560</Cost>
+    <PathPrerequisite Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard">ClassColonizedStarSystem,IsolatedNode</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementTradingCompanyHeadquarters</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementTradingCompanySubsidiary</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Enqueue">ClassColonizedStarSystem,BuildingStarSystemImprovementTradingCompanyHeadquarters</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Enqueue">ClassColonizedStarSystem,BuildingStarSystemImprovementTradingCompanySubsidiary</PathPrerequisite>
+    <InterpreterPrerequisite Flags="Enqueue,Discard">(Count(Context, @'../ClassEmpire/ClassColonizedStarSystem/StarSystemImprovementTradingCompanyHeadquarters') + Count(Context, @'../ClassEmpire/ClassColonizedStarSystem,BuildingStarSystemImprovementTradingCompanyHeadquarters') )lt Property(Context, @'../ClassEmpire,EmpireTypeMajor', AvailableNumberOfTradingCompanyHeadquarters)</InterpreterPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyTrade1</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementTradingCompanyHeadquarters" />
+    <SimulationDescriptorReference Name="DustBuilding" />
+    <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionTradingCompanyHeadquarters" />
+  </TradeCompanyHeadquartersStarSystemImprovementDefinition>
+
+  <!--Trade Sub -->
+  <TradeCompanySubsidiaryStarSystemImprovementDefinition Name="StarSystemImprovementTradingCompanySubsidiary" SubCategory="SubCategoryTradingCompanyStructure" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="Dust" />
+    <Tags>ImmuneToBombardmentAndDecay,NonTransferable</Tags>
+    <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementTradingCompanySubsidiary" />
+    <Cost ResourceName="SystemProduction">280</Cost>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard,UnlockAvailability,Faction">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard">ClassColonizedStarSystem,IsolatedNode</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementTradingCompanyHeadquarters</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementTradingCompanySubsidiary</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Enqueue">ClassColonizedStarSystem,BuildingStarSystemImprovementTradingCompanyHeadquarters</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Enqueue">ClassColonizedStarSystem,BuildingStarSystemImprovementTradingCompanySubsidiary</PathPrerequisite>
+    <InterpreterPrerequisite Flags="Enqueue,Discard">(Count(Context, @'../ClassEmpire/ClassColonizedStarSystem/StarSystemImprovementTradingCompanySubsidiary') + Count(Context, @'../ClassEmpire/ClassColonizedStarSystem,BuildingStarSystemImprovementTradingCompanySubsidiary') ) lt Property(Context, @'../ClassEmpire,EmpireTypeMajor', MaximumNumberOfTradingCompanySubsidiaries)</InterpreterPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyTrade1</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementTradingCompanySubsidiary" />
+    <SimulationDescriptorReference Name="DustBuilding" />
+    <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionTradingCompanyySubsidiary" />
+  </TradeCompanySubsidiaryStarSystemImprovementDefinition>
+
   <!--Predictive Logistics strat cost -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementIndustry3" SubCategory="SubCategoryIndustry" ScoreProvider="StarSystemImprovementBuilt">
     <SupervisorGain Name="Industry"/>
@@ -1427,6 +1466,7 @@
     <SupervisorGain Name="Industry" Weight="0.25"/>
     <SupervisorGain Name="Science" Weight="0.25"/>
     <SupervisorGain Name="Dust" Weight="0.25"/>
+    <QueuedSimulationDescriptorReference Name="IncreaseArcologyBeingBuiltCount"/>
     <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">2000 * (1 + Property(StockLocation,@'../ClassEmpire', ArcologicalAdministrationCount)) * (1 + Property(StockLocation,@ClassColonizedStarSystem, ArcologicalAdministrationCount)) * Property(StockLocation,@'../ClassEmpire', GameSpeedMultiplier)</CustomCost>
     <Cost ResourceName="SystemProduction">1</Cost>
     <PathPrerequisite Flags="Prerequisite,Disable,RequiresSystemLevel4">ColonizedStarSystemStateColony,StarSystemImprovementLevel4</PathPrerequisite>

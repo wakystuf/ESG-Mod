@@ -35,6 +35,7 @@
     <Property Name="IndustryCost"                   BaseValue="0" IsSealed="true"/>
     <Property Name="CuriositiesDiscovered"	/>
     <Property Name="ShipStage" BaseValue="0"/>
+    <Property Name="ShipStageManpowerAdjustment" BaseValue="1"/>
     <Property Name="ShipCount" BaseValue="1" />
     <Property Name="ShipHullIndex"                  BaseValue="0"/>
 
@@ -299,7 +300,8 @@
 
     <!-- Manpower management-->
     <Modifier TargetProperty="NetShipManpower"              Operation="Addition" Value="$(ShipManpowerRefillRate)"/>
-    <BinaryModifier TargetProperty="MaximumShipManpower"    Operation="Percent" Left="$(ShipStage)" BinaryOperation="Multiplication" Right="0.5" Path="ClassShip"/>
+    <BinaryModifier TargetProperty="ShipStageManpowerAdjustment" Operation="Addition" Left="$(ShipStage)" BinaryOperation="Division" Right="2" Path="ClassShip"/>
+    <Modifier TargetProperty="MaximumShipManpower"    Operation="Multiplication" Value="$(ShipStageManpowerAdjustment)" Path="ClassShip"/>
 
     <!-- Battle stats -->
 
@@ -735,6 +737,8 @@
 
   <SimulationDescriptor Name="ClassModuleOnlyOnePerShip" Type="ClassModuleOnlyOnePerShip"/>
   <SimulationDescriptor Name="ClassModuleNegatesDecloaking" Type="ClassModuleNegatesDecloaking"/>
+  <SimulationDescriptor Name="ModuleReducedCost" Type="ModuleReducedCost"/>
+
 
 
   <SimulationDescriptor Name="ShipRoleColonizer"      Type="ShipRole">
