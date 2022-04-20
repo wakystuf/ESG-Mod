@@ -60,6 +60,9 @@
 		<Property Name="AutonomousAdministrationCount"  		BaseValue="0"/>
 		<Property Name="ArcologicalAdministrationCount"  		BaseValue="0"/>
 
+		<!-- Empire-wide counts -->
+		<Property Name="OwnedMeagerPlanets"  		BaseValue="0" Composition="Sum"/>
+
 		<!-- Ship Class Base Costs -->
 		<!-- Civilian (Vineship) -->
 		<Property Name="CivilianBaseIndustry"			BaseValue="300"		MinValue="0"/>
@@ -732,11 +735,11 @@
 		<Property Name="PlanePopulationDestructionCountBonus" BaseValue="1" />
 
 		<Property Name="InfantryImprovementDestructionProbabilityBonus" BaseValue="0" />
-		<Property Name="TankImprovementDestructionProbabilityBonus" BaseValue="0.01" />
-		<Property Name="PlaneImprovementDestructionProbabilityBonus" BaseValue="0.02" />
+		<Property Name="TankImprovementDestructionProbabilityBonus" BaseValue="0.005" />
+		<Property Name="PlaneImprovementDestructionProbabilityBonus" BaseValue="0.01" />
 		<Property Name="InfantryPopulationDestructionProbabilityBonus" BaseValue="0" />
-		<Property Name="TankPopulationDestructionProbabilityBonus" BaseValue="0.01" />
-		<Property Name="PlanePopulationDestructionProbabilityBonus" BaseValue="0.02" />
+		<Property Name="TankPopulationDestructionProbabilityBonus" BaseValue="0.005" />
+		<Property Name="PlanePopulationDestructionProbabilityBonus" BaseValue="0.01" />
 
 		<!-- /GROUND BATTLE -->
 
@@ -781,8 +784,8 @@
 		<Property Name="SuperColonizationSystemCount" BaseValue="1" MinValue="1" />
 		<Property Name="SuperColonizationSystemCountGameStart" BaseValue="0" MaxValue="1" />
 		<Property Name="SuperColonizationCost"/>
-		<Property Name="SuperColonizationStrategicCostFraction" BaseValue="0.015"/>
-		<Property Name="SuperColonizationCostFromBase" BaseValue="400" MinValue="0"/>
+		<Property Name="SuperColonizationStrategicCostFraction" BaseValue="0.03"/>
+		<Property Name="SuperColonizationCostFromBase" BaseValue="200" MinValue="0"/>
 		<Property Name="SuperColonizationCostFromTurns" />
 		<Property Name="SuperColonizationCostFromSystems" />
 		<Property Name="MaxColonizationThresholdFIDSBonus"				BaseValue="0" MinValue="0"/>
@@ -1022,6 +1025,11 @@
 
 		<!--Depleted Planet counts-->
 		<Modifier TargetProperty="PopulationEmpireDepletedPlanetCount" Operation="Addition" Value="$(DepletedPlanetCount)" Path="ClassEmpire/ClassPopulationEmpire,PopulationCollectionBonusCravers3" TooltipHidden="true"/>
+
+		<!--Empire-wide counts -->
+		
+		<Modifier TargetProperty="EmpireOwnedMeagerPlanets" Operation="Force" Value="$(OwnedMeagerPlanets)" TooltipHidden="true" Path="ClassEmpire/ClassColonizedStarSystem"/>
+
 
 		<!--Exploration Ratio-->
 		<Modifier TargetProperty="ExplorationRatio" Operation="Addition" Value="$(KnownSystemCount)" Priority="1" Path="ClassEmpire"/>
