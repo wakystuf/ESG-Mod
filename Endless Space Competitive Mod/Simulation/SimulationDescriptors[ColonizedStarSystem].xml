@@ -143,8 +143,8 @@
 		<Property Name="UselessForTooltip"  BaseValue="0" MaxValue="1"/>
 
     <!-- New Ground Battle Variables -->
-    <Property Name="GroundBattleBombardmentAttackerDamageReduction"   BaseValue="0"/>
-    <Property Name="GroundBattleBombardmentDefensiveDamageReduction"  BaseValue="0"/>
+    <Property Name="GroundBattleBombardmentAttackerDamageReduction"   BaseValue="0" MinValue="Negative"/>
+    <Property Name="GroundBattleBombardmentDefensiveDamageReduction"  BaseValue="0" MinValue="Negative"/>
     
 		<!-- Population Control
          Assimilate -->
@@ -198,7 +198,17 @@
 		<Property Name="OnGoingLords" BaseValue="0"/>
 		<Property Name="OnGoingFomorian" BaseValue="0"/>
 
-		<!-- ########################################################## -->
+    <!-- Mavros Mod -->
+    <Property Name="DrudgeCount"					BaseValue="0" MinValue="0"/>
+    <Property Name="DrudgeTitanCount"			BaseValue="0" MinValue="0"/>
+    <Property Name="DrudgeOverseerCount"	BaseValue="0" MinValue="0"/>
+    <Property Name="DrudgeAnalystCount"		BaseValue="0" MinValue="0"/>
+    <Property Name="DrudgeEnvoyCount"			BaseValue="0" MinValue="0"/>
+    <Property Name="DrudgeQuest1Count"		BaseValue="0" MinValue="0"/>
+    <Property Name="DrudgeQuest2Count"		BaseValue="0" MinValue="0"/>
+    <Property Name="DrudgeQuest3Count"		BaseValue="0" MinValue="0"/>
+    
+    <!-- ########################################################## -->
 		<!-- ######################## PROPERTY ######################## -->
 		<!-- ########################################################## -->
 
@@ -220,6 +230,7 @@
 		<Property Name="OwnedLuxuryDeposits"                    BaseValue="0" Composition="Sum" />
 		<Property Name="OwnedAnomalies"                         BaseValue="0" Composition="Sum" />
 		<Property Name="OwnedMeagerPlanets"                     BaseValue="0" Composition="Sum" />
+		<Property Name="EmpireOwnedMeagerPlanets"               BaseValue="0"  />
 		<Property Name="OwnedTeemingPlanets"                    BaseValue="0" Composition="Sum" />
 		<Property Name="OwnedTemperatePlanets"                  BaseValue="0" Composition="Sum" />
 		<Property Name="OwnedColdPlanets"                       BaseValue="0" Composition="Sum" />
@@ -266,6 +277,7 @@
 		<Property Name="BonusHeroSystemDust"        BaseValue="0"/>
 		<Property Name="BonusHeroSystemScience"     BaseValue="0"/>
 		<Property Name="BonusHeroSystemPrestige"    BaseValue="0"/>
+		<Property Name="BonusHeroSystemApproval"    BaseValue="0"/>
 
 		<Property Name="AdditionalVisionRange" BaseValue="0" IsSealed="true"/>
 		<Property Name="VisionStrength" BaseValue="0"/>
@@ -367,7 +379,8 @@
 		<Property Name="OverPopulationPenalties"                        BaseValue="0"   MinValue="Negative"  />
 		<Property Name="OverPopulationPenaltiesReduction"               BaseValue="0"   MinValue="Negative"/>
 		<Property Name="OverColonizationPenalties"                      BaseValue="0"   MinValue="Negative"  />
-		<Property Name="ColonizationThresholdHappinessBonus"            BaseValue="0"   MinValue="0" MaxValue="10"  />
+		<Property Name="ColonizationThresholdHappinessBonus"            BaseValue="0"   MinValue="0" MaxValue="10"/>
+		<Property Name="IsUnderColonizationThreshold"            		BaseValue="0"   MinValue="0" MaxValue="1"/>
 
 		<Property Name="HappinessBonusMultiplier"                          BaseValue="1"/>
 		<Property Name="HappinessBonusFromFleetPresence"/>
@@ -653,7 +666,7 @@
 		<Property Name="RecipeIngredientEffectATier3Luxury23" BaseValue="0"/>
 		<Property Name="RecipeIngredientEffectBTier3Luxury23" BaseValue="0"/>
 		<Property Name="RecipeIngredientEffectATier3Luxury24" BaseValue="0"/>
-		<Property Name="RecipeIngredientEffectBTier3Luxury24" BaseValue="0"/>
+		<Property Name="RecipeIngredientEffectBTier3Luxury24" BaseValue="0" MinValue="Negative"/>
 		<Property Name="RecipeIngredientEffectATier1Strategic1" BaseValue="0"/>
 		<Property Name="RecipeIngredientEffectBTier1Strategic1" BaseValue="0"/>
 		<Property Name="RecipeIngredientEffectATier1Strategic2" BaseValue="0"/>
@@ -1125,6 +1138,7 @@
 		<Modifier           TargetProperty="Happiness" Operation="Addition" Value="$(HappinessPerHomeSystem)"/>
 		<Modifier           TargetProperty="Happiness" Operation="Addition" Value="$(HappinessFromTraitors)"/>
 		<Modifier           TargetProperty="Happiness" Operation="Addition" Value="$(HappinessFromMinors)"/>
+		<BinaryModifier     TargetProperty="Happiness" Operation="Addition" Left="$(BonusHeroSystemApproval)" BinaryOperation="Multiplication" Right="$(Population)" />
 
 		<BinaryModifier     TargetProperty="Happiness" Operation="Addition" Left="$(RepresentativeWithPartyInSenateCount)" BinaryOperation="Multiplication" Right="$(HappinessBonusPerRepresentative)" />
 		<BinaryModifier     TargetProperty="Happiness" Operation="Subtraction" Left="$(RepresentativeWithoutPartyInSenateCount)" BinaryOperation="Multiplication" Right="$(HappinessPenaltyPerRepresentative)" />
@@ -1153,7 +1167,7 @@
 
 		<!-- Luxury Base income -->
 		<Modifier TargetProperty="TradingRouteSystemLuxuryBaseIncome" Operation="Addition" Value="$(SystemLevel)"/>
-		<Modifier TargetProperty="TradingRouteSystemLuxuryBaseIncome" Operation="Multiplication" Value="0.06"/>
+		<Modifier TargetProperty="TradingRouteSystemLuxuryBaseIncome" Operation="Multiplication" Value="0.04"/>
 		<Modifier TargetProperty="TradingRouteSystemLuxuryBaseIncome" Operation="Multiplication" Value="$(TradingRouteIncomeModifier)"/>
 
 
@@ -1498,8 +1512,8 @@
     <!-- Ground Battle Modifiers -->
     <Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMin"          Operation="Percent" Value="$(GroundBattleBombardmentAttackerDamageReduction)"  TooltipHidden="true"/>
 		<Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMax"          Operation="Percent" Value="$(GroundBattleBombardmentAttackerDamageReduction)"  TooltipHidden="true"/>
-		<Modifier TargetProperty="GroundBattleBombardmentDefenderDamagesMin"          Operation="Percent" Value="$(GroundBattleBombardmentDefensiveDamageReduction)" TooltipHidden="true"/>
-		<Modifier TargetProperty="GroundBattleBombardmentDefenderDamagesMax"          Operation="Percent" Value="$(GroundBattleBombardmentDefensiveDamageReduction)" TooltipHidden="true"/>
+		<Modifier TargetProperty="GroundBattleBombardmentDefenderDamagesMin"          Operation="Percent" Value="$(GroundBattleBombardmentDefensiveDamageReduction)" Priority="999" TooltipHidden="true"/>
+		<Modifier TargetProperty="GroundBattleBombardmentDefenderDamagesMax"          Operation="Percent" Value="$(GroundBattleBombardmentDefensiveDamageReduction)" Priority="999" TooltipHidden="true"/>
   </SimulationDescriptor>
 
 	<SimulationDescriptor Name="ClassStarSystem" Type="Class">
@@ -2211,7 +2225,7 @@
 	<SimulationDescriptor Name="HigherDepositValue" Type="HigherDepositValue">
 		<Modifier TargetProperty="DepositValue" Operation="Addition" Value="2" Path="ClassStarSystem/ClassPlanet/ClassResourceDeposit" TooltipHidden="true"/>
 	</SimulationDescriptor>
-  
+
   <!-- Unfallen Vine States -->
   <SimulationDescriptor Name="ColonizedStarSystemInfluenceStateRootOwner" Type="ColonizedStarSystemInfluenceState">
     <Modifier TargetProperty="SystemManpowerLoss" Operation="Percent"  Value="-0.2"  Path="./ClassColonizedStarSystem,BesiegedColonizedStarSystem"   Priority="1"/>

@@ -53,6 +53,25 @@
     <Modifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Multiplication" Value="2" Priority="4" TooltipHidden="true"/>
   </SimulationDescriptor>
 
+  <!--Timelords-->
+  <SimulationDescriptor Name="AffinityGameplayTimeLords" Type="AffinityGameplay">
+        <!-- Composition Sum cannot be used as GameNodes are not in the empire's simulation -->
+        <Property Name="MaximumTimeBubblesCount" BaseValue="3"/> <!-- Can go up to 6 -->
+        <Property Name="TimeBubblesCount" IsSealed="true"/>
+        <Property Name="TotalTimeBubblesBeingBuiltCount" IsSealed="false"/>
+        <Property Name="TotalTimeBubblesBuiltCount" IsSealed="true"/>
+
+        <Modifier TargetProperty="TotalTimeBubblesBuiltCount" Operation="Force"    Value="$(TotalTimeBubblesBuiltCount)"      Path="ClassEmpire/ClassColonizedStarSystem/StarSystemImprovementUniqueTimeLords"/>
+
+        <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeIce" TooltipHidden="true"/>
+        <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeBarren" TooltipHidden="true"/>
+        <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeArctic" TooltipHidden="true"/>
+        <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeSwamp" TooltipHidden="true"/>
+        <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeLava" TooltipHidden="true"/>
+        <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeAsh" TooltipHidden="true"/>
+        <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem/PlanetTypeDesert" TooltipHidden="true"/>
+    </SimulationDescriptor>
+
   <!--Utopian Infrastructure-->
   <SimulationDescriptor Name="FactionTraitUtopianInfrastructure" Type="FactionTrait">
     <BinaryModifier TargetProperty="UtopianUnhappyReduction" Operation="Addition" Left="-0.25" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="../ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%FactionTraitUtopianInfrastructureTooltipOverride"/>
@@ -377,12 +396,12 @@
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="FactionTraitReducedManpowerFromFood" Type="FactionTrait">
-    <Modifier TargetProperty="PassiveEnrollmentRate" Operation="Percent" Value="-0.5" Path="ClassEmpire/ColonizedStarSystemStateColony,ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="PassiveEnrollmentRate" Operation="Percent" Value="-0.75" Path="ClassEmpire/ColonizedStarSystemStateColony,ClassColonizedStarSystem"/>
   </SimulationDescriptor>
 
   <!-- Ghost Crew-->
   <SimulationDescriptor Name="FactionTraitGhostCrew"    Type="FactionTrait">
-    <Modifier TargetProperty="MaximumShipManpower"	Operation="Percent"		Value="-0.8"	Priority="999"	Path="ClassEmpire//ClassGarrison/ClassShip"/>
+    <Modifier TargetProperty="MaximumShipManpower"	Operation="Percent"		Value="-0.8"	Path="ClassEmpire//ClassGarrison/ClassShip"/>
     <Modifier TargetProperty="ShipManpowerKillAbsorption"	Operation="Addition"		Value="0.95"		Path="ClassEmpire//ClassGarrison/ClassShip"/>
     <Modifier TargetProperty="ManpowerDamageOverTimeDefense"	Operation="Addition"		Value="0.95"		Path="ClassEmpire//ClassGarrison/ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
@@ -449,4 +468,8 @@
     <Modifier TargetProperty="Damage" Operation="Addition"  Value="0.2" Path="ClassEmpire/ClassGarrison,FleetInfluenceStateFriendly/ClassShip"  />
   </SimulationDescriptor>
   
+  <SimulationDescriptor Name="FactionTraitExtraStrategicsOnHome" Type="FactionTrait">
+    <Modifier TargetProperty="DepositValue" Operation="Addition" Value="2" Path="../ClassEmpire/ClassColonizedStarSystem,HomeSystem/ClassColonizedPlanet/ClassColonizedResourceDeposit" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
 </Datatable>

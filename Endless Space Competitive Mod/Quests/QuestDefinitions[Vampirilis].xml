@@ -1174,12 +1174,17 @@
             <InterpretedVar VarName="$CuriosityAmount" Target="$(Empire)">
                 <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true) *4</Expression>
             </InterpretedVar>
-            <!--Quest requirement lowered to only require cordial relations, not assimilation-->
-            <Var VarName="$RelationState" StringValue="DiplomaticRelationStateMinorCordial"/>           
+            <!--Amount of systems to discover-->
+            <Var VarName="$SystemObjectiveAmount" IntValue="10"/>
+            <Var VarName="$PercentageAmount" IntValue="50"/>
+
             <!--POLITICAL EFFECT LAUNCHED FROM THE BEGINNING-->
             <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventVampirilis01.2Religious"/>
             
+            <!--LOCALIZATION VARIABLE-->
             <LocalizationVar Source="$CuriosityAmount" LocalizationKey="$CuriosityAmountName"/>
+            <LocalizationVar  LocalizationKey="$SystemObjectiveAmountName"  Source="$SystemObjectiveAmount"/>
+            <LocalizationVar  LocalizationKey="$Percentage"                 Source="$PercentageAmount"/>
             
         </Vars>
 
@@ -1195,23 +1200,61 @@
                 </Choice>
                 <!--============ STEP 1 Choice 0 - Neutral ============-->
                 <ObjectiveSet>
-                    <Objective Name="Step2_1_Objective1">
+                    <Objective Name="Step2_1_Objective1" StartValue="0" EndValue="$SystemObjectiveAmount">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
-                        <Parallel CompletionPolicy="Any">
                             <Sequence>
-                                <!--Become "Cordial"-->
-                                <Decorator_DiplomaticRelationChanged Initiator="Empire">                                  
-                                    <Input_DiplomaticRelationState VarName="$RelationState"/>
-                                </Decorator_DiplomaticRelationChanged>
-                                <Action_ChooseOutcome Name="Outcome1"/>
+                                <Loop>
+                                    <!--Spawn Curiosities: just to be sure that the quest is possible/Not too difficult-->
+                                    <!--Spawned Curiosities: Visible only be the "CurrentEmpire"-->
+                                    <Action_SpawnCuriosity>
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                        <Input_Planets VarName="$FirstSystemPlanet"/>                                    
+                                        <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                                    </Action_SpawnCuriosity>
+                                    <Action_SpawnCuriosity>
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                        <Input_Planets VarName="$SecondSystemPlanet"/>
+                                        <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                                    </Action_SpawnCuriosity>
+                                    <Action_SpawnCuriosity>
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                        <Input_Planets VarName="$ThirdSystemPlanet"/>
+                                        <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                                    </Action_SpawnCuriosity>
+                                    <Action_SpawnCuriosity>
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                        <Input_Planets VarName="$FourthSystemPlanet"/>
+                                        <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                                    </Action_SpawnCuriosity>
+                                    <!--The Loop duration depends on the Game Speed-->
+                                    <Input_Count VarName="$CuriositySpawnLoop"/>
+                                </Loop>
+                                <Parallel CompletionPolicy="First">
+                                    <Sequence>
+                                        <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
+                                            <Input_MinimumPercentage VarName="$PercentageAmount"/>
+                                        </Decorator_ExploredNode>
+                                        <Action_ChooseOutcome Name="Outcome1"/>
+                                    </Sequence>
+                                    <Sequence>
+                                        <Decorator_BeginTurn>
+                                            <Condition_ExplorationProgress MinimumState="Revealed">
+                                                <Input_Empire VarName="$CurrentEmpire"/>
+                                                <Input_Percentage VarName="$PercentageAmount"/>
+                                            </Condition_ExplorationProgress>
+                                        </Decorator_BeginTurn>
+                                        <Action_ChooseOutcome Name="Outcome1"/>
+                                    </Sequence>
+                                    <Sequence>
+                                        <Loop>
+                                            <Decorator_ExploredNode Initiator="Empire" MinimumState="Revealed" ProgressionIncrement="1"/>
+                                            <Input_Count VarName="$SystemObjectiveAmount"/>
+                                        </Loop>
+                                        <Action_ChooseOutcome Name="Outcome1"/>
+                                    </Sequence>
+                                </Parallel>
                             </Sequence>
-                            <Sequence>
-                                <Decorator_MinorEmpireIntegrated Initiator="Empire">                               
-                                </Decorator_MinorEmpireIntegrated>
-                                <Action_ChooseOutcome Name="Outcome1"/>
-                            </Sequence>
-                        </Parallel>
                         <Outcome Name="Outcome1">
                             <Triggers Weight="1">
                                 <QuestTrigger>

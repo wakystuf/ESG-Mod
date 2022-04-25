@@ -1,7 +1,32 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
 
-
+  <!--  Resource Deposit  -->
+  <SimulationDescriptor Name="ClassResourceDeposit" Type="Class">
+    <Property Name="LuxuryBoostingPopulation"           BaseValue="0" MinValue="0"/>
+    <Property Name="SplicedLuxuryBoostingPopulation"    BaseValue="0" MinValue="0"/>
+    <Property Name="StrategicBoostingPopulation"        BaseValue="0" MinValue="0"/>
+    <Property Name="SplicedStrategicBoostingPopulation" BaseValue="0" MinValue="0"/>
+    <!-- ABOVE IS ESG -->
+    <Property Name="DepositValue" BaseValue="2"/>
+    <Property Name="ResourceBonus"/>
+    <Modifier TargetProperty="DepositValue" Operation="Addition" Value="$(ResourceBonus)" Priority="5"/>
+    </SimulationDescriptor>
+  <SimulationDescriptor Name="ClassColonizedResourceDeposit" Type="ClassColonizedResourceDeposit"> </SimulationDescriptor>
+  
+  <!--  Deposit Size  -->
+  <SimulationDescriptor Name="DepositSizePoor" Type="DepositSize">
+    <Modifier TargetProperty="DepositValue" Value="1" Operation="Subtraction" Path="ClassResourceDeposit" TooltipHidden="true"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="DepositSizeAverage" Type="DepositSize">
+    <Modifier TargetProperty="DepositValue" Value="0" Operation="Addition" Path="ClassResourceDeposit,ResourceTypeStrategic" TooltipHidden="true"/>
+    <Modifier TargetProperty="DepositValue" Value="0" Operation="Addition" Path="ClassResourceDeposit,ResourceTypeLuxury" TooltipHidden="true"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="DepositSizeAbundant" Type="DepositSize">
+    <Modifier TargetProperty="DepositValue" Value="1" Operation="Addition" Path="ClassResourceDeposit,ResourceTypeStrategic" TooltipHidden="true"/>
+    <Modifier TargetProperty="DepositValue" Value="1" Operation="Addition" Path="ClassResourceDeposit,ResourceTypeLuxury" TooltipHidden="true"/>
+  </SimulationDescriptor>
+    
   <!-- System level (for Filter Barges) -->
   <!--  Resource Type  -->
   <SimulationDescriptor Name="ResourceTypeStrategic" Type="ResourceType">
@@ -14,7 +39,6 @@
     <Modifier TargetProperty="PlanetHasStrategic" Operation="Addition" Value="1" Path="./ClassPlanet" TooltipHidden="true"/>
     <Modifier TargetProperty="BoleanOwnedStrategicDeposit" Operation="Addition" Value="1" Path="./ClassPlanet" TooltipHidden="true"/>
   </SimulationDescriptor>
-
 
   <!-- Strategic Resource -->
 
