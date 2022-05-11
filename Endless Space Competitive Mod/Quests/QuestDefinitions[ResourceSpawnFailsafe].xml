@@ -26,7 +26,9 @@
         
         <!-- Choose an Empire, so that it can be fed into the context (no impact on anything; simply needs to be non-null)-->
         <Var VarName="$ChosenEmpire">
-          <From Source="$Empire"/>
+          <Select Index="0">
+            <From Source="$Empire"/>
+          </Select>
         </Var>
  
         <!-- Find the Academy, just to have an objective frame of reference for this process-->
@@ -516,10 +518,13 @@
 
       </Vars>
       <!--============ PREREQUISITES ============-->
-      <Prerequisites Target="$(Empires)" AnyTarget="true">
+      <Prerequisites Target="$(ChosenEmpire)">
+        <!-- In theory this would be the correct filter, but it doesn't work; Path prereq is used instead
           <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="StrategicResourceGenerationQuest" QuestState="NotStarted"/>
           <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="StrategicResourceGenerationQuest" QuestState="InProgress"/>
           <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="StrategicResourceGenerationQuest" QuestState="Completed"/>
+          -->
+          <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,FactionTraitStrategicGen</PathPrerequisite>
           <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
       </Prerequisites>
       <!--============ STEPS ============-->
@@ -701,7 +706,9 @@
       
       <!-- Choose an Empire, so that it can be fed into the context (no impact on anything; simply needs to be non-null)-->
       <Var VarName="$ChosenEmpire">
-        <From Source="$Empire"/>
+        <Select Index="0">
+          <From Source="$Empire"/>
+        </Select>
       </Var>
 
       <!-- Find the Academy, just to have an objective frame of reference for this process-->
@@ -1177,10 +1184,13 @@
 
     </Vars>
     <!--============ PREREQUISITES ============-->
-    <Prerequisites Target="$(Empires)" AnyTarget="true">
+    <Prerequisites Target="$(ChosenEmpire)">
+      <!-- Should work, but doesn't, hence the path pre-req instead
         <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="LuxuryResourceGenerationQuest" QuestState="NotStarted"/>
         <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="LuxuryResourceGenerationQuest" QuestState="InProgress"/>
         <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="LuxuryResourceGenerationQuest" QuestState="Completed"/>
+      -->
+        <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,FactionTraitStrategicGen</PathPrerequisite>
         <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
     </Prerequisites>
     <!--============ STEPS ============-->

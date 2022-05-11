@@ -25,7 +25,9 @@
         
         <!-- Choose an Empire, so that it can be fed into the context (no impact on anything; simply needs to be non-null)-->
         <Var VarName="$ChosenEmpire">
-          <From Source="$Empire"/>
+          <Select Index="0">
+            <From Source="$Empire"/>
+          </Select>
         </Var>
  
         <!-- Find the Academy, just to have an objective frame of reference for this process-->
@@ -513,6 +515,9 @@
         <Var VarName="$Strategic5" StringValue="Curiosity_PlanetResource_Strategic05"/>
         <Var VarName="$Strategic6" StringValue="Curiosity_PlanetResource_Strategic06"/>
 
+        <!-- Establish trait for triggering of this quest (to enable failsafe quest to filter properly) -->
+        <Var VarName="$Trait" StringValue="FactionTraitStrategicGen"/>
+
       </Vars>
       <!--============ PREREQUISITES ============-->
       <Prerequisites Target="$(Empires)" AnyTarget="true">
@@ -524,6 +529,10 @@
               <ObjectiveSet> 
                 <Objective Name="Objective_Fake">
                   <Sequence>
+                    <Action_ApplyDescriptor LogAction="false">
+                      <Input_DescriptorName VarName="$Trait"/>
+                      <Input_Targets VarName="$ChosenEmpire"/>
+                    </Action_ApplyDescriptor>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation0T1R1Planets"/>
                       <Input_Count VarName="$C0StrategicT1Count"/>
@@ -706,7 +715,9 @@
       
       <!-- Choose an Empire, so that it can be fed into the context (no impact on anything; simply needs to be non-null)-->
       <Var VarName="$ChosenEmpire">
-        <From Source="$Empire"/>
+        <Select Index="0">
+          <From Source="$Empire"/>
+        </Select>
       </Var>
 
       <!-- Find the Academy, just to have an objective frame of reference for this process-->
@@ -1180,6 +1191,9 @@
       <Var VarName="$Luxury23" StringValue="Curiosity_PlanetResource_Luxury23"/>
       <Var VarName="$Luxury24" StringValue="Curiosity_PlanetResource_Luxury24"/>
 
+      <!-- Establish trait for triggering of this quest (to enable failsafe quest to filter properly) -->
+      <Var VarName="$Trait" StringValue="FactionTraitLuxuryGen"/>
+
     </Vars>
     <!--============ PREREQUISITES ============-->
     <Prerequisites Target="$(Empires)" AnyTarget="true">
@@ -1190,7 +1204,11 @@
         <Step Name="Step1">
             <ObjectiveSet> 
               <Objective Name="Objective_Fake">
-                <Sequence> 
+                <Sequence>
+                  <Action_ApplyDescriptor LogAction="false">
+                    <Input_DescriptorName VarName="$Trait"/>
+                    <Input_Targets VarName="$ChosenEmpire"/>
+                  </Action_ApplyDescriptor> 
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T2R9Planets"/>
                     <Input_Count VarName="$C0LuxuryT2v0Count"/>
