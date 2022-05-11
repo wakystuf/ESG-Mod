@@ -24,6 +24,9 @@
     <Property Name="MajorPopulationCount"	BaseValue="0"  />
     <Property Name="NonMajorPopulationCount" BaseValue="0"  />
     <Property Name="PlanetCount"            BaseValue="1"/>
+		<Property Name="CurrentTurn" 						BaseValue="1"/>
+    <Property Name="GameSpeedModifier" 			BaseValue="1"/>
+
 
     <!-- Defined by size, type -->
     <Property Name="RawMaximumPopulation"   BaseValue="0" MinValue="0" MaxValue="14" RoundingFunction="Floor"/>
@@ -643,19 +646,26 @@
   <!-- GAME SPEED -->
   <SimulationDescriptor Name="PlanetGameSpeedFast" Type="PlanetGameSpeed" IsSerializable="false">
     <Modifier TargetProperty="PlanetDepletionMax" Operation="Multiplication" Value=".5" TooltipHidden="true" />
+    <Modifier TargetProperty="GameSpeedModifier" Operation="Multiplication" Value=".5" TooltipHidden="true" />
     <Modifier TargetProperty="DepositValue" Operation="Multiplication" Value="2" TooltipHidden="true" Path="ClassPlanet/ClassResourceDeposit" Priority="999" />
   </SimulationDescriptor>
   <SimulationDescriptor Name="PlanetGameSpeedSlow" Type="PlanetGameSpeed" IsSerializable="false">
     <Modifier TargetProperty="PlanetDepletionMax" Operation="Multiplication" Value="1.5" TooltipHidden="true" />
+    <Modifier TargetProperty="GameSpeedModifier" Operation="Multiplication" Value="1.5" TooltipHidden="true" />
     <Modifier TargetProperty="DepositValue" Operation="Multiplication" Value="0.75" TooltipHidden="true" Path="ClassPlanet/ClassResourceDeposit" Priority="999" />
   </SimulationDescriptor>
   <SimulationDescriptor Name="PlanetGameSpeedEndless" Type="PlanetGameSpeed" IsSerializable="false">
     <Modifier TargetProperty="PlanetDepletionMax" Operation="Multiplication" Value="2" TooltipHidden="true" />
+    <Modifier TargetProperty="GameSpeedModifier" Operation="Multiplication" Value="2" TooltipHidden="true" />
     <Modifier TargetProperty="DepositValue" Operation="Multiplication" Value="0.5" TooltipHidden="true" Path="ClassPlanet/ClassResourceDeposit" Priority="999" />
   </SimulationDescriptor>
 
-  <SimulationDescriptor Name="CraverHomeDepletionGameStart" Type="PlanetGameSpeed" IsSerializable="false">
-    <Modifier TargetProperty="PlanetDepletionMax" Operation="Subtraction" Value="120" TooltipHidden="true" Path="ClassPlanet"/>
+  <SimulationDescriptor Name="CraverHomeDepletionGameStart" Type="PlanetDepletion" IsSerializable="false">
+		<Property Name="CraverInitialDepletion" BaseValue="112.5"/>
+    <Property Name="TurnOneBoolean" 			  BaseValue="2" MinValue="0"/>
+    <Modifier TargetProperty="TurnOneBoolean" Operation="Subtraction" Value="$(CurrentTurn)" TooltipHidden="true"/>
+    <Modifier TargetProperty="CraverInitialDepletion" Operation="Multiplication" Value="$(GameSpeedModifier)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetDepletionPerTurn" Operation="Addition" Left="$(CraverInitialDepletion)" BinaryOperation="Multiplication" Right="$(TurnOneBoolean)" TooltipHidden="true" Path="ClassPlanet"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="SlotTypeAnomaly" Type="PlanetAnomaly"/>
