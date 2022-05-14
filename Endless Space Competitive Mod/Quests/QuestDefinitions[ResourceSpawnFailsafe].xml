@@ -11,9 +11,10 @@
     -->
 
     <!-- ##### GALAXY GEN QUEST Spawn strategic resources in a way that is evenly distributed among constellations  #####-->
-    <QuestDefinition Name="StrategicResourceGenerationQuest" Category="GalaxyGeneration" SubCategory="ResourceNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="true" MinimumTurn="0">
+
+    <QuestDefinition Name="StrategicResourceGenerationQuestFailsafe" Category="GalaxyGeneration" SubCategory="ResourceNormalization" MinimumTurn="5">
       <!--============ TAGS ============-->
-      <Tags>Hidden, StrategicResourceGenerationQuest</Tags>
+      <Tags>Hidden, BeginTurn</Tags>
       <!--============ CONTEXT ============-->
       <QuestContextSolo/>
       <!--============ OCCURRENCE RULES ============-->
@@ -515,12 +516,15 @@
         <Var VarName="$Strategic5" StringValue="Curiosity_PlanetResource_Strategic05"/>
         <Var VarName="$Strategic6" StringValue="Curiosity_PlanetResource_Strategic06"/>
 
-        <!-- Establish trait for triggering of this quest (to enable failsafe quest to filter properly) -->
-        <Var VarName="$Trait" StringValue="FactionTraitStrategicGen"/>
-
       </Vars>
       <!--============ PREREQUISITES ============-->
-      <Prerequisites Target="$(Empires)" AnyTarget="true">
+      <Prerequisites Target="$(ChosenEmpire)">
+        <!-- In theory this would be the correct filter, but it doesn't work; Path prereq is used instead
+          <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="StrategicResourceGenerationQuest" QuestState="NotStarted"/>
+          <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="StrategicResourceGenerationQuest" QuestState="InProgress"/>
+          <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="StrategicResourceGenerationQuest" QuestState="Completed"/>
+          -->
+          <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,FactionTraitStrategicGen</PathPrerequisite>
           <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
       </Prerequisites>
       <!--============ STEPS ============-->
@@ -529,10 +533,6 @@
               <ObjectiveSet> 
                 <Objective Name="Objective_Fake">
                   <Sequence>
-                    <Action_ApplyDescriptor LogAction="false">
-                      <Input_DescriptorName VarName="$Trait"/>
-                      <Input_Targets VarName="$ChosenEmpire"/>
-                    </Action_ApplyDescriptor>
                     <Action_SpawnCuriosity>
                       <Input_Planets VarName="$Constellation0T1R1Planets"/>
                       <Input_Count VarName="$C0StrategicT1Count"/>
@@ -683,16 +683,7 @@
                       <Input_Count VarName="$C4StrategicT3Count"/>
                       <Input_CuriosityDefinition VarName="$Strategic6"/>
                     </Action_SpawnCuriosity>
-                    <Action_ChooseOutcome Name="Outcome1"/>
                   </Sequence>
-                  <Outcome Name="Outcome1">
-                    <Triggers Weight="1">
-                      <QuestTrigger>
-                        <Tags>LuxuryResourceGenerationQuest</Tags>
-                        <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
-                      </QuestTrigger>
-                    </Triggers>
-                  </Outcome>
                 </Objective>
               </ObjectiveSet>
           </Step>
@@ -701,9 +692,9 @@
 
 
   <!-- ##### GALAXY GEN QUEST Spawn strategic resources in a way that is evenly distributed among constellations  #####-->
-  <QuestDefinition Name="LuxuryResourceGenerationQuest" Category="GalaxyGeneration" SubCategory="ResourceNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="true" MinimumTurn="0">
+  <QuestDefinition Name="LuxuryResourceGenerationQuestFailsafe" Category="GalaxyGeneration" SubCategory="ResourceNormalization" MinimumTurn="5">
     <!--============ TAGS ============-->
-    <Tags>Hidden, LuxuryResourceGenerationQuest</Tags>
+    <Tags>Hidden, BeginTurn</Tags>
     <!--============ CONTEXT ============-->
     <QuestContextSolo/>
     <!--============ OCCURRENCE RULES ============-->
@@ -1191,12 +1182,15 @@
       <Var VarName="$Luxury23" StringValue="Curiosity_PlanetResource_Luxury23"/>
       <Var VarName="$Luxury24" StringValue="Curiosity_PlanetResource_Luxury24"/>
 
-      <!-- Establish trait for triggering of this quest (to enable failsafe quest to filter properly) -->
-      <Var VarName="$Trait" StringValue="FactionTraitLuxuryGen"/>
-
     </Vars>
     <!--============ PREREQUISITES ============-->
-    <Prerequisites Target="$(Empires)" AnyTarget="true">
+    <Prerequisites Target="$(ChosenEmpire)">
+      <!-- Should work, but doesn't, hence the path pre-req instead
+        <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="LuxuryResourceGenerationQuest" QuestState="NotStarted"/>
+        <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="LuxuryResourceGenerationQuest" QuestState="InProgress"/>
+        <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="LuxuryResourceGenerationQuest" QuestState="Completed"/>
+      -->
+        <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,FactionTraitStrategicGen</PathPrerequisite>
         <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
     </Prerequisites>
     <!--============ STEPS ============-->
@@ -1204,11 +1198,7 @@
         <Step Name="Step1">
             <ObjectiveSet> 
               <Objective Name="Objective_Fake">
-                <Sequence>
-                  <Action_ApplyDescriptor LogAction="false">
-                    <Input_DescriptorName VarName="$Trait"/>
-                    <Input_Targets VarName="$ChosenEmpire"/>
-                  </Action_ApplyDescriptor> 
+                <Sequence> 
                   <Action_SpawnCuriosity>
                     <Input_Planets VarName="$T2R9Planets"/>
                     <Input_Count VarName="$C0LuxuryT2v0Count"/>
