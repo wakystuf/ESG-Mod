@@ -11,15 +11,14 @@
     -->
 
     <!-- ##### GALAXY GEN QUEST Spawn strategic resources in a way that is evenly distributed among constellations  #####-->
-
     <QuestDefinition Name="StrategicResourceGenerationQuestFailsafe" Category="GalaxyGeneration" SubCategory="ResourceNormalization" MinimumTurn="5">
       <!--============ TAGS ============-->
       <Tags>Hidden, BeginTurn</Tags>
       <!--============ CONTEXT ============-->
       <QuestContextSolo/>
       <!--============ OCCURRENCE RULES ============-->
-      <RepetitionRules  NumberOfOccurrencesPerGame="1"
-                        NumberOfOccurrencesPerEmpire="0"
+      <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                        NumberOfOccurrencesPerEmpire="1"
                         NumberOfConcurrentInstances="0"/>
       <!--============ VARIABLES ============-->
       <Vars>
@@ -27,7 +26,7 @@
         <!-- Choose an Empire, so that it can be fed into the context (no impact on anything; simply needs to be non-null)-->
         <Var VarName="$ChosenEmpire">
           <Select Index="0">
-            <From Source="$Empire"/>
+            <From Source="$Empires"/>
           </Select>
         </Var>
  
@@ -518,12 +517,13 @@
 
       </Vars>
       <!--============ PREREQUISITES ============-->
-      <Prerequisites Target="$(ChosenEmpire)">
+      <Prerequisites Target="$(Empire)">
         <!-- In theory this would be the correct filter, but it doesn't work; Path prereq is used instead
           <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="StrategicResourceGenerationQuest" QuestState="NotStarted"/>
           <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="StrategicResourceGenerationQuest" QuestState="InProgress"/>
           <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="StrategicResourceGenerationQuest" QuestState="Completed"/>
           -->
+          <PathPrerequisite Flags="Prerequisite">ClassEmpire,FactionTraitIsEmpire0</PathPrerequisite>
           <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,FactionTraitStrategicGen</PathPrerequisite>
           <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
       </Prerequisites>
@@ -698,8 +698,8 @@
     <!--============ CONTEXT ============-->
     <QuestContextSolo/>
     <!--============ OCCURRENCE RULES ============-->
-    <RepetitionRules  NumberOfOccurrencesPerGame="1"
-                      NumberOfOccurrencesPerEmpire="0"
+    <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                      NumberOfOccurrencesPerEmpire="1"
                       NumberOfConcurrentInstances="0"/>
     <!--============ VARIABLES ============-->
     <Vars>
@@ -707,7 +707,7 @@
       <!-- Choose an Empire, so that it can be fed into the context (no impact on anything; simply needs to be non-null)-->
       <Var VarName="$ChosenEmpire">
         <Select Index="0">
-          <From Source="$Empire"/>
+          <From Source="$Empires"/>
         </Select>
       </Var>
 
@@ -1184,12 +1184,13 @@
 
     </Vars>
     <!--============ PREREQUISITES ============-->
-    <Prerequisites Target="$(ChosenEmpire)">
+    <Prerequisites Target="$(Empire)">
       <!-- Should work, but doesn't, hence the path pre-req instead
         <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="LuxuryResourceGenerationQuest" QuestState="NotStarted"/>
         <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="LuxuryResourceGenerationQuest" QuestState="InProgress"/>
         <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="LuxuryResourceGenerationQuest" QuestState="Completed"/>
       -->
+        <PathPrerequisite Flags="Prerequisite">ClassEmpire,FactionTraitIsEmpire0</PathPrerequisite>
         <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,FactionTraitStrategicGen</PathPrerequisite>
         <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
     </Prerequisites>
