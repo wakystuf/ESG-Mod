@@ -387,7 +387,10 @@
 		<Property Name="HappinessBonusMultiplier"                          BaseValue="1"/>
 		<Property Name="HappinessBonusFromFleetPresence"/>
 		<Property Name="HappinessStarSystemIsHappy" BaseValue="0" MinValue="0" MaxValue="1"/>
-
+                <Property Name="HappinessStarSystemIsMutinous" BaseValue="0" MinValue="0" MaxValue="1"/>
+                <Property Name="HappinessStarSystemIsUnhappy" BaseValue="0" MinValue="0" MaxValue="1"/>
+                <Property Name="HappinessStarSystemIsEcstatic" BaseValue="0" MinValue="0" MaxValue="1"/>
+		
 		<!-- Ownership -->
 		<Property Name="Ownership"              BaseValue="0"       MinValue="0"    MaxValue="1"    IsSealed="true" IsSerializable="true"/>
 		<Property Name="OwnerShipDecayRate"     BaseValue="-0.1"   MinValue="-1"   MaxValue="0"/>
@@ -1132,7 +1135,7 @@
 		<!-- system conversion -->
 
 		<!-- Sum of System Levels -->
-		<BinaryModifier TargetProperty="SystemLevelSum"       Operation="Addition"    Left="$(SystemLevel)" BinaryOperation="Addition" Right="1"     Path="!ClassExploitedStarSystem/./ClassEmpire"/>
+		<BinaryModifier TargetProperty="SystemLevelSum"       Operation="Addition"    Left="$(SystemLevel)" BinaryOperation="Subtraction" Right="$(OutpostCount)"     Path="!ClassExploitedStarSystem/./ClassEmpire"/>
 		<Modifier       TargetProperty="SystemLevelSum"       Operation="Addition"    Value="$(SystemLevel)"      Path="ClassExploitedStarSystem/./ClassEmpire"/>
 
 		<!-- Happiness stuff -->
@@ -1717,7 +1720,7 @@
 		<Property Name="BuildingProductionCostReduction" MaxValue="0.75"/>
 		<Property Name="UniqueBuildingProductionCostReduction" MaxValue="0.75"/>
 		<Property Name="ShipProductionCostReduction" MinValue="Negative" MaxValue="0.75"/>
-		<Property Name="ColonyShipProductionCostReduction" MaxValue="0.75"/>
+		<Property Name="ColonyShipProductionCostReduction" MinValue="Negative" MaxValue="0.75"/>
 		<Property Name="MilitaryShipProductionCostReduction" MinValue="Negative" MaxValue="0.75"/>
 		<Property Name="ProbesProductionCostReduction" MaxValue="0.75"/>
 		<Property Name="MothershipProductionCostReduction" BaseValue="1"/>
@@ -2254,4 +2257,45 @@
     <Modifier TargetProperty="SystemHappiness"    Operation="Addition" Value="-10"	 Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="SystemManpowerLoss" Operation="Percent"  Value="0.2"   Path="./ClassColonizedStarSystem,BesiegedColonizedStarSystem"   Priority="1"/>
   </SimulationDescriptor>
+
+    <!-- Happiness on system -->
+    <SimulationDescriptor Name="HappinessStatusStarSystem0" Type="HappinessStatusStarSystem" IsSerializable="false">
+        <Modifier TargetProperty="HappinessStarSystemIsMutinous"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="SystemEmpirePoint"        Operation="Percent" Value="-.75"    Path="ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="SystemGrowth"             Operation="Percent" Value="-.75"    Path="ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="HappinessStatusStarSystem1" Type="HappinessStatusStarSystem" IsSerializable="false">
+        <Modifier TargetProperty="HappinessStarSystemIsUnhappy"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="SystemEmpirePoint"        Operation="Percent" Value="-.3" Path="ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="SystemGrowth"             Operation="Percent" Value="-.3" Path="ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="HappinessStatusStarSystem4" Type="HappinessStatusStarSystem" IsSerializable="false">
+        <Modifier TargetProperty="HappinessStarSystemIsHappy"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="HappinessStarSystemIsEcstatic"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="SystemEmpirePoint"        Operation="Percent" Value=".25"  Path="ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="SystemGrowth"             Operation="Percent" Value=".25"  Path="ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+
+    <!-- Happiness on system for Hissho -->
+    <SimulationDescriptor Name="ObedienceStatusStarSystem0" Type="ObedienceStatusStarSystem" IsSerializable="false">
+        <Modifier TargetProperty="HappinessStarSystemIsMutinous"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="SystemEmpirePoint"        Operation="Percent" Value="-.3"    Path="ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="SystemGrowth"             Operation="Percent" Value="-.3"    Path="ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="ObedienceStatusStarSystem1" Type="ObedienceStatusStarSystem" IsSerializable="false">
+        <Modifier TargetProperty="HappinessStarSystemIsUnhappy"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="SystemEmpirePoint"        Operation="Percent" Value="-.15" Path="ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="SystemGrowth"             Operation="Percent" Value="-.15" Path="ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+	
+    <SimulationDescriptor Name="ObedienceStatusStarSystem4" Type="ObedienceStatusStarSystem" IsSerializable="false">
+        <Modifier TargetProperty="HappinessStarSystemIsHappy"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="HappinessStarSystemIsEcstatic"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="SystemEmpirePoint"        Operation="Percent" Value=".15"  Path="ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="SystemGrowth"             Operation="Percent" Value=".15"  Path="ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+
 </Datatable>
