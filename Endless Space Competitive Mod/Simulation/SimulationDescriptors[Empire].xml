@@ -1545,6 +1545,28 @@
 		<Modifier TargetProperty="AdmiralsInFriendlyTerritory"	Operation="Force" Value="$(AdmiralsInFriendlyTerritory)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 		<Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="$(MinorTraitsAssimilated)" Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet/ClassPopulation"/>
+
+		<!--Automatons-->
+		<!--Formula is : 33% - ((SystemCount - (OvercolCap / 2)) / (GalaxyNodes * 0.33)) -->
+		<Property Name="EnableTeleportation" BaseValue="0"/>
+		<Property Name="TempCalcProperty" BaseValue="0"/>
+		<Property Name="SystemCountTemp" BaseValue="0" MinValue="0"/>
+		<Property Name="OverColonizationThresholdTemp" BaseValue="0"/>
+		<Property Name="NumberOfGalaxyNodesTemp" BaseValue="0"/>
+		<Property Name="FinalBonus" BaseValue="0.33" MinValue="0"/>
+		<Modifier TargetProperty="NumberOfGalaxyNodesTemp" Operation="Addition" Value="$(NumberOfGalaxyNodes)" />
+		<Modifier TargetProperty="OverColonizationThresholdTemp" Operation="Addition" Value="$(OverColonizationThreshold)" />
+		<Modifier TargetProperty="SystemCountTemp" Operation="Addition" Value="$(SystemCount)" />
+
+		<Modifier TargetProperty="OverColonizationThresholdTemp" Operation="Multiplication" Value="0.5"/>
+		<Modifier TargetProperty="SystemCountTemp" Operation="Subtraction" Value="$(OverColonizationThresholdTemp)" />
+		<Modifier TargetProperty="NumberOfGalaxyNodesTemp" Operation="Multiplication" Value="0.33"/>
+
+		<BinaryModifier TargetProperty="TempCalcProperty" Operation="Addition" Left="$(SystemCountTemp)" BinaryOperation="Division" Right="$(NumberOfGalaxyNodesTemp)" />
+
+		<Modifier TargetProperty="FinalBonus" Operation="Subtraction" Value="$(TempCalcProperty)" />
+
+		<BinaryModifier TargetProperty="SystemFIDSIPercent"   Operation="Addition"   Left="$(FinalBonus)"  BinaryOperation="Multiplication" Right="$(EnableTeleportation)" Path="ClassEmpire/ClassColonizedStarSystem" />
 	</SimulationDescriptor>
 
 	<!--Used for Craver Influence and Science ESG-->
