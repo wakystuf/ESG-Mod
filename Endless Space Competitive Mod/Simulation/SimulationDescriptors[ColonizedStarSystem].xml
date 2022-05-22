@@ -209,6 +209,10 @@
     <Property Name="DrudgeQuest1Count"		BaseValue="0" MinValue="0"/>
     <Property Name="DrudgeQuest2Count"		BaseValue="0" MinValue="0"/>
     <Property Name="DrudgeQuest3Count"		BaseValue="0" MinValue="0"/>
+
+	<!--Automatons-->
+	<Property Name="IndustryInterest" BaseValue="0"/>
+	<Property Name="TotalMult" BaseValue="1"/>
     
     <!-- ########################################################## -->
 		<!-- ######################## PROPERTY ######################## -->
@@ -928,13 +932,12 @@
 		<Modifier TargetProperty="SystemsAboveOverColonizationCount" Operation="Addition" Value="$(SystemsAboveOverColonizationCount)" Path="../ClassEmpire"/>
 
 		<Modifier TargetProperty="MaximumSystemProductionStock" Operation="Addition"  Value="$(NetSystemProduction)"/>
-		<Property Name="ImVerySmart" BaseValue="0"/>
-		<Property Name="TotalMult" BaseValue="1"/>
+		
 		<Modifier TargetProperty="MaximumSystemProductionStock" Operation="Multiplication"  Value="$(TotalMult)"/>
-		<BinaryModifier TargetProperty="ImVerySmart" Operation="Addition" Left="$(SystemProductionStock)" BinaryOperation="Multiplication" Right="$(InterestRate)"/>
-		<BinaryModifier TargetProperty="MaximumSystemProductionStock" Operation="Subtraction" Left="$(ImVerySmart)" BinaryOperation="Multiplication" Right="$(SystemLevel)" Priority="1"/>
-		<BinaryModifier TargetProperty="MaximumSystemProductionStock" Operation="Subtraction" Left="$(ImVerySmart)" BinaryOperation="Multiplication" Right="4" Priority="1"/>
-		<Modifier TargetProperty="NetSystemProduction" Operation="Addition"  Value="$(ImVerySmart)"/>
+		<BinaryModifier TargetProperty="IndustryInterest" Operation="Addition" Left="$(SystemProductionStock)" BinaryOperation="Multiplication" Right="$(InterestRate)"/>
+		<BinaryModifier TargetProperty="MaximumSystemProductionStock" Operation="Subtraction" Left="$(IndustryInterest)" BinaryOperation="Multiplication" Right="$(SystemLevel)" Priority="1"/>
+		<BinaryModifier TargetProperty="MaximumSystemProductionStock" Operation="Subtraction" Left="$(IndustryInterest)" BinaryOperation="Multiplication" Right="4" Priority="1"/>
+		<Modifier TargetProperty="NetSystemProduction" Operation="Addition"  Value="$(IndustryInterest)"/>
 
 		<Modifier       TargetProperty="OwnerShipDecayRate"    Operation="Division" Value="$(GameSpeedMultiplier)" />
 		<Modifier       TargetProperty="OwnerShipRecoveryRate" Operation="Division" Value="$(GameSpeedMultiplier)" />
