@@ -308,6 +308,7 @@
     <PathPrerequisite Flags="Prerequisite,DiplomaticTradable,Discard" Inverted="true">AffinityGameplayVampirilis</PathPrerequisite>
     <SimulationDescriptorReference Name="TechnologyDust1" />
     <SimulationDescriptorReference Name="TechnologyDust1Alt" />
+    <SimulationDescriptorReference Name="TechnologyTrade1" />
     <SimulationDescriptorReference Name="TechnologyCountEconomyAndTradeIncreaseStage2" />
     <SimulationDescriptorReference Name="TechnologyCounter" />
     <PopulationEvent Name="PopulationPoliticalEventPacifistTechnology" />
@@ -319,6 +320,7 @@
     <CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage2Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEconomyAndTradeMultiplier)</CustomCost>
     <PathPrerequisite Flags="Prerequisite,DiplomaticTradable,Discard,Faction,AffinityGameplayTechnologyVampirilis" Inverted="false">AffinityGameplayVampirilis</PathPrerequisite>
     <SimulationDescriptorReference Name="TechnologyDust1" />
+    <SimulationDescriptorReference Name="TechnologyTrade1" />
     <SimulationDescriptorReference Name="TechnologyCountEconomyAndTradeIncreaseStage2" />
     <SimulationDescriptorReference Name="TechnologyCounter" />
     <PopulationEvent Name="PopulationPoliticalEventPacifistTechnology" />
@@ -330,8 +332,10 @@
     <AIGain RessourceName="Capability">
       <Tag>TechnologyTrade</Tag>
     </AIGain>
-    <CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage3Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEconomyAndTradeMultiplier)</CustomCost>
-    <SimulationDescriptorReference Name="TechnologyTrade1" />
+    <CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage3Multiplier) * (1 - (Property(StockLocation,@ClassEmpire/ClassResearch , TechnologyLinkReductionValue) * Count(StockLocation, @'ClassEmpire/ClassResearch,TechnologyLinkEconomyAndTrade5To9'))) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEconomyAndTradeMultiplier)</CustomCost>
+    <PathPrerequisite Flags="Prerequisite,Discard,DiplomaticTradable" Inverted="true">AffinityMappingVenetians</PathPrerequisite>
+    <SimulationDescriptorReference Name="TechnologyTrade2" />
+    <SimulationDescriptorReference Name="TechnologyTrade2Common" />
     <SimulationDescriptorReference Name="TechnologyCountEconomyAndTradeIncreaseStage3" />
     <SimulationDescriptorReference Name="TechnologyCounter" />
     <PopulationEvent Name="PopulationPoliticalEventPacifistTechnology" />
@@ -340,23 +344,37 @@
     <HelperVariable Name="AvailableTerranPlanets" />
     <HelperFormula>$(AvailableTerranPlanets) * 1 + 5 * $(ImprovementsVariable) * $(DustVariable)</HelperFormula>
   </TechnologyDefinition>
-
+  <TechnologyDefinition Name="TechnologyDefinitionEconomyAndTrade9Venetians" TechnologyStage="TechnologyStageDefinitionEconomyAndTrade3" Category="CategoryTechnologyEconomyAndTrade" ScoreProvider="TechnologyUnlocked">
+    <AIGain RessourceName="Capability">
+      <Tag>TechnologyTrade</Tag>
+    </AIGain>
+    <CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage3Multiplier) * (1 - (Property(StockLocation,@ClassEmpire/ClassResearch , TechnologyLinkReductionValue) * Count(StockLocation, @'ClassEmpire/ClassResearch,TechnologyLinkEconomyAndTrade5To9'))) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEconomyAndTradeMultiplier)</CustomCost>
+    <PathPrerequisite Flags="Prerequisite,Discard,DiplomaticTradable,Faction,AffinityVenetians" Inverted="false">AffinityMappingVenetians</PathPrerequisite>
+    <SimulationDescriptorReference Name="TechnologyTrade2" />
+    <SimulationDescriptorReference Name="TechnologyTrade2Venetians" />
+    <SimulationDescriptorReference Name="TechnologyCountEconomyAndTradeIncreaseStage3" />
+    <SimulationDescriptorReference Name="TechnologyCounter" />
+    <PopulationEvent Name="PopulationPoliticalEventPacifistTechnology" />
+    <HelperVariable Name="DustVariable" />
+    <HelperVariable Name="ImprovementsVariable" />
+    <HelperVariable Name="AvailableTerranPlanets" />
+    <HelperFormula>$(AvailableTerranPlanets) * 1 + 5 * $(ImprovementsVariable) * $(DustVariable)</HelperFormula>
+  </TechnologyDefinition>
+  
   <TechnologyDefinition Name="TechnologyDefinitionEconomyAndTrade12" TechnologyStage="TechnologyStageDefinitionEconomyAndTrade4" Category="CategoryTechnologyEconomyAndTrade" SubCategoryInQuests="TechnoMilitary" ScoreProvider="TechnologyUnlocked">
     <CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage4Multiplier) * (1 - (Property(StockLocation,@ClassEmpire/ClassResearch , TechnologyLinkReductionValue) * Count(StockLocation, @'ClassEmpire/ClassResearch,TechnologyLinkEconomyAndTrade9To12'))) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEconomyAndTradeMultiplier)</CustomCost>
-    <PathPrerequisite Flags="Prerequisite,Discard,DiplomaticTradable" Inverted="true">AffinityMappingVenetians</PathPrerequisite>
-    <SimulationDescriptorReference Name="TechnologyTrade2" />
-    <SimulationDescriptorReference Name="TechnologyTrade2Common" />
+    <SimulationDescriptorReference Name="TechnologyTrade99" />
     <SimulationDescriptorReference Name="TechnologyCountEconomyAndTradeIncreaseStage4" />
     <SimulationDescriptorReference Name="TechnologyCounter" />
     <PopulationEvent Name="PopulationPoliticalEventPacifistTechnology" />
     <HelperVariable Name="TradeSubsidiaryVariable" />
     <HelperFormula>5 * $(TradeSubsidiaryVariable)</HelperFormula>
   </TechnologyDefinition>
+
   <TechnologyDefinition Name="TechnologyDefinitionEconomyAndTrade12Venetians" TechnologyStage="TechnologyStageDefinitionEconomyAndTrade4" Category="CategoryTechnologyEconomyAndTrade" SubCategoryInQuests="TechnoMilitary" ScoreProvider="TechnologyUnlocked">
     <CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage4Multiplier) * (1 - (Property(StockLocation,@ClassEmpire/ClassResearch , TechnologyLinkReductionValue) * Count(StockLocation, @'ClassEmpire/ClassResearch,TechnologyLinkEconomyAndTrade9To12'))) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEconomyAndTradeMultiplier)</CustomCost>
     <PathPrerequisite Flags="Prerequisite,Discard,DiplomaticTradable,Faction,AffinityVenetians" Inverted="false">AffinityMappingVenetians</PathPrerequisite>
-    <SimulationDescriptorReference Name="TechnologyTrade2" />
-    <SimulationDescriptorReference Name="TechnologyTrade2Venetians" />
+    <SimulationDescriptorReference Name="TechnologyTrade99" />
     <SimulationDescriptorReference Name="TechnologyCountEconomyAndTradeIncreaseStage4" />
     <SimulationDescriptorReference Name="TechnologyCounter" />
     <PopulationEvent Name="PopulationPoliticalEventPacifistTechnology" />
