@@ -22,8 +22,6 @@
 		<Property Name="EmpirePointFromIndustryConversion"	BaseValue="0"/>
 		<Property Name="CanBeSlowed"												BaseValue="1"/>
 		<Property Name="BonusFromOrbitalPlatforms" BaseValue="0" MaxValue="0.20"/>
-		<Property Name="BonusIndustryInterest" BaseValue="0" MinValue="0"/>
-		<Property Name="InterestRate" BaseValue="0"/>
     
 		<!-- Food rework -->
 		<Property Name="SystemGrowthStockNextTurn"					BaseValue="0" MinValue="0"/>
@@ -211,8 +209,14 @@
     <Property Name="DrudgeQuest3Count"		BaseValue="0" MinValue="0"/>
 
 	<!--Automatons-->
+	<Property Name="InterestRate" BaseValue="0"/>
 	<Property Name="IndustryInterest" BaseValue="0"/>
 	<Property Name="TotalMult" BaseValue="1"/>
+	<Property Name="IndustryInterestRatioToIndustryNet" BaseValue="0" MaxValue="0.5"/>
+	<Property Name="IndustryInterestFinal" BaseValue="0"/>
+	<Property Name="SystemLevelCutBy4" BaseValue="0"/>
+	
+	
     
     <!-- ########################################################## -->
 		<!-- ######################## PROPERTY ######################## -->
@@ -931,13 +935,16 @@
 
 		<Modifier TargetProperty="SystemsAboveOverColonizationCount" Operation="Addition" Value="$(SystemsAboveOverColonizationCount)" Path="../ClassEmpire"/>
 
-		<Modifier TargetProperty="MaximumSystemProductionStock" Operation="Addition"  Value="$(NetSystemProduction)"/>
+		<Modifier TargetProperty="MaximumSystemProductionStock" Operation="Addition"  Value="$(NetSystemProduction)"  Priority="-1"/>
 		
-		<Modifier TargetProperty="MaximumSystemProductionStock" Operation="Multiplication"  Value="$(TotalMult)"/>
+		<Modifier TargetProperty="MaximumSystemProductionStock" Operation="Multiplication"  Value="$(TotalMult)" Priority="-1"/>
 		<BinaryModifier TargetProperty="IndustryInterest" Operation="Addition" Left="$(SystemProductionStock)" BinaryOperation="Multiplication" Right="$(InterestRate)"/>
-		<BinaryModifier TargetProperty="MaximumSystemProductionStock" Operation="Subtraction" Left="$(IndustryInterest)" BinaryOperation="Multiplication" Right="$(SystemLevel)" Priority="1"/>
-		<BinaryModifier TargetProperty="MaximumSystemProductionStock" Operation="Subtraction" Left="$(IndustryInterest)" BinaryOperation="Multiplication" Right="4" Priority="1"/>
-		<Modifier TargetProperty="NetSystemProduction" Operation="Addition"  Value="$(IndustryInterest)"/>
+		<BinaryModifier TargetProperty="SystemLevelCutBy4" Operation="Addition" Left="$(SystemLevel)" BinaryOperation="Multiplication" Right="0.25"/>
+		<BinaryModifier TargetProperty="IndustryInterestRatioToIndustryNet" Operation="Addition" Left="$(IndustryInterest)" BinaryOperation="Division" Right="$(SystemProduction)"/> <!--This is used to limit the industry bonus with MaxValue of the property-->
+		<BinaryModifier TargetProperty="IndustryInterestFinal" Operation="Addition" Left="$(IndustryInterestRatioToIndustryNet)" BinaryOperation="Multiplication" Right="$(SystemProduction)"/> 
+		<Modifier TargetProperty="NetSystemProduction" Operation="Addition"  Value="$(IndustryInterestFinal)"/>
+		<Modifier TargetProperty="MaximumSystemProductionStock" Operation="Subtraction"  Value="$(IndustryInterestFinal)"/>
+		<BinaryModifier TargetProperty="MaximumSystemProductionStock" Operation="Subtraction" Left="$(IndustryInterestFinal)" BinaryOperation="Multiplication" Right="$(SystemLevelCutBy4)"/>
 
 		<Modifier       TargetProperty="OwnerShipDecayRate"    Operation="Division" Value="$(GameSpeedMultiplier)" />
 		<Modifier       TargetProperty="OwnerShipRecoveryRate" Operation="Division" Value="$(GameSpeedMultiplier)" />
