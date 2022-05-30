@@ -65,9 +65,13 @@
   <!-- ************************** -->
 
   <SimulationDescriptor Name="ModuleSupportAntiCrew"                 Type="ModuleSupportAntiCrew">
-    <Property Name="FlotillaShipManpowerKillPerHitPercent"                BaseValue="0"/>
-    <Property Name="FlotillaManpowerDamageOverTimeIncreaseVar"                BaseValue="0"/>
-    <Modifier TargetProperty="FlotillaManpowerDamageOverTimeIncrease"            Operation="Addition"	Value="$(FlotillaManpowerDamageOverTimeIncreaseVar)"      Path="../ClassShip" TooltipHidden="true"/>
+    <Property Name="FlotillaManpowerDamageOverTimeIncreaseVar"        BaseValue="0"/>
+    <Property Name="FlotillaShipManpowerKillPerHitPercent"            BaseValue="0"/>
+    <Property Name="FleetManpowerDamageOverTimeIncreaseVar"           BaseValue="0"/>
+    <Property Name="FleetShipManpowerKillPerHitPercent"               BaseValue="0"/>
+    <Modifier TargetProperty="FlotillaManpowerDamageOverTimeIncrease" Operation="Addition" Value="$(FlotillaManpowerDamageOverTimeIncreaseVar)" Path="../ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="ManpowerDamageOverTime"                 Operation="Addition" Value="$(FleetManpowerDamageOverTimeIncreaseVar)" Path="../ClassGarrison//ClassShip" TooltipHidden="true"/>
+    <Modifier TargetProperty="ShipManpowerKillPerHitPercent"          Operation="Addition" Value="$(FleetShipManpowerKillPerHitPercent)" Path="../ClassGarrison//ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleSupportAntiCrew1Strategic1"      Type="ModuleSupportAntiCrew">
@@ -901,12 +905,16 @@
 
   <!--Repair-->
   <SimulationDescriptor Name="ModuleSupportRepair"            Type="ModuleSupportRepair">
-    <Property Name="RepairAfterBattle"                BaseValue="0"/>
-    <Property Name="RepairAfterPhase"                BaseValue="0"/>
-    <Property Name="HealthRegenerationRatio"                BaseValue="0"/>
-    <Modifier TargetProperty="RepairAfterBattle"      Operation="Addition" Value="$(RepairAfterBattle)"       Path="../ClassShip"     Priority="1"/>
-    <Modifier TargetProperty="RepairAfterPhase"      Operation="Addition" Value="$(RepairAfterPhase)"       Path="../ClassShip"     Priority="1"/>
-    <Modifier TargetProperty="HealthRegenerationRatio"      Operation="Addition" Value="$(HealthRegenerationRatio)"       Path="../ClassShip"     Priority="1"/>
+    <Property Name="RepairAfterBattle"                    BaseValue="0"/>
+    <Property Name="RepairAfterBattleFleet"               BaseValue="0"/>
+    <Property Name="RepairAfterPhase"                     BaseValue="0"/>
+    <Property Name="RepairAfterPhaseFleet"                BaseValue="0"/>
+    <Property Name="HealthRegenerationRatio"              BaseValue="0"/>
+    <Modifier TargetProperty="RepairAfterBattle"          Operation="Addition" Value="$(RepairAfterBattle)"       Path="../ClassShip"                         Priority="1"/>
+    <Modifier TargetProperty="RepairAfterBattleFleet"     Operation="Addition" Value="$(RepairAfterBattle)"       Path="../ClassGarrisonFleet//ClassShip"     Priority="1"/>
+    <Modifier TargetProperty="RepairAfterPhase"           Operation="Addition" Value="$(RepairAfterPhase)"        Path="../ClassShip"                         Priority="1"/>
+    <Modifier TargetProperty="RepairAfterPhase"           Operation="Addition" Value="$(RepairAfterPhaseFleet)"   Path="../ClassGarrsionFleet//ClassShip"     Priority="1"/>
+    <Modifier TargetProperty="HealthRegenerationRatio"    Operation="Addition" Value="$(HealthRegenerationRatio)" Path="../ClassShip"                         Priority="1"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleSupportRepair1" Type="ModuleSupportRepair">
@@ -952,7 +960,7 @@
   <SimulationDescriptor Name="ModuleSupportShieldRegenerate"                         Type="ModuleSupportShieldRegenerate">
     <Property Name="ShieldRegeneratePerSecond"                BaseValue="0"/>
     <Modifier TargetProperty="ShieldRegeneratePerSecond"      Operation="Multiplication" Value="$(Multiplier)" TooltipHidden="true"/>
-    <Modifier TargetProperty="ShieldRegeneratePerSecond"      Operation="Addition" Value="$(ShieldRegeneratePerSecond)"       Path="../ClassGarrison/ClassShip"     Priority="1"/>
+    <Modifier TargetProperty="ShieldRegeneratePerSecond"      Operation="Addition" Value="$(ShieldRegeneratePerSecond)"       Path="../ClassGarrisonFleet/ClassShip"     Priority="1"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleSupportShieldRegenerate1Strategic4"              Type="ModuleSupportShieldRegenerate">
