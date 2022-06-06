@@ -103,12 +103,37 @@
 		<Property Name="UtopianUnhappyReduction"					BaseValue="0" MinValue="Negative"/>
     <Property Name="UtopianUnhappyReductionPerPop"		BaseValue="0" MinValue="Negative"/>
 
-
+    <Property Name="DrudgeCount" BaseValue="0"/>
+    <Property Name="DrudgeTitanCount" BaseValue="0"/>
+    <Property Name="DrudgeCountCappedAtOne" MaxValue="1" BaseValue="0"/> <!--Basically a boolean-->
+    <Property Name="DrudgeTitanCountCappedAtOne" MaxValue="1" BaseValue="0"/> <!--Basically a boolean-->
+    <Property Name="NonDrudgeCount" BaseValue="0"/>
+    <Property Name="NonDrudgeTitanCount" BaseValue="0"/>
+    <Property Name="BuildingProductionCostReductionTemp" BaseValue="0"/>
+    <Property Name="ShipProductionCostReductionTemp" BaseValue="0"/> 
 
     <!-- ########################################################## -->
     <!-- ######################## MODIFIER ######################## -->
     <!-- ########################################################## -->
 
+    <Modifier TargetProperty="DrudgeCountCappedAtOne" Operation="Addition" Value="$(DrudgeCount)"/>
+    <Modifier TargetProperty="DrudgeTitanCountCappedAtOne" Operation="Addition" Value="$(DrudgeTitanCount)"/>
+
+    <Modifier TargetProperty="NonDrudgeCount" Operation="Addition" Value="$(MajorPopulationCount)"/>
+    <Modifier TargetProperty="NonDrudgeCount" Operation="Addition" Value="$(NonMajorPopulationCount)"/>
+    <Modifier TargetProperty="NonDrudgeCount" Operation="Subtraction" Value="$(DrudgeCount)"/>
+
+    <Modifier TargetProperty="NonDrudgeTitanCount" Operation="Addition" Value="$(MajorPopulationCount)"/>
+    <Modifier TargetProperty="NonDrudgeTitanCount" Operation="Addition" Value="$(NonMajorPopulationCount)"/>
+    <Modifier TargetProperty="NonDrudgeTitanCount" Operation="Subtraction" Value="$(DrudgeTitanCount)"/>
+    
+    <BinaryModifier TargetProperty="BuildingProductionCostReductionTemp" Operation="Addition" Left="$(DrudgeCountCappedAtOne)" BinaryOperation="Multiplication" Right="$(NonDrudgeCount)"/>
+    <BinaryModifier TargetProperty="ShipProductionCostReductionTemp" Operation="Addition" Left="$(DrudgeTitanCountCappedAtOne)" BinaryOperation="Multiplication" Right="$(NonDrudgeTitanCount)"/>
+    <Modifier TargetProperty="BuildingProductionCostReductionTemp" Operation="Multiplication" Value="0.01"/>
+    <Modifier TargetProperty="ShipProductionCostReductionTemp" Operation="Multiplication" Value="0.01"/>
+    <!--<Modifier TargetProperty="BuildingProductionCostReduction" Operation="Addition" Value="$(ShipProductionCostReductionTemp)"  Path="../ClassColonizedStarSystem" Priority="1"/>
+    <Modifier TargetProperty="ShipProductionCostReduction" Operation="Addition" Value="$(BuildingProductionCostReductionTemp)"  Path="../ClassColonizedStarSystem" Priority="1"/>-->
+    
     <!-- Utopian Architecture and Divine Indifference -->
     <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="$(UtopianUnhappyReductionPerPop)" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedPlanet" Priority="10" TooltipHidden="true"/>
 
