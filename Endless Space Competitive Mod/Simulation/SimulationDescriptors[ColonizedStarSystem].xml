@@ -1309,30 +1309,32 @@
 
 		<Modifier TargetProperty="AtWarStatus"                  Operation="Addition" Value="$(WarCount)"                  Priority="1"/>
 
-		<!-- MigrationScore = Approval x (1 + 0.05 x FreeSlots) x (1 - 0.75 x WarCount / NbPlayers) x (1.000 - EconomyRanking x 0.00 (effectively useless)) -->
-		<BinaryModifier TargetProperty="MigrationScore" Operation="Addition"          Left="$(Happiness)" BinaryOperation="Multiplication" Right="0.4" />
+		<!-- Migration Score is simply based on approval (need to be above 30 approval)
+			Old formula: MigrationScore = Approval x (1 + 0.05 x FreeSlots) x (1 - 0.75 x WarCount / NbPlayers) x (1.000 - EconomyRanking x 0.00 (effectively useless)) -->
+		<BinaryModifier TargetProperty="MigrationScore" Operation="Addition"          Left="$(Happiness)" BinaryOperation="Multiplication" Right="1.67" />
+		<!-- 
 		<Modifier TargetProperty="MigrationScore" Operation="Addition"    Value="$(MigrationScoreFromSystemLevel)" />
 		<Modifier TargetProperty="MigrationScore" Operation="Multiplication"    Value="$(MigrationScoreFromFreeSlots)" />
 		<Modifier TargetProperty="MigrationScore" Operation="Multiplication"    Value="$(MigrationScoreFromWars)" />
-		<Modifier TargetProperty="MigrationScore" Operation="Multiplication"    Value="$(MigrationScoreFromEconomy)" />
+		<Modifier TargetProperty="MigrationScore" Operation="Multiplication"    Value="$(MigrationScoreFromEconomy)" />-->
 
-		<!-- 1 + (0.02 x FreeSlots) -->
+		<!-- 1 + (0.02 x FreeSlots) 
 		<BinaryModifier TargetProperty="MigrationScoreFromFreeSlots"    Operation="Addition"        Left="$(MaximumPopulation)" BinaryOperation="Subtraction" Right="$(Population)" Priority="0"/>
 		<Modifier TargetProperty="MigrationScoreFromFreeSlots"          Operation="Multiplication"  Value="0.02" Priority="1"/>
-		<Modifier TargetProperty="MigrationScoreFromFreeSlots"          Operation="Addition"        Value="1" Priority="2"/>
+		<Modifier TargetProperty="MigrationScoreFromFreeSlots"          Operation="Addition"        Value="1" Priority="2"/>-->
 
-		<!--SystemLevel * 5 - 5-->
+		<!--SystemLevel * 5 - 5
 		<BinaryModifier TargetProperty="MigrationScoreFromSystemLevel"          Operation="Addition"        Left="5" BinaryOperation="Multiplication" Right="$(SystemLevel)"/>
-		<Modifier TargetProperty="MigrationScoreFromSystemLevel"          Operation="Subtraction"         Value="5"/>
-		<!-- 1 - (0.75 x WarCount / NbPlayers) -->
+		<Modifier TargetProperty="MigrationScoreFromSystemLevel"          Operation="Subtraction"         Value="5"/>-->
+		<!-- 1 - (0.75 x WarCount / NbPlayers) 
 		<BinaryModifier TargetProperty="MigrationScoreFromWars"    Operation="Addition"         Left="-0.75" BinaryOperation="Multiplication" Right="$(WarCount)" Priority="0"/>
 		<Modifier TargetProperty="MigrationScoreFromWars"          Operation="Division"         Value="$(NumberOfMajorEmpires)" Priority="1"/>
-		<Modifier TargetProperty="MigrationScoreFromWars"          Operation="Addition"         Value="1" Priority="2"/>
+		<Modifier TargetProperty="MigrationScoreFromWars"          Operation="Addition"         Value="1" Priority="2"/>-->
 
-		<!-- EconomyRanking: First = 0, second = 1, etc. -->
-		<!-- 1.02 - (EconomyRanking x 0.02) -->
+		<!-- EconomyRanking: First = 0, second = 1, etc
+			  1.02 - (EconomyRanking x 0.02) 
 		<BinaryModifier TargetProperty="MigrationScoreFromEconomy"    Operation="Addition"         Left="0.00" BinaryOperation="Multiplication" Right="$(VictoryEconomicRanking)" Priority="0"/>
-		<Modifier TargetProperty="MigrationScoreFromEconomy"          Operation="Addition"         Value="1.00" Priority="1"/>
+		<Modifier TargetProperty="MigrationScoreFromEconomy"          Operation="Addition"         Value="1.00" Priority="1"/>-->
 
 		<!-- outpost migration flux -->
 		<Modifier TargetProperty="SystemGrowth" Operation="Addition" Value="$(SystemGrowth)" Path="ClassColonizedStarSystem/ClassOutpostMigrationFlux"/>
