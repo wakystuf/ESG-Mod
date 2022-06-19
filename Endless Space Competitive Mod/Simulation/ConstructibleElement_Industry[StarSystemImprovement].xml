@@ -766,6 +766,22 @@
     <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionApproval1" />
   </StarSystemImprovementDefinition>
 
+  <!--  Large Chain Gang -->
+  <StarSystemResourceImprovementDefinition Name="StarSystemImprovementEnrollmentLarge" SubCategory="SubCategoryMilitary" ScoreProvider="StarSystemImprovementBuilt">
+    <AIGain RessourceName="GrowthToManpowerGain"/>
+    <Tags>NoBuyout</Tags>
+    <Cost ResourceName="SystemTurnBased">1</Cost>
+    <CustomCost ResourceName="SystemGrowth" Instant="true">600 * Property(StockLocation, @../ClassEmpire, GameSpeedMultiplier, true)</CustomCost>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyDefense1NonVampirilis</TechnologyPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">../ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard">ColonizedStarSystemStateColony,!BesiegedColonizedStarSystem,!BlockadedColonizedStarSystem,!GroundBattleInProgress</PathPrerequisite>
+    <!--  Check growth stock instead of population count (must have equivalent to 2 pop). Also, uses flag Enqueue instead of Prerequisite so that it doesn't block construction queue once queued  -->
+    <InterpreterPrerequisite Flags="NotEnoughPopulation,Enqueue">Property(Context, @ClassColonizedStarSystem, SystemGrowthStock) ge (2 * 600 * Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)) and Property(Context, @ClassColonizedStarSystem, PopulationWithGrowth) ge 1</InterpreterPrerequisite>
+    <!--  if flag Cancel is raised on a queued construction, it will be cancelled (and refund its cost)  -->
+    <InterpreterPrerequisite Flags="Prerequisite,ManpowerMaxed,Cancel">Property(Context,@../ClassEmpire, EmpireManpowerStock) lt Property(Context,@../ClassEmpire, MaximumEmpireManpowerStock)</InterpreterPrerequisite>
+    <Resource Name="EmpireManpower">600</Resource>
+  </StarSystemResourceImprovementDefinition>
+
   <!--**********************-->
   <!--***TIER 2 BUILDINGS***-->
   <!--**********************-->
