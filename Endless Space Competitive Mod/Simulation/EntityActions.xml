@@ -364,6 +364,7 @@
     <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
 
     <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 100</RelationInterpreterPrerequisite>
+    <RelationInterpreterPrerequisite Flags="Prerequisite,SystemIsBeingBlockaded">Property(Context, @'ClassMinorRelationWithMajor', MinorBlockaded, true) lt 1</RelationInterpreterPrerequisite>
 
     <MinorEmpireInterpreterPrerequisite Flags="OwnershipType">$(OwnershipType) lt 2 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
     <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpireAssimilated</PopulationEventOnSelf>
@@ -382,6 +383,7 @@
 
     <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 100 </RelationInterpreterPrerequisite>
     <RelationInterpreterPrerequisite Flags="Prerequisite,NotConnectedToRootNetwork">Path(Context,@'ClassMinorRelationWithMajor,MinorRelationUnderInfluence')</RelationInterpreterPrerequisite>
+    <RelationInterpreterPrerequisite Flags="Prerequisite,SystemIsBeingBlockaded">Property(Context, @'ClassMinorRelationWithMajor', MinorBlockaded, true) lt 1</RelationInterpreterPrerequisite>
 
     <MinorEmpireInterpreterPrerequisite Flags="OwnershipType">$(OwnershipType) lt 2 or $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
     <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpireAssimilated</PopulationEventOnSelf>
@@ -401,6 +403,7 @@
     <StatePrerequisite Inverted="true" Flags="Prerequisite,Disable,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
 
     <RelationInterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 100</RelationInterpreterPrerequisite>
+    <RelationInterpreterPrerequisite Flags="Prerequisite,SystemIsBeingBlockaded">Property(Context, @'ClassMinorRelationWithMajor', MinorBlockaded, true) lt 1</RelationInterpreterPrerequisite>
 
     <MinorEmpireInterpreterPrerequisite Flags="Disable,OwnershipType">$(OwnershipType) lt 2 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
     <PopulationEventOnSelf>PopulationPoliticalEventMinorEmpirePurge</PopulationEventOnSelf>
@@ -489,6 +492,17 @@
 
     <PathPrerequisite Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
   </OutpostActionFinishDefinition>
+
+  <!--  War  -->
+  <EmpireDiplomaticAction Name="StartWarEmpireAction" ResultingDiplomaticRelationState="DiplomaticRelationStateMinorAdvancedWar" RefreshRelationPoint="true">
+    <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * (2 * Property(Relation,RelationPoint)) * Property(StockLocation,@ClassEmpire,FreeWarDeclaration) * Property(StockLocation,@ClassEmpire,AggressiveTreatyCostReduction)</CustomCost>
+    <CancelActions Flags="CancelOnWar" SameContext="true" SameInitiator="true" SameNodeAndOnAllEmpires="false"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedBrainwashed"/>
+    <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
+    <PopulationEventOnSelf>PopulationPoliticalEventMinorWarDeclared</PopulationEventOnSelf>
+    <ScoreProviderEventOnSelf>MinorEmpireWarDeclared</ScoreProviderEventOnSelf>
+  </EmpireDiplomaticAction>
   
   <!-- Diplomacy -->
   <!-- DEPRECATED DONT DELETE -->
@@ -522,7 +536,8 @@
     <StatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Hidden="true" State="DiplomaticRelationStateMinorUnknown"/>
     <StatePrerequisite Inverted="true" Flags="Prerequisite,CannotDoThisWhenAtWar" Hidden="true" State="DiplomaticRelationStateMinorAdvancedWar"/>
     <RelationInterpreterPrerequisite   Flags="Prerequisite,MustBeFriendlyRelation">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 50</RelationInterpreterPrerequisite>
- 
+    <RelationInterpreterPrerequisite Flags="Prerequisite,SystemIsBeingBlockaded">Property(Context, @'ClassMinorRelationWithMajor', MinorBlockaded, true) lt 1</RelationInterpreterPrerequisite>
+
     <MinorEmpireInterpreterPrerequisite Inverted="true" Flags="Discard">$(OwnershipType) eq 2 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
     <MinorEmpireInterpreterPrerequisite Flags="OwnershipType">$(OwnershipType) lt 2 or $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
 
@@ -542,7 +557,8 @@
 
     <RelationInterpreterPrerequisite   Flags="Prerequisite,MustBeFriendlyRelation">Property(Context, @'ClassMinorRelationWithMajor', RelationPoint, true) ge 50</RelationInterpreterPrerequisite>
     <RelationInterpreterPrerequisite Flags="Prerequisite,NotConnectedToRootNetwork">Path(Context,@'ClassMinorRelationWithMajor,MinorRelationUnderInfluence')</RelationInterpreterPrerequisite>
-
+    <RelationInterpreterPrerequisite Flags="Prerequisite,SystemIsBeingBlockaded">Property(Context, @'ClassMinorRelationWithMajor', MinorBlockaded, true) lt 1</RelationInterpreterPrerequisite>
+    
     <MinorEmpireInterpreterPrerequisite Inverted="true" Flags="Discard">$(OwnershipType) eq 2 and $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
     <MinorEmpireInterpreterPrerequisite Flags="OwnershipType">$(OwnershipType) lt 2 or $(IsOwner) eq 1</MinorEmpireInterpreterPrerequisite>
 
