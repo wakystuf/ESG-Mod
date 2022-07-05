@@ -102,6 +102,89 @@
     </Steps>
   </QuestDefinition>
 
+  <!--  #######################################  -->
+  <!--             UPDATE12  Chapter0Bis            -->
+  <!--  #######################################  -->
+  <QuestDefinition Name="UniquePlanetQuest-Chapter0Bis" Category="SideQuest" SubCategory="Update12" MinimumTurn="1">
+    <!-- ============ TAGS ============ -->
+    <Tags>BeginTurn,Hidden</Tags>
+    <!-- ============ CONTEXT ============ -->
+    <QuestContextSolo />
+    <!-- ============ OCCURRENCE RULES ============ -->
+    <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0" />
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire" />
+      </Var>
+      <!-- Count all StarSystems in the Galaxy -->
+      <!-- Check there is still system to discover in other Constellations -->
+      <!-- If no: avoid the First objective of the Chapter1Bis -->
+      <Var VarName="$AllStarSystemsCount">
+        <Count>
+          <From Source="$Constellations.$StarSystems" />
+        </Count>
+      </Var>
+      <InterpretedVar VarName="$MinimumAmount">
+        <Expression>$(AllStarSystemsCount) - 16</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$GameSpeed" Target="$(Empire)">
+        <Expression>19 * Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)</Expression>
+      </InterpretedVar>
+      <Var VarName="$NoUnrevealSystem" StringValue="NoUnrevealSystem" />
+    </Vars>
+    <!-- ============ PREREQUISITES ============ -->
+    <Prerequisites Target="$(Empire)">
+      <DownloadableContentPrerequisite Flags="Prerequisite,Discard">Update12</DownloadableContentPrerequisite>
+    </Prerequisites>
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <!-- ============ STEP 1 ============ -->
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Objective1">
+            <Parallel CompletionPolicy="First">
+              <Sequence>
+                <Parallel CompletionPolicy="All">
+                  <Sequence>
+                    <Loop>
+                      <Decorator_ExploredNode Initiator="Empire" MinimumState="Revealed"></Decorator_ExploredNode>
+                      <Input_Count VarName="$MinimumAmount" />
+                    </Loop>
+                  </Sequence>
+                  <Sequence>
+                    <Decorator_Wait>
+                      <Input_WaitDuration VarName="$GameSpeed" />
+                    </Decorator_Wait>
+                  </Sequence>
+                </Parallel>
+                <Action_ApplyDescriptor>
+                  <Input_DescriptorName VarName="$NoUnrevealSystem" />
+                  <Input_Targets VarName="$CurrentEmpire" />
+                </Action_ApplyDescriptor>
+                <Action_ChooseOutcome Name="Outcome1" />
+              </Sequence>
+              <Sequence>
+                <Decorator_Wait>
+                  <Input_WaitDuration VarName="$GameSpeed" />
+                </Decorator_Wait>
+                <Action_ChooseOutcome Name="Outcome1" />
+              </Sequence>
+            </Parallel>
+            <Outcome Name="Outcome1">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>UniquePlanetQuest-Chapter1</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
   <!-- ####################################### -->
   <!--            UPDATE12  Chapter1           -->
   <!-- ####################################### -->
