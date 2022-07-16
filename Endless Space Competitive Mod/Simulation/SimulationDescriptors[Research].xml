@@ -91,6 +91,16 @@
 		<Property Name="QuadrantMilitaryStage5UnlockedTechnologyCount_ESG" MinValue="0" MaxValue="3"/>
 		<Property Name="QuadrantMilitaryStage6UnlockedTechnologyCount_ESG" MinValue="0" MaxValue="1"/>
 
+		<Property Name="TechnologyStage3UnlockedBoolean" MinValue="0" MaxValue="1"/>
+		<Property Name="TechnologyStage4UnlockedBoolean" MinValue="0" MaxValue="1"/>
+		<Property Name="TechnologyStage5UnlockedBoolean" MinValue="0" MaxValue="1"/>
+
+		<Property Name="TechnologyStage3LockedBoolean" BaseValue="1" MinValue="0" MaxValue="1"/>
+		<Property Name="TechnologyStage4LockedBoolean" BaseValue="1" MinValue="0" MaxValue="1"/>
+		<Property Name="TechnologyStage5LockedBoolean" BaseValue="1" MinValue="0" MaxValue="1"/>
+
+		<Property Name="RushPremium" BaseValue="0.3"/>
+
 		<Property Name="CanLevelupSystems" BaseValue="0"/>
 
 
@@ -112,6 +122,28 @@
 		<Property Name="TechnologyTotalStageUnlocked"/>
 		<Property Name="UnlockedTechnologyCount"/>
 		<Property Name="UnlockedTechnologyCount_ESG"/>
+
+
+		<!-- Create booleans to enable penalties for rushing techs -->
+		<BinaryModifier TargetProperty="TechnologyStage3UnlockedBoolean"   Operation="Addition" Left="$(TechnologyQuadrantEmpireDevelopmentActualStageNumber)" BinaryOperation="Subtraction" Right="2"/>
+		<BinaryModifier TargetProperty="TechnologyStage4UnlockedBoolean"   Operation="Addition" Left="$(TechnologyQuadrantEmpireDevelopmentActualStageNumber)" BinaryOperation="Subtraction" Right="3"/>
+		<BinaryModifier TargetProperty="TechnologyStage5UnlockedBoolean"   Operation="Addition" Left="$(TechnologyQuadrantEmpireDevelopmentActualStageNumber)" BinaryOperation="Subtraction" Right="4"/>
+
+		<BinaryModifier TargetProperty="TechnologyStage3UnlockedBoolean"   Operation="Addition" Left="$(TechnologyQuadrantScienceAndExplorationActualStageNumber)" BinaryOperation="Subtraction" Right="2"/>
+		<BinaryModifier TargetProperty="TechnologyStage4UnlockedBoolean"   Operation="Addition" Left="$(TechnologyQuadrantScienceAndExplorationActualStageNumber)" BinaryOperation="Subtraction" Right="3"/>
+		<BinaryModifier TargetProperty="TechnologyStage5UnlockedBoolean"   Operation="Addition" Left="$(TechnologyQuadrantScienceAndExplorationActualStageNumber)" BinaryOperation="Subtraction" Right="4"/>
+
+		<BinaryModifier TargetProperty="TechnologyStage3UnlockedBoolean"   Operation="Addition" Left="$(TechnologyQuadrantEconomyAndTradeActualStageNumber)" BinaryOperation="Subtraction" Right="2"/>
+		<BinaryModifier TargetProperty="TechnologyStage4UnlockedBoolean"   Operation="Addition" Left="$(TechnologyQuadrantEconomyAndTradeActualStageNumber)" BinaryOperation="Subtraction" Right="3"/>
+		<BinaryModifier TargetProperty="TechnologyStage5UnlockedBoolean"   Operation="Addition" Left="$(TechnologyQuadrantEconomyAndTradeActualStageNumber)" BinaryOperation="Subtraction" Right="4"/>
+
+		<BinaryModifier TargetProperty="TechnologyStage3UnlockedBoolean"   Operation="Addition" Left="$(TechnologyQuadrantMilitaryActualStageNumber)" BinaryOperation="Subtraction" Right="2"/>
+		<BinaryModifier TargetProperty="TechnologyStage4UnlockedBoolean"   Operation="Addition" Left="$(TechnologyQuadrantMilitaryActualStageNumber)" BinaryOperation="Subtraction" Right="3"/>
+		<BinaryModifier TargetProperty="TechnologyStage5UnlockedBoolean"   Operation="Addition" Left="$(TechnologyQuadrantMilitaryActualStageNumber)" BinaryOperation="Subtraction" Right="4"/>
+
+		<Modifier TargetProperty="TechnologyStage3LockedBoolean"   Operation="Subtraction" Value="$(TechnologyStage3UnlockedBoolean)"/>
+		<Modifier TargetProperty="TechnologyStage4LockedBoolean"   Operation="Subtraction" Value="$(TechnologyStage4UnlockedBoolean)"/>
+		<Modifier TargetProperty="TechnologyStage5LockedBoolean"   Operation="Subtraction" Value="$(TechnologyStage5UnlockedBoolean)"/>
 
 		<Modifier TargetProperty="TechnologyTotalStageUnlocked"   Operation="Addition" Value="$(TechnologyQuadrantEmpireDevelopmentActualStageNumber)"/>
 		<Modifier TargetProperty="TechnologyTotalStageUnlocked"   Operation="Addition" Value="$(TechnologyQuadrantScienceAndExplorationActualStageNumber)"/>
@@ -239,6 +271,11 @@
 		<Modifier       TargetProperty="TechnologyCurrentCost"   Operation="Power"          Value="1.25"                                                                Priority="2"/>
 		<Modifier       TargetProperty="TechnologyCurrentCost"   Operation="Multiplication" Value="$(TechnologyCostModifier)"                                           Priority="3"/>
 		<Modifier       TargetProperty="TechnologyCurrentCost"   Operation="Percent"        Value="$(TechnologyCostReduction)"                                          Priority="4"/>
+
+		<!-- Cost Adjustment for rushing techs -->
+		<BinaryModifier TargetProperty="TechnologyCostStage3Multiplier"   Operation="Percent" Left="$(RushPremium)" BinaryOperation="Multiplication" Right="$(TechnologyStage3LockedBoolean)"/>
+		<BinaryModifier TargetProperty="TechnologyCostStage4Multiplier"   Operation="Percent" Left="$(RushPremium)" BinaryOperation="Multiplication" Right="$(TechnologyStage4LockedBoolean)"/>
+		<BinaryModifier TargetProperty="TechnologyCostStage5Multiplier"   Operation="Percent" Left="$(RushPremium)" BinaryOperation="Multiplication" Right="$(TechnologyStage5LockedBoolean)"/>
 
 		<!-- ESCM -->
 		<Modifier TargetProperty="EmpireEmpireDevelopmentStage" Operation="Force" Value="$(TechnologyQuadrantEmpireDevelopmentActualStageNumber)" Path="../ClassEmpire"/>
