@@ -618,7 +618,16 @@
   <!--  *********************************  -->
   <!--  ** EXPLORATION (PROBE) MODULES **  -->
   <!--  *********************************  -->
-
+  <SimulationDescriptor Name="ModuleSupportExploration" Type="ModuleSupportExploration">
+    <Property Name="VisionRange"/>
+    <Property Name="MaximumMovement"/>
+    <Property Name="MaximumShipProbeStock"/>
+    <Property Name="NetShipProbe"/>
+    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="$(VisionRange)" Path="../ClassShip" Priority="1"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="$(MaximumMovement)" Path="../ClassShip" Priority="1"/>
+    <BinaryModifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Left="$(MaximumShipProbeStock)" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" Path="../ClassShip" Priority="1"/>
+    <BinaryModifier TargetProperty="NetShipProbe"          Operation="Addition" Left="$(NetShipProbe)"          BinaryOperation="Division" Right="$(GameSpeedMultiplier)" Path="../ClassShip" Priority="1"/>
+  </SimulationDescriptor>
   <SimulationDescriptor Name="ModuleSupportExploration1" Type="ModuleSupportExploration">
     <Modifier TargetProperty="VisionRange" Operation="Addition" Value="1" Path="ModuleSupportExploration"/>
     <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="2" Path="ModuleSupportExploration"/>

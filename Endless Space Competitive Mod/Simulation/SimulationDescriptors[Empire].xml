@@ -27,6 +27,7 @@
 		<Property Name="UselessForTooltip"						BaseValue="1" MaxValue="1" MinValue="1"/>
     	<Property Name="UsesVariantArcology"					BaseValue="0" MaxValue="1" MinValue="0"/>
     	<Property Name="UsesColonies"							BaseValue="0" MaxValue="1" MinValue="0"/>
+		<Property Name="TurnOneBoolean" 			  			BaseValue="-2" MaxValue="0" MinValue="Negative"/>
     
 		<!--Automatons-->
 		<!--Automatons-->
@@ -1069,6 +1070,10 @@
 
 		<BinaryModifier TargetProperty="GameSpeedTimeMultiplier" Operation="Force" Left="1" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" TooltipHidden="true"/>
 		<BinaryModifier TargetProperty="GameSpeedTimeMultiplier" Operation="Force" Left="1" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" TooltipHidden="true" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<BinaryModifier TargetProperty="GameSpeedTimeMultiplier" Operation="Force" Left="1" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" TooltipHidden="true" Path="ClassEmpire//ClassLaw"/>
+
+		<Modifier TargetProperty="TurnOneBoolean" Operation="Addition" Value="$(CurrentTurn)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="MaximumShipProbeStock" Operation="Percent" Left="$(GameSpeedMultiplier)" BinaryOperation="Multiplication" Right="$(TurnOneBoolean)" TooltipHidden="true" Path="ClassEmpire//ClassShip,ShipRoleExploration" Priority="999"/>
 
 		<Modifier TargetProperty="TurnsBetweenElections" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassSenate"/>
 		<Modifier TargetProperty="TurnsBeforeSurvey" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassSenate"/>
@@ -1081,8 +1086,8 @@
 		<Modifier TargetProperty="ExperiencePerTurn" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassGarrison/ClassShip" />
 
 		<Modifier TargetProperty="HealthPerTurn" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassHero" />
-		<Modifier TargetProperty="ExperiencePerTurn" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassGarrison/ClassHero" />
-		<Modifier TargetProperty="ExperiencePerTurn" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassColonizedStarSystem/ClassHero" />
+		<Modifier TargetProperty="ExperienceMultiplier" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassGarrison/ClassHero" />
+		<Modifier TargetProperty="ExperienceMultiplier" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassColonizedStarSystem/ClassHero" />
 		<Modifier TargetProperty="AssignmentCooldownBaseDuration" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassHero" />
 		<Modifier TargetProperty="AssignmentCooldownBaseDuration" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassGarrison/ClassHero" />
 		<Modifier TargetProperty="AssignmentCooldownBaseDuration" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassColonizedStarSystem/ClassHero" />
@@ -1687,6 +1692,7 @@
         <Modifier TargetProperty="Trend" Operation="Multiplication" Value="$(GameSpeedTrendMultiplier)" Priority="1"  Path="ClassEmpire/ClassMinorRelationWithMajor"/>
 		<Modifier TargetProperty="MaximumHackingOperationsCount" Operation="Force" Value="0" Priority="1000"/>
 
+		<Modifier TargetProperty="NetMinorStress"       Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="0" />
         <Modifier TargetProperty="Happiness"            Operation="Force" Value="50" Priority="1000"  Path="ClassEmpire/ClassColonizedStarSystem"/>
         <Modifier TargetProperty="NetEmpireMoney"       Operation="Force" Value="50" Priority="1000"/>
         <Modifier TargetProperty="BuyoutActivated"      Operation="Force" Value="1"/>
