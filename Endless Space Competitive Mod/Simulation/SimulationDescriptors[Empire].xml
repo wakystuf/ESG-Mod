@@ -27,6 +27,7 @@
 		<Property Name="UselessForTooltip"						BaseValue="1" MaxValue="1" MinValue="1"/>
     	<Property Name="UsesVariantArcology"					BaseValue="0" MaxValue="1" MinValue="0"/>
     	<Property Name="UsesColonies"							BaseValue="0" MaxValue="1" MinValue="0"/>
+		<Property Name="TurnOneBoolean" 			  			BaseValue="-2" MaxValue="0" MinValue="Negative"/>
     
 		<!--Automatons-->
 		<!--Automatons-->
@@ -1070,6 +1071,9 @@
 		<BinaryModifier TargetProperty="GameSpeedTimeMultiplier" Operation="Force" Left="1" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" TooltipHidden="true"/>
 		<BinaryModifier TargetProperty="GameSpeedTimeMultiplier" Operation="Force" Left="1" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" TooltipHidden="true" Path="ClassEmpire/ClassColonizedStarSystem"/>
 		<BinaryModifier TargetProperty="GameSpeedTimeMultiplier" Operation="Force" Left="1" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" TooltipHidden="true" Path="ClassEmpire//ClassLaw"/>
+
+		<Modifier TargetProperty="TurnOneBoolean" Operation="Addition" Value="$(CurrentTurn)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="MaximumShipProbeStock" Operation="Percent" Left="$(GameSpeedMultiplier)" BinaryOperation="Multiplication" Right="$(TurnOneBoolean)" TooltipHidden="true" Path="ClassEmpire//ClassShip,ShipRoleExploration" Priority="999"/>
 
 		<Modifier TargetProperty="TurnsBetweenElections" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassSenate"/>
 		<Modifier TargetProperty="TurnsBeforeSurvey" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassSenate"/>
