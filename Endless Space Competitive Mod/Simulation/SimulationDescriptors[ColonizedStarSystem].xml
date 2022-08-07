@@ -1507,6 +1507,7 @@
 		<Modifier TargetProperty="WastedGrowth"  Operation="Subtraction" Value="1" Priority="8"/> <!-- this tweak exists to round down, solving floating point exception issues -->
 		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(GameSettingFoodReworkEnabled)" Priority="9"/>
 		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(DisableFoodConversion)" Priority="9"/>
+		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(ShouldUseGrowth)" Priority="9"/>
 
 		<!-- Convert food as appropriate (using separate intermediate variables so that it shows up clearly in the GUI) -->
 		<BinaryModifier TargetProperty="WastedFoodtoDust"  Operation="Addition" Left="$(CanConvertWastedFoodtoDust1)" BinaryOperation="Addition" Right="$(CanConvertWastedFoodtoDust2)" Priority="1"/>
@@ -1762,8 +1763,8 @@
 		<Property Name="GameSpeedProductionCostReduction" MinValue="Negative"/>
 
 		<!-- Spaceport -->
-		<Property Name="SpaceportCapacity" />
-		<Property Name="SpaceportMaximumCapacity" BaseValue="5"/>
+		<Property Name="SpaceportCapacity" RoundingFunction="Ceil"/>
+		<Property Name="SpaceportMaximumCapacity" BaseValue="10"/>
 
 		<!-- Wonder -->
 		<Property Name="WonderAmount" BaseValue="0"/>
@@ -2092,8 +2093,8 @@
 	<SimulationDescriptor Name="BlockadedColonizedStarSystem" Type="BlockadedColonizedStarSystem" IsSerializable="false">
 		<Property Name="BlockadeOrbitingMilitaryPower"      IsSealed="true" IsSerializable="true"/>
 		<Property Name="BlockadeImpactFactor"               BaseValue="1"/>
-		<Property Name="NetSystemGrowthImpactFactor"        BaseValue="5"/>
-		<Property Name="NetSystemProductionImpactFactor"    BaseValue="5"/>
+		<Property Name="NetSystemGrowthImpactFactor"        BaseValue="15"/>
+		<Property Name="NetSystemProductionImpactFactor"    BaseValue="15"/>
 
 		<!-- Properties that are used for the leeching blockade effect (for now, only pirates). -->
 		<Property Name="SystemMoneyLostFromBlockade"        BaseValue="0"/>
