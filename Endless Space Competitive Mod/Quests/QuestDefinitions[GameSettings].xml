@@ -979,6 +979,10 @@
       <Var VarName="$CurrentEmpire">
         <From Source="$Empire"/>
       </Var>
+      <Var VarName="$HomeSystem">
+        <From Source="$CurrentEmpire.$HomeColonizedStarSystem"/>
+      </Var>
+      <Var VarName="$NoCloaking" StringValue="CannotBeCloaked"/>
     </Vars>
     <Prerequisites Target="$(Empire)">
       <PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassSenate/LawEffectSussy</PathPrerequisite>
@@ -988,6 +992,10 @@
         <ObjectiveSet>
           <Objective Name="Sussy">
             <Sequence>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$NoCloaking"/>
+                <Input_Targets VarName="$HomeSystem"/>
+              </Action_ApplyDescriptor>
               <Action_EliminateEmpire>
                 <Input_Empire VarName="$CurrentEmpire"/>
               </Action_EliminateEmpire>
@@ -997,4 +1005,199 @@
       </Step>
     </Steps>
   </QuestDefinition>
+  
+  <!-- Gamespeed -->
+  <QuestDefinition Name="QuestGamespeedFastESG" IsInstant="true" Category="GameSetting" SubCategory="GameSpeed" TriggeringProbability="1" MinimumTurn="0">
+    <Tags>Hidden,BeginTurn</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$Trait" StringValue="FactionTraitGameSpeedFastESG"/>
+      <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+        <Expression>Property(Context,@'../ClassEmpire',BankAccount) * 0</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+        <Expression>Property(Context,@'../ClassEmpire',EmpireEmpirePointStock) * 0</Expression>
+      </InterpretedVar>
+      <Var VarName="$ResourceName1" StringValue="EmpireMoney"/>
+      <Var VarName="$ResourceName2" StringValue="EmpireEmpirePoint"/>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <GameSettingPrerequisite Flags="Prerequisite,Discard">GameSpeed,Fast</GameSettingPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Add_Trait">
+            <Sequence>
+              <Action_TransferResource>
+                <Input_Location VarName="$CurrentEmpire"/>
+                <Input_ResourceName VarName="$ResourceName1"/>
+                <Input_Amount VarName="$Amount01"/>
+              </Action_TransferResource>
+              <Action_TransferResource>
+                <Input_Location VarName="$CurrentEmpire"/>
+                <Input_ResourceName VarName="$ResourceName2"/>
+                <Input_Amount VarName="$Amount02"/>
+              </Action_TransferResource>
+              <Action_ApplyDescriptor LogAction="false">
+                <Input_DescriptorName VarName="$Trait"/>
+                <Input_Targets VarName="$CurrentEmpire"/>
+              </Action_ApplyDescriptor>
+              <Decorator_BeginTurn></Decorator_BeginTurn>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
+  <QuestDefinition Name="QuestGamespeedNormalESG" IsInstant="true" Category="GameSetting" SubCategory="GameSpeed" TriggeringProbability="1" MinimumTurn="0">
+    <Tags>Hidden,BeginTurn</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$Trait" StringValue="FactionTraitGameSpeedNormalESG"/>
+      <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+        <Expression>Property(Context,@'../ClassEmpire',BankAccount) * 1</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+        <Expression>Property(Context,@'../ClassEmpire',EmpireEmpirePointStock) * 1</Expression>
+      </InterpretedVar>
+      <Var VarName="$ResourceName1" StringValue="EmpireMoney"/>
+      <Var VarName="$ResourceName2" StringValue="EmpireEmpirePoint"/>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <GameSettingPrerequisite Flags="Prerequisite,Discard">GameSpeed,Normal</GameSettingPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Add_Trait">
+            <Sequence>
+              <Action_TransferResource>
+                <Input_Location VarName="$CurrentEmpire"/>
+                <Input_ResourceName VarName="$ResourceName1"/>
+                <Input_Amount VarName="$Amount01"/>
+              </Action_TransferResource>
+              <Action_TransferResource>
+                <Input_Location VarName="$CurrentEmpire"/>
+                <Input_ResourceName VarName="$ResourceName2"/>
+                <Input_Amount VarName="$Amount02"/>
+              </Action_TransferResource>
+              <Action_ApplyDescriptor LogAction="false">
+                <Input_DescriptorName VarName="$Trait"/>
+                <Input_Targets VarName="$CurrentEmpire"/>
+              </Action_ApplyDescriptor>
+              <Decorator_BeginTurn></Decorator_BeginTurn>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
+  <QuestDefinition Name="QuestGamespeedSlowESG" IsInstant="true" Category="GameSetting" SubCategory="GameSpeed" TriggeringProbability="1" MinimumTurn="0">
+    <Tags>Hidden,BeginTurn</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$Trait" StringValue="FactionTraitGameSpeedSlowESG"/>
+      <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+        <Expression>Property(Context,@'../ClassEmpire',BankAccount) * 2</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+        <Expression>Property(Context,@'../ClassEmpire',EmpireEmpirePointStock) * 2</Expression>
+      </InterpretedVar>
+      <Var VarName="$ResourceName1" StringValue="EmpireMoney"/>
+      <Var VarName="$ResourceName2" StringValue="EmpireEmpirePoint"/>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <GameSettingPrerequisite Flags="Prerequisite,Discard">GameSpeed,Slow</GameSettingPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Add_Trait">
+            <Sequence>
+              <Action_TransferResource>
+                <Input_Location VarName="$CurrentEmpire"/>
+                <Input_ResourceName VarName="$ResourceName1"/>
+                <Input_Amount VarName="$Amount01"/>
+              </Action_TransferResource>
+              <Action_TransferResource>
+                <Input_Location VarName="$CurrentEmpire"/>
+                <Input_ResourceName VarName="$ResourceName2"/>
+                <Input_Amount VarName="$Amount02"/>
+              </Action_TransferResource>
+              <Action_ApplyDescriptor LogAction="false">
+                <Input_DescriptorName VarName="$Trait"/>
+                <Input_Targets VarName="$CurrentEmpire"/>
+              </Action_ApplyDescriptor>
+              <Decorator_BeginTurn></Decorator_BeginTurn>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
+  <QuestDefinition Name="QuestGamespeedEndlessESG" IsInstant="true" Category="GameSetting" SubCategory="GameSpeed" TriggeringProbability="1" MinimumTurn="0">
+    <Tags>Hidden,BeginTurn</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerEmpire="1"/>
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$Trait" StringValue="FactionTraitGameSpeedEndlessESG"/>
+      <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+        <Expression>Property(Context,@'../ClassEmpire',BankAccount) * 3</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+        <Expression>Property(Context,@'../ClassEmpire',EmpireEmpirePointStock) * 3</Expression>
+      </InterpretedVar>
+      <Var VarName="$ResourceName1" StringValue="EmpireMoney"/>
+      <Var VarName="$ResourceName2" StringValue="EmpireEmpirePoint"/>
+    </Vars>
+    <Prerequisites Target="$(Empire)">
+      <GameSettingPrerequisite Flags="Prerequisite,Discard">GameSpeed,Endless</GameSettingPrerequisite>
+    </Prerequisites>
+    <Steps>
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Add_Trait">
+            <Sequence>
+              <Action_TransferResource>
+                <Input_Location VarName="$CurrentEmpire"/>
+                <Input_ResourceName VarName="$ResourceName1"/>
+                <Input_Amount VarName="$Amount01"/>
+              </Action_TransferResource>
+              <Action_TransferResource>
+                <Input_Location VarName="$CurrentEmpire"/>
+                <Input_ResourceName VarName="$ResourceName2"/>
+                <Input_Amount VarName="$Amount02"/>
+              </Action_TransferResource>
+              <Action_ApplyDescriptor LogAction="false">
+                <Input_DescriptorName VarName="$Trait"/>
+                <Input_Targets VarName="$CurrentEmpire"/>
+              </Action_ApplyDescriptor>
+              <Decorator_BeginTurn></Decorator_BeginTurn>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
+
 </Datatable>

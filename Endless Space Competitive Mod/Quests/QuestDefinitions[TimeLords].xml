@@ -1333,13 +1333,16 @@
             <Var VarName="$CurrentEmpire">
                 <From Source="$Empire"/>
             </Var>
+
+            <Var VarName="$FoodBuildings"  StringValue="SubCategoryFood"/>
+
             
             <Var VarName="$PoliticalEffectEcologist" StringValue="PopulationEventTimeLords05-Ecologist"/>
             
             <!--Military Politic-->
             <Var VarName="$Politics" StringValue="Politics04"/>
             <InterpretedVar VarName="$Amount01" Target="$(Empire)">
-                <Expression>Min(2,(Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics04') + 1))</Expression>
+                <Expression>8</Expression>
             </InterpretedVar>
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
         </Vars>
@@ -1363,26 +1366,15 @@
                     <Objective Name="Objective_Ecologist">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
-                        <Parallel CompletionPolicy="Any">
-                            <Sequence>
-                                <Decorator_BeginTurn>
-                                    <Condition_HasLaws>
-                                        <Input_Empire VarName="$CurrentEmpire"/>
-                                        <Input_Politics VarName="$Politics"/>
-                                        <Input_MinimumAmount VarName="$Amount01"/>
-                                    </Condition_HasLaws>
-                                </Decorator_BeginTurn>
-                            </Sequence>
-                            <Sequence>
-                                <Decorator_LawActivated>
-                                    <Condition_HasLaws>
-                                        <Input_Empire VarName="$CurrentEmpire"/>
-                                        <Input_Politics VarName="$Politics"/>
-                                        <Input_MinimumAmount VarName="$Amount01"/>
-                                    </Condition_HasLaws>                                    
-                                </Decorator_LawActivated>
-                            </Sequence>
-                        </Parallel>
+                        <Sequence>
+                            <Loop>
+                                <Decorator_ConstructionCompleted Initiator="Empire" ProgressionIncrement="1">                                   
+                                    <Input_ConstructionSubCategory VarName="$FoodBuildings"/>
+                                    <Input_ValidType>Building</Input_ValidType>
+                                </Decorator_ConstructionCompleted>
+                                <Input_Count VarName="$Amount01"/>
+                            </Loop>
+                        </Sequence>
                     </Objective> 
 
                     <Reward Droplist="DroplistRewardQuestTimeLords08" Picks="1"/>
