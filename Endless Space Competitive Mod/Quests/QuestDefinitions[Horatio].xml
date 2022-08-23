@@ -193,6 +193,361 @@
         
     </QuestDefinition>
 
+    <!-- #############################################-->
+    <!-- HORATIO QUEST Chapter000 (Special curios - T4)-->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="HoratioQuest-Chapter000" Category="MajorQuest" SubCategory="Horatio">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn,Hidden</Tags>        
+
+        <QuestContextSolo/>
+        
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            
+            <Var VarName="$MyHomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+            <!--Define at least 4 Systems: they should correspond to the defined distance.-->
+            <!--But the "Mimimum Candidate Count" provide at least 4 "near" systems  -->
+            <Var VarName="$StarSystemToChoose">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>
+                        <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                    </Where>
+                    <OrderBy>                        
+                        <SortSystemByDistance OriginVarName="$MyHomeSystem" SortBy="Nearest" MinimumDistance="3" MaximumDistance="60" MinimumCandidateCount="4"/>
+                    </OrderBy>
+                </From>
+            </Var>
+            <!--Define Where to spawn the Curiosities -->
+            <Var VarName="$FirstSystem">
+                <First>
+                    <From Source="$StarSystemToChoose"/>                    
+                </First>
+            </Var>
+            <Var VarName="$FirstSystemPlanet">
+                <Any>
+                    <From Source="$FirstSystem.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$SecondSystem">
+                <First>
+                    <From Source="$StarSystemToChoose">
+                        <Where>
+                            <IsNot EntityVarName="$FirstSystem"/>
+                        </Where>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$SecondSystemPlanet">
+                <Any>
+                    <From Source="$SecondSystem.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$ThirdSystem">
+                <First>
+                    <From Source="$StarSystemToChoose">
+                        <Where>
+                            <IsNot EntityVarName="$FirstSystem"/>
+                            <IsNot EntityVarName="$SecondSystem"/>
+                        </Where>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$ThirdSystemPlanet">
+                <Any>
+                    <From Source="$ThirdSystem.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$FourthSystem">
+                <First>
+                    <From Source="$StarSystemToChoose">
+                        <Where>
+                            <IsNot EntityVarName="$FirstSystem"/>
+                            <IsNot EntityVarName="$SecondSystem"/>
+                            <IsNot EntityVarName="$ThirdSystem"/>
+                        </Where>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$FourthSystemPlanet">
+                <Any>
+                    <From Source="$FourthSystem.$Planets"/>
+                </Any>
+            </Var>
+
+            <!--Will be visible only for the Current Empire-->
+            <Var VarName="$CuriosityName" StringValue="Curiosity_Horatio_Signal_Era4"/>
+            <Var VarName="$CuriosityType" StringValue="CuriosityTypeSignal"/>
+                        
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityHoratio,PopulationMajor</PathPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 1 Choice 0 - Neutral ============-->
+                <ObjectiveSet>
+                    <Objective Name="Objective_Fake">
+                        <Sequence>
+                            <Action_SpawnCuriosity>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_Planets VarName="$FirstSystemPlanet"/>                                    
+                                <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                            </Action_SpawnCuriosity>
+                            <Action_SpawnCuriosity>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_Planets VarName="$SecondSystemPlanet"/>
+                                <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                            </Action_SpawnCuriosity>
+                            <Action_SpawnCuriosity>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_Planets VarName="$ThirdSystemPlanet"/>
+                                <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                            </Action_SpawnCuriosity>
+                            <Action_SpawnCuriosity>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_Planets VarName="$FourthSystemPlanet"/>
+                                <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                            </Action_SpawnCuriosity>
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!-- HORATIO QUEST Chapter001 (Special curios - T3)-->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="HoratioQuest-Chapter001" Category="MajorQuest" SubCategory="Horatio">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn,Hidden</Tags>        
+
+        <QuestContextSolo/>
+        
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            
+            <Var VarName="$MyHomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+            <!--Define at least 4 Systems: they should correspond to the defined distance.-->
+            <!--But the "Mimimum Candidate Count" provide at least 4 "near" systems  -->
+            <Var VarName="$StarSystemToChoose">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>
+                        <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                    </Where>
+                    <OrderBy>                        
+                        <SortSystemByDistance OriginVarName="$MyHomeSystem" SortBy="Nearest" MinimumDistance="3" MaximumDistance="60" MinimumCandidateCount="3"/>
+                    </OrderBy>
+                </From>
+            </Var>
+            <!--Define Where to spawn the Curiosities -->
+            <Var VarName="$FirstSystem">
+                <First>
+                    <From Source="$StarSystemToChoose"/>                    
+                </First>
+            </Var>
+            <Var VarName="$FirstSystemPlanet">
+                <Any>
+                    <From Source="$FirstSystem.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$SecondSystem">
+                <First>
+                    <From Source="$StarSystemToChoose">
+                        <Where>
+                            <IsNot EntityVarName="$FirstSystem"/>
+                        </Where>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$SecondSystemPlanet">
+                <Any>
+                    <From Source="$SecondSystem.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$ThirdSystem">
+                <First>
+                    <From Source="$StarSystemToChoose">
+                        <Where>
+                            <IsNot EntityVarName="$FirstSystem"/>
+                            <IsNot EntityVarName="$SecondSystem"/>
+                        </Where>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$ThirdSystemPlanet">
+                <Any>
+                    <From Source="$ThirdSystem.$Planets"/>
+                </Any>
+            </Var>
+
+            <!--Will be visible only for the Current Empire-->
+            <Var VarName="$CuriosityName" StringValue="Curiosity_Horatio_Signal_Era3"/>
+            <Var VarName="$CuriosityType" StringValue="CuriosityTypeSignal"/>
+                        
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityHoratio,PopulationMajor</PathPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 1 Choice 0 - Neutral ============-->
+                <ObjectiveSet>
+                    <Objective Name="Objective_Fake">
+                        <Sequence>
+                            <Action_SpawnCuriosity>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_Planets VarName="$FirstSystemPlanet"/>                                    
+                                <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                            </Action_SpawnCuriosity>
+                            <Action_SpawnCuriosity>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_Planets VarName="$SecondSystemPlanet"/>
+                                <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                            </Action_SpawnCuriosity>
+                            <Action_SpawnCuriosity>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_Planets VarName="$ThirdSystemPlanet"/>
+                                <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                            </Action_SpawnCuriosity>
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!-- HORATIO QUEST Chapter002 (Special curios - T2)-->
+    <!-- #############################################-->
+
+    <QuestDefinition Name="HoratioQuest-Chapter002" Category="MajorQuest" SubCategory="Horatio">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn,Hidden</Tags>        
+
+        <QuestContextSolo/>
+        
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            
+            <Var VarName="$MyHomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+            <!--Define at least 4 Systems: they should correspond to the defined distance.-->
+            <!--But the "Mimimum Candidate Count" provide at least 4 "near" systems  -->
+            <Var VarName="$StarSystemToChoose">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>
+                        <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                    </Where>
+                    <OrderBy>                        
+                        <SortSystemByDistance OriginVarName="$MyHomeSystem" SortBy="Nearest" MinimumDistance="3" MaximumDistance="60" MinimumCandidateCount="2"/>
+                    </OrderBy>
+                </From>
+            </Var>
+            <!--Define Where to spawn the Curiosities -->
+            <Var VarName="$FirstSystem">
+                <First>
+                    <From Source="$StarSystemToChoose"/>                    
+                </First>
+            </Var>
+            <Var VarName="$FirstSystemPlanet">
+                <Any>
+                    <From Source="$FirstSystem.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$SecondSystem">
+                <First>
+                    <From Source="$StarSystemToChoose">
+                        <Where>
+                            <IsNot EntityVarName="$FirstSystem"/>
+                        </Where>
+                    </From>
+                </First>
+            </Var>
+            <Var VarName="$SecondSystemPlanet">
+                <Any>
+                    <From Source="$SecondSystem.$Planets"/>
+                </Any>
+            </Var>
+
+            <!--Will be visible only for the Current Empire-->
+            <Var VarName="$CuriosityName" StringValue="Curiosity_Horatio_Signal_Era2"/>
+            <Var VarName="$CuriosityType" StringValue="CuriosityTypeSignal"/>
+                        
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityHoratio,PopulationMajor</PathPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 1 Choice 0 - Neutral ============-->
+                <ObjectiveSet>
+                    <Objective Name="Objective_Fake">
+                        <Sequence>
+                            <Action_SpawnCuriosity>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_Planets VarName="$FirstSystemPlanet"/>                                    
+                                <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                            </Action_SpawnCuriosity>
+                            <Action_SpawnCuriosity>
+                                <Input_Empires VarName="$CurrentEmpire"/>
+                                <Input_Planets VarName="$SecondSystemPlanet"/>
+                                <Input_CuriosityDefinition VarName="$CuriosityName"/>
+                            </Action_SpawnCuriosity>
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
     
     <!-- ############################################# -->
     <!-- ######### HORATIO QUEST - CHAPTER 1 ######### -->
@@ -259,7 +614,7 @@
             <Var VarName="$MinimumAmount03" IntValue="1"/> 
             <Var VarName="$MinimumAmount04" IntValue="100"/>
             <Var VarName="$MinimumAmount05" IntValue="60"/>
-            <Var VarName="$MinimumAmount06" IntValue="5"/>
+            <Var VarName="$MinimumAmount06" IntValue="3"/>
             <Var VarName="$MinimumAmount07" IntValue="150"/>
             <Var VarName="$Ships"/>
             
@@ -416,11 +771,11 @@
                         </Action_TriggerPopulationEvent>
                     </StartActions>
                     
-                    <Objective Name="Objective_Industrialist" StartValue="0" EndValue="5">
+                    <Objective Name="Objective_Industrialist" StartValue="0" EndValue="3">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
                         <Sequence>
-                            <Loop Count="5">
+                            <Loop Count="3">
                                 <!--SHOULD BE IN BEGIN TURN-->
                                 <Decorator_ShipConstructed Initiator="Empire" ProgressionIncrement="1">
                                     <Condition_ShipStats>
@@ -797,33 +1152,18 @@
                     <From Source="$ConstellationSystems"/>
                 </First>
             </Var>
-            <Var VarName="$StarSystem02">
-                <First>
-                    <From Source="$ConstellationSystems">
-                        <Where>
-                            <IsNot EntityVarName="$StarSystem01"/>
-                        </Where>
-                    </From>
-                </First>
-            </Var>
 
             <Var VarName="$HeroDefinitionName" StringValue="HeroQuestHoratio04"/>
             <Var VarName="$HeroGUID"/>
             
             <DroplistVar VarName="$FleetToSpawn01" Droplist="DroplistSpawnHoratioQuestFleet01"/>
-            <DroplistVar VarName="$FleetToSpawn02" Droplist="DroplistSpawnHoratioQuestFleet02"/>
             <Var VarName="$FleetToSpawnGUID01"/>
-            <Var VarName="$FleetToSpawnGUID02"/>
             <Var VarName="$FleetToSpawnEntity01"/>
-            <Var VarName="$FleetToSpawnEntity02"/>
             <Var VarName="$FleetControllerName01" StringValue="%HoratioQuest-LesserEmpireName"/>
             
             <Var VarName="$FleetMissionDefinitionName01" StringValue="HoratioRoamAndAttack"/>
-            <Var VarName="$FleetMissionDefinitionName02" StringValue="HoratioRoamAndAttack"/>
             <Var VarName="$FleetMissionGUID01"/>
-            <Var VarName="$FleetMissionGUID02"/>
             <Var VarName="$Marker01"/>
-            <Var VarName="$Marker02"/>
 
             <Var VarName="$PoliticalEffectIndustrialist"    StringValue="PopulationEventHoratio02-Industrialist"/>
             
@@ -838,7 +1178,7 @@
                 <!--============ Industrialist ============-->
                 <ObjectiveSet>
 
-                    <Objective Name="Objective_Industrialist" StartValue="0" EndValue="2">
+                    <Objective Name="Objective_Industrialist" StartValue="0" EndValue="1">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
                         <Sequence>
@@ -888,34 +1228,6 @@
                                 <Output_Markers VarName="$Marker01"/>
                             </Action_AddQuestMarkers>
 
-                            <!--Create the 2nd enemy quest fleet-->
-                            <Action_SpawnFleets>
-                                <Input_Empire VarName="$IAEmpire"/>
-                                <Input_Locations VarName="$StarSystem02"/>
-                                <Input_DroppableFleet VarName="$FleetToSpawn02"/>
-                                <Output_FleetGUIDs VarName="$FleetToSpawnGUID02"/>
-                            </Action_SpawnFleets>
-                            <Decorator_EntityCreated>
-                                <Input_GUID VarName="$FleetToSpawnGUID02"/>
-                                <Output_Entity VarName="$FleetToSpawnEntity02"/>
-                            </Decorator_EntityCreated>
-                            <Action_CreateFleetMissions>
-                                <Input_MissionDefinitionName VarName="$FleetMissionDefinitionName02"/>
-                                <Input_FleetGUIDs VarName="$FleetToSpawnGUID02"/>
-                                <Input_TargetEmpires VarName="$CurrentEmpire"/>
-                                <Output_MissionGUIDs VarName="$FleetMissionGUID02"/>
-                            </Action_CreateFleetMissions>
-                            <Action_RegisterLesserName>
-                                <Input_GUIDs VarName="$FleetToSpawnGUID02"/>
-                                <Input_Name VarName="$FleetControllerName01"/>
-                            </Action_RegisterLesserName>
-                            <Action_AddQuestMarkers RevealsLocation="false">
-                                <Input_Targets VarName="$FleetToSpawnEntity02"/>
-                                <Input_Empires VarName="$CurrentEmpire"/>
-                                <Output_Markers VarName="$Marker02"/>
-                            </Action_AddQuestMarkers>
-
-                            <Parallel CompletionPolicy="All">
                                 <Sequence>
                                     <Decorator_BattleEnded ProgressionIncrement="1">
                                         <Condition_BattleEnded_FleetDestroyed>
@@ -926,17 +1238,6 @@
                                         <Input_Markers VarName="$Marker01"/>
                                     </Action_RemoveQuestMarkers>
                                 </Sequence>
-                                <Sequence>
-                                    <Decorator_BattleEnded ProgressionIncrement="1">
-                                        <Condition_BattleEnded_FleetDestroyed>
-                                            <Input_FleetGUIDs VarName="$FleetToSpawnGUID02"/>
-                                        </Condition_BattleEnded_FleetDestroyed>
-                                    </Decorator_BattleEnded>
-                                    <Action_RemoveQuestMarkers>
-                                        <Input_Markers VarName="$Marker02"/>
-                                    </Action_RemoveQuestMarkers>
-                                </Sequence>
-                            </Parallel>    
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
                         <Outcome Name="Outcome1">
@@ -984,12 +1285,12 @@
             <Var VarName="$Amount01" IntValue="3"/>           
             
             <InterpretedVar VarName="$Amount02" Target="$(Empire)">
-                <Expression>(Property(Context, @../ClassEmpire, NetEmpireEmpirePoint)+50)</Expression>
+                <Expression>(Property(Context, @../ClassEmpire, NetEmpireEmpirePoint)+100)</Expression>
             </InterpretedVar>
             <Var VarName="$Expression02" StringValue="Property(Context, NetEmpireEmpirePoint) ge $(Amount02)"/>
 
-            <Var VarName="$Amount03" IntValue="3"/>
-            <Var VarName="$Amount04" IntValue="3"/>
+            <Var VarName="$Amount03" IntValue="6"/>
+            <Var VarName="$Amount04" IntValue="2"/>
             
             <Var VarName="$PoliticalEffectEcologist"       StringValue="PopulationEventHoratio03-Ecologist"/>
             <Var VarName="$PoliticalEffectReligious"       StringValue="PopulationEventHoratio03-Religious"/>
@@ -1175,12 +1476,12 @@
             </Var>
            
             <InterpretedVar VarName="$Amount01" Target="$(Empire)">
-                <Expression>(Property(Context, @../ClassEmpire, NetEmpireEmpirePoint)+50)</Expression>
+                <Expression>(Property(Context, @../ClassEmpire, NetEmpireEmpirePoint)+100)</Expression>
             </InterpretedVar>
             <Var VarName="$Expression01" StringValue="Property(Context, NetEmpireEmpirePoint) ge $(Amount01)"/>
 
-            <Var VarName="$Amount02" IntValue="3"/>
-            <Var VarName="$Amount03" IntValue="3"/>
+            <Var VarName="$Amount02" IntValue="2"/>
+            <Var VarName="$Amount03" IntValue="6"/>
             
             <Var VarName="$PoliticalEffectReligious"       StringValue="PopulationEventHoratio03-Religious"/>
             <Var VarName="$PoliticalEffectIndustrialist"   StringValue="PopulationEventHoratio03-Industrialist"/>
@@ -1356,12 +1657,12 @@
                 </Any>
             </Var>
             
-            <Var VarName="$Amount01" IntValue="1000"/>
+            <Var VarName="$Amount01" IntValue="10000"/>
             <Var VarName="$Curiosity01" StringValue="Curiosity_Quest_Horatio01"/>
             <Var VarName="$Curiosity01GUID"/>
             <Var VarName="$PoliticalEffectEcologist"        StringValue="PopulationEventHoratio04-Ecologist"/>
             <Var VarName="$Marker01"/>
-            <Var VarName="$Amount02" IntValue="-1000"/>
+            <Var VarName="$Amount02" IntValue="-10000"/>
             <Var VarName="$ResourceName" StringValue="EmpireMoney"/>
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <LocalizationVar LocalizationKey="$Planet01Name" Source="$Planet01"/>
@@ -1542,7 +1843,7 @@
                 </Any>
             </Var>
                    
-            <Var VarName="$Amount01" IntValue="9"/>
+            <Var VarName="$Amount01" IntValue="8"/>
             
             <Var VarName="$Curiosity01" StringValue="Curiosity_Quest_Horatio02"/>
             <Var VarName="$Curiosity01GUID"/>

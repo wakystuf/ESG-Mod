@@ -1,0 +1,1300 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+    
+    <!-- ####################################### -->
+    <!--           RESOURCE GENERATION           -->
+    <!-- ####################################### -->
+  
+    <!-- ##### Work in progress. To Do's: #####
+    * Tighten up filters that would sometimes cause the quest to not start if enabled
+    * Think about T3 spawns and how to balance by constellation without null results
+    -->
+
+    <!-- ##### GALAXY GEN QUEST Spawn strategic resources in a way that is evenly distributed among constellations  #####-->
+    <QuestDefinition Name="StrategicResourceGenerationQuestFailsafe" Category="GalaxyGeneration" SubCategory="ResourceNormalization" MinimumTurn="5">
+      <!--============ TAGS ============-->
+      <Tags>Hidden, BeginTurn</Tags>
+      <!--============ CONTEXT ============-->
+      <QuestContextSolo/>
+      <!--============ OCCURRENCE RULES ============-->
+      <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                        NumberOfOccurrencesPerEmpire="1"
+                        NumberOfConcurrentInstances="0"/>
+      <!--============ VARIABLES ============-->
+      <Vars>
+        
+        <!-- Choose an Empire, so that it can be fed into the context (no impact on anything; simply needs to be non-null)-->
+        <Var VarName="$ChosenEmpire">
+          <Select Index="0">
+            <From Source="$Empires"/>
+          </Select>
+        </Var>
+ 
+        <!-- Find the Academy, just to have an objective frame of reference for this process-->
+        <Var VarName="$AcademySystem">
+          <From Source="$Constellations.$StarSystems">
+              <Where>
+                  <PathPrerequisite Flags="Prerequisite">WorldAcademy</PathPrerequisite>
+              </Where>
+          </From>
+        </Var>
+        <Var VarName="$Constellation0">
+          <From Source="$AcademySystem.$Constellation"/>
+        </Var>
+
+        <!-- Build the index of constellations -->
+        <Var VarName="$ConstellationNearestAcademy">
+          <From Source="$Constellations">
+            <OrderBy>
+              <SortConstellationByDistance OriginVarName="$Constellation0" SortBy="Nearest"/>
+            </OrderBy>
+          </From>
+        </Var>
+        <Var VarName="$Constellation1">
+          <Select Index="0">
+            <From Source="$ConstellationNearestAcademy"/>
+          </Select>
+        </Var>
+        <Var VarName="$Constellation2">
+          <Select Index="1">
+            <From Source="$ConstellationNearestAcademy"/>
+          </Select>
+        </Var>
+        <Var VarName="$Constellation3">
+          <Select Index="2">
+            <From Source="$ConstellationNearestAcademy"/>
+          </Select>
+        </Var>
+        <Var VarName="$Constellation4">
+          <Select Index="3">
+            <From Source="$ConstellationNearestAcademy"/>
+          </Select>
+        </Var>
+
+        <!-- Calculate number of planets in each constellation -->
+        <Var VarName="$Constellation0_SystemCount">
+          <Count>
+            <From Source="$Constellation0.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Count>
+        </Var>
+        <Var VarName="$Constellation1_SystemCount">
+          <Count>
+            <From Source="$Constellation1.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Count>
+        </Var>
+        <Var VarName="$Constellation2_SystemCount">
+          <Count>
+            <From Source="$Constellation2.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Count>
+        </Var>
+        <Var VarName="$Constellation3_SystemCount">
+          <Count>
+            <From Source="$Constellation3.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Count>
+        </Var>
+        <Var VarName="$Constellation4_SystemCount">
+          <Count>
+            <From Source="$Constellation4.$StarSystems">
+              <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Count>
+        </Var>
+
+        <!-- Calculate benchmarks for a typical system -->
+        <Var VarName="$SystemCount">
+          <Count>
+            <From Source="$Constellations.$StarSystems"/>
+          </Count>
+        </Var>
+        <Var VarName="$ConstellationCount">
+          <Count>
+            <From Source="$Constellations"/>
+          </Count>
+        </Var>
+        <InterpretedVar VarName="$ExpectedSystems">
+          <Expression>Floor($(SystemCount)/$(ConstellationCount))</Expression>
+        </InterpretedVar>
+
+        <!-- Calculate relative performance to find the rump constellation -->
+        <InterpretedVar VarName="$Constellation0_RumpBoolean">
+          <Expression>1-Round(($(Constellation0_SystemCount)/$(ExpectedSystems)))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation1_RumpBoolean">
+          <Expression>1-Round(($(Constellation1_SystemCount)/$(ExpectedSystems)))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation2_RumpBoolean">
+          <Expression>1-Round(($(Constellation2_SystemCount)/$(ExpectedSystems)))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation3_RumpBoolean">
+          <Expression>1-Round(($(Constellation3_SystemCount)/$(ExpectedSystems)))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$Constellation4_RumpBoolean">
+          <Expression>1-Round(($(Constellation4_SystemCount)/$(ExpectedSystems)))</Expression>
+        </InterpretedVar>
+
+        <!-- Calculate number of deposits to spawn for each resource -->
+        <InterpretedVar VarName="$GalaxySize" Target="$(Empire)">
+          <Expression>Property(Context, @../ClassEmpire, GalaxySize, true)</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C0StrategicT1Count">
+          <Expression>Ceil((5 - (2.5 * $(Constellation0_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C0StrategicT2Count">
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation0_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C0StrategicT3Count">
+          <Expression>Ceil((2.5 - (1.25 * $(Constellation0_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C1StrategicT1Count">
+          <Expression>Ceil((5 - (2.5 * $(Constellation1_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C1StrategicT2Count">
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation1_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C1StrategicT3Count">
+          <Expression>Ceil((2.5 - (1.25 * $(Constellation1_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C2StrategicT1Count">
+          <Expression>Ceil((5 - (2.5 * $(Constellation2_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C2StrategicT2Count">
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation2_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C2StrategicT3Count">
+          <Expression>Ceil((2.5 - (1.25 * $(Constellation2_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C3StrategicT1Count">
+          <Expression>Ceil((5 - (2.5 * $(Constellation3_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C3StrategicT2Count">
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation3_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C3StrategicT3Count">
+          <Expression>Ceil((2.5 - (1.25 * $(Constellation3_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C4StrategicT1Count">
+          <Expression>Ceil((5 - (2.5 * $(Constellation4_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C4StrategicT2Count">
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation4_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+        <InterpretedVar VarName="$C4StrategicT3Count">
+          <Expression>Ceil((2.5 - (1.25 * $(Constellation4_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+        </InterpretedVar>
+
+        <!-- Separate planets by constellation and type (we sample twice from each section to get 2 separate randomized sets so that different resources of the same tier spawn independently) -->
+        <Var VarName="$Constellation0T1R1Planets">
+          <Randomize>
+            <From Source="$Constellation0.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeBarren,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeAsh,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation0T1R2Planets">
+          <Randomize>
+            <From Source="$Constellation0.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeBarren,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeAsh,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation0T2R3Planets">
+          <Randomize>
+            <From Source="$Constellation0.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation0T2R4Planets">
+          <Randomize>
+            <From Source="$Constellation0.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation0T3R5Planets">
+          <Randomize>
+            <From Source="$Constellation0.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeAsh,!PlanetTypeBarren,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation0T3R6Planets">
+          <Randomize>
+            <From Source="$Constellation0.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeSwamp,!PlanetTypeAsh,!PlanetTypeBarren,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation1T1R1Planets">
+          <Randomize>
+            <From Source="$Constellation1.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeBarren,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeAsh,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation1T1R2Planets">
+          <Randomize>
+            <From Source="$Constellation1.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeBarren,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeAsh,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation1T2R3Planets">
+          <Randomize>
+            <From Source="$Constellation1.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation1T2R4Planets">
+          <Randomize>
+            <From Source="$Constellation1.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation1T3R5Planets">
+          <Randomize>
+            <From Source="$Constellation1.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeAsh,!PlanetTypeBarren,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation1T3R6Planets">
+          <Randomize>
+            <From Source="$Constellation1.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeSwamp,!PlanetTypeAsh,!PlanetTypeBarren,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation2T1R1Planets">
+          <Randomize>
+            <From Source="$Constellation2.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeBarren,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeAsh,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation2T1R2Planets">
+          <Randomize>
+            <From Source="$Constellation2.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeBarren,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeAsh,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation2T2R3Planets">
+          <Randomize>
+            <From Source="$Constellation2.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation2T2R4Planets">
+          <Randomize>
+            <From Source="$Constellation2.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation2T3R5Planets">
+          <Randomize>
+            <From Source="$Constellation2.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeAsh,!PlanetTypeBarren,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation2T3R6Planets">
+          <Randomize>
+            <From Source="$Constellation2.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeSwamp,!PlanetTypeAsh,!PlanetTypeBarren,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation3T1R1Planets">
+          <Randomize>
+            <From Source="$Constellation3.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeBarren,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeAsh,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation3T1R2Planets">
+          <Randomize>
+            <From Source="$Constellation3.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeBarren,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeAsh,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation3T2R3Planets">
+          <Randomize>
+            <From Source="$Constellation3.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation3T2R4Planets">
+          <Randomize>
+            <From Source="$Constellation3.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation3T3R5Planets">
+          <Randomize>
+            <From Source="$Constellation3.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeAsh,!PlanetTypeBarren,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation3T3R6Planets">
+          <Randomize>
+            <From Source="$Constellation3.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeSwamp,!PlanetTypeAsh,!PlanetTypeBarren,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation4T1R1Planets">
+          <Randomize>
+            <From Source="$Constellation4.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeBarren,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeAsh,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation4T1R2Planets">
+          <Randomize>
+            <From Source="$Constellation4.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeBarren,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeAsh,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation4T2R3Planets">
+          <Randomize>
+            <From Source="$Constellation4.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation4T2R4Planets">
+          <Randomize>
+            <From Source="$Constellation4.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation4T3R5Planets">
+          <Randomize>
+            <From Source="$Constellation4.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeAsh,!PlanetTypeBarren,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+        <Var VarName="$Constellation4T3R6Planets">
+          <Randomize>
+            <From Source="$Constellation4.$StarSystems.$Planets"> 
+              <Where>
+                <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeSwamp,!PlanetTypeAsh,!PlanetTypeBarren,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+              </Where>
+            </From>
+          </Randomize>
+        </Var>
+
+        <!-- Define curiosity types -->
+        <Var VarName="$Strategic1" StringValue="Curiosity_PlanetResource_Strategic01"/>
+        <Var VarName="$Strategic2" StringValue="Curiosity_PlanetResource_Strategic02"/>
+        <Var VarName="$Strategic3" StringValue="Curiosity_PlanetResource_Strategic03"/>
+        <Var VarName="$Strategic4" StringValue="Curiosity_PlanetResource_Strategic04"/>
+        <Var VarName="$Strategic5" StringValue="Curiosity_PlanetResource_Strategic05"/>
+        <Var VarName="$Strategic6" StringValue="Curiosity_PlanetResource_Strategic06"/>
+
+      </Vars>
+      <!--============ PREREQUISITES ============-->
+      <Prerequisites Target="$(Empire)">
+        <!-- In theory this would be the correct filter, but it doesn't work; Path prereq is used instead
+          <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="StrategicResourceGenerationQuest" QuestState="NotStarted"/>
+          <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="StrategicResourceGenerationQuest" QuestState="InProgress"/>
+          <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="StrategicResourceGenerationQuest" QuestState="Completed"/>
+          -->
+          <PathPrerequisite Flags="Prerequisite">ClassEmpire,FactionTraitIsEmpire0</PathPrerequisite>
+          <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,FactionTraitStrategicGen</PathPrerequisite>
+          <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
+      </Prerequisites>
+      <!--============ STEPS ============-->
+      <Steps>   
+          <Step Name="Step1">
+              <ObjectiveSet> 
+                <Objective Name="Objective_Fake">
+                  <Sequence>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation0T1R1Planets"/>
+                      <Input_Count VarName="$C0StrategicT1Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic1"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation0T1R2Planets"/>
+                      <Input_Count VarName="$C0StrategicT1Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic2"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation0T2R3Planets"/>
+                      <Input_Count VarName="$C0StrategicT2Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic3"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation0T2R4Planets"/>
+                      <Input_Count VarName="$C0StrategicT2Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic4"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation0T3R5Planets"/>
+                      <Input_Count VarName="$C0StrategicT3Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic5"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation0T3R6Planets"/>
+                      <Input_Count VarName="$C0StrategicT3Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic6"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation1T1R1Planets"/>
+                      <Input_Count VarName="$C1StrategicT1Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic1"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation1T1R2Planets"/>
+                      <Input_Count VarName="$C1StrategicT1Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic2"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation1T2R3Planets"/>
+                      <Input_Count VarName="$C1StrategicT2Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic3"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation1T2R4Planets"/>
+                      <Input_Count VarName="$C1StrategicT2Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic4"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation1T3R5Planets"/>
+                      <Input_Count VarName="$C1StrategicT3Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic5"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation1T3R6Planets"/>
+                      <Input_Count VarName="$C1StrategicT3Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic6"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation2T1R1Planets"/>
+                      <Input_Count VarName="$C2StrategicT1Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic1"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation2T1R2Planets"/>
+                      <Input_Count VarName="$C2StrategicT1Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic2"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation2T2R3Planets"/>
+                      <Input_Count VarName="$C2StrategicT2Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic3"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation2T2R4Planets"/>
+                      <Input_Count VarName="$C2StrategicT2Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic4"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation2T3R5Planets"/>
+                      <Input_Count VarName="$C2StrategicT3Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic5"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation2T3R6Planets"/>
+                      <Input_Count VarName="$C2StrategicT3Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic6"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation3T1R1Planets"/>
+                      <Input_Count VarName="$C3StrategicT1Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic1"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation3T1R2Planets"/>
+                      <Input_Count VarName="$C3StrategicT1Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic2"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation3T2R3Planets"/>
+                      <Input_Count VarName="$C3StrategicT2Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic3"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation3T2R4Planets"/>
+                      <Input_Count VarName="$C3StrategicT2Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic4"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation3T3R5Planets"/>
+                      <Input_Count VarName="$C3StrategicT3Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic5"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation3T3R6Planets"/>
+                      <Input_Count VarName="$C3StrategicT3Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic6"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation4T1R1Planets"/>
+                      <Input_Count VarName="$C4StrategicT1Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic1"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation4T1R2Planets"/>
+                      <Input_Count VarName="$C4StrategicT1Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic2"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation4T2R3Planets"/>
+                      <Input_Count VarName="$C4StrategicT2Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic3"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation4T2R4Planets"/>
+                      <Input_Count VarName="$C4StrategicT2Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic4"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation4T3R5Planets"/>
+                      <Input_Count VarName="$C4StrategicT3Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic5"/>
+                    </Action_SpawnCuriosity>
+                    <Action_SpawnCuriosity>
+                      <Input_Planets VarName="$Constellation4T3R6Planets"/>
+                      <Input_Count VarName="$C4StrategicT3Count"/>
+                      <Input_CuriosityDefinition VarName="$Strategic6"/>
+                    </Action_SpawnCuriosity>
+                  </Sequence>
+                </Objective>
+              </ObjectiveSet>
+          </Step>
+      </Steps>
+  </QuestDefinition>
+
+
+  <!-- ##### GALAXY GEN QUEST Spawn strategic resources in a way that is evenly distributed among constellations  #####-->
+  <QuestDefinition Name="LuxuryResourceGenerationQuestFailsafe" Category="GalaxyGeneration" SubCategory="ResourceNormalization" MinimumTurn="5">
+    <!--============ TAGS ============-->
+    <Tags>Hidden, BeginTurn</Tags>
+    <!--============ CONTEXT ============-->
+    <QuestContextSolo/>
+    <!--============ OCCURRENCE RULES ============-->
+    <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                      NumberOfOccurrencesPerEmpire="1"
+                      NumberOfConcurrentInstances="0"/>
+    <!--============ VARIABLES ============-->
+    <Vars>
+      
+      <!-- Choose an Empire, so that it can be fed into the context (no impact on anything; simply needs to be non-null)-->
+      <Var VarName="$ChosenEmpire">
+        <Select Index="0">
+          <From Source="$Empires"/>
+        </Select>
+      </Var>
+
+      <!-- Find the Academy, just to have an objective frame of reference for this process-->
+      <Var VarName="$AcademySystem">
+        <From Source="$Constellations.$StarSystems">
+            <Where>
+                <PathPrerequisite Flags="Prerequisite">WorldAcademy</PathPrerequisite>
+            </Where>
+        </From>
+      </Var>
+      <Var VarName="$Constellation0">
+        <From Source="$AcademySystem.$Constellation"/>
+      </Var>
+
+      <!-- Build the index of constellations -->
+      <Var VarName="$ConstellationNearestAcademy">
+        <From Source="$Constellations">
+          <OrderBy>
+            <SortConstellationByDistance OriginVarName="$Constellation0" SortBy="Nearest"/>
+          </OrderBy>
+        </From>
+      </Var>
+      <Var VarName="$Constellation1">
+        <Select Index="0">
+          <From Source="$ConstellationNearestAcademy"/>
+        </Select>
+      </Var>
+      <Var VarName="$Constellation2">
+        <Select Index="1">
+          <From Source="$ConstellationNearestAcademy"/>
+        </Select>
+      </Var>
+      <Var VarName="$Constellation3">
+        <Select Index="2">
+          <From Source="$ConstellationNearestAcademy"/>
+        </Select>
+      </Var>
+      <Var VarName="$Constellation4">
+        <Select Index="3">
+          <From Source="$ConstellationNearestAcademy"/>
+        </Select>
+      </Var>
+
+      <!-- Calculate number of planets in each constellation -->
+      <Var VarName="$Constellation0_SystemCount">
+        <Count>
+          <From Source="$Constellation0.$StarSystems">
+            <Where>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Count>
+      </Var>
+      <Var VarName="$Constellation1_SystemCount">
+        <Count>
+          <From Source="$Constellation1.$StarSystems">
+            <Where>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Count>
+      </Var>
+      <Var VarName="$Constellation2_SystemCount">
+        <Count>
+          <From Source="$Constellation2.$StarSystems">
+            <Where>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Count>
+      </Var>
+      <Var VarName="$Constellation3_SystemCount">
+        <Count>
+          <From Source="$Constellation3.$StarSystems">
+            <Where>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Count>
+      </Var>
+      <Var VarName="$Constellation4_SystemCount">
+        <Count>
+          <From Source="$Constellation4.$StarSystems">
+            <Where>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Count>
+      </Var>
+
+      <!-- Calculate benchmarks for a typical system -->
+      <Var VarName="$SystemCount">
+        <Count>
+          <From Source="$Constellations.$StarSystems"/>
+        </Count>
+      </Var>
+      <Var VarName="$ConstellationCount">
+        <Count>
+          <From Source="$Constellations"/>
+        </Count>
+      </Var>
+      <InterpretedVar VarName="$ExpectedSystems">
+        <Expression>Floor($(SystemCount)/$(ConstellationCount))</Expression>
+      </InterpretedVar>
+
+      <!-- Calculate relative performance to find the rump constellation -->
+      <InterpretedVar VarName="$Constellation0_RumpBoolean">
+        <Expression>1-Round(($(Constellation0_SystemCount)/$(ExpectedSystems)))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Constellation1_RumpBoolean">
+        <Expression>1-Round(($(Constellation1_SystemCount)/$(ExpectedSystems)))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Constellation2_RumpBoolean">
+        <Expression>1-Round(($(Constellation2_SystemCount)/$(ExpectedSystems)))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Constellation3_RumpBoolean">
+        <Expression>1-Round(($(Constellation3_SystemCount)/$(ExpectedSystems)))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Constellation4_RumpBoolean">
+        <Expression>1-Round(($(Constellation4_SystemCount)/$(ExpectedSystems)))</Expression>
+      </InterpretedVar>
+
+      <!-- Calculate number of deposits to spawn for each resource -->
+      <InterpretedVar VarName="$GalaxySize" Target="$(Empire)">
+        <Expression>Property(Context, @../ClassEmpire, GalaxySize, true)</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C0LuxuryT2v0Count">
+        <Expression>Ceil((3 - (1.5 * $(Constellation0_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C0LuxuryT2v1Count">
+        <Expression>Ceil((1.5 - (0.75 * $(Constellation0_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C0LuxuryT3Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation0_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C1LuxuryT2v0Count">
+        <Expression>Ceil((3 - (1.5 * $(Constellation1_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C1LuxuryT2v1Count">
+        <Expression>Ceil((1.5 - (0.75 * $(Constellation1_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C1LuxuryT3Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation1_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C2LuxuryT2v0Count">
+        <Expression>Ceil((3 - (1.5 * $(Constellation2_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C2LuxuryT2v1Count">
+        <Expression>Ceil((1.5 - (0.75 * $(Constellation2_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C2LuxuryT3Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation2_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C3LuxuryT2v0Count">
+        <Expression>Ceil((3 - (1.5 * $(Constellation3_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C3LuxuryT2v1Count">
+        <Expression>Ceil((1.5 - (0.75 * $(Constellation3_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C3LuxuryT3Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation3_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C4LuxuryT2v0Count">
+        <Expression>Ceil((3 - (1.5 * $(Constellation4_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C4LuxuryT2v1Count">
+        <Expression>Ceil((1.5 - (0.75 * $(Constellation4_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$C4LuxuryT3Count">
+        <Expression>Ceil((1 - (0.5 * $(Constellation4_RumpBoolean))) * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <!-- Need to figure out what to do about this and eventually likely remove -->
+      <InterpretedVar VarName="$LuxuryT2v0Count">
+        <Expression>Ceil(2 * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$LuxuryT2v1Count">
+        <Expression>Ceil(1 * $(GalaxySize))</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$LuxuryT3Count">
+        <Expression>Ceil(1 * $(GalaxySize))</Expression>
+      </InterpretedVar>
+
+      <!-- Assign T2 luxuries to planets by constellation and type -->
+      <Var VarName="$T2R9Planets">
+        <Randomize>
+          <From Source="$Constellation0.$StarSystems.$Planets"> 
+            <Where>
+              <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T2R10Planets">
+        <Randomize>
+          <From Source="$Constellation1.$StarSystems.$Planets"> 
+            <Where>
+              <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T2R11Planets">
+        <Randomize>
+          <From Source="$Constellation2.$StarSystems.$Planets"> 
+            <Where>
+              <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T2R12Planets">
+        <Randomize>
+          <From Source="$Constellation3.$StarSystems.$Planets"> 
+            <Where>
+              <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T2R13Planets">
+        <Randomize>
+          <From Source="$Constellation4.$StarSystems.$Planets"> 
+            <Where>
+              <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T2R14v0Planets">
+        <Randomize>
+          <From Source="$Constellation0.$StarSystems.$Planets"> 
+            <Where>
+              <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T2R14v1Planets">
+        <Randomize>
+          <From Source="$Constellation1.$StarSystems.$Planets"> 
+            <Where>
+              <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T2R15v0Planets">
+        <Randomize>
+          <From Source="$Constellation2.$StarSystems.$Planets"> 
+            <Where>
+              <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T2R15v1Planets">
+        <Randomize>
+          <From Source="$Constellation3.$StarSystems.$Planets"> 
+            <Where>
+              <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T2R16Planets">
+        <Randomize>
+          <From Source="$Constellation4.$StarSystems.$Planets"> 
+            <Where>
+              <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeGasBurning,!PlanetTypeGasHot,!PlanetTypeGasWarm,!PlanetTypeGasTemperate,!PlanetTypeGasCold,!PlanetTypeGasFrozen,!PlanetTypeSwamp,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+
+      <!-- Find planets that may already have T3 resources, so that they can be excluded (ideally would also filter for curiosity level, but that line causes crashes)-->
+      <Var VarName="$T3R17Planets_Excluded">
+        <From Source="$Constellations.$StarSystems.$Planets">
+          <Where>
+            <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeLifeform"/>
+            <PathPrerequisite Flags="Prerequisite">PlanetTypeArctic</PathPrerequisite>
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+ <!--            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassPlanet', CuriositiesLevel4Count) gt 0</InterpreterPrerequisite>-->
+          </Where>
+        </From>
+      </Var>
+      <Var VarName="$T3R18Planets_Excluded">
+        <From Source="$Constellations.$StarSystems.$Planets">
+          <Where>
+            <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeRuins"/>
+            <PathPrerequisite Flags="Prerequisite">PlanetTypeSwamp</PathPrerequisite>
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+          </Where>
+        </From>
+      </Var>
+      <Var VarName="$T3R19Planets_Excluded">
+        <From Source="$Constellations.$StarSystems.$Planets">
+          <Where>
+            <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeRuins"/>
+            <PathPrerequisite Flags="Prerequisite">PlanetTypeIce</PathPrerequisite>
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+          </Where>
+        </From>
+      </Var>
+      <Var VarName="$T3R20Planets_Excluded">
+        <From Source="$Constellations.$StarSystems.$Planets">
+          <Where>
+            <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeLifeform"/>
+            <PathPrerequisite Flags="Prerequisite">PlanetTypeDesert</PathPrerequisite>
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+          </Where>
+        </From>
+      </Var>
+      <Var VarName="$T3R21Planets_Excluded">
+        <From Source="$Constellations.$StarSystems.$Planets">
+          <Where>
+            <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeUnderground"/>
+            <PathPrerequisite Flags="Prerequisite">PlanetTypeBarren</PathPrerequisite>
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+          </Where>
+        </From>
+      </Var>
+      <Var VarName="$T3R22Planets_Excluded">
+        <From Source="$Constellations.$StarSystems.$Planets">
+          <Where>
+            <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeLifeform"/>
+            <PathPrerequisite Flags="Prerequisite">PlanetTypeLava</PathPrerequisite>
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+          </Where>
+        </From>
+      </Var>
+      <Var VarName="$T3R23Planets_Excluded">
+        <From Source="$Constellations.$StarSystems.$Planets">
+          <Where>
+            <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeRuins"/>
+            <PathPrerequisite Flags="Prerequisite">PlanetTypeAsh</PathPrerequisite>
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+          </Where>
+        </From>
+      </Var>
+      <Var VarName="$T3R24Planets_Excluded">
+        <From Source="$Constellations.$StarSystems.$Planets">
+          <Where>
+            <FilterPlanetByCuriosity DisplayedTypeVarName="CuriosityTypeLifeform"/>
+            <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeSwamp,!PlanetTypeAsh,!PlanetTypeBarren,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+          </Where>
+        </From>
+      </Var>
+
+      <!-- Assign T3 luxuries to planets by constellation and type, filtering for exclusions -->
+       
+      <Var VarName="$T3R17Planets">
+        <Randomize>
+          <From Source="$Constellations.$StarSystems.$Planets"> 
+            <Where>
+              <IsNot EntityVarName="$T3R17Planets_Excluded"/>
+              <PathPrerequisite Flags="Prerequisite">PlanetTypeArctic</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T3R18Planets">
+        <Randomize>
+          <From Source="$Constellations.$StarSystems.$Planets"> 
+            <Where>
+              <!--<IsNot EntityVarName="$T3R18Planets_Excluded"/>-->
+              <PathPrerequisite Flags="Prerequisite">PlanetTypeSwamp</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var> 
+      <Var VarName="$T3R19Planets">
+        <Randomize>
+          <From Source="$Constellations.$StarSystems.$Planets"> 
+            <Where>
+              <!--<IsNot EntityVarName="$T3R19Planets_Excluded"/>-->
+              <PathPrerequisite Flags="Prerequisite">PlanetTypeIce</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T3R20Planets">
+        <Randomize>
+          <From Source="$Constellations.$StarSystems.$Planets"> 
+            <Where>
+              <!--<IsNot EntityVarName="$T3R20Planets_Excluded"/>-->
+              <PathPrerequisite Flags="Prerequisite">PlanetTypeDesert</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T3R21Planets">
+        <Randomize>
+          <From Source="$Constellations.$StarSystems.$Planets"> 
+            <Where>
+              <IsNot EntityVarName="$T3R21Planets_Excluded"/>
+              <PathPrerequisite Flags="Prerequisite">PlanetTypeBarren</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T3R22Planets">
+        <Randomize>
+          <From Source="$Constellations.$StarSystems.$Planets"> 
+            <Where>
+              <IsNot EntityVarName="$T3R22Planets_Excluded"/>
+              <PathPrerequisite Flags="Prerequisite">PlanetTypeLava</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T3R23Planets">
+        <Randomize>
+          <From Source="$Constellations.$StarSystems.$Planets"> 
+            <Where>
+              <IsNot EntityVarName="$T3R23Planets_Excluded"/>
+              <PathPrerequisite Flags="Prerequisite">PlanetTypeAsh</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      <Var VarName="$T3R24Planets">
+        <Randomize>
+          <From Source="$Constellations.$StarSystems.$Planets"> 
+            <Where>
+              <IsNot EntityVarName="$T3R24Planets_Excluded"/>
+              <PathPrerequisite Flags="Prerequisite">!PlanetTypeIce,!PlanetTypeArctic,!PlanetTypeLava,!PlanetTypeDesert,!PlanetTypeSwamp,!PlanetTypeAsh,!PlanetTypeBarren,!PlanetTypeVeldt,!PlanetTypeSteppes,!PlanetTypeArid,!PlanetTypeSnow,!PlanetTypeMonsoon,!PlanetTypeOcean,!PlanetTypeTerran,!PlanetTypeForest,!PlanetTypeAtoll,!PlanetTypeTundra,!PlanetTypeTropical,!PlanetTypeJungle,!PlanetTypeBoreal,!PlanetTypeDestroyed</PathPrerequisite>
+              <PathPrerequisite Inverted="true" Flags="Prerequisite">./ClassStarSystem, QuestNode</PathPrerequisite> 
+            </Where>
+          </From>
+        </Randomize>
+      </Var>
+      
+      <!-- Define curiosity types -->
+      <Var VarName="$Luxury9" StringValue="Curiosity_PlanetResource_Luxury09"/>
+      <Var VarName="$Luxury10" StringValue="Curiosity_PlanetResource_Luxury10"/>
+      <Var VarName="$Luxury11" StringValue="Curiosity_PlanetResource_Luxury11"/>
+      <Var VarName="$Luxury12" StringValue="Curiosity_PlanetResource_Luxury12"/>
+      <Var VarName="$Luxury13" StringValue="Curiosity_PlanetResource_Luxury13"/>
+      <Var VarName="$Luxury14" StringValue="Curiosity_PlanetResource_Luxury14"/>
+      <Var VarName="$Luxury15" StringValue="Curiosity_PlanetResource_Luxury15"/>
+      <Var VarName="$Luxury16" StringValue="Curiosity_PlanetResource_Luxury16"/>
+      <Var VarName="$Luxury17" StringValue="Curiosity_PlanetResource_Luxury17"/>
+      <Var VarName="$Luxury18" StringValue="Curiosity_PlanetResource_Luxury18"/>
+      <Var VarName="$Luxury19" StringValue="Curiosity_PlanetResource_Luxury19"/>
+      <Var VarName="$Luxury20" StringValue="Curiosity_PlanetResource_Luxury20"/>
+      <Var VarName="$Luxury21" StringValue="Curiosity_PlanetResource_Luxury21"/>
+      <Var VarName="$Luxury22" StringValue="Curiosity_PlanetResource_Luxury22"/>
+      <Var VarName="$Luxury23" StringValue="Curiosity_PlanetResource_Luxury23"/>
+      <Var VarName="$Luxury24" StringValue="Curiosity_PlanetResource_Luxury24"/>
+
+    </Vars>
+    <!--============ PREREQUISITES ============-->
+    <Prerequisites Target="$(Empire)">
+      <!-- Should work, but doesn't, hence the path pre-req instead
+        <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="LuxuryResourceGenerationQuest" QuestState="NotStarted"/>
+        <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="LuxuryResourceGenerationQuest" QuestState="InProgress"/>
+        <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="LuxuryResourceGenerationQuest" QuestState="Completed"/>
+      -->
+        <PathPrerequisite Flags="Prerequisite">ClassEmpire,FactionTraitIsEmpire0</PathPrerequisite>
+        <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,FactionTraitStrategicGen</PathPrerequisite>
+        <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
+    </Prerequisites>
+    <!--============ STEPS ============-->
+    <Steps>   
+        <Step Name="Step1">
+            <ObjectiveSet> 
+              <Objective Name="Objective_Fake">
+                <Sequence> 
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T2R9Planets"/>
+                    <Input_Count VarName="$C0LuxuryT2v0Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury9"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T2R10Planets"/>
+                    <Input_Count VarName="$C1LuxuryT2v0Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury10"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T2R11Planets"/>
+                    <Input_Count VarName="$C2LuxuryT2v0Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury11"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T2R12Planets"/>
+                    <Input_Count VarName="$C3LuxuryT2v0Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury12"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T2R13Planets"/>
+                    <Input_Count VarName="$C4LuxuryT2v0Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury13"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T2R14v0Planets"/>
+                    <Input_Count VarName="$C0LuxuryT2v1Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury14"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T2R14v1Planets"/>
+                    <Input_Count VarName="$C1LuxuryT2v1Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury14"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T2R15v0Planets"/>
+                    <Input_Count VarName="$C2LuxuryT2v1Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury15"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T2R15v1Planets"/>
+                    <Input_Count VarName="$C3LuxuryT2v1Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury15"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T2R16Planets"/>
+                    <Input_Count VarName="$C4LuxuryT2v1Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury16"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T3R17Planets"/>
+                    <Input_Count VarName="$LuxuryT3Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury17"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T3R18Planets"/>
+                    <Input_Count VarName="$LuxuryT3Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury18"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T3R19Planets"/>
+                    <Input_Count VarName="$LuxuryT3Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury19"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T3R20Planets"/>
+                    <Input_Count VarName="$LuxuryT3Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury20"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T3R21Planets"/>
+                    <Input_Count VarName="$LuxuryT3Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury21"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T3R22Planets"/>
+                    <Input_Count VarName="$LuxuryT3Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury22"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T3R23Planets"/>
+                    <Input_Count VarName="$LuxuryT3Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury23"/>
+                  </Action_SpawnCuriosity>
+                  <Action_SpawnCuriosity>
+                    <Input_Planets VarName="$T3R24Planets"/>
+                    <Input_Count VarName="$LuxuryT3Count"/>
+                    <Input_CuriosityDefinition VarName="$Luxury24"/>
+                  </Action_SpawnCuriosity>
+                </Sequence>
+              </Objective>
+            </ObjectiveSet>
+        </Step>
+    </Steps>
+</QuestDefinition>
+
+</Datatable>

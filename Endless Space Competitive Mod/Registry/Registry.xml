@@ -9,7 +9,7 @@
             <TradingCompanyHeadquartersModifier>1</TradingCompanyHeadquartersModifier>
             <TradingCompanySubsidiaryModifier>0.9</TradingCompanySubsidiaryModifier>
           </ResourceIncome>
-          <TradingRoutesIncomeThresholdFormula>(Floor(250 * Pow(4.2, Property(Empire, AvailableNumberOfTradingCompanyHeadquarters))))</TradingRoutesIncomeThresholdFormula>
+          <TradingRoutesIncomeThresholdFormula>(Floor(250 * Pow(4.2, Property(Empire, AvailableNumberOfTradingCompanyHeadquarters)))) * Property(Empire, @ClassEmpire, GameSpeedMultiplier)</TradingRoutesIncomeThresholdFormula>
           <TradingRoutesExperienceThresholdFormula>((Floor(500 * (1 + Pow(1.45, Property(TradingCompany, Level))) - 900)) * Property(TradingCompany, @../ClassEmpire, TradingCompanyLevelUpMultiplier))</TradingRoutesExperienceThresholdFormula>
           <TradingCompanyIncomeMultiplierFormula>(0.75 + Pow(Property(TradingCompany, Level) / 35, 0.75))</TradingCompanyIncomeMultiplierFormula>
           <TradingRouteLengthModifierFormula>Min((1 + $(PathLength) / 10), (1+1.2*(Logn($(PathLength)^2))))</TradingRouteLengthModifierFormula>
@@ -17,10 +17,10 @@
         <DepartmentOfTheInterior>
           <GrowthFormula>(Property(Empire, @ClassEmpire, BaseFoodRequiredToGrowPop) + (5 * $(Population))) * Property(Empire, @ClassEmpire, GameSpeedMultiplier) * $(Population)</GrowthFormula>
           <MothershipGrowthFormula>1200 * Property(Empire, @ClassEmpire, GameSpeedMultiplier) * $(Population)</MothershipGrowthFormula>
-          <OutpostBuyoutCostFormula>(Property(Empire, @AffinityGameplayVenetians, OwnedSystems) + Property(Empire, @AffinityGameplayVenetians, OwnedOutposts)+5) * 50</OutpostBuyoutCostFormula>
-          <OutpostBuyoutRefoundFormula>(Property(Empire, @AffinityGameplayVenetians, OwnedSystems) + Property(Empire, @AffinityGameplayVenetians, OwnedOutposts)+5) * 50</OutpostBuyoutRefoundFormula>
+          <OutpostBuyoutCostFormula>Min(600, (Property(Empire, @AffinityGameplayVenetians, OwnedSystems) + Property(Empire, @AffinityGameplayVenetians, OwnedOutposts)+5) * 50) * Property(Empire, @ClassEmpire, GameSpeedMultiplier)</OutpostBuyoutCostFormula>
+          <OutpostBuyoutRefoundFormula>Min(600, (Property(Empire, @AffinityGameplayVenetians, OwnedSystems) + Property(Empire, @AffinityGameplayVenetians, OwnedOutposts)+5) * 50) * Property(Empire, @ClassEmpire, GameSpeedMultiplier)</OutpostBuyoutRefoundFormula>
           <InfluenceConversionLifeforceGain>1500</InfluenceConversionLifeforceGain>
-		  <AssimilationThresholdFormula>Ceil(2.5 + $(AssimilatedPopulationsCount) * 2.5)</AssimilationThresholdFormula>
+          <AssimilationThresholdFormula>Min(2 + $(AssimilatedPopulationsCount) * 2, 10)</AssimilationThresholdFormula>
         </DepartmentOfTheInterior>
         <DepartmentOfDefense>
           <RetrofitCostFormula>(30 * (Property(Empire, @ClassEmpire, DustInflation)^0.33) * Property(Empire, @ClassEmpire, GameSpeedMultiplier)) * Property(Empire, @ClassEmpire, RetrofitCost)</RetrofitCostFormula>
@@ -32,8 +32,8 @@
           <!--  Parameter is the industry cost of the building on completion, with all modifiers applied, as a regular construction or a buyout  -->
           <ConstructionCompleteExperienceFormula>0.03 * $(Parameter) * Property(Hero, ExperienceMultiplier)</ConstructionCompleteExperienceFormula>
           <NodeDiscoveredExperienceFormula>4 * Property(Hero, ExperienceMultiplier)</NodeDiscoveredExperienceFormula>
-          <CuriosityDiscoveredExperienceFormula>6 * Property(Hero, ExperienceMultiplier)</CuriosityDiscoveredExperienceFormula>
-          </DepartmentOfEducation>
+          <CuriosityDiscoveredExperienceFormula>6</CuriosityDiscoveredExperienceFormula>
+        </DepartmentOfEducation>
       </Agencies>
     </Empire>
     <Academy>

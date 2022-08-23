@@ -9,12 +9,13 @@
 
   <!-- Vaulters -->
   <SimulationDescriptor Name="StarSystemImprovementUniqueStrategicVaulters" Type="StarSystemImprovement">
-    <Modifier TargetProperty="ResourceBonus" Operation="Addition" Value="1" Path="./ClassColonizedStarSystem/ClassColonizedPlanet/ResourceTypeStrategic"/>
-    <Modifier TargetProperty="ResourceBonus" Operation="Addition" Value="$(SD2Flag)" Path="./ClassColonizedStarSystem/ClassColonizedPlanet/ResourceTypeStrategic,ResourceRarityCommon" SearchValueFromPath="true" TooltipHidden="true"/>
-    <Modifier TargetProperty="ResourceBonus" Operation="Addition" Value="$(SD3Flag)" Path="./ClassColonizedStarSystem/ClassColonizedPlanet/ResourceTypeStrategic,ResourceRarityUncommon" SearchValueFromPath="true" TooltipHidden="true"/>
-    <Modifier TargetProperty="ResourceBonus" Operation="Addition" Value="$(SD4Flag)" Path="./ClassColonizedStarSystem/ClassColonizedPlanet/ResourceTypeStrategic,ResourceRarityRare" SearchValueFromPath="true" TooltipHidden="true"/>
-    <!-- Alternate version that works; kept intact for later, just in case.--> 
-    <!--<BinaryModifier TargetProperty="ResourceBonus" Operation="Addition" Left="0.5" BinaryOperation="Multiplication" Right="$(SystemLevel)" Path="./ClassColonizedStarSystem/ClassColonizedPlanet/ResourceTypeStrategic" SearchValueFromPath="true"/>-->
+    <Modifier TargetProperty="ResourceBonus" Operation="Addition" Value="1" Path="./ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeStrategic"/>
+    <BinaryModifier TargetProperty="NetStrategic1" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(SD2Flag)" Path="../ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
+    <BinaryModifier TargetProperty="NetStrategic2" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(SD2Flag)" Path="../ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
+    <BinaryModifier TargetProperty="NetStrategic3" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(SD3Flag)" Path="../ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
+    <BinaryModifier TargetProperty="NetStrategic4" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(SD3Flag)" Path="../ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
+    <BinaryModifier TargetProperty="NetStrategic5" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(SD4Flag)" Path="../ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
+    <BinaryModifier TargetProperty="NetStrategic6" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(SD4Flag)" Path="../ClassColonizedStarSystem" SearchValueFromPath="true" TooltipHidden="true" />
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="StarSystemImprovementUniqueVaulters" Type="StarSystemImprovement">
@@ -29,7 +30,7 @@
     <BinaryModifier TargetProperty="SystemMoneyFromMoneyConversion" Operation="Addition" Left="-0.25" BinaryOperation="Multiplication" Right="$(SystemMoney)" Path="ClassColonizedStarSystem" TooltipHidden="true" />
   </SimulationDescriptor>
   <SimulationDescriptor Name="StarSystemImprovementDustToLifeforceEffectFakeForGUI" Type="StarSystemImprovement">
-    <BinaryModifier TargetProperty="SystemLifeforceFromMoneyConversion" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(SystemMoney)" Path="ClassColonizedStarSystem" TooltipOverride="%StarSystemImprovementDustToLifeforceTooltipEffect"/>
+    <BinaryModifier TargetProperty="SystemLifeforceFromMoneyConversion" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(SystemMoney)" Path="FAKE" TooltipOverride="%StarSystemImprovementDustToLifeforceTooltipEffect"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="StarSystemImprovementGrowthFromLifeforceEffect" Type="StarSystemImprovement">
@@ -86,7 +87,7 @@
   <!-- Lumeris T4 Empire Unique Building  -->
   <SimulationDescriptor Name="BuildingStarSystemImprovementUniqueVenetians" Type="BuildingStarSystemImprovement"/>
   <SimulationDescriptor Name="StarSystemImprovementUniqueVenetians" Type="StarSystemImprovement">
-    <BinaryModifier TargetProperty="SystemFIDSIPercent" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(PeacefulRelationshipCount)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="SystemFIDSIPercent" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(NumberOfTradingCompanies)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
   </SimulationDescriptor>
 
   <!--Hissho-->
@@ -163,13 +164,47 @@
 
   <!--Bespoke Architecture-->
   <SimulationDescriptor Name="StarSystemImprovementQuestTimeLords01" Type="StarSystemImprovement">
-    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(NonMajorPopulationCount)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementQuestTimeLords01TooltipsEffect"/>
+    <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="3" BinaryOperation="Multiplication" Right="$(NonMajorPopulationCount)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementQuestTimeLords01TooltipsEffect"/>
   </SimulationDescriptor>
 
   <!--Sensory Deprevation-->
   <SimulationDescriptor Name="StarSystemImprovementQuestTimeLords02" Type="StarSystemImprovement">
     <BinaryModifier TargetProperty="Happiness" Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(MajorPopulationCount)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementQuestTimeLords02TooltipsEffect"/>
   </SimulationDescriptor>
+
+  <!--Scrap Kings-->
+  <SimulationDescriptor Name="StarSystemImprovementQuestTimeLords99Effect" Type="StarSystemImprovement">
+    <Modifier TargetProperty="ShipProductionCostReduction" Operation="Addition" Value="0.35" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <Modifier TargetProperty="ExperienceAtShipCreation" Operation="Addition" Value="40" Path="ClassColonizedStarSystem/ClassGarrison" TooltipHidden="true"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="StarSystemImprovementQuestTimeLords99EffectFakeForGUI" Type="StarSystemImprovement">
+    <Modifier TargetProperty="ExperienceAtShipCreation" Operation="Addition" Value="40" Path="FAKE" TooltipOverride="%LawEffectP00L02-QuestTimeLordsEffectOverride"/>
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="StarSystemImprovementQuestTimeLords99" Type="StarSystemImprovement"/>
+
+  <!--  Fabricated Forces (including upgraded versions)  -->
+  <SimulationDescriptor Name="StarSystemImprovementIndustryToManpower" Type="StarSystemImprovement" />
+  <SimulationDescriptor Name="StarSystemImprovementIndustryToManpowerEffect" Type="StarSystemImprovement">
+    <Property Name="ManpowerConversionLocal" BaseValue="0.5"/>
+    <Modifier TargetProperty="ManpowerConversionLocal" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="EmpireManpower" Operation="Addition" Left="$(ManpowerConversionLocal)" BinaryOperation="Multiplication" Right="$(SystemProduction)" Path="../ClassEmpire" TooltipHidden="true" />
+    <BinaryModifier TargetProperty="SystemProductionFromProductionConversion" Operation="Addition" Left="-1" BinaryOperation="Multiplication" Right="$(SystemProduction)" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="StarSystemImprovementQuestTimeLords06Effect" Type="StarSystemImprovement">
+    <Property Name="ManpowerConversionLocal" BaseValue="0.75"/>
+    <Modifier TargetProperty="ManpowerConversionLocal" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="EmpireManpower" Operation="Addition" Left="$(ManpowerConversionLocal)" BinaryOperation="Multiplication" Right="$(SystemProduction)" Path="../ClassEmpire" TooltipHidden="true" />
+    <BinaryModifier TargetProperty="SystemProductionFromProductionConversion" Operation="Addition" Left="-1" BinaryOperation="Multiplication" Right="$(SystemProduction)" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="StarSystemImprovementQuestTimeLords08Effect" Type="StarSystemImprovement">
+    <Property Name="ManpowerConversionLocal" BaseValue="0.63"/>
+    <Modifier TargetProperty="ManpowerConversionLocal" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="EmpireManpower" Operation="Addition" Left="$(ManpowerConversionLocal)" BinaryOperation="Multiplication" Right="$(SystemProduction)" Path="../ClassEmpire" TooltipHidden="true" />
+    <BinaryModifier TargetProperty="SystemProductionFromProductionConversion" Operation="Addition" Left="-1" BinaryOperation="Multiplication" Right="$(SystemProduction)" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+  </SimulationDescriptor>
+
+  <!--  Create Pop (Fast speed)  -->
+  <SimulationDescriptor Name="StarSystemImprovementCreateMajorPopulationFast" Type="StarSystemImprovement"/>
 
   <!-- Cravers Industrialist Path Antenna Reward-->
   <SimulationDescriptor Name="StarSystemImprovementIndustryCravers" Type="StarSystemImprovement">
@@ -464,6 +499,14 @@
     <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(MajorPopulationCount)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
   </SimulationDescriptor>
 
+  <!--  Academy Embassy  -->
+  <SimulationDescriptor Name="StarSystemImprovementAcademyEmbassy" Type="StarSystemImprovement">
+    <Modifier TargetProperty="HeroRecruitmentUnlocked" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="HeroUnlockThresholdModifier" Operation="Multiplication" Value="0.8" Path="../ClassEmpire"/>
+    <Modifier TargetProperty="ExperienceMultiplier" Operation="Addition" Value="0.25" Path="../ClassEmpire//ClassHero"/>
+    <Modifier TargetProperty="ExperiencePerTurn" Operation="Addition" Value="4" Path="../ClassEmpire//ClassHero"/>
+  </SimulationDescriptor>
+
   <!-- ############################################################################# -->
   <!-- #################################  Tier 3   ################################# -->
   <!-- ############################################################################# -->
@@ -498,6 +541,11 @@
   <SimulationDescriptor Name="StarSystemImprovementInfluence1Cravers" Type="StarSystemImprovement">
     <Modifier TargetProperty="PlanetRawPrestige" Operation="Addition" Value="2" Path="./ClassColonizedStarSystem,HappinessStatusStarSystem3/ClassColonizedPlanet"/>
     <Modifier TargetProperty="PlanetRawPrestige" Operation="Addition" Value="2" Path="./ClassColonizedStarSystem,HappinessStatusStarSystem4/ClassColonizedPlanet"/>
+  </SimulationDescriptor>
+  
+  <!--Colonial Rights (Hissho version)-->
+  <SimulationDescriptor Name="StarSystemImprovementApproval2MajorHisshos" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Addition" Right="5" BinaryOperation="Multiplication" Left="$(SystemLevel)" SearchValueFromPath="true" Path="./ClassColonizedStarSystem"/>
   </SimulationDescriptor>
 
   <!--Optics Labs-->
@@ -591,7 +639,7 @@
 
   <!--Autonomous Administration-->
   <SimulationDescriptor Name="StarSystemImprovementOverExpansion1" Type="StarSystemImprovement">
-    <Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="false"/>
+    <Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="false" Priority="999"/>
     <Modifier TargetProperty="AutonomousAdministrationCount" Operation="Addition" Value="1" Path="../ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
 
@@ -846,61 +894,61 @@
     <Modifier TargetProperty="DepositValue" Operation="Percent" Value="0.2" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeStrategic" TooltipHidden="true"/>
     <!-- Real path for effect -->
     <Modifier TargetProperty="Happiness" Operation="Addition" Value="15" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="NetPolitics01ElectionScore" Operation="Addition" Value="0.2" Path="../ClassEmpire/ClassSenate" TooltipHidden="true"/>
+    <Modifier TargetProperty="NetPolitics01ElectionScore" Operation="Addition" Value="0.5" Path="../ClassEmpire/ClassSenate" TooltipHidden="true"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="StarSystemImprovementPropagandaPolitics02" Type="StarSystemImprovement">
     <Modifier TargetProperty="NetSystemProduction" Operation="Multiplication" Value="0" Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="SystemResearch" Operation="Percent" Value="0.15" Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="Happiness" Operation="Addition" Value="15" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="NetPolitics02ElectionScore" Operation="Addition" Value="0.2" Path="../ClassEmpire/ClassSenate" TooltipHidden="true"/>
+    <Modifier TargetProperty="NetPolitics02ElectionScore" Operation="Addition" Value="0.5" Path="../ClassEmpire/ClassSenate" TooltipHidden="true"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="StarSystemImprovementPropagandaPolitics03" Type="StarSystemImprovement">
     <Modifier TargetProperty="NetSystemProduction" Operation="Multiplication" Value="0" Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="SystemMoney" Operation="Percent" Value="0.15" Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="Happiness" Operation="Addition" Value="15" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="NetPolitics03ElectionScore" Operation="Addition" Value="0.2" Path="../ClassEmpire/ClassSenate" TooltipHidden="true"/>
+    <Modifier TargetProperty="NetPolitics03ElectionScore" Operation="Addition" Value="0.5" Path="../ClassEmpire/ClassSenate" TooltipHidden="true"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="StarSystemImprovementPropagandaPolitics04" Type="StarSystemImprovement">
     <Modifier TargetProperty="NetSystemProduction" Operation="Multiplication" Value="0" Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="SystemGrowth" Operation="Percent" Value="0.2" Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="Happiness" Operation="Addition" Value="15" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="NetPolitics04ElectionScore" Operation="Addition" Value="0.2" Path="../ClassEmpire/ClassSenate" TooltipHidden="true"/>
+    <Modifier TargetProperty="NetPolitics04ElectionScore" Operation="Addition" Value="0.5" Path="../ClassEmpire/ClassSenate" TooltipHidden="true"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="StarSystemImprovementPropagandaPolitics05" Type="StarSystemImprovement">
     <Modifier TargetProperty="NetSystemProduction" Operation="Multiplication" Value="0" Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="SystemEmpirePoint" Operation="Percent" Value="0.15" Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="Happiness" Operation="Addition" Value="15" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="NetPolitics05ElectionScore" Operation="Addition" Value="0.2" Path="../ClassEmpire/ClassSenate" TooltipHidden="true"/>
+    <Modifier TargetProperty="NetPolitics05ElectionScore" Operation="Addition" Value="0.5" Path="../ClassEmpire/ClassSenate" TooltipHidden="true"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="StarSystemImprovementPropagandaPolitics06" Type="StarSystemImprovement">
     <Modifier TargetProperty="NetSystemProduction" Operation="Multiplication" Value="0" Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="NetSystemManpower" Operation="Percent" Value="0.2" Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="Happiness" Operation="Addition" Value="15" Path="ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="NetPolitics06ElectionScore" Operation="Addition" Value="0.2" Path="../ClassEmpire/ClassSenate" TooltipHidden="true"/>
+    <Modifier TargetProperty="NetPolitics06ElectionScore" Operation="Addition" Value="0.5" Path="../ClassEmpire/ClassSenate" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="StarSystemImprovementPropagandaPolitics01Queued" Type="StarSystemImprovementPropaganda">
-    <Modifier TargetProperty="Politics01ToPolitics01" Operation="Addition" Value="2" Path="../ClassEmpire//ClassPopulationEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="Politics01ToPolitics01" Operation="Addition" Value="5" Path="../ClassEmpire//ClassPopulationEmpire" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="SystemMoney" Operation="Subtraction" Left="1" BinaryOperation="Multiplication" Right="$(Population)" SearchValueFromPath="true" Path="ClassColonizedStarSystem"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="StarSystemImprovementPropagandaPolitics02Queued" Type="StarSystemImprovementPropaganda">
-    <Modifier TargetProperty="Politics02ToPolitics02" Operation="Addition" Value="2" Path="../ClassEmpire//ClassPopulationEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="Politics02ToPolitics02" Operation="Addition" Value="5" Path="../ClassEmpire//ClassPopulationEmpire" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="SystemMoney" Operation="Subtraction" Left="1" BinaryOperation="Multiplication" Right="$(Population)" SearchValueFromPath="true" Path="ClassColonizedStarSystem"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="StarSystemImprovementPropagandaPolitics03Queued" Type="StarSystemImprovementPropaganda">
-    <Modifier TargetProperty="Politics03ToPolitics03" Operation="Addition" Value="2" Path="../ClassEmpire//ClassPopulationEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="Politics03ToPolitics03" Operation="Addition" Value="5" Path="../ClassEmpire//ClassPopulationEmpire" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="SystemMoney" Operation="Subtraction" Left="1" BinaryOperation="Multiplication" Right="$(Population)" SearchValueFromPath="true" Path="ClassColonizedStarSystem"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="StarSystemImprovementPropagandaPolitics04Queued" Type="StarSystemImprovementPropaganda">
-    <Modifier TargetProperty="Politics04ToPolitics04" Operation="Addition" Value="2" Path="../ClassEmpire//ClassPopulationEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="Politics04ToPolitics04" Operation="Addition" Value="5" Path="../ClassEmpire//ClassPopulationEmpire" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="SystemMoney" Operation="Subtraction" Left="1" BinaryOperation="Multiplication" Right="$(Population)" SearchValueFromPath="true" Path="ClassColonizedStarSystem"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="StarSystemImprovementPropagandaPolitics05Queued" Type="StarSystemImprovementPropaganda">
-    <Modifier TargetProperty="Politics05ToPolitics05" Operation="Addition" Value="2" Path="../ClassEmpire//ClassPopulationEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="Politics05ToPolitics05" Operation="Addition" Value="5" Path="../ClassEmpire//ClassPopulationEmpire" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="SystemMoney" Operation="Subtraction" Left="1" BinaryOperation="Multiplication" Right="$(Population)" SearchValueFromPath="true" Path="ClassColonizedStarSystem"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="StarSystemImprovementPropagandaPolitics06Queued" Type="StarSystemImprovementPropaganda">
-    <Modifier TargetProperty="Politics06ToPolitics06" Operation="Addition" Value="2" Path="../ClassEmpire//ClassPopulationEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="Politics06ToPolitics06" Operation="Addition" Value="5" Path="../ClassEmpire//ClassPopulationEmpire" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="SystemMoney" Operation="Subtraction" Left="1" BinaryOperation="Multiplication" Right="$(Population)" SearchValueFromPath="true" Path="ClassColonizedStarSystem"/>
   </SimulationDescriptor>
 
@@ -909,33 +957,33 @@
   <!--  ###########################################################################  -->
   <SimulationDescriptor Name="StarSystemImprovementIndustryToScience" Type="StarSystemImprovement"/>
   <SimulationDescriptor Name="StarSystemImprovementIndustryToScienceEffect" Type="StarSystemImprovement">
-    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.5"   BinaryOperation="Multiplication" Right="$(SystemProduction)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.5"   BinaryOperation="Multiplication" Right="$(SystemProductionFromGrowth)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.5"   BinaryOperation="Multiplication" Right="$(SystemProductionStock)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.33"   BinaryOperation="Multiplication" Right="$(SystemProduction)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.33"   BinaryOperation="Multiplication" Right="$(SystemProductionFromGrowth)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.33"   BinaryOperation="Multiplication" Right="$(SystemProductionStock)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="SystemProductionFromProductionConversion"    Operation="Addition" Left="-1"    BinaryOperation="Multiplication" Right="$(SystemProduction)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
 
-    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.5"   BinaryOperation="Multiplication" Right="$(NetSystemProductionForConvertersFromGhostSystem)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.33"   BinaryOperation="Multiplication" Right="$(NetSystemProductionForConvertersFromGhostSystem)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="SystemProductionFromProductionConversion"    Operation="Addition" Left="-1"    BinaryOperation="Multiplication" Right="$(NetSystemProductionForConvertersFromGhostSystem)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="StarSystemImprovementIndustryToDust" Type="StarSystemImprovement"/>
   <SimulationDescriptor Name="StarSystemImprovementIndustryToDustEffect" Type="StarSystemImprovement">
-    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.5"    BinaryOperation="Multiplication" Right="$(SystemProduction)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.5"    BinaryOperation="Multiplication" Right="$(SystemProductionFromGrowth)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.5"    BinaryOperation="Multiplication" Right="$(SystemProductionStock)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.33"    BinaryOperation="Multiplication" Right="$(SystemProduction)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.33"    BinaryOperation="Multiplication" Right="$(SystemProductionFromGrowth)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.33"    BinaryOperation="Multiplication" Right="$(SystemProductionStock)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="SystemProductionFromProductionConversion"   Operation="Addition" Left="-1"     BinaryOperation="Multiplication" Right="$(SystemProduction)"  Path="ClassColonizedStarSystem" TooltipHidden="true" />
 
-    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.5"    BinaryOperation="Multiplication" Right="$(NetSystemProductionForConvertersFromGhostSystem)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.33"    BinaryOperation="Multiplication" Right="$(NetSystemProductionForConvertersFromGhostSystem)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="SystemProductionFromProductionConversion"   Operation="Addition" Left="-1"     BinaryOperation="Multiplication" Right="$(NetSystemProductionForConvertersFromGhostSystem)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="StarSystemImprovementIndustryToScience2Effect" Type="StarSystemImprovement">
-    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.75"    BinaryOperation="Multiplication" Right="$(SystemProduction)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.75"    BinaryOperation="Multiplication" Right="$(SystemProductionFromGrowth)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.75"    BinaryOperation="Multiplication" Right="$(SystemProductionStock)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.66"    BinaryOperation="Multiplication" Right="$(SystemProduction)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.66"    BinaryOperation="Multiplication" Right="$(SystemProductionFromGrowth)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.66"    BinaryOperation="Multiplication" Right="$(SystemProductionStock)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="SystemProductionFromProductionConversion"    Operation="Addition" Left="-1"      BinaryOperation="Multiplication" Right="$(SystemProduction)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
 
-    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.75"    BinaryOperation="Multiplication" Right="$(NetSystemProductionForConvertersFromGhostSystem)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemResearchFromProductionConversion"      Operation="Addition" Left="0.66"    BinaryOperation="Multiplication" Right="$(NetSystemProductionForConvertersFromGhostSystem)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="SystemProductionFromProductionConversion"    Operation="Addition" Left="-1"      BinaryOperation="Multiplication" Right="$(NetSystemProductionForConvertersFromGhostSystem)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
   </SimulationDescriptor>
 
@@ -947,9 +995,9 @@
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="StarSystemImprovementIndustryToDust2Effect" Type="StarSystemImprovement">
-    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.75"     BinaryOperation="Multiplication" Right="$(SystemProduction)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.75"     BinaryOperation="Multiplication" Right="$(SystemProductionFromGrowth)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.75"     BinaryOperation="Multiplication" Right="$(SystemProductionStock)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.66"     BinaryOperation="Multiplication" Right="$(SystemProduction)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.66"     BinaryOperation="Multiplication" Right="$(SystemProductionFromGrowth)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.66"     BinaryOperation="Multiplication" Right="$(SystemProductionStock)"   Path="ClassColonizedStarSystem" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="SystemProductionFromProductionConversion"   Operation="Addition" Left="-1"       BinaryOperation="Multiplication" Right="$(SystemProduction)"  Path="ClassColonizedStarSystem" TooltipHidden="true" />
 
     <BinaryModifier TargetProperty="SystemMoneyFromProductionConversion"        Operation="Addition" Left="0.75"     BinaryOperation="Multiplication" Right="$(NetSystemProductionForConvertersFromGhostSystem)"  Path="ClassColonizedStarSystem" TooltipHidden="true"/>
@@ -1062,5 +1110,12 @@
     <Modifier       TargetProperty="VisionRange"                        Operation="Addition"        Value="8"       Path="./ClassColonizedStarSystem"/>
     <Modifier       TargetProperty="PlanetRawFIDSI"                     Operation="Addition"        Value="5"       Path="./ClassColonizedStarSystem/ClassColonizedPlanet"/>
     <Modifier       TargetProperty="TradingRouteIncomeModifier"         Operation="Percent"         Value="0.50"    Path="./ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+  
+  <SimulationDescriptor Name="StarSystemImprovementVault" Type="StarSystemImprovement">
+    <Modifier TargetProperty="SystemHasVault" Operation="Addition" Value="1" Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="VaultDustBonus"    Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(MaximumSystemManpower)" Path="./ClassColonizedStarSystem" TooltipHidden="true" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="VaultScienceBonus" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(MaximumSystemManpower)" Path="./ClassColonizedStarSystem" TooltipHidden="true" SearchValueFromPath="true"/>
+    <Modifier TargetProperty="ResourceRatioStolenOnPillage" Operation="Multiplication" Value="2" Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
   </SimulationDescriptor>
 </Datatable>

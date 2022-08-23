@@ -108,11 +108,18 @@
   </DiplomaticTermMapSharingDefinition>
   
   <!-- TradeAgreement -->
-  <DiplomaticTermDefinition Name="TradeAgreement" PropositionMethod="Negotiation" ApplicationMethod="Symmetrical" Category="CategoryTreaty" Alignment="Good" UpkeepDescriptorReference="DiplomaticAbilityEffectTradeAgreement">
-    <PathPrerequisite Flags="Prerequisite,Discard,Technology">../ClassEmpire/ClassResearch,TechnologyDiplomacyPeace</PathPrerequisite>
+  <DiplomaticTermDefinition Name="TradeAgreement" PropositionMethod="Negotiation" ApplicationMethod="Symmetrical" Category="CategoryTreaty" Alignment="Good" UpkeepDescriptorReference="DiplomaticAbilityEffectTradeAgreement" AssociatedPolitics="Politics03">
+    <PathPrerequisite Flags="Prerequisite,Discard,Technology">../ClassEmpire/ClassResearch,TechnologyTrade1</PathPrerequisite>
     <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard" Inverted="true" Responsible="EmpireWhichReceives">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Disable,YouNeedTradeCompanies" Responsible="EmpireWhichProvides">
+      <InterpreterPrerequisite Flags="Prerequisite,Discard,YouNeedTradeCompanies">Property(Context,@'../ClassEmpire',NumberOfTradingCompanies) gt 0</InterpreterPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Disable,TheyNeedTradeCompanies" Responsible="EmpireWhichReceives">
+      <InterpreterPrerequisite Flags="Prerequisite,Discard,TheyNeedTradeCompanies">Property(Context,@'../ClassEmpire',NumberOfTradingCompanies) gt 0</InterpreterPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
     <DiplomaticContractContainsTermPrerequisite Inverted="true" Flags="Prerequisite,Discard">PressureReductionDemand</DiplomaticContractContainsTermPrerequisite>
     <DiplomaticAbilityPrerequisite TargetRelation="ProviderToReceiver" Inverted="true" Flags="Prerequisite,Discard">ShareTradingRouteBranches</DiplomaticAbilityPrerequisite>
+    <DiplomaticAbilityPrerequisite TargetRelation="ProviderToReceiver" Inverted="true" Flags="Prerequisite,Discard">ShareTradingRouteBranchesForced</DiplomaticAbilityPrerequisite>
     <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStatePeace</DiplomaticRelationStatePrerequisite>
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateAlliance</DiplomaticRelationStatePrerequisite>
@@ -135,10 +142,11 @@
 
   <!-- ScienceAgreement -->
   <DiplomaticTermDefinition Name="ScienceAgreement" PropositionMethod="Negotiation" ApplicationMethod="Symmetrical" Category="CategoryTreaty" Alignment="Good" AssociatedPolitics="Politics02" UpkeepDescriptorReference="DiplomaticAbilityEffectScienceAgreement">
-    <PathPrerequisite Flags="Prerequisite,Discard,Technology">../ClassEmpire/ClassResearch,TechnologyDiplomacyAlliance</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard,Technology">../ClassEmpire/ClassResearch,TechnologyTrade1</PathPrerequisite>
     <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard" Inverted="true" Responsible="EmpireWhichReceives">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
     <DiplomaticContractContainsTermPrerequisite Inverted="true" Flags="Prerequisite,Discard">PressureReductionDemand</DiplomaticContractContainsTermPrerequisite>
     <DiplomaticAbilityPrerequisite TargetRelation="ProviderToReceiver" Inverted="true" Flags="Prerequisite,Discard">ScienceAgreement</DiplomaticAbilityPrerequisite>
+    <DiplomaticAbilityPrerequisite TargetRelation="ProviderToReceiver" Inverted="true" Flags="Prerequisite,Discard">ScienceAgreementForced</DiplomaticAbilityPrerequisite>
     <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStatePeace</DiplomaticRelationStatePrerequisite>
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateAlliance</DiplomaticRelationStatePrerequisite>
@@ -146,7 +154,7 @@
       <DiplomaticContractContainsTermPrerequisite>AskAlliance</DiplomaticContractContainsTermPrerequisite>
     </DiplomaticMetaPrerequisite>
     <DiplomaticAbilityChange Operation="Add" DiplomaticAbilityReference="ScienceAgreement" />
-    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">(200 - 100*$(IsAlliance)) * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,PeacefulTreatyCostReduction) * Property(EmpireWhichProposes,@ClassEmpire,PeacefulTreatyCostReduction) * (1 + (Property(EmpireWhichProposes,@ClassEmpire,SystemCount) / 10) * 1.25)  * Property(EmpireWhichProposes,@ClassEmpire,TradeAgreementCost) * (0.5 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyReworkDisabled))</DiplomaticCustomCost>
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">(300 - 200*$(IsAlliance)) * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,PeacefulTreatyCostReduction) * Property(EmpireWhichProposes,@ClassEmpire,PeacefulTreatyCostReduction) * (1 + (Property(EmpireWhichProposes,@ClassEmpire,SystemCount) / 10) * 1.25)  * Property(EmpireWhichProposes,@ClassEmpire,TradeAgreementCost) * (0.5 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyReworkDisabled))</DiplomaticCustomCost>
     <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireHonor">$(ProposerIsProvider) * Property(EmpireWhichProposes, @ClassEmpire, CanUseHonor) * (20 - 40*0.25* $(IsAlliance)) * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,PeacefulTreatyCostReduction) * Property(EmpireWhichProposes,@ClassEmpire,PeacefulTreatyCostReduction) * (1 + (Property(EmpireWhichProposes,@ClassEmpire,SystemCount) / 10) * 1.25) * Property(EmpireWhichProposes,@ClassEmpire,TradeAgreementCost) * (0.5 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyReworkDisabled))</DiplomaticCustomCost>
   </DiplomaticTermDefinition>
 
@@ -172,4 +180,70 @@
     <DiplomaticAbilityChange Operation="Add" DiplomaticAbilityReference="FactionPact" />
     <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">(400 - 200*$(IsAlliance)) * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,PeacefulTreatyCostReduction) * Property(EmpireWhichProposes,@ClassEmpire,PeacefulTreatyCostReduction) * (1 + (Property(EmpireWhichProposes,@ClassEmpire,SystemCount) / 10) * 1.25) * Property(EmpireWhichProposes,@ClassEmpire,TradeAgreementCost) * (0.5 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyReworkDisabled))</DiplomaticCustomCost>
   </DiplomaticTermFactionPactDefinition>
+  
+  <!-- Forced Mutual Agreements -->
+  <!-- TradeAgreement -->
+  <DiplomaticTermDefinition Name="TradeAgreementForced" PropositionMethod="Declaration" ApplicationMethod="Symmetrical" Category="CategoryTreaty" Alignment="Neutral" UpkeepDescriptorReference="DiplomaticAbilityEffectTradeAgreementForced" AssociatedPolitics="Politics03">
+    <PathPrerequisite Flags="Prerequisite,Discard,Technology">../ClassEmpire/ClassResearch,TechnologyTrade2Common</PathPrerequisite>
+    <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard" Inverted="true" Responsible="EmpireWhichReceives">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Disable,ForcedPacifists" Responsible="EmpireWhichProvides">
+      <InterpreterPrerequisite Flags="Prerequisite,Disable,ForcedPacifists">Path(Context,@'../ClassEmpire/ClassSenate/ClassLaw,LawEffectP03L00')</InterpreterPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Disable,YouNeedTradeCompanies" Responsible="EmpireWhichProvides">
+      <InterpreterPrerequisite Flags="Prerequisite,Discard,YouNeedTradeCompanies">Property(Context,@'../ClassEmpire',NumberOfTradingCompanies) gt 0</InterpreterPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Disable,TheyNeedTradeCompanies" Responsible="EmpireWhichReceives">
+      <InterpreterPrerequisite Flags="Prerequisite,Discard,TheyNeedTradeCompanies">Property(Context,@'../ClassEmpire',NumberOfTradingCompanies) gt 0</InterpreterPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
+    <DiplomaticContractContainsTermPrerequisite Inverted="true" Flags="Prerequisite,Discard">PressureReductionDemand</DiplomaticContractContainsTermPrerequisite>
+    <DiplomaticAbilityPrerequisite TargetRelation="ProviderToReceiver" Inverted="true" Flags="Prerequisite,Discard">ShareTradingRouteBranchesForced</DiplomaticAbilityPrerequisite>
+    <DiplomaticAbilityPrerequisite TargetRelation="ProviderToReceiver" Inverted="true" Flags="Prerequisite,Discard">ShareTradingRouteBranches</DiplomaticAbilityPrerequisite>
+    <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
+      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStatePeace</DiplomaticRelationStatePrerequisite>
+      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateAlliance</DiplomaticRelationStatePrerequisite>
+      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateTeam</DiplomaticRelationStatePrerequisite>
+      <DiplomaticContractContainsTermPrerequisite>PeaceRelation</DiplomaticContractContainsTermPrerequisite>
+      <DiplomaticContractContainsTermPrerequisite>AskAlliance</DiplomaticContractContainsTermPrerequisite>
+    </DiplomaticMetaPrerequisite>
+    <DiplomaticAbilityChange Operation="Add" DiplomaticAbilityReference="ShareTradingRouteBranchesForced" />
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">(1000 - 200*$(IsAlliance)) * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,PeacefulTreatyCostReduction) * Property(EmpireWhichProposes,@ClassEmpire,PeacefulTreatyCostReduction) * (1 + (Property(EmpireWhichProposes,@ClassEmpire,SystemCount) / 10) * 1.25) * Property(EmpireWhichProposes,@ClassEmpire,TradeAgreementCost) * (0.5 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyReworkDisabled))</DiplomaticCustomCost>
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireHonor">$(ProposerIsProvider) * Property(EmpireWhichProposes, @ClassEmpire, CanUseHonor) * (20 - 40*0.25* $(IsAlliance)) * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,PeacefulTreatyCostReduction) * Property(EmpireWhichProposes,@ClassEmpire,PeacefulTreatyCostReduction) * (1 + (Property(EmpireWhichProposes,@ClassEmpire,SystemCount) / 10) * 1.25) * Property(EmpireWhichProposes,@ClassEmpire,TradeAgreementCost) * (0.5 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyReworkDisabled))</DiplomaticCustomCost>
+  </DiplomaticTermDefinition>
+
+  <!-- Cancel TradeAgreementForced -->
+  <DiplomaticTermDefinition Name="CancelTradeAgreementForced" PropositionMethod="Declaration" ApplicationMethod="Symmetrical" Category="CategoryTreaty" Alignment="Neutral">
+    <DiplomaticContractContainsTermPrerequisite Inverted="true" Flags="Prerequisite,Discard">PressureReductionDemand</DiplomaticContractContainsTermPrerequisite>
+    <DiplomaticAbilityPrerequisite TargetRelation="ProviderToReceiver" Inverted="false" Flags="Prerequisite,Discard">ShareTradingRouteBranchesForced</DiplomaticAbilityPrerequisite>
+    <DiplomaticAbilityChange Operation="Remove" DiplomaticAbilityReference="ShareTradingRouteBranchesForced" />
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">1000 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(EmpireWhichProposes,@ClassEmpire,AggressiveTreatyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,AggressiveTreatyCostReduction) * Property(OtherSideOfRelation,@ClassDiplomaticEmpire,ReceivedAggressiveTreatyCostReduction) * (1 + (Property(EmpireWhichProposes,@ClassEmpire,SystemCount) / 10) * 1.25) * 1.5 * Property(EmpireWhichProposes,@ClassEmpire,TradeAgreementCost) * (0.5 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyReworkDisabled))</DiplomaticCustomCost>
+  </DiplomaticTermDefinition>
+
+  <!-- ScienceAgreement -->
+  <DiplomaticTermDefinition Name="ScienceAgreementForced" PropositionMethod="Declaration" ApplicationMethod="Symmetrical" Category="CategoryTreaty" Alignment="Neutral" AssociatedPolitics="Politics02" UpkeepDescriptorReference="DiplomaticAbilityEffectScienceAgreementForced">
+    <PathPrerequisite Flags="Prerequisite,Discard,Technology">../ClassEmpire/ClassResearch,TechnologyTrade2Common</PathPrerequisite>
+    <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard" Inverted="true" Responsible="EmpireWhichReceives">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
+    <DiplomaticContractContainsTermPrerequisite Inverted="true" Flags="Prerequisite,Discard">PressureReductionDemand</DiplomaticContractContainsTermPrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Disable,ForcedPacifists" Responsible="EmpireWhichProvides">
+      <InterpreterPrerequisite Flags="Prerequisite,Disable,ForcedPacifists">Path(Context,@'../ClassEmpire/ClassSenate/ClassLaw,LawEffectP03L00')</InterpreterPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
+    <DiplomaticAbilityPrerequisite TargetRelation="ProviderToReceiver" Inverted="true" Flags="Prerequisite,Discard">ScienceAgreementForced</DiplomaticAbilityPrerequisite>
+    <DiplomaticAbilityPrerequisite TargetRelation="ProviderToReceiver" Inverted="true" Flags="Prerequisite,Discard">ScienceAgreement</DiplomaticAbilityPrerequisite>
+    <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
+      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStatePeace</DiplomaticRelationStatePrerequisite>
+      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateAlliance</DiplomaticRelationStatePrerequisite>
+      <DiplomaticContractContainsTermPrerequisite>PeaceRelation</DiplomaticContractContainsTermPrerequisite>
+      <DiplomaticContractContainsTermPrerequisite>AskAlliance</DiplomaticContractContainsTermPrerequisite>
+    </DiplomaticMetaPrerequisite>
+    <DiplomaticAbilityChange Operation="Add" DiplomaticAbilityReference="ScienceAgreementForced" />
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">(750 - 200*$(IsAlliance)) * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,PeacefulTreatyCostReduction) * Property(EmpireWhichProposes,@ClassEmpire,PeacefulTreatyCostReduction) * (1 + (Property(EmpireWhichProposes,@ClassEmpire,SystemCount) / 10) * 1.25)  * Property(EmpireWhichProposes,@ClassEmpire,TradeAgreementCost) * (0.5 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyReworkDisabled))</DiplomaticCustomCost>
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireHonor">$(ProposerIsProvider) * Property(EmpireWhichProposes, @ClassEmpire, CanUseHonor) * (20 - 40*0.25* $(IsAlliance)) * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,PeacefulTreatyCostReduction) * Property(EmpireWhichProposes,@ClassEmpire,PeacefulTreatyCostReduction) * (1 + (Property(EmpireWhichProposes,@ClassEmpire,SystemCount) / 10) * 1.25) * Property(EmpireWhichProposes,@ClassEmpire,TradeAgreementCost) * (0.5 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyReworkDisabled))</DiplomaticCustomCost>
+  </DiplomaticTermDefinition>
+
+  <!-- Cancel ScienceAgreementForced -->
+  <DiplomaticTermDefinition Name="CancelScienceAgreementForced" PropositionMethod="Declaration" ApplicationMethod="Symmetrical" Category="CategoryTreaty" Alignment="Neutral">
+    <DiplomaticContractContainsTermPrerequisite Inverted="true" Flags="Prerequisite,Discard">PressureReductionDemand</DiplomaticContractContainsTermPrerequisite>
+    <DiplomaticAbilityPrerequisite TargetRelation="ProviderToReceiver" Inverted="false" Flags="Prerequisite,Discard">ScienceAgreementForced</DiplomaticAbilityPrerequisite>
+    <DiplomaticAbilityChange Operation="Remove" DiplomaticAbilityReference="ScienceAgreementForced" />
+    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">1000 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(EmpireWhichProposes,@ClassEmpire,AggressiveTreatyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,AggressiveTreatyCostReduction) * Property(OtherSideOfRelation,@ClassDiplomaticEmpire,ReceivedAggressiveTreatyCostReduction) * (1 + (Property(EmpireWhichProposes,@ClassEmpire,SystemCount) / 10) * 1.25) * 1.5 * Property(EmpireWhichProposes,@ClassEmpire,TradeAgreementCost) * (0.5 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyReworkDisabled))</DiplomaticCustomCost>
+  </DiplomaticTermDefinition>
 </Datatable>
