@@ -21,6 +21,8 @@
 		<Property Name="ManpowerCapacityWithGhosts"					BaseValue="0"/>
 		<Property Name="EmpirePointFromIndustryConversion"	BaseValue="0"/>
 		<Property Name="CanBeSlowed"												BaseValue="1"/>
+		<Property Name="SystemHasVault"										  BaseValue="0"/>
+		<Property Name="BonusFromOrbitalPlatforms" BaseValue="0" MaxValue="0.20"/>
     
 		<!-- Food rework -->
 		<Property Name="SystemGrowthStockNextTurn"					BaseValue="0" MinValue="0"/>
@@ -145,7 +147,11 @@
     <Property Name="GroundBattleBombardmentAttackerDamageReduction"   BaseValue="0" MinValue="Negative"/>
     <Property Name="GroundBattleBombardmentDefensiveDamageReduction"  BaseValue="0" MinValue="Negative"/>
     
-		<!-- Population Control
+    <!-- Vault Bonus -->    
+    <Property Name="VaultDustBonus" BaseValue="0"/>
+    <Property Name="VaultScienceBonus" BaseValue="0"/>
+
+    <!-- Population Control
          Assimilate -->
 		<Property Name="OnGoingZvali" BaseValue="0"/>
 		<Property Name="OnGoingAmoeba" BaseValue="0"/>
@@ -206,6 +212,16 @@
     <Property Name="DrudgeQuest1Count"		BaseValue="0" MinValue="0"/>
     <Property Name="DrudgeQuest2Count"		BaseValue="0" MinValue="0"/>
     <Property Name="DrudgeQuest3Count"		BaseValue="0" MinValue="0"/>
+
+	<!--Automatons-->
+	<Property Name="InterestRate" BaseValue="0"/>
+	<Property Name="IndustryInterest" BaseValue="0"/>
+	<Property Name="TotalMult" BaseValue="1"/>
+	<Property Name="IndustryInterestRatioToIndustryNet" BaseValue="0" MaxValue="0.5"/>
+	<Property Name="IndustryInterestFinal" BaseValue="0"/>
+	<Property Name="SystemLevelCutBy4" BaseValue="0"/>
+	
+	
     
     <!-- ########################################################## -->
 		<!-- ######################## PROPERTY ######################## -->
@@ -384,7 +400,10 @@
 		<Property Name="HappinessBonusMultiplier"                          BaseValue="1"/>
 		<Property Name="HappinessBonusFromFleetPresence"/>
 		<Property Name="HappinessStarSystemIsHappy" BaseValue="0" MinValue="0" MaxValue="1"/>
-
+                <Property Name="HappinessStarSystemIsMutinous" BaseValue="0" MinValue="0" MaxValue="1"/>
+                <Property Name="HappinessStarSystemIsUnhappy" BaseValue="0" MinValue="0" MaxValue="1"/>
+                <Property Name="HappinessStarSystemIsEcstatic" BaseValue="0" MinValue="0" MaxValue="1"/>
+		
 		<!-- Ownership -->
 		<Property Name="Ownership"              BaseValue="0"       MinValue="0"    MaxValue="1"    IsSealed="true" IsSerializable="true"/>
 		<Property Name="OwnerShipDecayRate"     BaseValue="-0.1"   MinValue="-1"   MaxValue="0"/>
@@ -526,6 +545,10 @@
 		<Property Name="TradingRoutesSystemOutputBonus"/>
 
 		<Property Name="TradingRouteSystemTotalBaseIncome_Luxury" BaseValue="0"/>
+
+		<!--Automatons Planet Cracker and Dust Conversion-->
+		<Property Name="SystemResearchFromStockIndustry"     MinValue="Negative"/>
+		<Property Name="SystemMoneyFromStockIndustry"     MinValue="Negative"/>
 
 		<!-- Feedback infinite building effect -->
 		<Property Name="SystemMoneyFromProductionConversion"/>
@@ -894,6 +917,7 @@
 		<Modifier TargetProperty="SD3Flag" Operation="Force" Value="$(SD3Flag)" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ResourceTypeStrategic"/>
 		<Modifier TargetProperty="SD4Flag" Operation="Force" Value="$(SD4Flag)" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ResourceTypeStrategic"/>
 		<Modifier TargetProperty="SystemLevel" Operation="Force" Value="$(SystemLevel)" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ResourceTypeStrategic"/>
+		<Modifier TargetProperty="CurrentTurn" Operation="Force" Value="$(CurrentTurn)" Path="ClassColonizedStarSystem/ClassColonizedPlanet"/>
 
 		<!-- Riftborn capstone senator hero skill bonus -->
 		<Modifier TargetProperty="SystemProduction" Operation="Percent" Value="$(SystemProductionAnomalyPercentBonus)"/>
@@ -920,7 +944,16 @@
 
 		<Modifier TargetProperty="SystemsAboveOverColonizationCount" Operation="Addition" Value="$(SystemsAboveOverColonizationCount)" Path="../ClassEmpire"/>
 
-		<Modifier TargetProperty="MaximumSystemProductionStock" Operation="Multiplication"  Value="$(NetSystemProduction)"/>
+		<Modifier TargetProperty="MaximumSystemProductionStock" Operation="Addition"  Value="$(NetSystemProduction)"  Priority="-1"/>
+		
+		<Modifier TargetProperty="MaximumSystemProductionStock" Operation="Multiplication"  Value="$(TotalMult)" Priority="-1"/>
+		<BinaryModifier TargetProperty="IndustryInterest" Operation="Addition" Left="$(SystemProductionStock)" BinaryOperation="Multiplication" Right="$(InterestRate)"/>
+		<BinaryModifier TargetProperty="SystemLevelCutBy4" Operation="Addition" Left="$(SystemLevel)" BinaryOperation="Multiplication" Right="0.25"/>
+		<BinaryModifier TargetProperty="IndustryInterestRatioToIndustryNet" Operation="Addition" Left="$(IndustryInterest)" BinaryOperation="Division" Right="$(SystemProduction)"/> <!--This is used to limit the industry bonus with MaxValue of the property-->
+		<BinaryModifier TargetProperty="IndustryInterestFinal" Operation="Addition" Left="$(IndustryInterestRatioToIndustryNet)" BinaryOperation="Multiplication" Right="$(SystemProduction)"/> 
+		<Modifier TargetProperty="NetSystemProduction" Operation="Addition"  Value="$(IndustryInterestFinal)"/>
+		<Modifier TargetProperty="MaximumSystemProductionStock" Operation="Subtraction"  Value="$(IndustryInterestFinal)"/>
+		<BinaryModifier TargetProperty="MaximumSystemProductionStock" Operation="Subtraction" Left="$(IndustryInterestFinal)" BinaryOperation="Multiplication" Right="$(SystemLevelCutBy4)"/>
 
 		<Modifier       TargetProperty="OwnerShipDecayRate"    Operation="Division" Value="$(GameSpeedMultiplier)" />
 		<Modifier       TargetProperty="OwnerShipRecoveryRate" Operation="Division" Value="$(GameSpeedMultiplier)" />
@@ -957,6 +990,10 @@
 		<Modifier TargetProperty="SystemResearch"           Operation="Addition"    Value="$(SystemResearchFromProductionConversion)" TooltipHidden="false" Priority="2"/>
 		<Modifier TargetProperty="SystemResearch"           Operation="Addition"    Value="$(SystemResearchFromMoneyConversion)" TooltipHidden="false" Priority="2"/>
 		<Modifier TargetProperty="NetSystemResearch"        Operation="Addition"    Value="$(SystemResearchFromResearchConversion)"   TooltipHidden="false"/>
+
+		<!--Automatons Industry Stock Conversion-->
+		<Modifier TargetProperty="SystemResearch"           Operation="Addition"    Value="$(SystemResearchFromStockIndustry)" TooltipHidden="false" Priority="2"/>
+		<Modifier TargetProperty="SystemMoney"           Operation="Addition"    Value="$(SystemMoneyFromStockIndustry)" TooltipHidden="false" Priority="2"/>
 
 		<Modifier TargetProperty="NetSystemEmpirePoint"     Operation="Addition"    Value="$(SystemEmpirePointFromSystemEmpirePoint)" TooltipHidden="false"    />
 		<Modifier TargetProperty="NetSystemEmpirePoint"     Operation="Addition"    Value="$(SystemEmpirePointFromMoneyConversion)" TooltipHidden="false"    />
@@ -1100,6 +1137,8 @@
 		<!--<Modifier       TargetProperty="SystemPopulationIsMaxed"    Operation="Multiplication" Value="$(ShouldUseGrowth)"  Priority="2"   />-->
 		<BinaryModifier       TargetProperty="SystemPopulationIsMaxed"    Operation="Multiplication" Left="$(ShouldUseGrowth)" BinaryOperation="Addition" Right="$(DisableFoodConversion)"  Priority="2"   />
 
+		<!--I have no clue where tf i put this-->
+		<Modifier TargetProperty="SystemFIDSPercent"                                		Operation="Addition"     Value="$(BonusFromOrbitalPlatforms)"   />
 
 		<!-- Strategic Resource Management -->
 		<Modifier       TargetProperty="Strategic1" Operation="Multiplication" Value="$(AllowToExploitStrategicCommon1)"        Priority="99" />
@@ -1119,7 +1158,7 @@
 		<!-- system conversion -->
 
 		<!-- Sum of System Levels -->
-		<BinaryModifier TargetProperty="SystemLevelSum"       Operation="Addition"    Left="$(SystemLevel)" BinaryOperation="Addition" Right="1"     Path="!ClassExploitedStarSystem/./ClassEmpire"/>
+		<BinaryModifier TargetProperty="SystemLevelSum"       Operation="Addition"    Left="$(SystemLevel)" BinaryOperation="Subtraction" Right="$(OutpostCount)"     Path="!ClassExploitedStarSystem/./ClassEmpire"/>
 		<Modifier       TargetProperty="SystemLevelSum"       Operation="Addition"    Value="$(SystemLevel)"      Path="ClassExploitedStarSystem/./ClassEmpire"/>
 
 		<!-- Happiness stuff -->
@@ -1270,30 +1309,32 @@
 
 		<Modifier TargetProperty="AtWarStatus"                  Operation="Addition" Value="$(WarCount)"                  Priority="1"/>
 
-		<!-- MigrationScore = Approval x (1 + 0.05 x FreeSlots) x (1 - 0.75 x WarCount / NbPlayers) x (1.000 - EconomyRanking x 0.00 (effectively useless)) -->
-		<BinaryModifier TargetProperty="MigrationScore" Operation="Addition"          Left="$(Happiness)" BinaryOperation="Multiplication" Right="0.4" />
+		<!-- Migration Score is simply based on approval (need to be above 30 approval)
+			Old formula: MigrationScore = Approval x (1 + 0.05 x FreeSlots) x (1 - 0.75 x WarCount / NbPlayers) x (1.000 - EconomyRanking x 0.00 (effectively useless)) -->
+		<BinaryModifier TargetProperty="MigrationScore" Operation="Addition"          Left="$(Happiness)" BinaryOperation="Multiplication" Right="1.67" />
+		<!-- 
 		<Modifier TargetProperty="MigrationScore" Operation="Addition"    Value="$(MigrationScoreFromSystemLevel)" />
 		<Modifier TargetProperty="MigrationScore" Operation="Multiplication"    Value="$(MigrationScoreFromFreeSlots)" />
 		<Modifier TargetProperty="MigrationScore" Operation="Multiplication"    Value="$(MigrationScoreFromWars)" />
-		<Modifier TargetProperty="MigrationScore" Operation="Multiplication"    Value="$(MigrationScoreFromEconomy)" />
+		<Modifier TargetProperty="MigrationScore" Operation="Multiplication"    Value="$(MigrationScoreFromEconomy)" />-->
 
-		<!-- 1 + (0.02 x FreeSlots) -->
+		<!-- 1 + (0.02 x FreeSlots) 
 		<BinaryModifier TargetProperty="MigrationScoreFromFreeSlots"    Operation="Addition"        Left="$(MaximumPopulation)" BinaryOperation="Subtraction" Right="$(Population)" Priority="0"/>
 		<Modifier TargetProperty="MigrationScoreFromFreeSlots"          Operation="Multiplication"  Value="0.02" Priority="1"/>
-		<Modifier TargetProperty="MigrationScoreFromFreeSlots"          Operation="Addition"        Value="1" Priority="2"/>
+		<Modifier TargetProperty="MigrationScoreFromFreeSlots"          Operation="Addition"        Value="1" Priority="2"/>-->
 
-		<!--SystemLevel * 5 - 5-->
+		<!--SystemLevel * 5 - 5
 		<BinaryModifier TargetProperty="MigrationScoreFromSystemLevel"          Operation="Addition"        Left="5" BinaryOperation="Multiplication" Right="$(SystemLevel)"/>
-		<Modifier TargetProperty="MigrationScoreFromSystemLevel"          Operation="Subtraction"         Value="5"/>
-		<!-- 1 - (0.75 x WarCount / NbPlayers) -->
+		<Modifier TargetProperty="MigrationScoreFromSystemLevel"          Operation="Subtraction"         Value="5"/>-->
+		<!-- 1 - (0.75 x WarCount / NbPlayers) 
 		<BinaryModifier TargetProperty="MigrationScoreFromWars"    Operation="Addition"         Left="-0.75" BinaryOperation="Multiplication" Right="$(WarCount)" Priority="0"/>
 		<Modifier TargetProperty="MigrationScoreFromWars"          Operation="Division"         Value="$(NumberOfMajorEmpires)" Priority="1"/>
-		<Modifier TargetProperty="MigrationScoreFromWars"          Operation="Addition"         Value="1" Priority="2"/>
+		<Modifier TargetProperty="MigrationScoreFromWars"          Operation="Addition"         Value="1" Priority="2"/>-->
 
-		<!-- EconomyRanking: First = 0, second = 1, etc. -->
-		<!-- 1.02 - (EconomyRanking x 0.02) -->
+		<!-- EconomyRanking: First = 0, second = 1, etc
+			  1.02 - (EconomyRanking x 0.02) 
 		<BinaryModifier TargetProperty="MigrationScoreFromEconomy"    Operation="Addition"         Left="0.00" BinaryOperation="Multiplication" Right="$(VictoryEconomicRanking)" Priority="0"/>
-		<Modifier TargetProperty="MigrationScoreFromEconomy"          Operation="Addition"         Value="1.00" Priority="1"/>
+		<Modifier TargetProperty="MigrationScoreFromEconomy"          Operation="Addition"         Value="1.00" Priority="1"/>-->
 
 		<!-- outpost migration flux -->
 		<Modifier TargetProperty="SystemGrowth" Operation="Addition" Value="$(SystemGrowth)" Path="ClassColonizedStarSystem/ClassOutpostMigrationFlux"/>
@@ -1466,6 +1507,7 @@
 		<Modifier TargetProperty="WastedGrowth"  Operation="Subtraction" Value="1" Priority="8"/> <!-- this tweak exists to round down, solving floating point exception issues -->
 		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(GameSettingFoodReworkEnabled)" Priority="9"/>
 		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(DisableFoodConversion)" Priority="9"/>
+		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(ShouldUseGrowth)" Priority="9"/>
 
 		<!-- Convert food as appropriate (using separate intermediate variables so that it shows up clearly in the GUI) -->
 		<BinaryModifier TargetProperty="WastedFoodtoDust"  Operation="Addition" Left="$(CanConvertWastedFoodtoDust1)" BinaryOperation="Addition" Right="$(CanConvertWastedFoodtoDust2)" Priority="1"/>
@@ -1704,7 +1746,7 @@
 		<Property Name="BuildingProductionCostReduction" MaxValue="0.75"/>
 		<Property Name="UniqueBuildingProductionCostReduction" MaxValue="0.75"/>
 		<Property Name="ShipProductionCostReduction" MinValue="Negative" MaxValue="0.75"/>
-		<Property Name="ColonyShipProductionCostReduction" MaxValue="0.75"/>
+		<Property Name="ColonyShipProductionCostReduction" MinValue="Negative" MaxValue="0.75"/>
 		<Property Name="MilitaryShipProductionCostReduction" MinValue="Negative" MaxValue="0.75"/>
 		<Property Name="ProbesProductionCostReduction" MaxValue="0.75"/>
 		<Property Name="MothershipProductionCostReduction" BaseValue="1"/>
@@ -1712,7 +1754,7 @@
 		<Property Name="JuggernautShipProductionCostReductionAdj" BaseValue="1" MinValue="Negative"/>
 
 		<!-- Buyout bonus -->
-		<Property Name="WonderBuyoutReduction"      MaxValue="0.75"/>
+		<Property Name="WonderBuyoutReduction"  	BaseValue="-0.33" MinValue="Negative" MaxValue="0.75"/>
 		<Property Name="BuildingBuyoutReduction"    MaxValue="0.75"/>
 		<Property Name="ShipBuyoutReduction"        MaxValue="0.75"/>
 		<Property Name="ColonyShipBuyoutReduction"  MaxValue="0.75"/>
@@ -1721,8 +1763,8 @@
 		<Property Name="GameSpeedProductionCostReduction" MinValue="Negative"/>
 
 		<!-- Spaceport -->
-		<Property Name="SpaceportCapacity" />
-		<Property Name="SpaceportMaximumCapacity" BaseValue="5"/>
+		<Property Name="SpaceportCapacity" RoundingFunction="Ceil"/>
+		<Property Name="SpaceportMaximumCapacity" BaseValue="10"/>
 
 		<!-- Wonder -->
 		<Property Name="WonderAmount" BaseValue="0"/>
@@ -2051,8 +2093,8 @@
 	<SimulationDescriptor Name="BlockadedColonizedStarSystem" Type="BlockadedColonizedStarSystem" IsSerializable="false">
 		<Property Name="BlockadeOrbitingMilitaryPower"      IsSealed="true" IsSerializable="true"/>
 		<Property Name="BlockadeImpactFactor"               BaseValue="1"/>
-		<Property Name="NetSystemGrowthImpactFactor"        BaseValue="5"/>
-		<Property Name="NetSystemProductionImpactFactor"    BaseValue="5"/>
+		<Property Name="NetSystemGrowthImpactFactor"        BaseValue="15"/>
+		<Property Name="NetSystemProductionImpactFactor"    BaseValue="15"/>
 
 		<!-- Properties that are used for the leeching blockade effect (for now, only pirates). -->
 		<Property Name="SystemMoneyLostFromBlockade"        BaseValue="0"/>
@@ -2184,12 +2226,155 @@
 		<Modifier TargetProperty="NetLuxury23"      Operation="Subtraction"     Value="$(NetLuxury23LostFromBlockade)"     Priority="1000" Path="!BesiegedColonizedStarSystem,ClassColonizedStarSystem" TooltipHidden="true"/>
 		<Modifier TargetProperty="NetLuxury24"      Operation="Subtraction"     Value="$(NetLuxury24LostFromBlockade)"     Priority="1000" Path="!BesiegedColonizedStarSystem,ClassColonizedStarSystem" TooltipHidden="true"/>
 
+		<!-- Minors -->
+		<Modifier TargetProperty="MinorBlockaded" Operation="Force" Value="1" Path="./EmpireTypeMinor/ClassMinorRelationWithMajor" TooltipHidden="true"/>
+
 		<!-- Fake modifiers for GUI -->
 		<Modifier TargetProperty="NetLuxury1"                   Operation="Force"         Value="0" Path="FAKE" TooltipOverride="%NegatedLuxuryTooltipEffect"/>
 		<Modifier TargetProperty="NetStrategic1"                Operation="Force"         Value="0" Path="FAKE" TooltipOverride="%NegatedStrategicTooltipEffect"/>
 		<BinaryModifier TargetProperty="SystemMoney"            Operation="Percent"       Left="-0.50" BinaryOperation="Multiplication" Right="$(BlockadeImpactFactor)" Path="FAKE,ClassColonizedStarSystem"/>
 		<BinaryModifier TargetProperty="SystemResearch"         Operation="Percent"       Left="-0.50" BinaryOperation="Multiplication" Right="$(BlockadeImpactFactor)" Path="FAKE,ClassColonizedStarSystem"/>
 		<BinaryModifier TargetProperty="SystemEmpirePoint"      Operation="Percent"       Left="-0.50" BinaryOperation="Multiplication" Right="$(BlockadeImpactFactor)" Path="FAKE,ClassColonizedStarSystem"/>
+	</SimulationDescriptor>
+
+
+	<SimulationDescriptor Name="BesiegedColonizedStarSystem" Type="BesiegedColonizedStarSystem" IsSerializable="false">
+		<Property Name="OrbitingSiegePower" IsSealed="true" />
+		<Property Name="OrbitingOffensivePower" IsSealed="true" />
+		<Property Name="SystemManpowerLoss" MinValue="Negative" />
+		<Property Name="BlockadeImpactFactor" BaseValue="1" />
+		<Property Name="NetSystemGrowthImpactFactor" BaseValue="5" />
+		<Property Name="NetSystemProductionImpactFactor" BaseValue="5" />
+		<!--  Properties that are needed because Net can't be affected directly because of Siege leeching effect  -->
+		<Property Name="SystemMoneyLostFromSiege" BaseValue="0" />
+		<Property Name="SystemResearchLostFromSiege" BaseValue="0" />
+		<Property Name="SystemEmpirePointLostFromSiege" BaseValue="0" />
+		<Property Name="NetStrategic1LostFromSiege" BaseValue="0" />
+		<Property Name="NetStrategic2LostFromSiege" BaseValue="0" />
+		<Property Name="NetStrategic3LostFromSiege" BaseValue="0" />
+		<Property Name="NetStrategic4LostFromSiege" BaseValue="0" />
+		<Property Name="NetStrategic5LostFromSiege" BaseValue="0" />
+		<Property Name="NetStrategic6LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury1LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury2LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury3LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury4LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury5LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury6LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury7LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury8LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury9LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury10LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury11LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury12LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury13LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury11LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury11LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury14LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury11LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury15LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury16LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury17LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury18LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury20LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury21LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury22LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury23LostFromSiege" BaseValue="0" />
+		<Property Name="NetLuxury24LostFromSiege" BaseValue="0" />
+		<!--  Outpost maluses (both for growth-based and production-based factions)  -->
+		<Modifier TargetProperty="NetSystemGrowthImpactFactor" Operation="Multiplication" Value="$(ShouldUseGrowth)" Priority="1000" Path="ColonizedStarSystemStateOutpost" TooltipHidden="true" />
+		<BinaryModifier TargetProperty="NetSystemProductionImpactFactor" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(ShouldUseGrowth)" Priority="1000" Path="ColonizedStarSystemStateOutpost" TooltipHidden="true" />
+		<BinaryModifier TargetProperty="SystemGrowthUpkeep" Operation="Addition" Left="$(OrbitingSiegePower)" BinaryOperation="Multiplication" Right="$(NetSystemGrowthImpactFactor)" Path="ColonizedStarSystemStateOutpost" Priority="100000" TooltipOverride="%NotificationSystemGrowthUpkeepFromSiegeTooltipEffect" />
+		<BinaryModifier TargetProperty="SystemProductionUpkeep" Operation="Addition" Left="$(OrbitingSiegePower)" BinaryOperation="Multiplication" Right="$(NetSystemProductionImpactFactor)" Path="ColonizedStarSystemStateOutpost" Priority="100000" />
+		<!--  Colony defense maluses  -->
+		<BinaryModifier TargetProperty="SystemManpowerLoss" Operation="Subtraction" Left="$(OrbitingSiegePower)" BinaryOperation="Division" Right="1" Path="!GroundBattleInProgress" Priority="0" />
+		<BinaryModifier TargetProperty="NetSystemManpower" Operation="Force" Left="$(SystemManpowerLoss)" BinaryOperation="Multiplication" Right="1" />
+		<Modifier TargetProperty="SystemDefenseRecovery" Operation="Force" Value="0" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="MaximumSystemManpowerRefillRate" Operation="Force" Value="0" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="ShouldTakeGrowthForManpower" Operation="Force" Value="0" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetSystemMigrationGrowth" Operation="Force" Value="0" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="SystemInfluenceRadius" Operation="Force" Value="0.1" Path="ClassColonizedStarSystem" TooltipHidden="true" Priority="10000"/>
+
+		<!--  Prevent Citadel manpower refill.  -->
+		<Modifier TargetProperty="MaximumCitadelManpowerRefillRate" Operation="Force" Value="0" Priority="1000" Path="ClassColonizedStarSystem/ClassCitadel" TooltipHidden="true" />
+		<!--  dust/science/influence & resources loss are calculated with "raw" net.  -->
+		<BinaryModifier TargetProperty="SystemMoneyLostFromSiege" Operation="Addition" Left="$(SystemMoney)" BinaryOperation="Multiplication" Right="0.5" TooltipHidden="true" />
+		<BinaryModifier TargetProperty="SystemResearchLostFromSiege" Operation="Addition" Left="$(SystemResearch)" BinaryOperation="Multiplication" Right="0.5" TooltipHidden="true" />
+		<BinaryModifier TargetProperty="SystemEmpirePointLostFromSiege" Operation="Addition" Left="$(SystemEmpirePoint)" BinaryOperation="Multiplication" Right="0.5" TooltipHidden="true" />
+		<Modifier TargetProperty="NetStrategic1LostFromSiege" Operation="Addition" Value="$(Strategic1)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetStrategic2LostFromSiege" Operation="Addition" Value="$(Strategic2)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetStrategic3LostFromSiege" Operation="Addition" Value="$(Strategic3)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetStrategic4LostFromSiege" Operation="Addition" Value="$(Strategic4)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetStrategic5LostFromSiege" Operation="Addition" Value="$(Strategic5)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetStrategic6LostFromSiege" Operation="Addition" Value="$(Strategic6)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury1LostFromSiege" Operation="Addition" Value="$(Luxury1)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury2LostFromSiege" Operation="Addition" Value="$(Luxury2)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury3LostFromSiege" Operation="Addition" Value="$(Luxury3)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury4LostFromSiege" Operation="Addition" Value="$(Luxury4)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury5LostFromSiege" Operation="Addition" Value="$(Luxury5)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury6LostFromSiege" Operation="Addition" Value="$(Luxury6)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury7LostFromSiege" Operation="Addition" Value="$(Luxury7)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury8LostFromSiege" Operation="Addition" Value="$(Luxury8)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury9LostFromSiege" Operation="Addition" Value="$(Luxury9)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury10LostFromSiege" Operation="Addition" Value="$(Luxury10)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury11LostFromSiege" Operation="Addition" Value="$(Luxury11)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury12LostFromSiege" Operation="Addition" Value="$(Luxury12)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury13LostFromSiege" Operation="Addition" Value="$(Luxury13)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury11LostFromSiege" Operation="Addition" Value="$(Luxury11)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury11LostFromSiege" Operation="Addition" Value="$(Luxury11)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury14LostFromSiege" Operation="Addition" Value="$(Luxury14)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury11LostFromSiege" Operation="Addition" Value="$(Luxury11)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury15LostFromSiege" Operation="Addition" Value="$(Luxury15)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury16LostFromSiege" Operation="Addition" Value="$(Luxury16)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury17LostFromSiege" Operation="Addition" Value="$(Luxury17)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury18LostFromSiege" Operation="Addition" Value="$(Luxury18)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury20LostFromSiege" Operation="Addition" Value="$(Luxury20)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury21LostFromSiege" Operation="Addition" Value="$(Luxury21)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury22LostFromSiege" Operation="Addition" Value="$(Luxury22)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury23LostFromSiege" Operation="Addition" Value="$(Luxury23)" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury24LostFromSiege" Operation="Addition" Value="$(Luxury24)" TooltipHidden="true" />
+		<!--  Then loss is applied on "final" net (ATTENTION: Not applied when the system is besieged!)  -->
+		<BinaryModifier TargetProperty="NetSystemMoney" Operation="Subtraction" Left="$(SystemMoneyLostFromSiege)" BinaryOperation="Multiplication" Right="$(BlockadeImpactFactor)" Path="ClassColonizedStarSystem" />
+		<BinaryModifier TargetProperty="NetSystemResearch" Operation="Subtraction" Left="$(SystemResearchLostFromSiege)" BinaryOperation="Multiplication" Right="$(BlockadeImpactFactor)" Path="ClassColonizedStarSystem" />
+		<BinaryModifier TargetProperty="NetSystemEmpirePoint" Operation="Subtraction" Left="$(SystemEmpirePointLostFromSiege)" BinaryOperation="Multiplication" Right="$(BlockadeImpactFactor)" Path="ClassColonizedStarSystem" />
+		<Modifier TargetProperty="NetStrategic1" Operation="Subtraction" Value="$(NetStrategic1LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetStrategic2" Operation="Subtraction" Value="$(NetStrategic2LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetStrategic3" Operation="Subtraction" Value="$(NetStrategic3LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetStrategic4" Operation="Subtraction" Value="$(NetStrategic4LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetStrategic5" Operation="Subtraction" Value="$(NetStrategic5LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetStrategic6" Operation="Subtraction" Value="$(NetStrategic6LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury1" Operation="Subtraction" Value="$(NetLuxury1LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury2" Operation="Subtraction" Value="$(NetLuxury2LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury3" Operation="Subtraction" Value="$(NetLuxury3LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury4" Operation="Subtraction" Value="$(NetLuxury4LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury5" Operation="Subtraction" Value="$(NetLuxury5LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury6" Operation="Subtraction" Value="$(NetLuxury6LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury7" Operation="Subtraction" Value="$(NetLuxury7LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury8" Operation="Subtraction" Value="$(NetLuxury8LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury9" Operation="Subtraction" Value="$(NetLuxury9LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury10" Operation="Subtraction" Value="$(NetLuxury10LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury11" Operation="Subtraction" Value="$(NetLuxury11LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury12" Operation="Subtraction" Value="$(NetLuxury12LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury13" Operation="Subtraction" Value="$(NetLuxury13LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury11" Operation="Subtraction" Value="$(NetLuxury11LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury11" Operation="Subtraction" Value="$(NetLuxury11LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury14" Operation="Subtraction" Value="$(NetLuxury14LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury11" Operation="Subtraction" Value="$(NetLuxury11LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury15" Operation="Subtraction" Value="$(NetLuxury15LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury16" Operation="Subtraction" Value="$(NetLuxury16LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury17" Operation="Subtraction" Value="$(NetLuxury17LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury18" Operation="Subtraction" Value="$(NetLuxury18LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury20" Operation="Subtraction" Value="$(NetLuxury20LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury21" Operation="Subtraction" Value="$(NetLuxury21LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury22" Operation="Subtraction" Value="$(NetLuxury22LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury23" Operation="Subtraction" Value="$(NetLuxury23LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="NetLuxury24" Operation="Subtraction" Value="$(NetLuxury24LostFromSiege)" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<!--  Fake modifiers for GUI  -->
+		<Modifier TargetProperty="NetLuxury1" Operation="Force" Value="0" Path="FAKE" TooltipOverride="%NegatedLuxuryTooltipEffect" />
+		<Modifier TargetProperty="NetStrategic1" Operation="Force" Value="0" Path="FAKE" TooltipOverride="%NegatedStrategicTooltipEffect" />
+		<BinaryModifier TargetProperty="SystemMoney" Operation="Percent" Left="-0.50" BinaryOperation="Multiplication" Right="$(BlockadeImpactFactor)" Path="FAKE,ClassColonizedStarSystem" />
+		<BinaryModifier TargetProperty="SystemResearch" Operation="Percent" Left="-0.50" BinaryOperation="Multiplication" Right="$(BlockadeImpactFactor)" Path="FAKE,ClassColonizedStarSystem" />
+		<BinaryModifier TargetProperty="SystemEmpirePoint" Operation="Percent" Left="-0.50" BinaryOperation="Multiplication" Right="$(BlockadeImpactFactor)" Path="FAKE,ClassColonizedStarSystem" />
 	</SimulationDescriptor>
 
 	<SimulationDescriptor Name="ColonizedStarSystemInfluenceStateOwnerFriend" Type="ColonizedStarSystemInfluenceState">
@@ -2241,4 +2426,78 @@
     <Modifier TargetProperty="SystemHappiness"    Operation="Addition" Value="-10"	 Path="ClassColonizedStarSystem"/>
     <Modifier TargetProperty="SystemManpowerLoss" Operation="Percent"  Value="0.2"   Path="./ClassColonizedStarSystem,BesiegedColonizedStarSystem"   Priority="1"/>
   </SimulationDescriptor>
+
+    <!-- Happiness on system -->
+    <SimulationDescriptor Name="HappinessStatusStarSystem0" Type="HappinessStatusStarSystem" IsSerializable="false">
+        <Modifier TargetProperty="HappinessStarSystemIsMutinous"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="SystemEmpirePoint"        Operation="Percent" Value="-.75"    Path="ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="SystemGrowth"             Operation="Percent" Value="-.75"    Path="ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="HappinessStatusStarSystem1" Type="HappinessStatusStarSystem" IsSerializable="false">
+        <Modifier TargetProperty="HappinessStarSystemIsUnhappy"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="SystemEmpirePoint"        Operation="Percent" Value="-.3" Path="ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="SystemGrowth"             Operation="Percent" Value="-.3" Path="ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="HappinessStatusStarSystem4" Type="HappinessStatusStarSystem" IsSerializable="false">
+        <Modifier TargetProperty="HappinessStarSystemIsHappy"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="HappinessStarSystemIsEcstatic"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="SystemEmpirePoint"        Operation="Percent" Value=".25"  Path="ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="SystemGrowth"             Operation="Percent" Value=".25"  Path="ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+
+    <!-- Happiness on system for Hissho -->
+    <SimulationDescriptor Name="ObedienceStatusStarSystem0" Type="ObedienceStatusStarSystem" IsSerializable="false">
+        <Modifier TargetProperty="HappinessStarSystemIsMutinous"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="SystemEmpirePoint"        Operation="Percent" Value="-.3"    Path="ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="SystemGrowth"             Operation="Percent" Value="-.3"    Path="ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+
+    <SimulationDescriptor Name="ObedienceStatusStarSystem1" Type="ObedienceStatusStarSystem" IsSerializable="false">
+        <Modifier TargetProperty="HappinessStarSystemIsUnhappy"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="SystemEmpirePoint"        Operation="Percent" Value="-.15" Path="ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="SystemGrowth"             Operation="Percent" Value="-.15" Path="ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+	
+    <SimulationDescriptor Name="ObedienceStatusStarSystem4" Type="ObedienceStatusStarSystem" IsSerializable="false">
+        <Modifier TargetProperty="HappinessStarSystemIsHappy"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="HappinessStarSystemIsEcstatic"		Operation="Addition" Value="1" Path="ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulation" TooltipHidden="true"/>
+        <Modifier TargetProperty="SystemEmpirePoint"        Operation="Percent" Value=".15"  Path="ClassColonizedStarSystem"/>
+        <Modifier TargetProperty="SystemGrowth"             Operation="Percent" Value=".15"  Path="ClassColonizedStarSystem"/>
+    </SimulationDescriptor>
+
+	<SimulationDescriptor Name="CannotBeCloaked" Type="CannotBeCloaked" IsSerializable="false">
+        <Modifier TargetProperty="AntiVisionStrength"		Operation="Force" Value="0" Priority="9999"/>
+    </SimulationDescriptor>
+
+	<SimulationDescriptor Name="StarSystemImprovementCloneZvaliPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneAmoebaPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneBenthysPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneBotsPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneDeuyivansPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneHaroshemsPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneHisshosPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneMavrosPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementClonePilgrimsPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneTikanansPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneGnashastsPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneEydersPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneNirisPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneBhagabasPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneRemnantPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementClonePulsosPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneGreenmanPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneGuardiansPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneSistersOfMercyPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneIlloPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneSowersPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneKalTikMasPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneSefalorosPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneGalvransPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneHarmonyPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneMinorHackingPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneBasryxoPopulation" Type="StarSystemImprovement"/>
+    <SimulationDescriptor Name="StarSystemImprovementCloneOracularsPopulation" Type="StarSystemImprovement"/>
+
 </Datatable>

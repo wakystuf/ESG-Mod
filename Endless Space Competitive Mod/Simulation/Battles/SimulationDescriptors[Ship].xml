@@ -206,8 +206,10 @@
     <Property Name="DamageCore"                     BaseValue="0" MinValue="-0.95"/>
     <Property Name="Accuracy"                       BaseValue="0" MinValue="-0.95"/>
 
-    <Property Name="DamageBonusPerTargetCommandPoints"          BaseValue="0"  MinValue="Negative"/>
-    <Property Name="DamageBonusPerOpponentShipAtLongRange"      BaseValue="0"  MinValue="Negative"/>
+    <Property Name="DamageBonusPerTargetCommandPoints"          				BaseValue="0"  MinValue="Negative"/>
+    <Property Name="DamageBonusPerTargetCommandPoints_LockOnBasic"          	BaseValue="0"  MinValue="Negative" MaxValue="0.08"/>
+    <Property Name="DamageBonusPerTargetCommandPoints_LockOnAdvanced"       	BaseValue="0"  MinValue="Negative" MaxValue="0.04"/>
+    <Property Name="DamageBonusPerOpponentShipAtLongRange"      				BaseValue="0"  MinValue="Negative"/>
 
     <!--!-Sums for GUI -->
     <Property Name="DamagePerSecondKinetic"             BaseValue="0"/>
@@ -289,9 +291,13 @@
     <Property Name="ShieldAbsorptionForFlotilla"              BaseValue="0"/>
     <Property Name="IsntImmuneToSpecialNodes"                 BaseValue="1"/>
 
+    <!--Automatons-->
+    <Property Name="AutomatonsSkillBonus" BaseValue="0"/>
+
     <!-- *** MODIFIERS ***-->
     <Modifier TargetProperty="MaximumHealth" Operation="Addition" Value="$(MaximumHealthFromSkillHoratio)" Path="ClassShip/ClassSectionCore"/>
     <Modifier TargetProperty="MaximumShield" Operation="Addition" Value="$(MaximumShieldFromSkillHoratio)" Path="ClassShip"/>
+    <BinaryModifier TargetProperty="MaximumHealth" Operation="Percent" Left="$(AutomatonsSkillBonus)" BinaryOperation="Multiplication" Right="$(Level)" Path="ClassShip/ClassSectionCore"/>
     <BinaryModifier TargetProperty="ExperienceRewardFromLevel"   Operation="Addition"           Left="$(Level)"                         BinaryOperation="Multiplication"    Right="0.2"/>
     <BinaryModifier TargetProperty="ExperienceReward"            Operation="Multiplication"     Left="$(ExperienceRewardFromLevel)"     BinaryOperation="Multiplication"    Right="$(CommandPoints)"/>
     <!-- Compute passive xp value for the ship for admirals : shipCP * (1 + nbStratModules/10)-->
@@ -326,6 +332,10 @@
     <Modifier TargetProperty="DamageShort"              Operation="Percent" Value="$(DamageShort)"                  Path="ClassShip/ClassSection/ClassModuleWeapon" />
     <Modifier TargetProperty="DamageMedium"             Operation="Percent" Value="$(DamageMedium)"                 Path="ClassShip/ClassSection/ClassModuleWeapon" />
     <Modifier TargetProperty="DamageLong"               Operation="Percent" Value="$(DamageLong)"                   Path="ClassShip/ClassSection/ClassModuleWeapon" />
+
+    <!-- Workaround for having all these different properties that are separately capped. Turned out not to work. -->
+	<!-- <Modifier TargetProperty="DamageBonusPerTargetCommandPoints" Operation="Addition" Value="$(DamageBonusPerTargetCommandPoints_LockOnBasic)"/> -->
+    <!-- <Modifier TargetProperty="DamageBonusPerTargetCommandPoints" Operation="Addition" Value="$(DamageBonusPerTargetCommandPoints_LockOnAdvanced)"/> -->
 
     <Modifier TargetProperty="ShipManpowerKillPerHit"   Operation="Percent" Value="$(ShipManpowerKillPerHitPercent)"  Path="ClassShip/ClassSection/ClassModuleWeapon" />
 
@@ -658,7 +668,7 @@
     <Property Name="MiningProbePlanetStatsMultiplier"           BaseValue="0" MinValue="0" Composition="Maximum"/>
 
     <Modifier TargetProperty="VisionRange"                      Operation="Addition"    Value="1"       Path="ClassShip"/>
-    <Modifier TargetProperty="CommandPoints"                    Operation="Addition"    Value="10"      Path="ClassShip"/>
+    <Modifier TargetProperty="CommandPoints"                    Operation="Addition"    Value="5"       Path="ClassShip"/>
     <Modifier TargetProperty="ShieldRadius"                     Operation="Addition"    Value="2.5"     Path="ClassShip"/>
     <Modifier TargetProperty="ScrapPriority"                    Operation="Subtraction" Value="2"       Path="ClassShip"/>
     <Modifier TargetProperty="VisualImportanceScore"            Operation="Addition"    Value="1000"    Path="ClassShip"/>

@@ -151,8 +151,629 @@
                 </ObjectiveSet>
             </Step>
         </Steps>
+    </QuestDefinition>
 
-        
+    <!--  #######################################  -->
+    <!--       HISSHOS QUEST Chapter1       -->
+    <!--  #######################################  -->
+    <QuestDefinition Name="MajorHisshosQuest-Chapter1-Part1" Category="MajorQuest" SubCategory="MajorHisshos" MinimumTurn="5">
+        <!-- ============ TAGS ============ -->
+        <Tags>BeginTurn</Tags>
+        <!-- ============ CONTEXT ============ -->
+        <QuestContextSolo />
+        <!-- ============ OCCURRENCE RULES ============ -->
+        <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0" />
+        <!-- ============ VARIABLES ============ -->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire" />
+            </Var>
+            <!-- FIRST CHOICE VARIABLES -->
+            <!-- Requiered amount of ships to build: use in localization only -->
+            <Var VarName="$Amount01" IntValue="2" />
+            <!-- Requiered amount of Defensive Power: checks all ships except Jugg and add 70 -->
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>Min(320,Ceil(MaxProperty(Context, @'ClassEmpire//ClassShip,!ShipRoleJuggernaut', DefensiveMilitaryPower)+70))</Expression>
+            </InterpretedVar>
+            <!-- How many ships the Decorator checks during the loop -->
+            <Var VarName="$Amount03" IntValue="1" />
+            <!-- Fake variable for the first Choice -->
+            <Var VarName="$Ships" />
+            <!--Quest requirement lowered to only require cordial relations, not assimilation-->
+            <Var VarName="$RelationState" StringValue="DiplomaticRelationStateMinorCordial"/> 
+            <!-- POLITICAL EFFECTS -->
+            <Var VarName="$PoliticalEffectMilitarist" StringValue="PopulationEventMajorHisshos01-Militarist" />
+            <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventMajorHisshos01-Religious" />
+            <!-- LOCALIZATION ONLY: allow to give the localized name of the Techn which unlocks the Minor Diplomacy -->
+            <Var VarName="$Technology01" StringValue="TechnologyDefinitionEmpireDevelopment1" />
+            <!-- LOCALIZATION ONLY -->
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01" />
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02" />
+            <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03" />
+            <LocalizationVar LocalizationKey="$Technology01Name" Source="$Technology01" />
+        </Vars>
+        <!-- ============ PREREQUISITES ============ -->
+        <Prerequisites Target="$(Empire)">
+            <!-- Only Empire with visual affinity Hisshos -->
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityMajorHisshos,PopulationMajor</PathPrerequisite>
+            <!-- Empire has a Home System -->
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassStarSystem,HomeSystem</PathPrerequisite>
+            <!-- I have the DLC Hisshos -->
+            <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCHisshos</DownloadableContentPrerequisite>
+        </Prerequisites>
+        <!-- ============ STEPS ============ -->
+        <Steps>
+            <Step Name="Step1">
+                <!-- ============ STEP 0 - Choose ============ -->
+                <!-- There are 2 Choices -->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0" />
+                    <ChoiceItem ObjectiveSetIndex="1" />
+                </Choice>
+                <!-- ============ Choice Index 0: Military - Build 2 Ships with X Defensive Power ============ -->
+                <ObjectiveSet>
+                    <!--  Launch the political Effect  -->
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire" />
+                            <Input_Target VarName="$CurrentEmpire" />
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist" />
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Militarist" StartValue="0" EndValue="2">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="40" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <!--  Next Sequence has to be validated twice to succeed the quest -->
+                            <Loop Count="2">
+                                <Sequence>
+                                    <Decorator_ShipConstructed Initiator="Empire" ProgressionIncrement="1">
+                                        <Condition_ShipStats>
+                                            <Input_ShipList VarName="$Ships" />
+                                            <Input_MinimumAmount VarName="$Amount03" />
+                                            <Input_MinimumDefensiveMilitaryPower VarName="$Amount02" />
+                                        </Condition_ShipStats>
+                                        <Output_Ship VarName="$Ships" />
+                                    </Decorator_ShipConstructed>
+                                </Sequence>
+                            </Loop>
+                            <!-- If loop is validated, then set the outcome -->
+                            <Action_ChooseOutcome Name="Outcome1" />
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <!-- This tag allows the system to launch the Chapter 2 -->
+                                    <Tags>MajorHisshosQuest-Chapter1-Part2-Militarist</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <!-- Droplist: Technology from common Militarist Techno -->
+                    <Reward Droplist="DroplistTechnologyDefinitionMilitary" EvaluationMethod="Dynamic" Picks="1" PreviewLocalizationKey="%RandomTechnologyTitle" />
+                </ObjectiveSet>
+                <!-- ============ Choice Index 1: Religious ============ -->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire" />
+                            <Input_Target VarName="$CurrentEmpire" />
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious" />
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Religious">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="40" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <!--Become Cordial-->
+                            <Decorator_DiplomaticRelationChanged Initiator="Empire">                                  
+                                <Input_DiplomaticRelationState VarName="$RelationState"/>
+                            </Decorator_DiplomaticRelationChanged>
+                            <Action_ChooseOutcome Name="Outcome1" />
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MajorHisshosQuest-Chapter1-Part2-Religious</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <!-- Droplist: Technology from common Empire Dev Techno -->
+                    <Reward Droplist="DroplistTechnologyEmpireDevelopment" EvaluationMethod="Dynamic" Picks="1" PreviewLocalizationKey="%RandomTechnologyTitle" />
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!--  ################################################  -->
+    <!--       HISSHOS QUEST Chapter1 Part 2- Militarist    -->
+    <!--  ################################################  -->
+    <QuestDefinition Name="MajorHisshosQuest-Chapter1-Part2-Militarist" Category="MajorQuest" SubCategory="MajorHisshos" MinimumTurn="1">
+        <!-- ============ TAGS ============ -->
+        <Tags>MajorHisshosQuest-Chapter1-Part2-Militarist</Tags>
+        <!-- ============ CONTEXT ============ -->
+        <QuestContextSolo />
+        <!-- ============ OCCURRENCE RULES ============ -->
+        <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0" />
+        <!-- ============ VARIABLES ============ -->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire" />
+            </Var>
+            <!-- LOCALIZATION ONLY -->
+            <Var VarName="$Amount01" IntValue="1" />
+            <!-- Politcal Effect -->
+            <Var VarName="$PoliticalEffectMilitarist" StringValue="PopulationEventMajorHisshos02-Militarist" />
+            <!-- LOCALIZATION ONLY -->
+            <LocalizationVar Source="$Amount01" LocalizationKey="$Amount01Name" />
+        </Vars>
+        <!-- ============ PREREQUISITES ============ -->
+        <Prerequisites Target="$(Empire)">
+            <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCHisshos</DownloadableContentPrerequisite>
+        </Prerequisites>
+        <!-- ============ STEPS ============ -->
+        <Steps>
+            <Step Name="Step1">
+                <!-- ============ Invade a System ============ -->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire" />
+                            <Input_Target VarName="$CurrentEmpire" />
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist" />
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Militarist">
+                        <AIHint Category="Invade" Motivation="0.6" />
+                        <Sequence>
+                            <!-- Invade a System and Capture it -->
+                            <Decorator_InvadeSystem Initiator="Empire">
+                                <Input_GroundBattleOutcomeType>CaptureOrRaze</Input_GroundBattleOutcomeType>
+                            </Decorator_InvadeSystem>
+                            <Action_ChooseOutcome Name="Outcome1" />
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MajorHisshosQuest-Chapter2-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistHisshos01" Picks="1" />
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!--  #################################################  -->
+    <!--             HISSHOS QUEST Chapter2 PART1            -->
+    <!--  #################################################  -->
+    <QuestDefinition Name="MajorHisshosQuest-Chapter2-Part1" Category="MajorQuest" SubCategory="MajorHisshos" MinimumTurn="1">
+        <!-- ============ TAGS ============ -->
+        <Tags>MajorHisshosQuest-Chapter2-Part1</Tags>
+        <!-- ============ CONTEXT ============ -->
+        <QuestContextSolo />
+        <!-- ============ OCCURRENCE RULES ============ -->
+        <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0" />
+        <!-- ============ VARIABLES ============ -->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire" />
+            </Var>
+            <!-- Choice1: Check if a ship involved in the fleet is a Juggernaut -->
+            <Var VarName="$ShipSize01" StringValue="ShipSizeJuggernaut" />
+            <!-- Choice1: Only 1 Ship needs to be a Juggernaut -->
+            <Var VarName="$Amount01" IntValue="1" />
+            <!-- Choice1: amount of Battle the player has to win -->
+            <Var VarName="$Amount04" IntValue="6" />
+            <!-- Choice2: Check the quantity Mining Resources -->
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression> SumProperty(Context, @'ClassEmpire/ClassMiningProbe', NetStrategic1)+ SumProperty(Context, @'ClassEmpire/ClassMiningProbe', NetStrategic2)+ SumProperty(Context, @'ClassEmpire/ClassMiningProbe', NetStrategic3)+ SumProperty(Context, @'ClassEmpire/ClassMiningProbe', NetStrategic4)+ SumProperty(Context, @'ClassEmpire/ClassMiningProbe', NetStrategic5)+ SumProperty(Context, @'ClassEmpire/ClassMiningProbe', NetStrategic6)+ SumProperty(Context, @'ClassEmpire/ClassGarrisonFleet', NetStrategic1FromSpecialNodes)+ SumProperty(Context, @'ClassEmpire/ClassGarrisonFleet', NetStrategic2FromSpecialNodes)+ SumProperty(Context, @'ClassEmpire/ClassGarrisonFleet', NetStrategic3FromSpecialNodes)+ SumProperty(Context, @'ClassEmpire/ClassGarrisonFleet', NetStrategic4FromSpecialNodes)+ SumProperty(Context, @'ClassEmpire/ClassGarrisonFleet', NetStrategic5FromSpecialNodes)+ SumProperty(Context, @'ClassEmpire/ClassGarrisonFleet', NetStrategic6FromSpecialNodes) </Expression>
+            </InterpretedVar>
+            <!-- Choice2: Increase the quantity Mining Resources -->
+            <InterpretedVar VarName="$Amount03" Target="$(Empire)">
+                <Expression>$(Amount02)+4</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount05" Target="$(Empire)">
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*10</Expression>
+            </InterpretedVar>
+            <!-- Choice2: Check the quantity Mining Resources -->
+            <Var VarName="$Expression01" StringValue="SumProperty(Context, @'ClassEmpire/ClassMiningProbe', NetStrategic1)+SumProperty(Context, @'ClassEmpire/ClassMiningProbe', NetStrategic2)+ SumProperty(Context, @'ClassEmpire/ClassMiningProbe', NetStrategic3)+SumProperty(Context, @'ClassEmpire/ClassMiningProbe', NetStrategic4)+ SumProperty(Context, @'ClassEmpire/ClassMiningProbe', NetStrategic5)+SumProperty(Context, @'ClassEmpire/ClassMiningProbe', NetStrategic6) + SumProperty(Context, @'ClassEmpire/ClassGarrisonFleet', NetStrategic1FromSpecialNodes)+ SumProperty(Context, @'ClassEmpire/ClassGarrisonFleet', NetStrategic2FromSpecialNodes)+ SumProperty(Context, @'ClassEmpire/ClassGarrisonFleet', NetStrategic3FromSpecialNodes)+ SumProperty(Context, @'ClassEmpire/ClassGarrisonFleet', NetStrategic4FromSpecialNodes)+ SumProperty(Context, @'ClassEmpire/ClassGarrisonFleet', NetStrategic5FromSpecialNodes)+ SumProperty(Context, @'ClassEmpire/ClassGarrisonFleet', NetStrategic6FromSpecialNodes) ge $(Amount03)" />
+            <!-- Choice2: Check the quantity of Happiness to validate the Quest -->
+            <Var VarName="$Expression02" StringValue="Property(Context, @'ClassEmpire', Happiness, true)" />
+            <Var VarName="$PoliticalEffectMilitarist" StringValue="PopulationEventMajorHisshos03-Militarist" />
+            <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventMajorHisshos03-Religious" />
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01" />
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02" />
+            <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03" />
+            <LocalizationVar LocalizationKey="$Amount04Name" Source="$Amount04" />
+            <LocalizationVar LocalizationKey="$Amount05Name" Source="$Amount05" />
+        </Vars>
+        <!-- ============ PREREQUISITES ============ -->
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityMajorHisshos,PopulationMajor</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassStarSystem,HomeSystem</PathPrerequisite>
+        </Prerequisites>
+        <!-- ============ STEPS ============ -->
+        <Steps>
+            <Step Name="Step1">
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0" />
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <!-- If Empire Major population is "Hissho"  -->
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="2">
+                        <!-- If Empire Major population isn't "Hissho"  -->
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+                <!-- ============ Choice Index 1: Win 3 battle with a Juggernaut ============ -->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire" />
+                            <Input_Target VarName="$CurrentEmpire" />
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist" />
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Militarist" StartValue="0" EndValue="$Amount04">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Loop>
+                                <Decorator_BattleEnded Status="Won" ProgressionIncrement="1">
+                                    <!-- Check the Current Empire participates -->
+                                    <Input_Empire VarName="$CurrentEmpire" />
+                                </Decorator_BattleEnded>
+                                <!-- Belong to the loop -->
+                                <Input_Count VarName="$Amount04" />
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1" />
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MajorHisshosQuest-Chapter3-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistHisshos03" Picks="1" />
+                </ObjectiveSet>
+                <!-- ============ No Choice Index 2: Mine X Strategic per turn with a Juggernaut ============ -->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire" />
+                            <Input_Target VarName="$CurrentEmpire" />
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious" />
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Religious1" StartValue="0" EndValue="$Amount05">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Loop>
+                                <Decorator_BeginTurn ProgressionIncrement="1">
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire" />
+                                        <Input_Expression VarName="$Expression01" />
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Input_Count VarName="$Amount05" />
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1" />
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MajorHisshosQuest-Chapter3-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistPrestigeEra4" Picks="1" />
+                </ObjectiveSet>
+                <!-- ============ No Choice Index 2: Mine X Strategic per turn with a Juggernaut ============ -->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire" />
+                            <Input_Target VarName="$CurrentEmpire" />
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious" />
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective_Religious2" StartValue="$Amount02" EndValue="$Amount03">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire" />
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire" />
+                                    <Input_Expression VarName="$Expression01" />
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1" />
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MajorHisshosQuest-Chapter3-Part1</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistHisshos04Bis" Picks="1" />
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!--  ################################################  -->
+    <!--       HISSHOS QUEST Chapter3 Part 2- Militarist    -->
+    <!--  ################################################  -->
+    <QuestDefinition Name="MajorHisshosQuest-Chapter3-Part2-Militarist" Category="MajorQuest" SubCategory="MajorHisshos" MinimumTurn="1">
+        <!-- ============ TAGS ============ -->
+        <Tags>MajorHisshosQuest-Chapter3-Part2-Militarist</Tags>
+        <!-- ============ CONTEXT ============ -->
+        <QuestContextSolo />
+        <!-- ============ OCCURRENCE RULES ============ -->
+        <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0" />
+        <!-- ============ VARIABLES ============ -->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire" />
+            </Var>
+            <!-- Owner of the Behemot -->
+            <Var VarName="$AIEmpire">
+                <Any>
+                    <From Source="$LesserEmpire"></From>
+                </Any>
+            </Var>
+            <!-- Used to define distance -->
+            <Var VarName="$MyHomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode" />
+            </Var>
+            <!-- Used to define Target -->
+            <Var VarName="$MyColonizedStarSystem">
+                <Any>
+                    <From Source="$CurrentEmpire.$ColonizedStarSystems">
+                        <Where>
+                            <FilterSystemByStatus StarSystemState="Colony" />
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <!-- Used to define the name and the location of the target -->
+            <Var VarName="$MyStarSystem">
+                <From Source="$MyColonizedStarSystem.$StarSystem" />
+            </Var>
+            <!-- Used to define distance -->
+            <Var VarName="$StarSystemToSelect">
+                <From Source="$Constellations.$StarSystems">
+                    <Where>
+                        <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                        <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, IsolatedNode</PathPrerequisite>
+                    </Where>
+                </From>
+            </Var>
+            <Var VarName="$StarSystemToChoose">
+                <Any>
+                    <From Source="$StarSystemToSelect">
+                        <OrderBy>
+                            <SortSystemByDistance OriginVarName="$MyHomeSystem" SortBy="Nearest" MinimumDistance="30" MaximumDistance="90" MinimumCandidateCount="1" />
+                        </OrderBy>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$Descriptor" StringValue="BonusOnJuggernauts" />
+            <!-- Used to drop the Behemot -->
+            <DroplistVar Droplist="DroplistHisshos09" VarName="$FleetToSpawn" />
+            <!-- Behaviour of the Behemot -->
+            <Var VarName="$FleetMissionDefinitionName01" StringValue="GotoAndAttackHisshos" />
+            <!-- Mark the Behemot -->
+            <Var VarName="$Marker01" />
+            <!-- Name of the Targets -->
+            <Var VarName="$FleetToSpawnGUID" />
+            <Var VarName="$MissionGUID1" />
+            <LocalizationVar LocalizationKey="$MyStarSystemName" Source="$MyStarSystem" />
+            <Var VarName="$FleetControllerName01" StringValue="%HisshosEnemyName" />
+            <Var VarName="$FleetName01" StringValue="%HisshosEnemyFleetName" />
+            <Var VarName="$PoliticalEffectMilitarist" StringValue="PopulationEventMajorHisshos05-Militarist" />
+        </Vars>
+        <!-- ============ PREREQUISITES ============ -->
+        <!-- ============ STEPS ============ -->
+        <Steps>
+            <Step Name="Step1">
+                <!-- ============ Defeat a Juggernaut ============ -->
+                <ObjectiveSet>
+                    <StartActions>
+                        <!-- Apply the speed and module modifier on the IA Empire -->
+                        <!-- /!\ MODIFY ALL JUGG OF THE LESSER EMPIRE -->
+                        <Action_ApplyDescriptor>
+                            <Input_DescriptorName VarName="$Descriptor" />
+                            <Input_Targets VarName="$AIEmpire" />
+                        </Action_ApplyDescriptor>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire" />
+                            <Input_Target VarName="$CurrentEmpire" />
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist" />
+                        </Action_TriggerPopulationEvent>
+                        <!-- Spawn Jugg on specific Location -->
+                        <Action_SpawnFleets>
+                            <Input_Empire VarName="$AIEmpire" />
+                            <Input_Locations VarName="$StarSystemToChoose" />
+                            <Input_DroppableFleet VarName="$FleetToSpawn" />
+                            <Input_FleetName VarName="$FleetName01" />
+                            <Output_FleetGUIDs VarName="$FleetToSpawnGUID" />
+                        </Action_SpawnFleets>
+                        <!-- Apply fleet behaviour -->
+                        <Action_CreateFleetMissions>
+                            <Input_MissionDefinitionName VarName="$FleetMissionDefinitionName01" />
+                            <Input_FleetGUIDs VarName="$FleetToSpawnGUID" />
+                            <Input_Targets VarName="$MyStarSystem" />
+                            <Output_MissionGUIDs VarName="$MissionGUID1" />
+                        </Action_CreateFleetMissions>
+                        <Action_AddQuestMarkers RevealsLocation="true">
+                            <Input_TargetGUIDs VarName="$FleetToSpawnGUID" />
+                            <Input_Empires VarName="$CurrentEmpire" />
+                            <Output_Markers VarName="$Marker01" />
+                        </Action_AddQuestMarkers>
+                        <!-- Change fleet name -->
+                        <Action_RegisterLesserName>
+                            <Input_GUIDs VarName="$FleetToSpawnGUID" />
+                            <Input_Name VarName="$FleetControllerName01" />
+                        </Action_RegisterLesserName>
+                    </StartActions>
+                    <Objective Name="Objective_Militarist">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <!-- Check the Behemot is destroyed by someone -->
+                            <Decorator_BattleEnded ProgressionIncrement="1">
+                                <Condition_BattleEnded_FleetDestroyed>
+                                    <Input_FleetGUIDs VarName="$FleetToSpawnGUID" />
+                                </Condition_BattleEnded_FleetDestroyed>
+                            </Decorator_BattleEnded>
+                            <Action_ApplyDescriptor Remove="true">
+                                <Input_DescriptorName VarName="$Descriptor" />
+                                <Input_Targets VarName="$AIEmpire" />
+                            </Action_ApplyDescriptor>
+                            <Action_ChooseOutcome Name="Outcome1" />
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MajorHisshosQuest-Chapter4-Part1-Militarist</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistHisshos04" Picks="1" />
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+    <!--  ################################################  -->
+    <!--       HISSHOS QUEST Chapter3 Part 2- Religious    -->
+    <!--  ################################################  -->
+    <QuestDefinition Name="MajorHisshosQuest-Chapter3-Part2-Religious" Category="MajorQuest" SubCategory="MajorHisshos" MinimumTurn="1">
+        <!-- ============ TAGS ============ -->
+        <Tags>MajorHisshosQuest-Chapter3-Part2-Religious</Tags>
+        <!-- ============ CONTEXT ============ -->
+        <QuestContextSolo />
+        <!-- ============ OCCURRENCE RULES ============ -->
+        <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0" />
+        <!-- ============ VARIABLES ============ -->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$MySystem" IgnoreLockedTargets="true">
+                <Any>
+                  <From Source="$CurrentEmpire.$ColonizedStarSystems"/>
+                </Any>
+            </Var>
+            <Var VarName="$MySystemLocation" IgnoreLockedTargets="true">               
+                <From Source="$MySystem.$StarSystem"/>                
+            </Var>                        
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems"/>
+            </Var>
+            <Var VarName="$ConstellationSystems">
+                <From Source="$AllStarSystems">                    
+                    <OrderBy>
+                        <SortSystemByDistance OriginVarName="$MySystemLocation" SortBy="Nearest" MinimumDistance="25" MinimumCandidateCount="1" ConsiderFreeMovement="true"/>
+                    </OrderBy>
+                </From>
+            </Var>
+            <Var VarName="$StarSystem01">
+                <First>
+                  <From Source="$ConstellationSystems">
+                    <Where>
+                      <PathPrerequisite Flags="Prerequisite">ClassStarSystem, !QuestNode</PathPrerequisite>
+                    </Where>
+                  </From>
+                </First>
+            </Var>
+            <Var VarName="$Planet01">
+                <Any>
+                    <From Source="$StarSystem01.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$Amount01" IntValue="5000"/>
+            <Var VarName="$Curiosity01" StringValue="Curiosity_Quest_Hissho99"/>
+            <Var VarName="$Curiosity01GUID"/>
+            <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventMajorHisshos05-Religious" />
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Amount02" IntValue="-5000"/>
+            <Var VarName="$ResourceName" StringValue="EmpireMoney"/>
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Planet01Name" Source="$Planet01"/>
+        </Vars>
+        <!-- ============ PREREQUISITES ============ -->
+        <!-- ============ STEPS ============ -->
+        <Steps>
+            <Step Name="Step1">
+                <!-- ============ Have X Warm Planets ============ -->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire" />
+                            <Input_Target VarName="$CurrentEmpire" />
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious" />
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$Planet01"/>
+                            <Input_CuriosityDefinition VarName="$Curiosity01"/>
+                            <Output_CuriosityGUIDs VarName="$Curiosity01GUID" />
+                        </Action_SpawnCuriosity>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$Planet01"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective_Religious" StartValue="$Amount01" EndValue="$Amount02">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_CuriosityDiscovered>
+                                <Input_CuriosityGUIDs VarName="$Curiosity01GUID"/>                                
+                            </Decorator_CuriosityDiscovered>
+                            <Action_TransferResource>
+                                <Input_Location VarName="$CurrentEmpire"/>
+                                <Input_ResourceName VarName="$ResourceName"/>
+                                <Input_Amount VarName="$Amount02"/>
+                            </Action_TransferResource>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MajorHisshosQuest-Chapter4-Part1-Religious</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistHisshos04" Picks="1" />
+                </ObjectiveSet>
+            </Step>
+        </Steps>
     </QuestDefinition>
 
 </Datatable>

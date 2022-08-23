@@ -9,52 +9,33 @@
   <SimulationDescriptor Name="ClassModuleBait2Explication"                       Type="ClassModuleBait2Explication"/>
   <SimulationDescriptor Name="ClassModuleJammer1Explication"                     Type="ClassModuleJammer1Explication"/>
   <SimulationDescriptor Name="ClassModuleJammer2Explication"                     Type="ClassModuleJammer2Explication"/>
+  <SimulationDescriptor Name="ClassModuleOnlyOnePerFlotilla"                     Type="ClassModuleOnlyOnePerFlotilla"/>
   <SimulationDescriptor Name="ClassModuleStrategicFromSpecialNodeExplication"    Type="ClassModuleStrategicFromSpecialNodeExplication"/>
-
-  <!-- Support Encounter -->
-	<SimulationDescriptor Name="ClassModuleSupportEncounter" Type="ClassModuleSupport">
-		<Property Name="DamageIncreasePercent"                  BaseValue="0"/>
-		<Property Name="MaximumShield"                          BaseValue="0"  MinValue="Negative"/>
-		<Property Name="HullPlatingAbsorption"                  BaseValue="0"    MinValue="Negative"/>
-		<Property Name="ShieldAbsorption"                       BaseValue="0"    MinValue="Negative"/>
-		<Property Name="DamageBonusPerTargetCommandPoints"      BaseValue="0"  MinValue="Negative"/>
-		<Property Name="RepairAfterBattle"                      BaseValue="0" MinValue="0"/>
-		<Property Name="RepairAfterPhase"                       BaseValue="0" MinValue="0"/>
-		<Property Name="ShipManpowerKillPerHitPercentEncounter" BaseValue="0"/>
-		<Property Name="MoraleBonus"                            BaseValue="0" MinValue="0"/>
-		
-		<Modifier TargetProperty="DamageIncreasePercent"   Operation="Addition"    Value="$(DamageIncreasePercent)"   Path="../ClassFlotilla/ClassShipEncounter"       Priority="1"/>
-
-		<Modifier TargetProperty="MaximumShield"            Operation="Addition" Value="$(FlotillaMaximumShield)"       Path="../ClassFlotilla"     Priority="1"/>
-		<Modifier TargetProperty="ShieldAbsorption"         Operation="Addition" Value="$(FlotillaShieldAbsorption)"       Path="../ClassFlotilla"     Priority="1"/>
-
-		<Modifier TargetProperty="HullPlatingAbsorption"   Operation="Addition" Value="$(FlotillaDmgReductionAgainstPhysical)" Path="../ClassFlotilla/ClassShipEncounter"  Priority="1"/>
-		<Modifier TargetProperty="ShieldAbsorption"     Operation="Addition" Value="$(FlotillaDmgReductionAgainstEnergy)"   Path="../ClassFlotilla/ClassShipEncounter"  Priority="1"/>
-
-		<Modifier TargetProperty="DamageBonusPerTargetCommandPoints"     Operation="Addition" Value="$(DamageBonusPerTargetCommandPointsFlotilla)"   Path="../ClassFlotilla/ClassShipEncounter" />
-
-		<Modifier TargetProperty="RepairAfterBattle"           Operation="Addition" Value="$(FlotillaRepairAfterBattle)"       Path="../ClassFlotilla/ClassShipEncounter"     Priority="1"/>
-		<Modifier TargetProperty="RepairAfterPhase"            Operation="Addition" Value="$(FlotillaRepairAfterPhase)"        Path="../ClassFlotilla/ClassShipEncounter"     Priority="1"/>
-
-		<Modifier TargetProperty="ShipManpowerKillPerHitPercentEncounter"       Operation="Addition" Value="$(FlotillaShipManpowerKillPerHitPercent)"        Path="../ClassFlotilla/ClassShipEncounter"     Priority="1"/>
-
-		<Modifier TargetProperty="MoraleBonus"            Operation="Percent"   Value="$(FlotillaMoraleBonusPercent)"  Path="../ClassGroup"     />
-	</SimulationDescriptor>
 
   <!-- ************************** -->
   <!-- ** ANTI CARRIER MODULES ** -->
   <!-- ************************** -->
 
   <!-- Lock-on Modules -->
+  <SimulationDescriptor Name="ModuleSupportAntiCarrier" Type="ModuleSupportAntiCarrier">
+    <Property Name="DamageBonusPerTargetCommandPointsFlotilla" BaseValue="0" MinValue="Negative"/>
+    <Property Name="DamageBonusPerTargetCommandPointsFlotilla_LockOnBasic" BaseValue="0" MinValue="Negative"/>
+    <Property Name="DamageBonusPerTargetCommandPointsFlotilla_LockOnAdvanced" BaseValue="0" MinValue="Negative"/>
+  </SimulationDescriptor>
+
   <SimulationDescriptor Name="ModuleSupportAntiCarrier1Strategic4"      Type="ModuleSupportAntiCarrier">
-    <Modifier TargetProperty="DamageBonusPerTargetCommandPointsFlotilla"    Operation="Addition" Value="0.06" Path="ModuleSupportAntiCarrier"/>
+    <!-- <Modifier TargetProperty="DamageBonusPerTargetCommandPointsFlotilla" Operation="Addition" Value="0.04" Path="ModuleSupportAntiCarrier"/> -->
+    <Modifier TargetProperty="DamageBonusPerTargetCommandPointsFlotilla_LockOnBasic"    Operation="Addition" Value="0.08" Path="ModuleSupportAntiCarrier"/>
     <Modifier TargetProperty="OffensiveMilitaryPower"                       Operation="Percent" Value="0.15" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleSupportAntiCarrier2Strategic6"      Type="ModuleSupportAntiCarrier">
-    <Modifier TargetProperty="DamageBonusPerTargetCommandPointsFlotilla" Operation="Addition" Value="0.1" Path="ModuleSupportAntiCarrier"/>
+    <!-- <Modifier TargetProperty="DamageBonusPerTargetCommandPointsFlotilla" Operation="Addition" Value="0.06" Path="ModuleSupportAntiCarrier"/> -->
+    <!-- Showing 12% is GUI-only; the effect will actually cap out at 8%, with the incremental 4% in reality covered by the separate variable -->
+    <Modifier TargetProperty="DamageBonusPerTargetCommandPointsFlotilla_LockOnBasic"    Operation="Addition" Value="0.12" Path="ModuleSupportAntiCarrier"/>
+    <Modifier TargetProperty="DamageBonusPerTargetCommandPointsFlotilla_LockOnAdvanced"    Operation="Addition" Value="0.04" Path="ModuleSupportAntiCarrier" TooltipHidden="true"/>
     <Modifier TargetProperty="OffensiveMilitaryPower"                       Operation="Percent" Value="0.2" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="70" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalStrategic2Cost"    Operation="Addition" Left="2" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
@@ -637,7 +618,16 @@
   <!--  *********************************  -->
   <!--  ** EXPLORATION (PROBE) MODULES **  -->
   <!--  *********************************  -->
-
+  <SimulationDescriptor Name="ModuleSupportExploration" Type="ModuleSupportExploration">
+    <Property Name="VisionRange"/>
+    <Property Name="MaximumMovement"/>
+    <Property Name="MaximumShipProbeStock"/>
+    <Property Name="NetShipProbe"/>
+    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="$(VisionRange)" Path="../ClassShip" Priority="1"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="$(MaximumMovement)" Path="../ClassShip" Priority="1"/>
+    <BinaryModifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Left="$(MaximumShipProbeStock)" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" Path="../ClassShip" Priority="1"/>
+    <BinaryModifier TargetProperty="NetShipProbe"          Operation="Addition" Left="$(NetShipProbe)"          BinaryOperation="Division" Right="$(GameSpeedMultiplier)" Path="../ClassShip" Priority="1"/>
+  </SimulationDescriptor>
   <SimulationDescriptor Name="ModuleSupportExploration1" Type="ModuleSupportExploration">
     <Modifier TargetProperty="VisionRange" Operation="Addition" Value="1" Path="ModuleSupportExploration"/>
     <Modifier TargetProperty="MaximumShipProbeStock" Operation="Addition" Value="2" Path="ModuleSupportExploration"/>

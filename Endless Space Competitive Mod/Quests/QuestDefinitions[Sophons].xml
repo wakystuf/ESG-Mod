@@ -791,11 +791,11 @@
         <From Source="$Empire"/>
       </Var>
       <InterpretedVar VarName="$MinimumAmount" Target="$(Empire)">
-        <Expression>Min(1,(Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics06') + 1))</Expression>
+        <Expression>Max(2,(Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics06') + 1))</Expression>
       </InterpretedVar>
       <Var VarName="$MilitaristPolitic" StringValue="Politics06"/>
       <InterpretedVar VarName="$Duration" Target="$(Empire)">
-        <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*8</Expression>
+        <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*4</Expression>
       </InterpretedVar>
       <LocalizationVar LocalizationKey="$AmountLoc" Source="$MinimumAmount"/>
       <LocalizationVar LocalizationKey="$DurationName" Source="$Duration"/>
@@ -836,7 +836,936 @@
         <Reward Droplist="DroplistMilitarySophonsQuest01" Picks="1"/>
       </Step>
     </Steps>
+  </QuestDefinition>
 
+  <!--  #######################################  -->
+  <!--            Chapter 2.2 - Diplomacy           -->
+  <!--  #######################################  -->
+  <QuestDefinition Name="SophonsQuest-Chapter2.2-Diplomacy" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false">
+    <!-- ============ TAGS ============ -->
+    <Tags>Chapter2.2-Diplomacy</Tags>
+    <QuestContextSolo />
+    <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0" />
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <!--    Define the Hangar -->
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire" />
+      </Var>
+      <Var IsGlobal="true" VarName="$ColonizedSystem01" />
+      <Var VarName="$ColonizedSystemLocation">
+        <From Source="$ColonizedSystem01.$StarSystem" />
+      </Var>
+      <!-- <Var VarName="$MinimumAmount" IntValue="70"/> -->
+      <InterpretedVar VarName="$MinimumAmount">
+        <Expression>Min(100,Property(ColonizedSystem01, @'ClassColonizedStarSystem', Happiness) + 15)</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+        <Expression>Property(Context, @'ClassEmpire', Obedience, true)</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+        <Expression>Min(100, Property(Context, @'ClassEmpire', Obedience, true)+5)</Expression>
+      </InterpretedVar>
+      <Var VarName="$Marker01" />
+      <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire', Obedience, true)" />
+      <!-- POLITICAL EFFECT  -->
+      <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventSophons02.2Pacifist" />
+      <LocalizationVar LocalizationKey="$SystemName01" Source="$ColonizedSystemLocation" />
+      <LocalizationVar LocalizationKey="$Amount" Source="$MinimumAmount" />
+      <LocalizationVar LocalizationKey="$MinObedience02Name" Source="$Amount02" />
+    </Vars>
+    <!-- ============ PREREQUISITES ============ -->
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <!-- ============ STEP 1 ============ -->
+      <Step Name="Step1">
+        <Choice DefaultChoiceIndex="0">
+          <ChoiceItem ObjectiveSetIndex="0">
+            <Prerequisites Target="$(Empire)">
+              <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+            </Prerequisites>
+          </ChoiceItem>
+          <ChoiceItem ObjectiveSetIndex="1">
+            <Prerequisites Target="$(Empire)">
+              <PathPrerequisite Flags="Prerequisite">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+            </Prerequisites>
+          </ChoiceItem>
+        </Choice>
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire" />
+              <Input_Target VarName="$CurrentEmpire" />
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist" />
+            </Action_TriggerPopulationEvent>
+            <Action_AddQuestMarkers>
+              <Input_Targets VarName="$ColonizedSystemLocation" />
+              <Input_Empires VarName="$CurrentEmpire" />
+              <Output_Markers VarName="$Marker01" />
+            </Action_AddQuestMarkers>
+          </StartActions>
+          <Objective Name="Step1_Objective1">
+            <!--  Reach an approval threshold on a specific system  -->
+            <AIHint Category="MaximizeResourceOnSystem" Motivation="0.5">
+              <Resource>Approval</Resource>
+              <Input_Var VarName="$ColonizedSystem01" />
+            </AIHint>
+            <Sequence>
+              <Decorator_BeginTurn>
+                <Condition_HasHappiness>
+                  <!-- Reach XX Approval on SystemName -->
+                  <Input_Empire VarName="$CurrentEmpire" />
+                  <Input_System VarName="$ColonizedSystemLocation" />
+                  <Input_MinimumAmount VarName="$MinimumAmount" />
+                </Condition_HasHappiness>
+              </Decorator_BeginTurn>
+              <Action_RemoveQuestMarkers>
+                <Input_Markers VarName="$Marker01" />
+              </Action_RemoveQuestMarkers>
+              <Action_ChooseOutcome Name="Outcome1" />
+            </Sequence>
+            <Outcome Name="Outcome1">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>Chapter2.3-Diplomacy</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+          <Reward Droplist="DroplistPrestigeEra4" Picks="1" />
+        </ObjectiveSet>
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire" />
+              <Input_Target VarName="$CurrentEmpire" />
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist" />
+            </Action_TriggerPopulationEvent>
+            <Action_AddQuestMarkers>
+              <Input_Targets VarName="$ColonizedSystemLocation" />
+              <Input_Empires VarName="$CurrentEmpire" />
+              <Output_Markers VarName="$Marker01" />
+            </Action_AddQuestMarkers>
+          </StartActions>
+          <Objective Name="Step1_Objective1Alt" StartValue="$Amount01" EndValue="$Amount02">
+            <!--  Reach an approval threshold on a specific system  -->
+            <Sequence>
+              <Decorator_BeginTurn>
+                <Condition_IsProgressionComplete>
+                  <Input_Context VarName="$CurrentEmpire" />
+                  <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire" />
+                  <Input_Expression VarName="$Expression01" />
+                </Condition_IsProgressionComplete>
+              </Decorator_BeginTurn>
+              <Action_RemoveQuestMarkers>
+                <Input_Markers VarName="$Marker01" />
+              </Action_RemoveQuestMarkers>
+              <Action_ChooseOutcome Name="Outcome1" />
+            </Sequence>
+            <Outcome Name="Outcome1">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>Chapter2.3-Diplomacy</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+          <Reward Droplist="DroplistPrestigeEra4" Picks="1" />
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
+  <!--  #######################################  -->
+  <!--            Chapter 2.3 - Diplomacy           -->
+  <!--  #######################################  -->
+  <QuestDefinition Name="SophonsQuest-Chapter2.3-Diplomacy" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false">
+    <!-- ============ TAGS ============ -->
+    <Tags>Chapter2.3-Diplomacy</Tags>
+    <QuestContextSolo />
+    <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0" />
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire" />
+      </Var>
+      <Var IsGlobal="true" VarName="$ColonizedSystem01" />
+      <Var VarName="$ColonizedSystemLocation">
+        <From Source="$ColonizedSystem01.$StarSystem" />
+      </Var>
+      <!-- <Var VarName="$Amount" IntValue="20"/> -->
+      <InterpretedVar VarName="$Amount" Target="$(Empire)">
+        <Expression>40</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$AmountAlt" Target="$(Empire)">
+        <Expression>MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', NetSystemEmpirePoint) + 20</Expression>
+      </InterpretedVar>
+      <Var VarName="$SystemCount" IntValue="2" />
+      <Var VarName="$SystemCountAlt" IntValue="1" />
+      <LocalizationVar LocalizationKey="$SystemAmount" Source="$SystemCount" />
+      <LocalizationVar LocalizationKey="$AmountLoc" Source="$Amount" />
+      <LocalizationVar LocalizationKey="$AmountAltLoc" Source="$AmountAlt" />
+      <LocalizationVar LocalizationKey="$SystemName01" Source="$ColonizedSystemLocation" />
+      <!-- POLITICAL EFFECT  -->
+      <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventSophons02.3Pacifist" />
+    </Vars>
+    <!-- ============ PREREQUISITES ============ -->
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <!-- ============ STEP 1 ============ -->
+      <Step Name="Step1">
+        <Choice DefaultChoiceIndex="0">
+          <ChoiceItem ObjectiveSetIndex="0">
+            <Prerequisites Target="$(Empire)">
+              <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
+            </Prerequisites>
+          </ChoiceItem>
+          <ChoiceItem ObjectiveSetIndex="1">
+            <Prerequisites Target="$(Empire)">
+              <PathPrerequisite Flags="Prerequisite">ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
+            </Prerequisites>
+          </ChoiceItem>
+        </Choice>
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire" />
+              <Input_Target VarName="$CurrentEmpire" />
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist" />
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+          <Objective Name="Step1_Objective1">
+            <!--  Generate 20 Influence per turn in at least 2 Systems  -->
+            <AIHint Category="MaximizeResource" Motivation="0.5">
+              <Resource>EmpirePoint</Resource>
+            </AIHint>
+            <Sequence>
+              <Decorator_BeginTurn>
+                <Condition_SystemsHaveFidsi>
+                  <Input_Empire VarName="$CurrentEmpire" />
+                  <Input_SystemCount VarName="$SystemCount" />
+                  <Input_NetEmpirePoint VarName="$Amount" />
+                </Condition_SystemsHaveFidsi>
+              </Decorator_BeginTurn>
+              <Action_ChooseOutcome Name="Outcome1" />
+            </Sequence>
+            <Outcome Name="Outcome1">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>SophonsQuest-Chapter3-Diplomacy</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+        </ObjectiveSet>
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire" />
+              <Input_Target VarName="$CurrentEmpire" />
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist" />
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+          <Objective Name="Step1_Objective1Alt">
+            <!--  Generate X Influence per turn in 1 System  -->
+            <AIHint Category="MaximizeResource" Motivation="0.5">
+              <Resource>EmpirePoint</Resource>
+            </AIHint>
+            <Sequence>
+              <Decorator_BeginTurn>
+                <Condition_SystemsHaveFidsi>
+                  <Input_Empire VarName="$CurrentEmpire" />
+                  <Input_SystemCount VarName="$SystemCountAlt" />
+                  <Input_NetEmpirePoint VarName="$AmountAlt" />
+                </Condition_SystemsHaveFidsi>
+              </Decorator_BeginTurn>
+              <Action_ChooseOutcome Name="Outcome2" />
+            </Sequence>
+            <Outcome Name="Outcome2">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>SophonsQuest-Chapter3-Diplomacy</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire" />
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+        </ObjectiveSet>
+        <Reward Droplist="DroplistDiplomacySophonsQuest01" Picks="1" />
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
+
+  <!--  #######################################  -->
+  <!--            Chapter 4 - SCIENCE           -->
+  <!--  #######################################  -->
+  <QuestDefinition Name="SophonsQuest-Chapter4-Science" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false">
+    <!-- ============ TAGS ============ -->
+    <Tags>SophonsQuest-Chapter4-Science,FactionFinalQuest,FactionQuestSophons</Tags>
+    <QuestContextSolo />
+    <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0" />
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire" />
+      </Var>
+      <Var VarName="$IAEmpire">
+        <From Source="$LesserEmpire" />
+      </Var>
+      <Var VarName="$ENFERSystem" IsGlobal="true" />
+      <Var VarName="$ENFERPlanet">
+        <Any>
+          <From Source="$ENFERSystem.$Planets" />
+        </Any>
+      </Var>
+      <Var VarName="$ColonizedStarSystemGUID" />
+      <Var VarName="$ColonizedStarSystem" />
+      <Var VarName="$ColonizedPlanetGUID" />
+      <Var VarName="$ColonizedPlanet" />
+      <Var VarName="$SystemControllerName" StringValue="%ENFERName02" />
+      <Var VarName="$NewSystemName" StringValue="%ENFERSystemName02" />
+      <Var VarName="$AllEmpires">
+        <From Source="$MajorEmpires" />
+      </Var>
+      <Var VarName="$Marker01" />
+      <Var VarName="$Amount01" IntValue="3" />
+      <Var VarName="$PopAffinity" StringValue="AffinityMavros" />
+      <InterpretedVar VarName="$ScienceAmount" Target="$(Empire)">
+        <Expression>Property(Context, @../ClassEmpire, EmpireResearch) *1.5</Expression>
+      </InterpretedVar>
+      <Var VarName="$PoliticalEffectScientist" StringValue="PopulationEventSophons04Scientist" />
+      <Var VarName="$ScienceTechnology" StringValue="CategoryTechnologyScienceAndExploration" />
+      <Var VarName="$DescriptorName01" StringValue="CannotBeInvaded" />
+      <Var VarName="$Amount02" IntValue="1000" />
+      <Var VarName="$ResourceName" StringValue="SystemManpower" />
+      <Var VarName="$Descriptor01" StringValue="ManpowerStockIncreased" />
+      <Var VarName="$Descriptor02" StringValue="CannotBeDestroyed" />
+      <Var VarName="$Descriptor03" StringValue="CannotBeInvaded" />
+      <Var VarName="$ColonyBase" StringValue="StarSystemImprovementColonyBase" />
+      <LocalizationVar LocalizationKey="$ScienceAmountName" Source="$ScienceAmount" />
+      <Var VarName="$Amount03" IntValue="5" />
+      <Var VarName="$Amount05" IntValue="100" />
+      <LocalizationVar Source="$Amount03" LocalizationKey="$Amount03Name" />
+    </Vars>
+    <!-- ============ PREREQUISITES ============ -->
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <Step Name="Step1">
+        <Choice DefaultChoiceIndex="0">
+          <ChoiceItem ObjectiveSetIndex="0">
+            <Prerequisites Target="$(Empire)">
+              <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
+              <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,AffinityGameplayUnfallen</PathPrerequisite>
+              <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
+            </Prerequisites>
+          </ChoiceItem>
+          <ChoiceItem ObjectiveSetIndex="1">
+            <Prerequisites Target="$(Empire)">
+              <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
+              <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,AffinityGameplayUnfallen</PathPrerequisite>
+              <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,AffinityGameplayUmbralChoir</PathPrerequisite>
+            </Prerequisites>
+          </ChoiceItem>
+          <ChoiceItem ObjectiveSetIndex="2">
+            <Prerequisites Target="$(Empire)">
+              <InterpreterPrerequisite Flags="Prerequisite"> Path(Context,@'ClassEmpire,EmpireTypeMajor,AffinityGameplayVampirilis') or Path(Context,@'ClassEmpire,EmpireTypeMajor,AffinityGameplayUnfallen') or Path(Context,@'ClassEmpire,EmpireTypeMajor,AffinityGameplayUmbralChoir') </InterpreterPrerequisite>
+            </Prerequisites>
+          </ChoiceItem>
+          <ChoiceItem ObjectiveSetIndex="3">
+            <Prerequisites Target="$(Empire)">
+              <InterpreterPrerequisite Flags="Prerequisite"> Path(Context,@'ClassEmpire,EmpireTypeMajor,AffinityGameplayVampirilis') or Path(Context,@'ClassEmpire,EmpireTypeMajor,AffinityGameplayUnfallen') or Path(Context,@'ClassEmpire,EmpireTypeMajor,AffinityGameplayUmbralChoir') </InterpreterPrerequisite>
+            </Prerequisites>
+          </ChoiceItem>
+        </Choice>
+        <!-- ============ STEP 1 ============ -->
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire" />
+              <Input_Target VarName="$CurrentEmpire" />
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist" />
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+          <Objective Name="Step1_Objective1">
+            <!--  TODO  -->
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <Sequence>
+              <Action_Colonize>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_Planet VarName="$ENFERPlanet" />
+                <Output_ColonizedStarSystemGUID VarName="$ColonizedStarSystemGUID" />
+                <Output_ColonizedPlanetGUID VarName="$ColonizedPlanetGUID" />
+              </Action_Colonize>
+              <Parallel CompletionPolicy="All">
+                <Decorator_EntityCreated>
+                  <Input_GUID VarName="$ColonizedStarSystemGUID" />
+                  <Output_Entity VarName="$ColonizedStarSystem" />
+                </Decorator_EntityCreated>
+                <Decorator_EntityCreated>
+                  <Input_GUID VarName="$ColonizedPlanetGUID" />
+                  <Output_Entity VarName="$ColonizedPlanet" />
+                </Decorator_EntityCreated>
+              </Parallel>
+              <Action_RegisterLesserName>
+                <Input_GUIDs VarName="$ColonizedStarSystemGUID" />
+                <Input_Name VarName="$SystemControllerName" />
+              </Action_RegisterLesserName>
+              <Action_RenameSystem>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_System VarName="$ENFERSystem" />
+                <Input_Name VarName="$NewSystemName" />
+              </Action_RenameSystem>
+              <Action_SetInvisibility Invisible="false">
+                <Input_Empires VarName="$AllEmpires" />
+                <Input_TargetEntities VarName="$ENFERSystem" />
+              </Action_SetInvisibility>
+              <Action_SpawnPopulation>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_System VarName="$ENFERSystem" />
+                <Input_Amount VarName="$Amount01" />
+                <Input_PopulationAffinity VarName="$PopAffinity" />
+              </Action_SpawnPopulation>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor01" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor02" />
+                <Input_Targets VarName="$ColonizedPlanet" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor03" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_TransferResource>
+                <Input_Location VarName="$ColonizedStarSystem" />
+                <Input_ResourceName VarName="$ResourceName" />
+                <Input_Amount VarName="$Amount02" />
+              </Action_TransferResource>
+              <Action_AddQuestMarkers RevealsLocation="true">
+                <Input_Targets VarName="$ENFERSystem" />
+                <Input_Empires VarName="$CurrentEmpire" />
+                <Output_Markers VarName="$Marker01" />
+              </Action_AddQuestMarkers>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_HasFidsi>
+                    <Input_Location VarName="$CurrentEmpire" />
+                    <Input_Science VarName="$ScienceAmount" />
+                  </Condition_HasFidsi>
+                </Decorator_BeginTurn>
+                <Action_ApplyDescriptor Remove="true">
+                  <Input_DescriptorName VarName="$Descriptor03" />
+                  <Input_Targets VarName="$ColonizedStarSystem" />
+                </Action_ApplyDescriptor>
+                <Action_SpawnImprovement>
+                  <Input_ColonizedStarSystem VarName="$ColonizedStarSystem"/>
+                  <Input_StarSystemImprovementDefinition VarName="$ColonyBase"/>
+                </Action_SpawnImprovement>
+                <Action_ApplyDescriptor Remove="true">
+                  <Input_DescriptorName VarName="$Descriptor02" />
+                  <Input_Targets VarName="$ColonizedPlanet" />
+                </Action_ApplyDescriptor>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker01" />
+                </Action_RemoveQuestMarkers>
+              </Sequence>
+              <Action_Colonize>
+                <Input_Empire VarName="$CurrentEmpire" />
+                <Input_Planet VarName="$ENFERPlanet" />
+                <Output_ColonizedStarSystemGUID VarName="$ColonizedStarSystemGUID" />
+                <Output_ColonizedPlanetGUID VarName="$ColonizedPlanetGUID" />
+              </Action_Colonize>
+              <Action_SetOwnership>
+                <Input_ColonizedStarSystemGUIDs VarName="$ColonizedStarSystemGUID" />
+                <Input_OwnershipValue VarName="$Amount05" />
+              </Action_SetOwnership>
+            </Sequence>
+          </Objective>
+          <Reward Droplist="DroplistRewardQuestSophons13" Picks="1" />
+          <Reward LocalizationKey="%SophonsQuest-Chapter4-ScienceReward" />
+        </ObjectiveSet>
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire" />
+              <Input_Target VarName="$CurrentEmpire" />
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist" />
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+          <Objective Name="Step2_Objective1" StartValue="0" EndValue="5">
+            <!--  TODO  -->
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <Sequence>
+              <Action_Colonize>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_Planet VarName="$ENFERPlanet" />
+                <Output_ColonizedStarSystemGUID VarName="$ColonizedStarSystemGUID" />
+                <Output_ColonizedPlanetGUID VarName="$ColonizedPlanetGUID" />
+              </Action_Colonize>
+              <Parallel CompletionPolicy="All">
+                <Decorator_EntityCreated>
+                  <Input_GUID VarName="$ColonizedStarSystemGUID" />
+                  <Output_Entity VarName="$ColonizedStarSystem" />
+                </Decorator_EntityCreated>
+                <Decorator_EntityCreated>
+                  <Input_GUID VarName="$ColonizedPlanetGUID" />
+                  <Output_Entity VarName="$ColonizedPlanet" />
+                </Decorator_EntityCreated>
+              </Parallel>
+              <Action_RegisterLesserName>
+                <Input_GUIDs VarName="$ColonizedStarSystemGUID" />
+                <Input_Name VarName="$SystemControllerName" />
+              </Action_RegisterLesserName>
+              <Action_RenameSystem>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_System VarName="$ENFERSystem" />
+                <Input_Name VarName="$NewSystemName" />
+              </Action_RenameSystem>
+              <Action_SetInvisibility Invisible="false">
+                <Input_Empires VarName="$AllEmpires" />
+                <Input_TargetEntities VarName="$ENFERSystem" />
+              </Action_SetInvisibility>
+              <Action_SpawnPopulation>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_System VarName="$ENFERSystem" />
+                <Input_Amount VarName="$Amount01" />
+                <Input_PopulationAffinity VarName="$PopAffinity" />
+              </Action_SpawnPopulation>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor01" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor02" />
+                <Input_Targets VarName="$ColonizedPlanet" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor03" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_TransferResource>
+                <Input_Location VarName="$ColonizedStarSystem" />
+                <Input_ResourceName VarName="$ResourceName" />
+                <Input_Amount VarName="$Amount02" />
+              </Action_TransferResource>
+              <Action_AddQuestMarkers RevealsLocation="true">
+                <Input_Targets VarName="$ENFERSystem" />
+                <Input_Empires VarName="$CurrentEmpire" />
+                <Output_Markers VarName="$Marker01" />
+              </Action_AddQuestMarkers>
+              <Loop Count="5">
+                <Decorator_TechnologyUnlocked ProgressionIncrement="1" Initiator="Empire">
+                  <Input_TechnologyCategory VarName="$ScienceTechnology" />
+                </Decorator_TechnologyUnlocked>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker01" />
+                </Action_RemoveQuestMarkers>
+              </Loop>
+              <Action_ApplyDescriptor Remove="true">
+                <Input_DescriptorName VarName="$Descriptor03" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor Remove="true">
+                <Input_DescriptorName VarName="$Descriptor02" />
+                <Input_Targets VarName="$ColonizedPlanet" />
+              </Action_ApplyDescriptor>
+              <Action_Colonize>
+                <Input_Empire VarName="$CurrentEmpire" />
+                <Input_Planet VarName="$ENFERPlanet" />
+                <Output_ColonizedStarSystemGUID VarName="$ColonizedStarSystemGUID" />
+                <Output_ColonizedPlanetGUID VarName="$ColonizedPlanetGUID" />
+              </Action_Colonize>
+              <Action_SetOwnership>
+                <Input_ColonizedStarSystemGUIDs VarName="$ColonizedStarSystemGUID" />
+                <Input_OwnershipValue VarName="$Amount05" />
+              </Action_SetOwnership>
+            </Sequence>
+          </Objective>
+          <Reward Droplist="DroplistRewardQuestSophons12" Picks="1" />
+          <Reward LocalizationKey="%SophonsQuest-Chapter4-ScienceReward" />
+        </ObjectiveSet>
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire" />
+              <Input_Target VarName="$CurrentEmpire" />
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist" />
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+          <Objective Name="Step3_Objective1">
+            <!--  TODO  -->
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <Sequence>
+              <Action_Colonize>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_Planet VarName="$ENFERPlanet" />
+                <Output_ColonizedStarSystemGUID VarName="$ColonizedStarSystemGUID" />
+                <Output_ColonizedPlanetGUID VarName="$ColonizedPlanetGUID" />
+              </Action_Colonize>
+              <Parallel CompletionPolicy="All">
+                <Decorator_EntityCreated>
+                  <Input_GUID VarName="$ColonizedStarSystemGUID" />
+                  <Output_Entity VarName="$ColonizedStarSystem" />
+                </Decorator_EntityCreated>
+                <Decorator_EntityCreated>
+                  <Input_GUID VarName="$ColonizedPlanetGUID" />
+                  <Output_Entity VarName="$ColonizedPlanet" />
+                </Decorator_EntityCreated>
+              </Parallel>
+              <Action_RegisterLesserName>
+                <Input_GUIDs VarName="$ColonizedStarSystemGUID" />
+                <Input_Name VarName="$SystemControllerName" />
+              </Action_RegisterLesserName>
+              <Action_RenameSystem>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_System VarName="$ENFERSystem" />
+                <Input_Name VarName="$NewSystemName" />
+              </Action_RenameSystem>
+              <Action_SetInvisibility Invisible="false">
+                <Input_Empires VarName="$AllEmpires" />
+                <Input_TargetEntities VarName="$ENFERSystem" />
+              </Action_SetInvisibility>
+              <Action_SpawnPopulation>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_System VarName="$ENFERSystem" />
+                <Input_Amount VarName="$Amount01" />
+                <Input_PopulationAffinity VarName="$PopAffinity" />
+              </Action_SpawnPopulation>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor01" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor02" />
+                <Input_Targets VarName="$ColonizedPlanet" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor03" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_TransferResource>
+                <Input_Location VarName="$ColonizedStarSystem" />
+                <Input_ResourceName VarName="$ResourceName" />
+                <Input_Amount VarName="$Amount02" />
+              </Action_TransferResource>
+              <Action_AddQuestMarkers RevealsLocation="true">
+                <Input_Targets VarName="$ENFERSystem" />
+                <Input_Empires VarName="$CurrentEmpire" />
+                <Output_Markers VarName="$Marker01" />
+              </Action_AddQuestMarkers>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_HasFidsi>
+                    <Input_Location VarName="$CurrentEmpire" />
+                    <Input_Science VarName="$ScienceAmount" />
+                  </Condition_HasFidsi>
+                </Decorator_BeginTurn>
+                <Action_ApplyDescriptor Remove="true">
+                  <Input_DescriptorName VarName="$Descriptor03" />
+                  <Input_Targets VarName="$ColonizedStarSystem" />
+                </Action_ApplyDescriptor>
+                <Action_ApplyDescriptor Remove="true">
+                  <Input_DescriptorName VarName="$Descriptor02" />
+                  <Input_Targets VarName="$ColonizedPlanet" />
+                </Action_ApplyDescriptor>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker01" />
+                </Action_RemoveQuestMarkers>
+              </Sequence>
+            </Sequence>
+          </Objective>
+          <Reward Droplist="DroplistRewardQuestSophons13" Picks="1" />
+        </ObjectiveSet>
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire" />
+              <Input_Target VarName="$CurrentEmpire" />
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist" />
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+          <Objective Name="Step4_Objective1" StartValue="0" EndValue="5">
+            <!--  TODO  -->
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <Sequence>
+              <Action_Colonize>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_Planet VarName="$ENFERPlanet" />
+                <Output_ColonizedStarSystemGUID VarName="$ColonizedStarSystemGUID" />
+                <Output_ColonizedPlanetGUID VarName="$ColonizedPlanetGUID" />
+              </Action_Colonize>
+              <Parallel CompletionPolicy="All">
+                <Decorator_EntityCreated>
+                  <Input_GUID VarName="$ColonizedStarSystemGUID" />
+                  <Output_Entity VarName="$ColonizedStarSystem" />
+                </Decorator_EntityCreated>
+                <Decorator_EntityCreated>
+                  <Input_GUID VarName="$ColonizedPlanetGUID" />
+                  <Output_Entity VarName="$ColonizedPlanet" />
+                </Decorator_EntityCreated>
+              </Parallel>
+              <Action_RegisterLesserName>
+                <Input_GUIDs VarName="$ColonizedStarSystemGUID" />
+                <Input_Name VarName="$SystemControllerName" />
+              </Action_RegisterLesserName>
+              <Action_RenameSystem>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_System VarName="$ENFERSystem" />
+                <Input_Name VarName="$NewSystemName" />
+              </Action_RenameSystem>
+              <Action_SetInvisibility Invisible="false">
+                <Input_Empires VarName="$AllEmpires" />
+                <Input_TargetEntities VarName="$ENFERSystem" />
+              </Action_SetInvisibility>
+              <Action_SpawnPopulation>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_System VarName="$ENFERSystem" />
+                <Input_Amount VarName="$Amount01" />
+                <Input_PopulationAffinity VarName="$PopAffinity" />
+              </Action_SpawnPopulation>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor01" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor02" />
+                <Input_Targets VarName="$ColonizedPlanet" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor03" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_TransferResource>
+                <Input_Location VarName="$ColonizedStarSystem" />
+                <Input_ResourceName VarName="$ResourceName" />
+                <Input_Amount VarName="$Amount02" />
+              </Action_TransferResource>
+              <Action_AddQuestMarkers RevealsLocation="true">
+                <Input_Targets VarName="$ENFERSystem" />
+                <Input_Empires VarName="$CurrentEmpire" />
+                <Output_Markers VarName="$Marker01" />
+              </Action_AddQuestMarkers>
+              <Loop Count="5">
+                <Decorator_TechnologyUnlocked ProgressionIncrement="1" Initiator="Empire">
+                  <Input_TechnologyCategory VarName="$ScienceTechnology" />
+                </Decorator_TechnologyUnlocked>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker01" />
+                </Action_RemoveQuestMarkers>
+              </Loop>
+              <Action_ApplyDescriptor Remove="true">
+                <Input_DescriptorName VarName="$Descriptor03" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor Remove="true">
+                <Input_DescriptorName VarName="$Descriptor02" />
+                <Input_Targets VarName="$ColonizedPlanet" />
+              </Action_ApplyDescriptor>
+            </Sequence>
+          </Objective>
+          <Reward Droplist="DroplistRewardQuestSophons12" Picks="1" />
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
+  <!--  #######################################  -->
+  <!--            Chapter 4 - DIPLOMACY          -->
+  <!--  #######################################  -->
+  <QuestDefinition Name="SophonsQuest-Chapter4-Diplomacy" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false" AlternateVersion="SophonsQuest-Chapter4-DiplomacyBis">
+    <!-- ============ TAGS ============ -->
+    <Tags>SophonsQuest-Chapter4-Diplomacy,FactionFinalQuest,FactionQuestSophons</Tags>
+    <QuestContextSolo />
+    <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0" />
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire" />
+      </Var>
+      <Var VarName="$IAEmpire">
+        <From Source="$LesserEmpire" />
+      </Var>
+      <Var VarName="$ENFERSystem" IsGlobal="true" />
+      <Var VarName="$ENFERPlanet">
+        <Any>
+          <From Source="$ENFERSystem.$Planets" />
+        </Any>
+      </Var>
+      <Var VarName="$ColonizedStarSystemGUID" />
+      <Var VarName="$ColonizedStarSystem" />
+      <Var VarName="$ColonizedPlanetGUID" />
+      <Var VarName="$ColonizedPlanet" />
+      <Var VarName="$SystemControllerName" StringValue="%ENFERName03" />
+      <Var VarName="$NewSystemName" StringValue="%ENFERSystemName03" />
+      <Var VarName="$AllEmpires">
+        <From Source="$MajorEmpires" />
+      </Var>
+      <Var VarName="$Marker01" />
+      <Var VarName="$Amount01" IntValue="3" />
+      <Var VarName="$PopAffinity" StringValue="AffinityMavros" />
+      <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventSophons04Militarist" />
+      <Var VarName="$FleetSpawnTimer" IntValue="3" />
+      <Var VarName="$FleetMissionDefinitionName01" StringValue="DefendSystem" />
+      <Var VarName="$FleetGUID" />
+      <Var VarName="$MissionGUID" />
+      <DroplistVar VarName="$FleetToSpawn01" Droplist="ENFERFleet01" />
+      <InterpretedVar VarName="$BloquadeTurnCount" Target="$(Empire)">
+        <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*8</Expression>
+      </InterpretedVar>
+      <InterpretedVar VarName="$Duration" Target="$(Empire)">
+        <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*6</Expression>
+      </InterpretedVar>
+      <Var VarName="$Amount02" IntValue="1000" />
+      <Var VarName="$ResourceName" StringValue="SystemManpower" />
+      <Var VarName="$Descriptor01" StringValue="ManpowerStockIncreased" />
+      <Var VarName="$Descriptor02" StringValue="CannotBeDestroyed" />
+      <Var VarName="$Descriptor03" StringValue="CannotBeInvaded" />
+      <Var VarName="$Amount05" IntValue="100" />
+      <LocalizationVar Source="$BloquadeTurnCount" LocalizationKey="$BloquadeTurnCountName" />
+    </Vars>
+    <!-- ============ PREREQUISITES ============ -->
+    <Prerequisites Target="$(Empire)">
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,AffinityGameplayVampirilis</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,AffinityGameplayUnfallen</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+    </Prerequisites>
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <!-- ============ STEP 1 ============ -->
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire" />
+              <Input_Target VarName="$CurrentEmpire" />
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist" />
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+          <Objective Name="Step1_Objective1" StartValue="0" EndValue="$BloquadeTurnCount">
+            <!--  TODO  -->
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <Sequence>
+              <Action_Colonize>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_Planet VarName="$ENFERPlanet" />
+                <Output_ColonizedStarSystemGUID VarName="$ColonizedStarSystemGUID" />
+                <Output_ColonizedPlanetGUID VarName="$ColonizedPlanetGUID" />
+              </Action_Colonize>
+              <Parallel CompletionPolicy="All">
+                <Decorator_EntityCreated>
+                  <Input_GUID VarName="$ColonizedStarSystemGUID" />
+                  <Output_Entity VarName="$ColonizedStarSystem" />
+                </Decorator_EntityCreated>
+                <Decorator_EntityCreated>
+                  <Input_GUID VarName="$ColonizedPlanetGUID" />
+                  <Output_Entity VarName="$ColonizedPlanet" />
+                </Decorator_EntityCreated>
+              </Parallel>
+              <Action_RegisterLesserName>
+                <Input_GUIDs VarName="$ColonizedStarSystemGUID" />
+                <Input_Name VarName="$SystemControllerName" />
+              </Action_RegisterLesserName>
+              <Action_RenameSystem>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_System VarName="$ENFERSystem" />
+                <Input_Name VarName="$NewSystemName" />
+              </Action_RenameSystem>
+              <Action_SetInvisibility Invisible="false">
+                <Input_Empires VarName="$AllEmpires" />
+                <Input_TargetEntities VarName="$ENFERSystem" />
+              </Action_SetInvisibility>
+              <Action_SpawnPopulation>
+                <Input_Empire VarName="$IAEmpire" />
+                <Input_System VarName="$ENFERSystem" />
+                <Input_Amount VarName="$Amount01" />
+                <Input_PopulationAffinity VarName="$PopAffinity" />
+              </Action_SpawnPopulation>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor01" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor02" />
+                <Input_Targets VarName="$ColonizedPlanet" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$Descriptor03" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_TransferResource>
+                <Input_Location VarName="$ColonizedStarSystem" />
+                <Input_ResourceName VarName="$ResourceName" />
+                <Input_Amount VarName="$Amount02" />
+              </Action_TransferResource>
+              <Action_AddQuestMarkers RevealsLocation="true">
+                <Input_Targets VarName="$ENFERSystem" />
+                <Input_Empires VarName="$CurrentEmpire" />
+                <Output_Markers VarName="$Marker01" />
+              </Action_AddQuestMarkers>
+              <Parallel CompletionPolicy="All">
+                <Loop>
+                  <Decorator_GuardNode ProgressionIncrement="1">
+                    <Input_Empire VarName="$CurrentEmpire" />
+                    <Input_Node VarName="$ENFERSystem" />
+                  </Decorator_GuardNode>
+                  <Input_Count VarName="$BloquadeTurnCount" />
+                </Loop>
+                <Loop>
+                  <Action_SpawnFleets>
+                    <Input_Empire VarName="$IAEmpire" />
+                    <Input_Locations VarName="$ENFERSystem" />
+                    <Input_DroppableFleet VarName="$FleetToSpawn01" />
+                    <Output_FleetGUIDs VarName="$FleetGUID" />
+                  </Action_SpawnFleets>
+                  <Action_CreateFleetMissions>
+                    <Input_MissionDefinitionName VarName="$FleetMissionDefinitionName01" />
+                    <Input_FleetGUIDs VarName="$FleetGUID" />
+                    <Input_TargetEmpires VarName="$CurrentEmpire" />
+                    <Output_MissionGUIDs VarName="$MissionGUID" />
+                  </Action_CreateFleetMissions>
+                  <Decorator_Wait>
+                    <Input_WaitDuration VarName="$Duration" />
+                  </Decorator_Wait>
+                  <Input_Count VarName="$FleetSpawnTimer" />
+                </Loop>
+              </Parallel>
+              <Action_ApplyDescriptor Remove="true">
+                <Input_DescriptorName VarName="$Descriptor02" />
+                <Input_Targets VarName="$ColonizedPlanet" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor Remove="true">
+                <Input_DescriptorName VarName="$Descriptor01" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor Remove="true">
+                <Input_DescriptorName VarName="$Descriptor03" />
+                <Input_Targets VarName="$ColonizedStarSystem" />
+              </Action_ApplyDescriptor>
+              <Action_Colonize>
+                <Input_Empire VarName="$CurrentEmpire" />
+                <Input_Planet VarName="$ENFERPlanet" />
+                <Output_ColonizedStarSystemGUID VarName="$ColonizedStarSystemGUID" />
+                <Output_ColonizedPlanetGUID VarName="$ColonizedPlanetGUID" />
+              </Action_Colonize>
+              <Action_SetOwnership>
+                <Input_ColonizedStarSystemGUIDs VarName="$ColonizedStarSystemGUID" />
+                <Input_OwnershipValue VarName="$Amount05" />
+              </Action_SetOwnership>
+              <Action_RemoveQuestMarkers>
+                <Input_Markers VarName="$Marker01" />
+              </Action_RemoveQuestMarkers>
+            </Sequence>
+          </Objective>
+          <Reward Droplist="DroplistRewardQuestSophons13" Picks="1" />
+          <Reward LocalizationKey="%SophonsQuest-Chapter4-DiplomacyReward" />
+        </ObjectiveSet>
+      </Step>
+    </Steps>
   </QuestDefinition>
   
 </Datatable>

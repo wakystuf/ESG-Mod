@@ -21,7 +21,7 @@
     <Modifier TargetProperty="RawMaximumPopulation" Operation="Addition" Value="2"  Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetAnomaly"/>
   </SimulationDescriptor>
   <SimulationDescriptor Name="EmpireImprovementQuestUnfallen99" Type="EmpireImprovement">
-    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(TotalPopulationCollectionBonus)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="SystemResearch" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(TotalPopulationCollectionBonus)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
     <BinaryModifier TargetProperty="SystemResearch" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(TotalPopulationCollectionBonus)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
   </SimulationDescriptor>
 
@@ -233,6 +233,11 @@
     <!-- Find cool bonus here -->
   </SimulationDescriptor>
 
+  <!--  Bugfix with vanilla UE attacker -->
+  <SimulationDescriptor Name="EmpireImprovementSlotsSmall01Terrans" Type="EmpireImprovement">
+    <Modifier TargetProperty="ShipStage" Value="1" Operation="Addition" Path="ClassEmpire//ClassGarrison/ClassShip,ShipHull01,ShipSizeSmall" TooltipHidden="true" />
+  </SimulationDescriptor>
+
   <SimulationDescriptor Name="StarSystemImprovementQuestGlobalCompet09" Type="StarSystemImprovementQuest">
     <Modifier TargetProperty="ShipBuyoutReduction" Operation="Addition" Value="0.2" Path="./ClassColonizedStarSystem"/>
     <Modifier TargetProperty="ExperienceAtShipCreation" Operation="Addition" Value="20" Path="./ColonizedStarSystemStateColony,ClassColonizedStarSystem/ClassGarrison" TooltipOverride="%StarSystemImprovementUniqueShip1TooltipEffect"/>
@@ -245,7 +250,7 @@
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="EmpireImprovementQuestTimeLords09" Type="EmpireImprovement">
-    <Modifier TargetProperty="ResourceBonus" Operation="Addition" Value="2" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeStrategic"/>
+    <Modifier TargetProperty="ResourceBonus" Operation="Addition" Value="1" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeStrategic"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="EmpireImprovementQuestTimeLords10" Type="EmpireImprovement">
@@ -324,8 +329,8 @@
 
   <!--Lumeris Quest Reward: Dust generation  -->
   <SimulationDescriptor Name="EmpireImprovementVenetianQuestDustGeneration" Type="EmpireImprovement">
-    <Modifier TargetProperty="SystemMoney" Operation="Percent" Value="0.3" Path="../ClassEmpire/ClassColonizedStarSystem"/>
-    <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="$(OwnedPlanets)" BinaryOperation="Multiplication" Right="20" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
+    <Modifier TargetProperty="SystemMoney" Operation="Percent" Value="0.2" Path="../ClassEmpire/ClassColonizedStarSystem"/>
+    <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="$(OwnedPlanets)" BinaryOperation="Multiplication" Right="10" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
   </SimulationDescriptor>
 
   <!--Lumeris Quest Reward: Dust recycling -->
@@ -487,6 +492,13 @@
     <Modifier TargetProperty="MaximumActionPointStock" Operation="Addition" Value="1" Path="../ClassEmpire//ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
 
+  <!-- Level 3 Trade -->
+  <SimulationDescriptor Name="EmpireImprovementTrade99" Type="EmpireImprovement">
+    <Modifier TargetProperty="TradingCompanyImprovementCostReduction" Operation="Subtraction" Value="0.3" Path="../ClassEmpire"/>
+    <Modifier TargetProperty="TradingRoutesBonus_Growth"		  Operation="Percent"				Value="1"		Path="../ClassEmpire//ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="TradingRoutesBonus_Production"	Operation="Percent"				Value="1"		Path="../ClassEmpire//ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+  
   <!-- Excess food conversion -->
   <SimulationDescriptor Name="EmpireImprovementWastedFoodConversiontoDust1" Type="EmpireImprovement">
     <Modifier TargetProperty="CanConvertWastedFoodtoDust1" Operation="Addition" Value="1" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%EmpireImprovementWastedFoodConversiontoDust"/>
@@ -563,7 +575,7 @@
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="EmpireImprovementQuestHoratioESG_2" Type="EmpireImprovement">
-    <Modifier TargetProperty="ExperiencePerTurn" Operation="Percent" Value="0.4" Path="ClassEmpire//ClassHero"/>
+    <Modifier TargetProperty="ExperienceMultiplier" Operation="Addition" Value="0.4" Path="ClassEmpire//ClassHero"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="EmpireImprovementQuestHoratioESG_3" Type="EmpireImprovement">
@@ -661,5 +673,13 @@
   
   <SimulationDescriptor Name="EmpireImprovementBombardmentUpgrade3" Type="EmpireImprovement">
     <Modifier TargetProperty="BombardmentLevel" Operation="Force" Value="3" Path="ClassEmpire" Priority="3" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <!-- Mutual Agreement Improvements -->
+  <SimulationDescriptor Name="EmpireImprovementTradeAgreement1" Type="EmpireImprovement"/>
+  <SimulationDescriptor Name="EmpireImprovementTradeAgreement2" Type="EmpireImprovement"/>
+  <SimulationDescriptor Name="EmpireImprovementHackingOnTrade" Type="EmpireImprovement">
+    <Modifier TargetProperty="HackingSpeedMultiplierForSelf" Operation="Addition" Value="0.5" Path="ClassEmpire/ClassColonizedStarSystem/StarSystemImprovementTradingCompanyHeadquarters/./ClassColonizedStarSystem" TooltipOverride="%EmpireImprovementHackingOnTradeTooltipEffect1"/>
+    <Modifier TargetProperty="HackingSpeedMultiplierForSelf" Operation="Addition" Value="0.15" Path="ClassEmpire/ClassColonizedStarSystem/StarSystemImprovementTradingCompanySubsidiary/./ClassColonizedStarSystem"   TooltipOverride="%EmpireImprovementHackingOnTradeTooltipEffect2"/>
   </SimulationDescriptor>
 </Datatable>

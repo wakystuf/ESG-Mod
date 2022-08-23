@@ -1,5 +1,99 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+  
+  <!--  ============================================
+     ========== DEEDS: EMPIRE DEVELOPMENT ===========
+     ================================================  -->
+  <QuestDefinition Name="Deeds_Wonder1" Category="Deeds" SubCategory="Wonder">
+    <!-- ============ TAGS ============ -->
+    <Tags>BeginTurn,Hidden,TechnologyStageDefinitionEmpireDevelopment2</Tags>
+    <!-- ============ CONTEXT ============ -->
+    <QuestContextMulti>
+      <Distribution Type="FreeForAll" />
+    </QuestContextMulti>
+    <!-- ============ OCCURRENCE RULES ============ -->
+    <RepetitionRules NumberOfOccurrencesPerGame="1" />
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <Var VarName="$WonderName" StringValue="StarSystemImprovementWonder1" SendToClient="true" />
+      <Var VarName="$UnlockedDescriptor" StringValue="StarSystemImprovementUnlockedWonder1" />
+      <Var VarName="$Players">
+        <From Source="$Empires">
+          <Where>
+            <PathPrerequisite Flags="Prerequisite">ClassEmpire,EmpireTypeMajor</PathPrerequisite>
+          </Where>
+        </From>
+      </Var>
+      <Var VarName="$ConstructionProgress" />
+      <Var VarName="$InfinityLoop" IntValue="-1" />
+      <Var VarName="$NullProgress" IntValue="0" />
+      <Var VarName="$Path" StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageEmpireDevelopment2" />
+    </Vars>
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <!-- ============ Step 1 ============ -->
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <!-- Teams are created here that's why the following variable must be set here. And the context here is the team -->
+          <Vars>
+            <Var VarName="$CurrentEmpire">
+              <From Source="$Team" />
+            </Var>
+          </Vars>
+          <Objective Name="Step1_Objective1" StartValue="0" EndValue="100">
+            <Sequence>
+              <Decorator_BeginTurn>
+                <Condition_CheckPath>
+                    <Input_SimulationObject VarName="$CurrentEmpire"/>
+                    <Input_Path VarName="$Path"/>
+                </Condition_CheckPath>
+              </Decorator_BeginTurn>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$UnlockedDescriptor" />
+                <Input_Targets VarName="$CurrentEmpire" />
+              </Action_ApplyDescriptor>
+              <Parallel CompletionPolicy="Any">
+                <!-- Infinite loop to update the progression of the construction -->
+                <Loop>
+                  <Decorator_ConstructionProgressed Initiator="Empire">
+                    <Input_ConstructionName VarName="$WonderName" />
+                    <Output_Progression VarName="$ConstructionProgress" />
+                  </Decorator_ConstructionProgressed>
+                  <Action_SetProgress>
+                    <Input_Value VarName="$ConstructionProgress" />
+                  </Action_SetProgress>
+                  <Input_Count VarName="$InfinityLoop" />
+                </Loop>
+                <Loop>
+                  <Decorator_ConstructionCancelled Initiator="Empire">
+                    <Input_ConstructionName VarName="$WonderName" />
+                  </Decorator_ConstructionCancelled>
+                  <Action_SetProgress>
+                    <Input_Value VarName="$NullProgress" />
+                  </Action_SetProgress>
+                  <Input_Count VarName="$InfinityLoop" />
+                </Loop>
+                <!-- Build the Wonder -->
+                <Sequence>
+                  <Decorator_ConstructionCompleted Initiator="Empire">
+                    <Input_ConstructionName VarName="$WonderName" />
+                  </Decorator_ConstructionCompleted>
+                </Sequence>
+              </Parallel>
+              <!--  Multiplayer Fix: Make sure all the clients have processed the wonder construction before it gets locked by the server.  -->
+              <Decorator_BeginTurn />
+              <Action_ApplyDescriptor Remove="true">
+                <Input_DescriptorName VarName="$UnlockedDescriptor" />
+                <Input_Targets VarName="$CurrentEmpire" />
+              </Action_ApplyDescriptor>
+            </Sequence>
+          </Objective>
+          <!-- <Reward Droplist="DroplistMinorRewardsEra2" Picks="1"/> -->
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+  
   <!-- ============================================
      ======== DEEDS: SCIENCE & EXPLORATION ==========
      ================================================ -->
