@@ -89,6 +89,7 @@
   <SimulationDescriptor Name="StarSystemImprovementUniqueVenetians" Type="StarSystemImprovement">
     <BinaryModifier TargetProperty="SystemFIDSIPercent" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(NumberOfTradingCompanies)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
   </SimulationDescriptor>
+  <SimulationDescriptor Name="BuildingStarSystemImprovementReduceInflation" Type="BuildingStarSystemImprovement"/>
 
   <!--Hissho-->
   <SimulationDescriptor Name="StarSystemImprovementUniqueMajorHisshos" Type="StarSystemImprovement">
@@ -700,6 +701,30 @@
     <Modifier TargetProperty="SystemGrowth" Operation="Percent" Value="0.25" Path="./ClassColonizedStarSystem"/>
     <BinaryModifier TargetProperty="SystemGrowth" Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(OwnedHotPlanets)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
     <BinaryModifier TargetProperty="SystemGrowth" Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(OwnedMeagerPlanets)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true"/>
+  </SimulationDescriptor>
+
+  <!--Biofuel Factory-->
+  <SimulationDescriptor Name="StarSystemImprovementFoodToIndustry" Type="StarSystemImprovement">
+    <Modifier TargetProperty="SystemProductionFromGrowth" Operation="Addition" Value="$(SystemGrowth)" TooltipHidden="true" SearchValueFromPath="true" Path="./ClassColonizedStarSystem" />
+    <Modifier TargetProperty="SystemProductionFromGrowth" Operation="Subtraction" Value="$(SystemGrowthUpkeep)" TooltipHidden="true" SearchValueFromPath="true" Path="./ClassColonizedStarSystem" />
+    <BinaryModifier TargetProperty="SystemProductionFromGrowth" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(SystemPopulationIsMaxed)" TooltipHidden="true" SearchValueFromPath="true" Path="./ClassColonizedStarSystem" />
+    <Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(SystemPopulationIsMaxed)" TooltipHidden="true" SearchValueFromPath="true" Path="./ClassColonizedStarSystem" Priority="9"/>
+    <Modifier TargetProperty="DisableFoodConversion" Operation="Subtraction" Value="1" TooltipHidden="true" Path="./ClassColonizedStarSystem" />
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="StarSystemImprovementFoodToIndustryUmbralChoir" Type="StarSystemImprovement">
+    <Modifier TargetProperty="SystemProductionFromGrowth" Operation="Addition" Value="$(SystemGrowth)" TooltipHidden="true" SearchValueFromPath="true" Path="./ClassColonizedStarSystem" />
+    <Modifier TargetProperty="SystemProductionFromGrowth" Operation="Subtraction" Value="$(SystemGrowthUpkeep)" TooltipHidden="true" SearchValueFromPath="true" Path="./ClassColonizedStarSystem" />
+    <BinaryModifier TargetProperty="SystemProductionFromGrowth" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(OwnedSystemPopulationIsMaxed)" TooltipHidden="true" SearchValueFromPath="true" Path="./ClassColonizedStarSystem" />
+    <Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(SystemPopulationIsMaxed)" TooltipHidden="true" SearchValueFromPath="true" Path="./ClassColonizedStarSystem" Priority="9"/>
+    <Modifier TargetProperty="DisableFoodConversion" Operation="Subtraction" Value="1" TooltipHidden="true" Path="./ClassColonizedStarSystem" />
+  </SimulationDescriptor>
+  <SimulationDescriptor Name="StarSystemImprovementFoodToIndustryVenetians" Type="StarSystemImprovement">
+    <Modifier TargetProperty="SystemProductionFromGrowth" Operation="Addition" Value="$(SystemGrowth)" TooltipHidden="true" SearchValueFromPath="true" Path="./ClassColonizedStarSystem" />
+    <Modifier TargetProperty="SystemProductionFromGrowth" Operation="Subtraction" Value="$(SystemGrowthUpkeep)" TooltipHidden="true" SearchValueFromPath="true" Path="./ClassColonizedStarSystem" />
+    <BinaryModifier TargetProperty="SystemProductionFromGrowth" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(SystemPopulationIsMaxed)" TooltipHidden="true" SearchValueFromPath="true" Path="./ClassColonizedStarSystem" />
+    <Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(SystemPopulationIsMaxed)" TooltipHidden="true" SearchValueFromPath="true" Path="./ClassColonizedStarSystem" Priority="9"/>
+    <Modifier TargetProperty="DisableFoodConversion" Operation="Subtraction" Value="1" TooltipHidden="true" Path="./ClassColonizedStarSystem" />
+    <BinaryModifier TargetProperty="SystemMoney" Operation="Addition" Left="$(SystemProductionFromGrowth)" BinaryOperation="Multiplication" Right="0.15" TooltipHidden="false" Path="./ClassColonizedStarSystem" SearchValueFromPath="true" />
   </SimulationDescriptor>
 
   <!--Intergalactic Lectures-->
