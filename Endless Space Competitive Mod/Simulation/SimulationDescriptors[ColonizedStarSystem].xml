@@ -22,7 +22,16 @@
 		<Property Name="EmpirePointFromIndustryConversion"	BaseValue="0"/>
 		<Property Name="CanBeSlowed"												BaseValue="1"/>
 		<Property Name="SystemHasVault"										  BaseValue="0"/>
-		<Property Name="BonusFromOrbitalPlatforms" BaseValue="0" MaxValue="0.20"/>
+		<Property Name="BonusFromOrbitalPlatforms"					BaseValue="0" MaxValue="0.20"/>
+    <Property Name="TerraformedPlanets"								  BaseValue="0"/>
+    <Property Name="TerraformedHotPlanets"							BaseValue="0"/>
+    <Property Name="TerraformedTemperatePlanets"				BaseValue="0"/>
+    <Property Name="TerraformedColdPlanets"							BaseValue="0"/>
+    <Property Name="BonusFromTerraformedHot"						BaseValue="0"/>
+    <Property Name="BonusFromTerraformedTemperate"			BaseValue="0"/>
+    <Property Name="BonusFromTerraformedCold"						BaseValue="0"/>
+    <Property Name="SpecialNodeFIDSIMultiplierUC"				BaseValue="1"/>
+    <Property Name="PopulationWithSpecialNodeMultiplier" BaseValue="0"/>
     
 		<!-- Food rework -->
 		<Property Name="SystemGrowthStockNextTurn"					BaseValue="0" MinValue="0"/>
@@ -817,8 +826,12 @@
 				 Ground Battle Strategies use GroundBattleDefenderManpowerLimit as a base, they do not directly affect the variable -->
     <BinaryModifier TargetProperty="ManpowerCapacityWithGhosts" Operation="Addition" Left="$(GroundBattleDefenderManpowerLimitFromGhosts)" BinaryOperation="Multiplication" Right="$(MaximumSystemManpower)"/>
     <!-- <BinaryModifier TargetProperty="GroundBattleDefenderManpowerLimit" Operation="Force" Left="$(DeploymentLimitRatio)" BinaryOperation="Multiplication" Right="$(ManpowerCapacityWithGhosts)"/>-->
-    
+    <Modifier TargetProperty="SystemProduction" Operation="Percent" Value="$(BonusFromTerraformedHot)"/>
+    <Modifier TargetProperty="SystemMoney" Operation="Percent" Value="$(BonusFromTerraformedTemperate)"/>
+    <Modifier TargetProperty="SystemResearch" Operation="Percent" Value="$(BonusFromTerraformedCold)"/>
 
+    <BinaryModifier TargetProperty="PopulationWithSpecialNodeMultiplier" Operation="Addition" Left="$(Population)" BinaryOperation="Multiplication" Right="$(SpecialNodeFIDSIMultiplierUC)"/>
+    
     <!-- Development Effect Boost -->
 		<Modifier TargetProperty="RecipeIngredientEffectTier1Luxury1" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
 		<Modifier TargetProperty="RecipeIngredientEffectTier1Luxury1Bis" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
