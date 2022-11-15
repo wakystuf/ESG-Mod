@@ -22,7 +22,18 @@
 		<Property Name="EmpirePointFromIndustryConversion"	BaseValue="0"/>
 		<Property Name="CanBeSlowed"												BaseValue="1"/>
 		<Property Name="SystemHasVault"										  BaseValue="0"/>
-		<Property Name="BonusFromOrbitalPlatforms" BaseValue="0" MaxValue="0.20"/>
+		<Property Name="BonusFromOrbitalPlatforms"					BaseValue="0" MaxValue="0.20"/>
+    <Property Name="TerraformedPlanets"								  BaseValue="0"/>
+    <Property Name="TerraformedHotPlanets"							BaseValue="0"/>
+    <Property Name="TerraformedTemperatePlanets"				BaseValue="0"/>
+    <Property Name="TerraformedColdPlanets"							BaseValue="0"/>
+    <Property Name="BonusFromTerraformedHot"						BaseValue="0"/>
+    <Property Name="BonusFromTerraformedTemperate"			BaseValue="0"/>
+    <Property Name="BonusFromTerraformedCold"						BaseValue="0"/>
+    <Property Name="SpecialNodeFIDSIMultiplierUC"				BaseValue="1"/>
+    <Property Name="PopulationWithSpecialNodeMultiplier" BaseValue="0"/>
+    <Property Name="GovernorsInEmpire"									BaseValue="0"/>
+    <Property Name="StarSystemImprovementUniqueCurioHeroVariable"	BaseValue="0"/>
     
 		<!-- Food rework -->
 		<Property Name="SystemGrowthStockNextTurn"					BaseValue="0" MinValue="0"/>
@@ -817,8 +828,12 @@
 				 Ground Battle Strategies use GroundBattleDefenderManpowerLimit as a base, they do not directly affect the variable -->
     <BinaryModifier TargetProperty="ManpowerCapacityWithGhosts" Operation="Addition" Left="$(GroundBattleDefenderManpowerLimitFromGhosts)" BinaryOperation="Multiplication" Right="$(MaximumSystemManpower)"/>
     <!-- <BinaryModifier TargetProperty="GroundBattleDefenderManpowerLimit" Operation="Force" Left="$(DeploymentLimitRatio)" BinaryOperation="Multiplication" Right="$(ManpowerCapacityWithGhosts)"/>-->
-    
+    <Modifier TargetProperty="SystemProduction" Operation="Percent" Value="$(BonusFromTerraformedHot)"/>
+    <Modifier TargetProperty="SystemMoney" Operation="Percent" Value="$(BonusFromTerraformedTemperate)"/>
+    <Modifier TargetProperty="SystemResearch" Operation="Percent" Value="$(BonusFromTerraformedCold)"/>
 
+    <BinaryModifier TargetProperty="PopulationWithSpecialNodeMultiplier" Operation="Addition" Left="$(Population)" BinaryOperation="Multiplication" Right="$(SpecialNodeFIDSIMultiplierUC)"/>
+    
     <!-- Development Effect Boost -->
 		<Modifier TargetProperty="RecipeIngredientEffectTier1Luxury1" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
 		<Modifier TargetProperty="RecipeIngredientEffectTier1Luxury1Bis" Operation="Percent" Value="$(FlatLuxuryBoost)"/>
@@ -875,7 +890,9 @@
 		<Modifier TargetProperty="RecipeIngredientEffectCTier3Strategic5" Operation="Percent" Value="$(DynamicLuxuryBoost)"/>
 		<Modifier TargetProperty="RecipeIngredientEffectDTier3Strategic5" Operation="Percent" Value="$(DynamicLuxuryBoost)"/>
 		<Modifier TargetProperty="RecipeIngredientEffectGUITier3Strategic6" Operation="Percent" Value="$(DynamicLuxuryBoost)"/>
-		<!-- ########################################################## -->
+    
+		<BinaryModifier TargetProperty="StarSystemImprovementUniqueCurioHeroVariable" Operation="Addition" Left="0.01" BinaryOperation="Multiplication" Right="$(GovernorsInEmpire)"/>
+    <!-- ########################################################## -->
 		<!-- ######################## DEBUG ######################## -->
 		<!-- ########################################################## -->
 
@@ -2470,32 +2487,45 @@
     </SimulationDescriptor>
 
 	<SimulationDescriptor Name="StarSystemImprovementCloneZvaliPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneAmoebaPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneBenthysPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneBotsPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneDeuyivansPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneHaroshemsPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneHisshosPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneMavrosPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementClonePilgrimsPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneTikanansPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneGnashastsPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneEydersPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneNirisPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneBhagabasPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneRemnantPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementClonePulsosPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneGreenmanPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneGuardiansPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneSistersOfMercyPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneIlloPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneSowersPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneKalTikMasPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneSefalorosPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneGalvransPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneHarmonyPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneMinorHackingPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneBasryxoPopulation" Type="StarSystemImprovement"/>
-    <SimulationDescriptor Name="StarSystemImprovementCloneOracularsPopulation" Type="StarSystemImprovement"/>
-
+  <SimulationDescriptor Name="StarSystemImprovementCloneAmoebaPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneBenthysPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneBotsPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneDeuyivansPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneHaroshemsPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneHisshosPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneMavrosPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementClonePilgrimsPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneTikanansPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneGnashastsPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneEydersPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneNirisPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneBhagabasPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneRemnantPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementClonePulsosPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneGreenmanPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneGuardiansPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneSistersOfMercyPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneIlloPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneSowersPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneKalTikMasPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneSefalorosPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneGalvransPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneHarmonyPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneMinorHackingPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneBasryxoPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneOracularsPopulation" Type="StarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneCraversPopulation"   Type="BuildingStarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneSophonsPopulation"   Type="BuildingStarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneTerransPopulation"   Type="BuildingStarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneMezariPopulation"   Type="BuildingStarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneSheredynPopulation"   Type="BuildingStarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneVenetiansPopulation"   Type="BuildingStarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneUnfallenPopulation"   Type="BuildingStarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneVampirilisPopulation"   Type="BuildingStarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneVaultersPopulation"   Type="BuildingStarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneVaultersSciencePopulation"   Type="BuildingStarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneVaultersMilitaryPopulation"   Type="BuildingStarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneMajorHisshosPopulation"   Type="BuildingStarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneUmbralChoirPopulation"   Type="BuildingStarSystemImprovement"/>
+  <SimulationDescriptor Name="StarSystemImprovementCloneTemplarsPopulation"   Type="BuildingStarSystemImprovement"/>
 </Datatable>

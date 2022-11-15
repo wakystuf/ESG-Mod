@@ -23,6 +23,8 @@
     <Property Name="ScavengersCodeAnywhere" BaseValue="0"/>
     <Property Name="ScavengersCodeAnywhereDisabled" BaseValue="1"/>
     <Property Name="HPPerSecondDynamic" BaseValue="0" MinValue="0"/>
+    <Property Name="AdditionalGroundBattleManpowerLimit" BaseValue="0" RoundingFunction="Floor"/>
+    <Property Name="BonusManpowerLimit" BaseValue="0"/>
 
     <!-- Mavros Mod Properties -->
     <Property Name="ScrapPerCP" 	          BaseValue="0" />
@@ -300,6 +302,8 @@
     <BinaryModifier TargetProperty="MaximumHealth" Operation="Percent" Left="$(AutomatonsSkillBonus)" BinaryOperation="Multiplication" Right="$(Level)" Path="ClassShip/ClassSectionCore"/>
     <BinaryModifier TargetProperty="ExperienceRewardFromLevel"   Operation="Addition"           Left="$(Level)"                         BinaryOperation="Multiplication"    Right="0.2"/>
     <BinaryModifier TargetProperty="ExperienceReward"            Operation="Multiplication"     Left="$(ExperienceRewardFromLevel)"     BinaryOperation="Multiplication"    Right="$(CommandPoints)"/>
+
+    <BinaryModifier TargetProperty="AdditionalGroundBattleManpowerLimit" Operation="Addition" Left="$(BonusManpowerLimit)" BinaryOperation="Multiplication" Right="$(MaximumShipManpower)"/>
     <!-- Compute passive xp value for the ship for admirals : shipCP * (1 + nbStratModules/10)-->
     <Modifier   TargetProperty="PassiveShipExperienceRewardForAdmirals" Operation="Division"        Value="10"                Path="ClassShip"                                              Priority="6"/>
     <Modifier   TargetProperty="PassiveShipExperienceRewardForAdmirals" Operation="Addition"        Value="1"                 Path="ClassShip"                                              Priority="7"/>

@@ -1143,4 +1143,78 @@
     <BinaryModifier TargetProperty="VaultScienceBonus" Operation="Addition" Left="0.25" BinaryOperation="Multiplication" Right="$(MaximumSystemManpower)" Path="./ClassColonizedStarSystem" TooltipHidden="true" SearchValueFromPath="true"/>
     <Modifier TargetProperty="ResourceRatioStolenOnPillage" Operation="Multiplication" Value="2" Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
   </SimulationDescriptor>
+
+  <!-- ESG Curiosity Buildings -->
+  <SimulationDescriptor Name="StarSystemImprovementHasHangarUpgrade" Type="StarSystemImprovement"/>
+
+  <SimulationDescriptor Name="BuildingStarSystemImprovementUniqueCurioBlockadeImmunity" Type="BuildingStarSystemImprovement"/>
+
+  <SimulationDescriptor Name="StarSystemImprovementUniqueCurioBlockadeImmunity" Type="StarSystemImprovement">
+    <Modifier TargetProperty="BlockadeImpactFactor"         Operation="Force" Value="0" Path="./ClassColonizedStarSystem,BlockadedColonizedStarSystem" Priority="-1" TooltipHidden="true"/>
+    <Modifier TargetProperty="BlockadeResourceImpactFactor" Operation="Force" Value="0" Path="./ClassColonizedStarSystem,BlockadedColonizedStarSystem" Priority="-1" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="BuildingStarSystemImprovementUniqueCurioInvasionManpower" Type="BuildingStarSystemImprovement"/>
+
+  <SimulationDescriptor Name="StarSystemImprovementUniqueCurioInvasionManpower" Type="StarSystemImprovement">
+    <Modifier TargetProperty="GroundBattleAttackerManpowerLimit" Operation="Percent" Value="-0.2" Path="./ClassColonizedStarSystem" TooltipOverride="%StarSystemImprovementUniqueCurioInvasionManpowerEffectOverride"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="StarSystemImprovementCurioPatrol" Type="StarSystemImprovement">
+    <Modifier TargetProperty="GroundBattleBombardmentAttackerDamages" Operation="Addition" Value="1000" Path="./ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="GroundBattleDefenderTroopsMaxHealthMultiplier" Operation="Addition" Value="0.15" Path="./ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="GroundBattlePopulationToManpowerPermanentConversionRate" Operation="Addition" Value="100" Path="./ClassColonizedStarSystem"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="BuildingStarSystemImprovementUniqueCurioHero" Type="BuildingStarSystemImprovement"/>
+
+  <SimulationDescriptor Name="StarSystemImprovementUniqueCurioHero" Type="StarSystemImprovement">
+    <BinaryModifier TargetProperty="SystemFIDSIPercent" Operation="Addition" Left="$(AssignedHero)" BinaryOperation="Multiplication" Right="$(StarSystemImprovementUniqueCurioHeroVariable)" Path="./ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%StarSystemImprovementUniqueCurioHeroTooltipOverride"/>
+    <Modifier TargetProperty="SystemMoneyUpkeep" Operation="Percent" Value="-0.5" Priority="200" Path="./ClassColonizedStarSystem" TooltipHidden="true"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="BuildingStarSystemImprovementUniqueCurioSenateUpgrade" Type="BuildingStarSystemImprovement"/>
+
+  <SimulationDescriptor Name="StarSystemImprovementUniqueCurioSenateUpgrade" Type="StarSystemImprovement"/>
+
+  <!-- Hangar Upgrades -->
+  <SimulationDescriptor Name="BuildingStarSystemImprovementCurioHangarSpeed" Type="BuildingStarSystemImprovement"/>
+
+  <SimulationDescriptor Name="StarSystemImprovementCurioHangarSpeed" Type="StarSystemImprovement"/>
+
+  <SimulationDescriptor Name="ShipConstructionEffectHangarIncreasedSpeed" Type="ShipConstructionEffect">
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="1" Path="ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="BuildingStarSystemImprovementCurioHangarHealth" Type="BuildingStarSystemImprovement"/>
+
+  <SimulationDescriptor Name="StarSystemImprovementCurioHangarHealth" Type="StarSystemImprovement"/>
+
+  <SimulationDescriptor Name="ShipConstructionEffectHangarIncreasedHealth" Type="ShipConstructionEffect">
+    <Modifier TargetProperty="MaximumHealth" Operation="Percent" Value="0.15" Path="ClassShip/ClassSectionCore"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="BuildingStarSystemImprovementCurioHangarVision" Type="BuildingStarSystemImprovement"/>
+
+  <SimulationDescriptor Name="StarSystemImprovementCurioHangarVision" Type="StarSystemImprovement"/>
+
+  <SimulationDescriptor Name="ShipConstructionEffectHangarIncreasedVision" Type="ShipConstructionEffect">
+    <Modifier TargetProperty="VisionRange" Operation="Percent" Value="0.25" Path="ClassShip"/>
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="BuildingStarSystemImprovementCurioHangarManpower" Type="BuildingStarSystemImprovement"/>
+
+  <SimulationDescriptor Name="StarSystemImprovementCurioHangarManpower" Type="StarSystemImprovement"/>
+
+  <SimulationDescriptor Name="ShipConstructionEffectHangarIncreasedManpower" Type="ShipConstructionEffect">
+    <Modifier TargetProperty="MaximumShipManpower" Operation="Percent" Value="0.15" Path="ClassShip"/>
+    <BinaryModifier TargetProperty="AdditionalGroundBattleManpowerLimit" Operation="Addition" Left="0.30" BinaryOperation="Multiplication" Right="$(MaximumShipManpower)" Path="ClassShip" SearchValueFromPath="true" TooltipHidden="true"/> <!-- Adds the increased manpower to deployment limit -->
+  </SimulationDescriptor>
+
+  <SimulationDescriptor Name="BuildingStarSystemImprovementUniquePortal" Type="BuildingStarSystemImprovement"/>
+
+  <SimulationDescriptor Name="StarSystemImprovementUniquePortal" Type="StarSystemImprovement">
+    <Modifier TargetProperty="HasPortal"    Operation="Addition" Value="1" Path="./ColonizedStarSystemStateColony,ClassColonizedStarSystem" TooltipOverride="%StarSystemImprovementPortalEffectOverride" />
+    <Modifier TargetProperty="CanUsePortals"                   Operation="Addition"    Value="1" Path="../ClassEmpire,EmpireTypeMajor" TooltipHidden="true"/>
+  </SimulationDescriptor>
 </Datatable>
