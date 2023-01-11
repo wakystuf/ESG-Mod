@@ -852,6 +852,76 @@
     </Steps>
   </QuestDefinition>
 
+
+  <QuestDefinition Name="Deeds_Regular_EmpireDevelopment_Stage4_C" Category="Deeds"
+    SubCategory="Regular">
+    <!-- ============ TAGS ============ -->
+    <Tags>BeginTurn,Hidden,TechnologyStageDefinitionEmpireDevelopment4</Tags>
+    <!-- ============ CONTEXT ============ -->
+    <QuestContextMulti>
+      <Distribution Type="FreeForAll" />
+    </QuestContextMulti>
+    <!-- ============ OCCURRENCE RULES ============ -->
+    <RepetitionRules NumberOfOccurrencesPerGame="1" />
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <Var VarName="$AllEmpires">
+        <From Source="$Empires" />
+      </Var>
+      <Var VarName="$MinimumAmount" IntValue="10" />
+      <Var VarName="$Path"
+        StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageEmpireDevelopment4" />
+      <LocalizationVar LocalizationKey="$QuestCompletedObjective" Source="$MinimumAmount" />
+    </Vars>
+    <!-- ============ PREREQUISITES ============ -->
+    <Prerequisites Target="$(Empires)" AnyTarget="true">
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_B" QuestState="InProgress" />
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_B" QuestState="Completed" />
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_B" QuestState="NotStarted" />
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_A" QuestState="NotStarted" />
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_A" QuestState="InProgress" />
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_EmpireDevelopment_Stage4_A" QuestState="Completed" />
+      <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCVaulters</DownloadableContentPrerequisite>
+    </Prerequisites>
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <!-- ============ Step 1 ============ -->
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <!-- Teams are created here that's why the following variable must be set here. And the
+          context here is the team -->
+          <Vars>
+            <Var VarName="$CurrentEmpire">
+              <From Source="$Team" />
+            </Var>
+          </Vars>
+          <Objective Name="Deeds_Regular_EmpireDevelopment_Stage4_C-Objective" StartValue="0"
+            EndValue="$MinimumAmount">
+            <Parallel CompletionPolicy="All">
+              <Sequence>
+                <Loop>
+                  <Decorator_QuestFinished RequiredState="Completed" ProgressionIncrement="1">
+                    <Input_Empire VarName="$CurrentEmpire" />
+                  </Decorator_QuestFinished>
+                  <Input_Count VarName="$MinimumAmount" />
+                </Loop>
+              </Sequence>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckPath>
+                    <Input_SimulationObject VarName="$CurrentEmpire" />
+                    <Input_Path VarName="$Path" />
+                  </Condition_CheckPath>
+                </Decorator_BeginTurn>
+              </Sequence>
+            </Parallel>
+          </Objective>
+          <Reward Droplist="DroplistRegularDeedsStage4Quadrant4Bis" Picks="1" />
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
     <!--  ============================================
      ======== DEEDS: SCIENCE & EXPLORATION ==========
      ================================================  -->
