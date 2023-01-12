@@ -9,37 +9,37 @@
         <Tags>BeginTurn,Hidden</Tags>        
 
         <!--============ CONTEXT ============-->
-        
-        <QuestContextSolo/>
+
+    <QuestContextSolo/>
 
         <!--============ OCCURRENCE RULES ============-->
-        <RepetitionRules  NumberOfOccurrencesPerGame="0"
-                          NumberOfOccurrencesPerEmpire="1"
-                          NumberOfConcurrentInstances="0"/>
+    <RepetitionRules NumberOfOccurrencesPerGame="0"
+      NumberOfOccurrencesPerEmpire="1"
+      NumberOfConcurrentInstances="0"/>
 
         <!--============ VARIABLES ============-->
         <Vars>
             <Var VarName="$CurrentEmpire">
-                <From Source="$Empire"/>
-            </Var>
+        <From Source="$Empire"/>
+      </Var>
            
             <Var VarName="$HomeSystem">
-                <From Source="$CurrentEmpire.$StartingNode"/>
-            </Var>
-            
-            <Var VarName="$DefinitionName1" StringValue="BalancedStartSophons"/>     
-            <Var VarName="$PopulationAffinity" StringValue="AffinitySophons"/> 
-            <Var VarName="$PopulationAffinity2" StringValue="AffinityPilgrims"/> 
-            <Var VarName="$Amount" IntValue="-2"/> 
-            <Var VarName="$Amount2" IntValue="-1"/> 
-        </Vars>
+        <From Source="$CurrentEmpire.$StartingNode"/>
+      </Var>
+
+      <Var VarName="$DefinitionName1" StringValue="BalancedStartSophons"/>
+      <Var VarName="$PopulationAffinity" StringValue="AffinitySophons"/>
+      <Var VarName="$PopulationAffinity2" StringValue="AffinityPilgrims"/>
+      <Var VarName="$Amount" IntValue="-2"/>
+      <Var VarName="$Amount2" IntValue="-1"/>
+    </Vars>
 
         <!--============ PREREQUISITES ============-->
         <Prerequisites Target="$(Empire)">
             <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinitySophons,PopulationMajor</PathPrerequisite>
             <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityPilgrims</PathPrerequisite>
             <GameSettingPrerequisite>BalancedHomes,True</GameSettingPrerequisite>
-        </Prerequisites>
+    </Prerequisites>
 
         <!--============ STEPS ============-->
         <Steps>
@@ -49,76 +49,76 @@
                     <Objective Name="Objective_Fake">
                         <Sequence>
                             <Action_SpawnPopulation>
-                                <Input_Empire VarName="$CurrentEmpire"/>
-                                <Input_System VarName="$HomeSystem"/>
-                                <Input_Amount VarName="$Amount"/>
-                                <Input_PopulationAffinity VarName="$PopulationAffinity"/>
-                            </Action_SpawnPopulation>  
+                <Input_Empire VarName="$CurrentEmpire"/>
+                <Input_System VarName="$HomeSystem"/>
+                <Input_Amount VarName="$Amount"/>
+                <Input_PopulationAffinity VarName="$PopulationAffinity"/>
+              </Action_SpawnPopulation>  
                             <Action_SpawnPopulation>
-                                <Input_Empire VarName="$CurrentEmpire"/>
-                                <Input_System VarName="$HomeSystem"/>
-                                <Input_Amount VarName="$Amount2"/>
-                                <Input_PopulationAffinity VarName="$PopulationAffinity2"/>
-                            </Action_SpawnPopulation>
+                <Input_Empire VarName="$CurrentEmpire"/>
+                <Input_System VarName="$HomeSystem"/>
+                <Input_Amount VarName="$Amount2"/>
+                <Input_PopulationAffinity VarName="$PopulationAffinity2"/>
+              </Action_SpawnPopulation>
                             <Action_ApplyStarSystemDefinition>
-                                <Input_DefinitionName VarName="$DefinitionName1"/>
-                                <Input_StarSystemNode VarName="$HomeSystem"/>
-                            </Action_ApplyStarSystemDefinition>        
-                            <Action_ChooseOutcome Name="Outcome1"/>                 
-                        </Sequence>
+                <Input_DefinitionName VarName="$DefinitionName1"/>
+                <Input_StarSystemNode VarName="$HomeSystem"/>
+              </Action_ApplyStarSystemDefinition>
+              <Action_ChooseOutcome Name="Outcome1"/>
+            </Sequence>
                         <Outcome Name="Outcome1">
                             <Triggers Weight="1">
                                 <QuestTrigger>
                                     <Tags>SophonsQuest-Chapter01</Tags>
-                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
-                                </QuestTrigger>
-                            </Triggers>
-                        </Outcome>
-                    </Objective>
-                </ObjectiveSet>
-            </Step>
-        </Steps>
-    </QuestDefinition>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
   
   <QuestDefinition Name="SophonsQuest-Chapter01" Category="MajorQuest" SubCategory="Sophons">
 
-        <Tags>SophonsQuest-Chapter01, Hidden</Tags> 
+        <Tags>SophonsQuest-Chapter01, Hidden</Tags>
 
-        <QuestContextSolo/>  
+    <QuestContextSolo/>
 
-        <RepetitionRules  NumberOfOccurrencesPerGame="0"
-                            NumberOfOccurrencesPerEmpire="1"
-                            NumberOfConcurrentInstances="0"/> 
+    <RepetitionRules NumberOfOccurrencesPerGame="0"
+      NumberOfOccurrencesPerEmpire="1"
+      NumberOfConcurrentInstances="0"/> 
 
         <Vars>
             <Var VarName="$CurrentEmpire">
-                <From Source="$Empire"/>
-            </Var>
+        <From Source="$Empire"/>
+      </Var>
            
             <Var VarName="$HomeSystem">
-                <From Source="$CurrentEmpire.$StartingNode"/>
-            </Var>
+        <From Source="$CurrentEmpire.$StartingNode"/>
+      </Var>
 
             <Var VarName="$HomePlanet">
                 <Any>
                     <From Source="$HomeSystem.$Planets">
                         <Where>
                             <PathPrerequisite Flags="Prerequisite">ClassPlanet,IsUniquePlanet</PathPrerequisite>
-                        </Where>
-                    </From>
-                </Any>
-            </Var> 
+            </Where>
+          </From>
+        </Any>
+      </Var>
 
-            <Var VarName="$Amount01" IntValue="2"/> 
-            <Var VarName="$Amount02" IntValue="1"/> 
-            <Var VarName="$PopulationAffinity" StringValue="AffinitySophons"/> 
-            <Var VarName="$PopulationAffinity2" StringValue="AffinityPilgrims"/> 
-        </Vars>
+      <Var VarName="$Amount01" IntValue="2"/>
+      <Var VarName="$Amount02" IntValue="1"/>
+      <Var VarName="$PopulationAffinity" StringValue="AffinitySophons"/>
+      <Var VarName="$PopulationAffinity2" StringValue="AffinityPilgrims"/>
+    </Vars>
 
         <Prerequisites Target="$(Empire)">
             <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinitySophons,PopulationMajor</PathPrerequisite>
             <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityPilgrims</PathPrerequisite>
-        </Prerequisites>
+    </Prerequisites>
 
         <!--============ STEPS ============-->
         <Steps>
@@ -128,33 +128,33 @@
                     <Objective Name="Objective_Fake">
                         <Sequence>
                             <Action_Colonize>
-                                <Input_Empire VarName="$CurrentEmpire"/>
-                                <Input_Planet VarName="$HomePlanet"/>
-                            </Action_Colonize>  
+                <Input_Empire VarName="$CurrentEmpire"/>
+                <Input_Planet VarName="$HomePlanet"/>
+              </Action_Colonize>  
                             <!--<Decorator_EntityCreated>
                                 <Input_GUID VarName="$NewHomeGUID"/>
                                 <Output_Entity VarName="$NewHome"/>
                             </Decorator_EntityCreated>   -->                     
                             <Action_SpawnPopulation>
-                                <Input_Empire VarName="$CurrentEmpire"/>
-                                <Input_System VarName="$HomeSystem"/>
-                                <Input_Amount VarName="$Amount01"/>
-                                <Input_PopulationAffinity VarName="$PopulationAffinity"/>
-                            </Action_SpawnPopulation>   
+                <Input_Empire VarName="$CurrentEmpire"/>
+                <Input_System VarName="$HomeSystem"/>
+                <Input_Amount VarName="$Amount01"/>
+                <Input_PopulationAffinity VarName="$PopulationAffinity"/>
+              </Action_SpawnPopulation>   
                             <Action_SpawnPopulation>
-                                <Input_Empire VarName="$CurrentEmpire"/>
-                                <Input_System VarName="$HomeSystem"/>
-                                <Input_Amount VarName="$Amount02"/>
-                                <Input_PopulationAffinity VarName="$PopulationAffinity2"/>
-                            </Action_SpawnPopulation>               
-                        </Sequence>
-                    </Objective>
-                </ObjectiveSet>
-            </Step>
-        </Steps>
+                <Input_Empire VarName="$CurrentEmpire"/>
+                <Input_System VarName="$HomeSystem"/>
+                <Input_Amount VarName="$Amount02"/>
+                <Input_PopulationAffinity VarName="$PopulationAffinity2"/>
+              </Action_SpawnPopulation>
+            </Sequence>
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
 
-        
-    </QuestDefinition>
+
+  </QuestDefinition>
   
   
   
@@ -172,9 +172,9 @@
 
     <QuestContextSolo/>
 
-    <RepetitionRules  NumberOfOccurrencesPerGame="0"
-                      NumberOfOccurrencesPerEmpire="1"
-                      NumberOfConcurrentInstances="0"/>
+    <RepetitionRules NumberOfOccurrencesPerGame="0"
+      NumberOfOccurrencesPerEmpire="1"
+      NumberOfConcurrentInstances="0"/>
 
     <!--============ VARIABLES ============-->
     <Vars>
@@ -222,7 +222,7 @@
       <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03"/>
       <!--Minor Faction Step2_3-->
 
-      <Var VarName="$MinimumRelationPoints"  IntValue="25"/>
+      <Var VarName="$MinimumRelationPoints" IntValue="25"/>
       <Var VarName="$JustOne" IntValue="1"/>
       <LocalizationVar LocalizationKey="$RelationPoints" Source="$MinimumRelationPoints"/>
       <!--POLITICAL EFFECT LAUNCHED FROM THE BEGINNING-->
@@ -260,7 +260,7 @@
             </Action_TriggerPopulationEvent>
           </StartActions>
           <Objective Name="Step2_1_Objective1" StartValue="0" EndValue="3">
-            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1"/>
             <Sequence>
               <Parallel CompletionPolicy="Any">
                 <Sequence>
@@ -389,7 +389,7 @@
           </StartActions>
           <Objective Name="Step2_3_Objective1">
             <!-- Reach a high relationship value with a minor faction -->
-            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1"/>
             <Sequence>
               <Parallel CompletionPolicy="Any">
                 <Sequence>
@@ -435,9 +435,9 @@
 
     <QuestContextSolo/>
 
-    <RepetitionRules  NumberOfOccurrencesPerGame="0"
-                      NumberOfOccurrencesPerEmpire="1"
-                      NumberOfConcurrentInstances="0"/>
+    <RepetitionRules NumberOfOccurrencesPerGame="0"
+      NumberOfOccurrencesPerEmpire="1"
+      NumberOfConcurrentInstances="0"/>
 
     <!--============ VARIABLES ============-->
     <Vars>
@@ -454,7 +454,7 @@
 
       <!--Minor Faction Step2_3-->
 
-      <Var VarName="$MinimumRelationPoints"  IntValue="25"/>
+      <Var VarName="$MinimumRelationPoints" IntValue="25"/>
 
       <LocalizationVar LocalizationKey="$RelationPoints" Source="$MinimumRelationPoints"/>
       <Var VarName="$Amount01" IntValue="3"/>
@@ -497,7 +497,7 @@
           </StartActions>
           <Objective Name="Step2_1_Objective1" StartValue="0" EndValue="3">
             <!-- Survive 3 battle -->
-            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1"/>
             <Sequence>
               <Parallel CompletionPolicy="Any">
                 <Sequence>
@@ -541,7 +541,7 @@
           </StartActions>
           <Objective Name="Step2_2_Objective1">
             <!--Reveal 3 Star Systems-->
-            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1"/>
             <Sequence>
               <Parallel CompletionPolicy="First">
                 <Sequence>
@@ -591,7 +591,7 @@
             </Action_TriggerPopulationEvent>
           </StartActions>
           <Objective Name="Step2_3_Objective1">
-            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1"/>
             <Sequence>
               <Parallel CompletionPolicy="Any">
                 <Sequence>
@@ -629,6 +629,92 @@
       </Step>
     </Steps>
   </QuestDefinition>
+
+  <!--  #######################################  -->
+  <!--            Chapter 2.3 - Science           -->
+  <!--  #######################################  -->
+<QuestDefinition Name="SophonsQuest-Chapter2.3-Science" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false">
+  <!-- ============ TAGS ============ -->
+<Tags>SophonsQuest-Chapter2.3-Science</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0"/>
+  <!-- ============ VARIABLES ============ -->
+<Vars>
+    <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+    <Var VarName="$ColonizedSystem">
+        <From Source="$CurrentEmpire.$ColonizedStarSystems"/>
+      </Var>
+    <Var VarName="$ColonizedSystemHangar">
+        <From Source="$ColonizedSystem.$Hangar"/>
+      </Var>
+    <Var VarName="$ColonizedSystemLocation">
+        <From Source="$ColonizedSystem.$StarSystem"/>
+      </Var>
+      <Var VarName="$Module01" StringValue="ModuleExplorationQuestSophons"/>
+      <Var VarName="$Amount" IntValue="1"/>
+      <Var VarName="$ENFERScience" StringValue="ShipDesignENFERScience"/>
+      <Var IsGlobal="true" VarName="$PlaceToBe"/>
+      <DroplistVar VarName="$FleetToSpawn01" Droplist="ENFERShip01"/>
+      <Var VarName="$GUID01"/>
+    <!-- <LocalizationVar LocalizationKey="$SystemName01"  Source="$ColonizedSystemLocation"/> -->
+      <Var IsGlobal="true" VarName="$Marker02"/>
+    <!-- POLITICAL EFFECT  -->
+      <Var VarName="$PoliticalEffectScience" StringValue="PopulationEventSophons02.3Science"/>
+      <Var VarName="$Path" StringValue="ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip/ClassSectionCore/ClassModuleSupportExplorationQuestSophons"/>
+    </Vars>
+  <!-- ============ PREREQUISITES ============ -->
+  <!-- ============ STEPS ============ -->
+<Steps>
+    <!-- ============ STEP 1 ============ -->
+    <Step Name="Step1">
+      <ObjectiveSet>
+        <StartActions>
+          <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire"/>
+              <Input_Target VarName="$CurrentEmpire"/>
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectScience"/>
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+        <Objective Name="Step1_Objective1">
+          <!--  Bring the alien ship to the hanger in one of your systems  -->
+            <AIHint Category="Minimal"/>
+          <!-- 
+                        <AIHint Category="ReturnToBase" Motivation="0.5">
+							<Input_Var VarName="$GUID01"/>
+						</AIHint> -->
+          <Sequence>
+            <Parallel CompletionPolicy="All">
+              <Sequence>
+                <Decorator_ShipDisbanded>
+                    <Input_ModuleName VarName="$Module01"/>
+                  </Decorator_ShipDisbanded>
+                </Sequence>
+              <Sequence>
+                  <Decorator_BeginTurn/>
+                <Action_RemoveQuestMarkers>
+                    <Input_Markers VarName="$Marker02"/>
+                  </Action_RemoveQuestMarkers>
+                </Sequence>
+              </Parallel>
+              <Action_ChooseOutcome Name="Outcome1"/>
+            </Sequence>
+          <Outcome Name="Outcome1">
+            <Triggers Weight="1">
+              <QuestTrigger>
+                <Tags>SophonsQuest-Chapter3-Science</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+        </ObjectiveSet>
+        <Reward Droplist="DroplistScienceSophonsQuest02" Picks="1"/>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
 
   <!-- ####################################### -->
   <!--           Chapter 2.1 - Military          -->
@@ -1767,5 +1853,5 @@
       </Step>
     </Steps>
   </QuestDefinition>
-  
+
 </Datatable>
