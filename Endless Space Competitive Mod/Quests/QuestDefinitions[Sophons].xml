@@ -631,14 +631,213 @@
   </QuestDefinition>
 
   <!--  #######################################  -->
+  <!--            Chapter 2.2 - Science           -->
+  <!--  #######################################  -->
+  <QuestDefinition Name="SophonsQuest-Chapter2.2-Science" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false">
+    <!-- ============ TAGS ============ -->
+    <Tags>Chapter2.2-Science</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0"/>
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <!-- Decorator should work with only the Name NOT with the QuestType -->
+      <Var VarName="$CuriosityType" StringValue="CuriosityTypeQuest"/>
+      <Var IsGlobal="true" VarName="$PlaceToBe"/>
+      <Var IsGlobal="true" VarName="$SystemToMark"/>
+      <Var VarName="$Marker01"/>
+      <Var VarName="$Marker02" IsGlobal="true"/>
+      <DroplistVar VarName="$FleetToSpawn01" Droplist="ENFERShip01"/>
+      <Var VarName="$SpawnedFleet01"/>
+      <Var VarName="$GUID01"/>
+      <Var VarName="$NoBattle" StringValue="CannotFight"/>
+      <Var VarName="$StayInFleet" StringValue="DisbandOnlyGarrison"/>
+      <Var VarName="$ENFERfleet"/>
+      <Var IsGlobal="true" VarName="$FarSystem"/>
+      <Var IsGlobal="true" VarName="$Planet"/>
+      <!-- POLITICAL EFFECT  -->
+      <Var VarName="$PoliticalEffectScience" StringValue="PopulationEventSophons02.2Science"/>
+    </Vars>
+    <!-- ============ PREREQUISITES ============ -->
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <!-- ============ STEP 1 ============ -->
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire"/>
+              <Input_Target VarName="$CurrentEmpire"/>
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectScience"/>
+            </Action_TriggerPopulationEvent>
+            <Action_AddQuestMarkers>
+              <Input_Targets VarName="$Planet"/>
+              <Input_Empires VarName="$CurrentEmpire"/>
+              <Output_Markers VarName="$Marker01"/>
+            </Action_AddQuestMarkers>
+          </StartActions>
+          <Objective Name="Step1_Objective1">
+            <!--  Explore curiosities  -->
+            <!-- <AIHint Category="Curiosity" Motivation="0.6">
+							<Input_Var VarName="$PlaceToBe"/>
+						</AIHint> -->
+            <Sequence>
+              <Decorator_CuriosityDiscovered Initiator="Empire">
+                <Input_DisplayedType VarName="$CuriosityType"/>
+                <Output_Node VarName="$PlaceToBe"/>
+              </Decorator_CuriosityDiscovered>
+              <Action_SpawnFleets>
+                <Input_Empire VarName="$CurrentEmpire"/>
+                <Input_Locations VarName="$PlaceToBe"/>
+                <Input_DroppableFleet VarName="$FleetToSpawn01"/>
+                <Output_FleetGUIDs VarName="$GUID01"/>
+              </Action_SpawnFleets>
+              <Decorator_EntityCreated>
+                <Input_GUID VarName="$GUID01"/>
+                <Output_Entity VarName="$ENFERfleet"/>
+              </Decorator_EntityCreated>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$NoBattle"/>
+                <Input_Targets VarName="$ENFERfleet"/>
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$StayInFleet"/>
+                <Input_Targets VarName="$ENFERfleet"/>
+              </Action_ApplyDescriptor>
+              <Action_RemoveQuestMarkers>
+                <Input_Markers VarName="$Marker01"/>
+              </Action_RemoveQuestMarkers>
+              <Action_AddQuestMarkers>
+                <Input_Targets VarName="$ENFERfleet"/>
+                <Input_Empires VarName="$CurrentEmpire"/>
+                <Output_Markers VarName="$Marker02"/>
+              </Action_AddQuestMarkers>
+              <Action_ChooseOutcome Name="Outcome1"/>
+            </Sequence>
+            <Outcome Name="Outcome1">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>SophonsQuest-Chapter2.3-Science</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+        </ObjectiveSet>
+        <Reward Droplist="DroplistStrategicsEra2" Picks="1"/>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
+  <!--  #######################################  -->
+  <!--            Chapter 2.2 ALT- Science           -->
+  <!--  #######################################  -->
+  <QuestDefinition Name="SophonsQuest-Chapter2.2Alt-Science" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false">
+    <!-- ============ TAGS ============ -->
+    <Tags>Chapter2.2Alt-Science</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0"/>
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <!-- Decorator should work with only the Name NOT with the QuestType -->
+      <Var VarName="$CuriosityType" StringValue="CuriosityTypeQuest"/>
+      <Var IsGlobal="true" VarName="$FarSystem"/>
+      <Var IsGlobal="true" VarName="$PlaceToBe"/>
+      <DroplistVar VarName="$FleetToSpawn01" Droplist="ENFERShip01"/>
+      <Var VarName="$SpawnedFleet01"/>
+      <Var VarName="$GUID01"/>
+      <Var VarName="$Marker01"/>
+      <Var IsGlobal="true" VarName="$Marker02"/>
+      <Var VarName="$NoBattle" StringValue="CannotFight"/>
+      <Var VarName="$StayInFleet" StringValue="DisbandOnlyGarrison"/>
+      <Var VarName="$ENFERfleet"/>
+      <Var IsGlobal="true" VarName="$OnePlanet"/>
+      <!-- POLITICAL EFFECT  -->
+      <Var VarName="$PoliticalEffectScience" StringValue="PopulationEventSophons02.2Science"/>
+    </Vars>
+    <!-- ============ PREREQUISITES ============ -->
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <!-- ============ STEP 1 ============ -->
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire"/>
+              <Input_Target VarName="$CurrentEmpire"/>
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectScience"/>
+            </Action_TriggerPopulationEvent>
+            <Action_AddQuestMarkers>
+              <Input_Targets VarName="$OnePlanet"/>
+              <Input_Empires VarName="$CurrentEmpire"/>
+              <Output_Markers VarName="$Marker01"/>
+            </Action_AddQuestMarkers>
+          </StartActions>
+          <Objective Name="Step1_Objective1">
+            <!--  Explore curiosities  -->
+            <AIHint Category="Minimal"/>
+            <Sequence>
+              <Decorator_CuriosityDiscovered Initiator="Empire">
+                <Input_DisplayedType VarName="$CuriosityType"/>
+                <Output_Node VarName="$PlaceToBe"/>
+              </Decorator_CuriosityDiscovered>
+              <Action_SpawnFleets>
+                <Input_Empire VarName="$CurrentEmpire"/>
+                <Input_Locations VarName="$PlaceToBe"/>
+                <Input_DroppableFleet VarName="$FleetToSpawn01"/>
+                <Output_FleetGUIDs VarName="$GUID01"/>
+              </Action_SpawnFleets>
+              <Decorator_EntityCreated>
+                <Input_GUID VarName="$GUID01"/>
+                <Output_Entity VarName="$ENFERfleet"/>
+              </Decorator_EntityCreated>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$NoBattle"/>
+                <Input_Targets VarName="$ENFERfleet"/>
+              </Action_ApplyDescriptor>
+              <Action_ApplyDescriptor>
+                <Input_DescriptorName VarName="$StayInFleet"/>
+                <Input_Targets VarName="$ENFERfleet"/>
+              </Action_ApplyDescriptor>
+              <Action_RemoveQuestMarkers>
+                <Input_Markers VarName="$Marker01"/>
+              </Action_RemoveQuestMarkers>
+              <Action_ChooseOutcome Name="Outcome1"/>
+              <Action_AddQuestMarkers>
+                <Input_Targets VarName="$ENFERfleet"/>
+                <Input_Empires VarName="$CurrentEmpire"/>
+                <Output_Markers VarName="$Marker02"/>
+              </Action_AddQuestMarkers>
+            </Sequence>
+            <Outcome Name="Outcome1">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>SophonsQuest-Chapter2.3-Science</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+        </ObjectiveSet>
+        <Reward Droplist="DroplistStrategicsEra2" Picks="1"/>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
+  <!--  #######################################  -->
   <!--            Chapter 2.3 - Science           -->
   <!--  #######################################  -->
 <QuestDefinition Name="SophonsQuest-Chapter2.3-Science" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false">
-  <!-- ============ TAGS ============ -->
+<!-- ============ TAGS ============ -->
 <Tags>SophonsQuest-Chapter2.3-Science</Tags>
     <QuestContextSolo/>
     <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0"/>
-  <!-- ============ VARIABLES ============ -->
+<!-- ============ VARIABLES ============ -->
 <Vars>
     <Var VarName="$CurrentEmpire">
         <From Source="$Empire"/>
@@ -659,12 +858,12 @@
       <DroplistVar VarName="$FleetToSpawn01" Droplist="ENFERShip01"/>
       <Var VarName="$GUID01"/>
       <Var IsGlobal="true" VarName="$Marker02"/>
-    <!-- POLITICAL EFFECT  -->
+      <!-- POLITICAL EFFECT  -->
       <Var VarName="$PoliticalEffectScience" StringValue="PopulationEventSophons02.3Science"/>
       <Var VarName="$Path" StringValue="ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip/ClassSectionCore/ClassModuleSupportExplorationQuestSophons"/>
     </Vars>
-  <!-- ============ PREREQUISITES ============ -->
-  <!-- ============ STEPS ============ -->
+<!-- ============ PREREQUISITES ============ -->
+<!-- ============ STEPS ============ -->
 <Steps>
     <!-- ============ STEP 1 ============ -->
     <Step Name="Step1">
