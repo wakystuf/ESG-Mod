@@ -651,10 +651,10 @@
       <Var VarName="$Marker02" IsGlobal="true"/>
       <DroplistVar VarName="$FleetToSpawn01" Droplist="ENFERShip01"/>
       <Var VarName="$SpawnedFleet01"/>
-      <Var VarName="$GUID01"/>
+      <Var VarName="$GUID01" IsGlobal="true"/>
       <Var VarName="$NoBattle" StringValue="CannotFight"/>
       <Var VarName="$StayInFleet" StringValue="DisbandOnlyGarrison"/>
-      <Var VarName="$ENFERfleet"/>
+      <Var VarName="$ENFERfleet" IsGlobal="true"/>
       <Var IsGlobal="true" VarName="$FarSystem"/>
       <Var IsGlobal="true" VarName="$Planet"/>
       <!-- POLITICAL EFFECT  -->
@@ -750,12 +750,12 @@
       <Var IsGlobal="true" VarName="$PlaceToBe"/>
       <DroplistVar VarName="$FleetToSpawn01" Droplist="ENFERShip01"/>
       <Var VarName="$SpawnedFleet01"/>
-      <Var VarName="$GUID01"/>
+      <Var VarName="$GUID01" IsGlobal="true"/>
       <Var VarName="$Marker01"/>
       <Var IsGlobal="true" VarName="$Marker02"/>
       <Var VarName="$NoBattle" StringValue="CannotFight"/>
       <Var VarName="$StayInFleet" StringValue="DisbandOnlyGarrison"/>
-      <Var VarName="$ENFERfleet"/>
+      <Var VarName="$ENFERfleet" IsGlobal="true"/>
       <Var IsGlobal="true" VarName="$OnePlanet"/>
       <!-- POLITICAL EFFECT  -->
       <Var VarName="$PoliticalEffectScience" StringValue="PopulationEventSophons02.2Science"/>
@@ -832,57 +832,55 @@
   <!--  #######################################  -->
   <!--            Chapter 2.3 - Science           -->
   <!--  #######################################  -->
-<QuestDefinition Name="SophonsQuest-Chapter2.3-Science" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false">
-<!-- ============ TAGS ============ -->
-<Tags>SophonsQuest-Chapter2.3-Science</Tags>
+  <QuestDefinition Name="SophonsQuest-Chapter2.3-Science" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false">
+    <!-- ============ TAGS ============ -->
+    <Tags>SophonsQuest-Chapter2.3-Science</Tags>
     <QuestContextSolo/>
     <RepetitionRules NumberOfOccurrencesPerGame="0" NumberOfOccurrencesPerEmpire="1" NumberOfConcurrentInstances="0"/>
-<!-- ============ VARIABLES ============ -->
-<Vars>
-    <Var VarName="$CurrentEmpire">
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
         <From Source="$Empire"/>
       </Var>
-    <Var VarName="$ColonizedSystem">
+      <Var VarName="$ColonizedSystem">
         <From Source="$CurrentEmpire.$ColonizedStarSystems"/>
       </Var>
-    <Var VarName="$ColonizedSystemHangar">
+      <Var VarName="$ColonizedSystemHangar">
         <From Source="$ColonizedSystem.$Hangar"/>
       </Var>
-    <Var VarName="$ColonizedSystemLocation">
-        <From Source="$ColonizedSystem.$StarSystem"/>
-      </Var>
+      <Var VarName="$ENFERfleet" IsGlobal="true"/>
+      <Var VarName="$GUID01" IsGlobal="true"/>
+
       <Var VarName="$Module01" StringValue="ModuleExplorationQuestSophons"/>
       <Var VarName="$Amount" IntValue="1"/>
-      <Var VarName="$ENFERScience" StringValue="ShipDesignENFERScience"/>
-      <Var IsGlobal="true" VarName="$PlaceToBe"/>
-      <DroplistVar VarName="$FleetToSpawn01" Droplist="ENFERShip01"/>
-      <Var VarName="$GUID01"/>
       <Var IsGlobal="true" VarName="$Marker02"/>
       <!-- POLITICAL EFFECT  -->
       <Var VarName="$PoliticalEffectScience" StringValue="PopulationEventSophons02.3Science"/>
       <Var VarName="$Path" StringValue="ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip/ClassSectionCore/ClassModuleSupportExplorationQuestSophons"/>
     </Vars>
-<!-- ============ PREREQUISITES ============ -->
-<!-- ============ STEPS ============ -->
-<Steps>
-    <!-- ============ STEP 1 ============ -->
-    <Step Name="Step1">
-      <ObjectiveSet>
-        <StartActions>
-          <Action_TriggerPopulationEvent>
+    <!-- ============ PREREQUISITES ============ -->
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <!-- ============ STEP 1 ============ -->
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
               <Input_Empire VarName="$CurrentEmpire"/>
               <Input_Target VarName="$CurrentEmpire"/>
               <Input_PopulationEventDefinition VarName="$PoliticalEffectScience"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-        <Objective Name="Step1_Objective1">
-          <!--  Bring the alien ship to the hanger in one of your systems  -->
+          <Objective Name="Step1_Objective1">
+            <!--  Bring the alien ship to the hanger in one of your systems  -->
             <AIHint Category="Minimal"/>
             <Sequence>
               <Parallel CompletionPolicy="All">
                 <Sequence>
                   <Decorator_ShipDisbanded>
-                    <Input_ModuleName VarName="$Module01"/>
+                    <Input_Hangars VarName="$ColonizedSystemHangar"/>
+                    <Input_FleetGUID VarName="$GUID01"/>
+                    <Input_ShipsInHangarsCount VarName="$Amount"/>
                   </Decorator_ShipDisbanded>
                 </Sequence>
                 <Sequence>
@@ -894,10 +892,10 @@
               </Parallel>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
-          <Outcome Name="Outcome1">
-            <Triggers Weight="1">
-              <QuestTrigger>
-                <Tags>SophonsQuest-Chapter3-Science</Tags>
+            <Outcome Name="Outcome1">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>SophonsQuest-Chapter3-Science</Tags>
                   <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
                 </QuestTrigger>
               </Triggers>
