@@ -488,10 +488,10 @@
       <Var VarName="$AllEmpires">
         <From Source="$Empires"/>
       </Var>
-      <Var VarName="$MinimumAmount" IntValue="10"/>
-      <Var VarName="$Path"
-        StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageEmpireDevelopment4"/>
-      <LocalizationVar LocalizationKey="$QuestCompletedObjective" Source="$MinimumAmount"/>
+      <Var VarName="$Path" StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageEmpireDevelopment4"/>
+      <Var VarName="$MinNumberOfHeroes" IntValue="1"/>
+      <Var VarName="$HeroLevelObjective" IntValue="11"/>
+      <LocalizationVar LocalizationKey="$LevelAmount" Source="$HeroLevelObjective"/>
     </Vars>
     <!-- ============ PREREQUISITES ============ -->
     <Prerequisites Target="$(Empires)" AnyTarget="true">
@@ -508,23 +508,22 @@
       <!-- ============ Step 1 ============ -->
       <Step Name="Step1">
         <ObjectiveSet>
-          <!-- Teams are created here that's why the following variable must be set here. And the
-          context here is the team -->
+          <!-- Teams are created here that's why the following variable must be set here. And the context here is the team -->
           <Vars>
             <Var VarName="$CurrentEmpire">
               <From Source="$Team"/>
             </Var>
           </Vars>
-          <Objective Name="Deeds_Regular_EmpireDevelopment_Stage4_C-Objective" StartValue="0"
-            EndValue="$MinimumAmount">
+          <Objective Name="Deeds_Regular_EmpireDevelopment_Stage4_C-Objective">
             <Parallel CompletionPolicy="All">
               <Sequence>
-                <Loop>
-                  <Decorator_QuestFinished RequiredState="Completed" ProgressionIncrement="1">
+                <Decorator_BeginTurn>
+                  <Condition_HasHeroes>
                     <Input_Empire VarName="$CurrentEmpire"/>
-                  </Decorator_QuestFinished>
-                  <Input_Count VarName="$MinimumAmount"/>
-                </Loop>
+                    <Input_MinimumAmount VarName="$MinNumberOfHeroes"/>
+                    <Input_MinimumLevel VarName="$HeroLevelObjective"/>
+                  </Condition_HasHeroes>
+                </Decorator_BeginTurn>
               </Sequence>
               <Sequence>
                 <Decorator_BeginTurn>
@@ -1071,10 +1070,10 @@
       <Var VarName="$AllEmpires">
         <From Source="$Empires"/>
       </Var>
-      <Var VarName="$MinNumberOfHeroes" IntValue="1"/>
-      <Var VarName="$HeroLevelObjective" IntValue="9"/>
-      <!-- <Var VarName="$Expression" StringValue="Max(MaxProperty(Context, @'EmpireTypeMajor/ClassGarrisonFleet/ClassHero',Level), MaxProperty(Context, @'EmpireTypeMajor/ClassStarSystem/ClassHero',Level), MaxProperty(Context, @'EmpireTypeMajor/ClassHero',Level))"/> -->
-      <LocalizationVar LocalizationKey="$LevelAmount" Source="$HeroLevelObjective"/>
+      <Var VarName="$Amount00" IntValue="999"/>
+      <Var VarName="$Amount01" IntValue="1000"/>
+      <Var VarName="$Expression01" StringValue="Max(Property(Context, @'ClassEmpire//ClassShip',OffensiveMilitaryPower)) ge $(Amount00)"/>
+      <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
       <Var VarName="$Path" StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageMilitary3"/>
     </Vars>
     <!-- ============ PREREQUISITES ============ -->
@@ -1101,16 +1100,10 @@
             <Parallel CompletionPolicy="All">
               <Sequence>
                 <Decorator_BeginTurn>
-                  <!-- <Condition_IsProgressionComplete>
-                                        <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression"/>
-                                    </Condition_IsProgressionComplete> -->
-                  <Condition_HasHeroes>
-                    <Input_Empire VarName="$CurrentEmpire"/>
-                    <Input_MinimumAmount VarName="$MinNumberOfHeroes"/>
-                    <Input_MinimumLevel VarName="$HeroLevelObjective"/>
-                  </Condition_HasHeroes>
+                  <Condition_CheckInterpreter>
+                    <Input_Context VarName="$CurrentEmpire"/>
+                    <Input_Expression VarName="$Expression01"/>
+                  </Condition_CheckInterpreter>
                 </Decorator_BeginTurn>
               </Sequence>
               <Sequence>
