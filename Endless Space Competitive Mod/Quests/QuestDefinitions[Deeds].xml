@@ -887,7 +887,7 @@
     </QuestContextMulti>
 
     <!--============ OCCURRENCE RULES ============-->
-    <RepetitionRules  NumberOfOccurrencesPerGame="1"/>
+    <RepetitionRules NumberOfOccurrencesPerGame="1"/>
 
     <!--============ VARIABLES ============-->
     <Vars>
@@ -975,7 +975,7 @@
     </QuestContextMulti>
 
     <!--============ OCCURRENCE RULES ============-->
-    <RepetitionRules  NumberOfOccurrencesPerGame="1"/>
+    <RepetitionRules NumberOfOccurrencesPerGame="1"/>
 
     <!--============ VARIABLES ============-->
     <Vars>
@@ -1049,6 +1049,81 @@
             </Parallel>
           </Objective>
           <Reward Droplist="DroplistRegularDeedsStage3Quadrant2Bis" Picks="1"/>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
+  <!--  ============================================
+     ================= DEEDS: MILITARY ==============
+     ================================================  -->
+<QuestDefinition Name="Deeds_Regular_Military_Stage3_A" Category="Deeds" SubCategory="Regular">
+    <!-- ============ TAGS ============ -->
+    <Tags>BeginTurn,Hidden,TechnologyStageDefinitionMilitary3</Tags>
+    <!-- ============ CONTEXT ============ -->
+    <QuestContextMulti>
+      <Distribution Type="FreeForAll"/>
+    </QuestContextMulti>
+    <!-- ============ OCCURRENCE RULES ============ -->
+    <RepetitionRules NumberOfOccurrencesPerGame="1"/>
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+      <Var VarName="$AllEmpires">
+        <From Source="$Empires"/>
+      </Var>
+      <Var VarName="$MinNumberOfHeroes" IntValue="1"/>
+      <Var VarName="$HeroLevelObjective" IntValue="9"/>
+      <!-- <Var VarName="$Expression" StringValue="Max(MaxProperty(Context, @'EmpireTypeMajor/ClassGarrisonFleet/ClassHero',Level), MaxProperty(Context, @'EmpireTypeMajor/ClassStarSystem/ClassHero',Level), MaxProperty(Context, @'EmpireTypeMajor/ClassHero',Level))"/> -->
+      <LocalizationVar LocalizationKey="$LevelAmount" Source="$HeroLevelObjective"/>
+      <Var VarName="$Path" StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageMilitary3"/>
+    </Vars>
+    <!-- ============ PREREQUISITES ============ -->
+    <Prerequisites Target="$(Empires)" AnyTarget="true">
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_Military_Stage3_B" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_Military_Stage3_B" QuestState="Completed"/>
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_Military_Stage3_B" QuestState="NotStarted"/>
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="Deeds_Regular_Military_Stage3_C" QuestState="NotStarted"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_Military_Stage3_C" QuestState="InProgress"/>
+      <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="Deeds_Regular_Military_Stage3_C" QuestState="Completed"/>
+    </Prerequisites>
+    <!-- ============ STEPS ============ -->
+    <Steps>
+      <!-- ============ Step 1 ============ -->
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <!-- Teams are created here, that's why setting the empire in a variable can only be made from here -->
+          <Vars>
+            <Var VarName="$CurrentEmpire">
+              <From Source="$Team"/>
+            </Var>
+          </Vars>
+          <Objective Name="Deeds_Regular_Military_Stage3_A-Objective">
+            <Parallel CompletionPolicy="All">
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <!-- <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression"/>
+                                    </Condition_IsProgressionComplete> -->
+                  <Condition_HasHeroes>
+                    <Input_Empire VarName="$CurrentEmpire"/>
+                    <Input_MinimumAmount VarName="$MinNumberOfHeroes"/>
+                    <Input_MinimumLevel VarName="$HeroLevelObjective"/>
+                  </Condition_HasHeroes>
+                </Decorator_BeginTurn>
+              </Sequence>
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_CheckPath>
+                    <Input_SimulationObject VarName="$CurrentEmpire"/>
+                    <Input_Path VarName="$Path"/>
+                  </Condition_CheckPath>
+                </Decorator_BeginTurn>
+              </Sequence>
+            </Parallel>
+          </Objective>
+          <Reward Droplist="DroplistRegularDeedsStage3Quadrant1Bis" Picks="1"/>
         </ObjectiveSet>
       </Step>
     </Steps>
