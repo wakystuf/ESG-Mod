@@ -1,0 +1,704 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+
+    <!-- VICTORY & DEFEAT -->
+    
+    <!-- NOTE: Decorator_PostEndTurn are used here, instead of BeginTurn. -->
+    <!-- That's because the Action_EliminateEmpire must be done between gameplay states 'EndTurn' and 'CheckForGameEndingConditions' -->
+
+    <!-- No system = defeat -->
+    <QuestDefinition Name="QuestDefeatBySystems" Category="VictoryCondition" SubCategory="Elimination">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn,Hidden</Tags>
+
+        <QuestContextSolo/>
+        
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <Vars>
+            <Var VarName="$ZeroSystem" IntValue="0"/>
+            <Var VarName="$OneSystem" IntValue="1"/>
+            <Var VarName="$OneTurn" IntValue="1"/>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$Expression01" StringValue="Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip') ge 1"/>
+            <Var VarName="$Expression02" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateColony') ge 1"/>
+            <Var VarName="$Expression03" StringValue="Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip') lt 1"/>
+        </Vars>
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,AffinityVampirilis</PathPrerequisite>
+			<PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,AffinityUnfallen</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,FactionTraitManualHomeSystem</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,AffinityUmbralChoir</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,AffinityHoratio</PathPrerequisite>
+        </Prerequisites>
+        
+        
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step1_Objective1">
+                        <Parallel CompletionPolicy="First" ResetPolicy="OnFail">
+                            <Sequence>
+                                <Parallel CompletionPolicy="First" ResetPolicy="OnFail">
+                                    <Sequence>
+                                        <!-- But if at anytime you have a system, start the whole sequence over again -->
+                                        <Decorator_PostEndTurn>
+                                            <Condition_HasSystems>
+                                                <Input_Empires VarName="$CurrentEmpire"/>
+                                                <Input_MinimumAmount VarName="$OneSystem"/>
+                                            </Condition_HasSystems>
+                                        </Decorator_PostEndTurn>
+                                        <Action_Fail/>
+                                    </Sequence>
+                                    <Sequence>
+                                        <!-- But if at anytime you have a system, start the whole sequence over again -->
+                                        <Decorator_PostEndTurn>
+                                            <Condition_CheckInterpreter>
+                                                <Input_Context VarName="$CurrentEmpire"/>
+                                                <Input_Expression VarName="$Expression01"/>
+                                            </Condition_CheckInterpreter>
+                                        </Decorator_PostEndTurn>
+                                        <Action_Fail/>
+                                    </Sequence>
+                                    <Sequence>
+                                        <!-- When you have zero systems, start the countdown! -->
+                                        <Decorator_PostEndTurn>
+                                            <Condition_CheckInterpreter>
+                                                <Input_Context VarName="$CurrentEmpire"/>
+                                                <Input_Expression VarName="$Expression03"/>
+                                            </Condition_CheckInterpreter>
+                                        </Decorator_PostEndTurn>
+                                    </Sequence>
+                                </Parallel>
+                                <Action_EliminateEmpire>
+                                    <Input_Empire VarName="$CurrentEmpire"/>
+                                </Action_EliminateEmpire>
+                            </Sequence>
+                            <Sequence>
+                                <Parallel CompletionPolicy="First" ResetPolicy="OnFail">
+                                    <Sequence>
+                                        <!-- But if at anytime you have a system, start the whole sequence over again -->
+                                        <Decorator_PostEndTurn>
+                                            <Condition_HasSystems>
+                                                <Input_Empires VarName="$CurrentEmpire"/>
+                                                <Input_MinimumAmount VarName="$OneSystem"/>
+                                            </Condition_HasSystems>
+                                        </Decorator_PostEndTurn>
+                                        <Action_Fail/>
+                                    </Sequence>
+                                    <Sequence>
+                                        <!-- When you have zero systems, start the countdown! -->
+                                        <Decorator_PostEndTurn>
+                                            <Condition_HasSystems>
+                                                <Input_Empires VarName="$CurrentEmpire"/>
+                                                <Input_MaximumAmount VarName="$ZeroSystem"/>
+                                            </Condition_HasSystems>
+                                        </Decorator_PostEndTurn>
+                                        <!-- One alert, wait a turn-->
+                                        <Action_Message Message="NoSystem-Countdown3">
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                        </Action_Message>
+                                        <Decorator_Wait>
+                                            <Input_WaitDuration VarName="$OneTurn"/>
+                                        </Decorator_Wait>
+                                        <Decorator_PostEndTurn/>
+                                        <!-- One alert, wait another turn-->
+                                        <Action_Message Message="NoSystem-Countdown2">
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                        </Action_Message>
+                                        <Decorator_Wait>
+                                            <Input_WaitDuration VarName="$OneTurn"/>
+                                        </Decorator_Wait>
+                                        <Decorator_PostEndTurn/>
+                                        <!-- Last alert, wait a last turn-->
+                                        <Action_Message Message="NoSystem-Countdown1">
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                        </Action_Message>
+                                        <Decorator_Wait>
+                                            <Input_WaitDuration VarName="$OneTurn"/>
+                                        </Decorator_Wait>
+										
+										<Decorator_PostEndTurn/>
+                                    </Sequence>
+                                </Parallel>
+                                <Action_EliminateEmpire>
+                                    <Input_Empire VarName="$CurrentEmpire"/>
+                                </Action_EliminateEmpire>
+                            </Sequence>                           
+                        </Parallel>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+
+    <!-- No mothership = defeat -->
+    <QuestDefinition Name="QuestDefeatByMotherships" Category="VictoryCondition" SubCategory="Elimination">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn,Hidden</Tags>
+
+        <QuestContextSolo/>
+        
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <Vars>
+            <Var VarName="$MothershipRole" StringValue="ShipRoleMothership"/>
+            <Var VarName="$OneTurn" IntValue="1"/>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+        </Vars>
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite" Inverted="false">ClassEmpire,AffinityVampirilis</PathPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step1_Objective1">
+                        <Sequence>
+                            <Parallel CompletionPolicy="First" ResetPolicy="OnFail">
+                                <Sequence>
+                                    <!-- Fail (and reset) this sequence if you have at least 1 system -->
+                                    <Decorator_PostEndTurn>
+                                        <Condition_HasFleets Minimum="1">
+                                            <Input_Empire VarName="$CurrentEmpire"/>
+                                            <Input_RoleName VarName="$MothershipRole"/>
+                                        </Condition_HasFleets>
+                                    </Decorator_PostEndTurn>
+                                    <Action_Fail/>
+                                </Sequence>
+                                <Sequence>
+                                    <!-- When you have zero motherships, start the countdown! -->
+                                    <Decorator_PostEndTurn>
+                                        <Condition_HasFleets Maximum="0">
+                                            <Input_Empire VarName="$CurrentEmpire"/>
+                                            <Input_RoleName VarName="$MothershipRole"/>
+                                        </Condition_HasFleets>
+                                    </Decorator_PostEndTurn>
+                                    <!-- One alert, wait a turn-->
+                                    <Action_Message Message="NoMothership-Countdown3">
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                    </Action_Message>
+                                    <Decorator_Wait>
+                                        <Input_WaitDuration VarName="$OneTurn"/>
+                                    </Decorator_Wait>
+                                    <Decorator_PostEndTurn/>
+                                    <!-- One alert, wait another turn-->
+                                    <Action_Message Message="NoMothership-Countdown2">
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                    </Action_Message>
+                                    <Decorator_Wait>
+                                        <Input_WaitDuration VarName="$OneTurn"/>
+                                    </Decorator_Wait>
+                                    <Decorator_PostEndTurn/>
+                                    <!-- One alert, wait a last turn-->
+                                    <Action_Message Message="NoMothership-Countdown1">
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                    </Action_Message>
+                                    <Decorator_Wait>
+                                        <Input_WaitDuration VarName="$OneTurn"/>
+                                    </Decorator_Wait>
+									
+									<Decorator_PostEndTurn/>
+                                </Sequence>
+                            </Parallel>
+                            <Action_EliminateEmpire>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                            </Action_EliminateEmpire>
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+	
+	<!-- No Home System = defeat for Unfallen -->
+    <QuestDefinition Name="QuestDefeatByHomeSystem" Category="VictoryCondition" SubCategory="Elimination">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn,Hidden</Tags>
+
+        <QuestContextSolo/>
+        
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <Vars>
+            <Var VarName="$ZeroSystem" IntValue="0"/>
+            <Var VarName="$OneSystem" IntValue="1"/>
+            <Var VarName="$OneTurn" IntValue="1"/>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+			</Var>
+        </Vars>
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite" Inverted="false">ClassEmpire,AffinityUnfallen</PathPrerequisite>
+        </Prerequisites>
+        
+        
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step1_Objective1">
+                            <Sequence>
+                                <Parallel CompletionPolicy="First" ResetPolicy="OnFail">
+                                    <Sequence>
+                                        <!-- But if at anytime you have a system, start the whole sequence over again -->
+                                        <Decorator_PostEndTurn>
+                                            <Condition_HasSystems OnlyHomeSystemForRootUsers="true">
+                                                <Input_Empires VarName="$CurrentEmpire"/>
+                                                <Input_MinimumAmount VarName="$OneSystem"/>
+                                            </Condition_HasSystems>
+                                        </Decorator_PostEndTurn>
+                                        <Action_Fail/>
+                                    </Sequence>
+                                    <Sequence>
+                                        <!-- When you have zero systems, start the countdown! -->
+                                        <Decorator_PostEndTurn>
+                                            <Condition_HasSystems OnlyHomeSystemForRootUsers="true">
+                                                <Input_Empires VarName="$CurrentEmpire"/>
+                                                <Input_MaximumAmount VarName="$ZeroSystem"/>
+                                            </Condition_HasSystems>
+                                        </Decorator_PostEndTurn>
+                                        <!-- One alert, wait a turn-->
+                                        <Action_Message Message="NoHomeSystem-Countdown3">
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                        </Action_Message>
+                                        <Decorator_Wait>
+                                            <Input_WaitDuration VarName="$OneTurn"/>
+                                        </Decorator_Wait>
+                                        <Decorator_PostEndTurn/>
+                                        <!-- One alert, wait another turn-->
+                                        <Action_Message Message="NoHomeSystem-Countdown2">
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                        </Action_Message>
+                                        <Decorator_Wait>
+                                            <Input_WaitDuration VarName="$OneTurn"/>
+                                        </Decorator_Wait>
+                                        <Decorator_PostEndTurn/>
+                                        <!-- Last alert, wait a last turn-->
+                                        <Action_Message Message="NoHomeSystem-Countdown1">
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                        </Action_Message>
+                                        <Decorator_Wait>
+                                            <Input_WaitDuration VarName="$OneTurn"/>
+                                        </Decorator_Wait>
+										
+										<Decorator_PostEndTurn/>
+                                    </Sequence>
+                                </Parallel>
+                                <Action_EliminateEmpire>
+                                    <Input_Empire VarName="$CurrentEmpire"/>
+                                </Action_EliminateEmpire>
+                            </Sequence>                           
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- No Home System = defeat for Umbral Choir -->
+    <QuestDefinition Name="QuestDefeatByHomeSystemUC" Category="VictoryCondition" SubCategory="Elimination">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn,Hidden</Tags>
+
+        <QuestContextSolo/>
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <Vars>
+            <Var VarName="$ZeroSystem" IntValue="0"/>
+            <Var VarName="$OneSystem" IntValue="1"/>
+            <Var VarName="$OneTurn" IntValue="1"/>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+        </Vars>
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite" Inverted="false">ClassEmpire,AffinityUmbralChoir</PathPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step1_Objective1">
+                        <Sequence>
+                            <Parallel CompletionPolicy="First" ResetPolicy="OnFail">
+                                <Sequence>
+                                    <!-- But if at anytime you have a non-ghost system, start the whole sequence over again -->
+                                    <Decorator_PostEndTurn>
+                                        <Condition_HasSystems IgnoreGhosts="true">
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                            <Input_MinimumAmount VarName="$OneSystem"/>
+                                        </Condition_HasSystems>
+                                    </Decorator_PostEndTurn>
+                                    <Action_Fail/>
+                                </Sequence>
+                                <Sequence>
+                                    <!-- When you have zero systems, start the countdown! -->
+                                    <Decorator_PostEndTurn>
+                                        <Condition_HasSystems IgnoreGhosts="true">
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                            <Input_MaximumAmount VarName="$ZeroSystem"/>
+                                        </Condition_HasSystems>
+                                    </Decorator_PostEndTurn>
+                                    <!-- One alert, wait a turn-->
+                                    <Action_Message Message="NoHomeSystem-Countdown6">
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                    </Action_Message>
+                                    <Decorator_Wait>
+                                        <Input_WaitDuration VarName="$OneTurn"/>
+                                    </Decorator_Wait>
+                                    <Decorator_PostEndTurn/>
+                                    <!-- One alert, wait another turn-->
+                                    <Action_Message Message="NoHomeSystem-Countdown5">
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                    </Action_Message>
+                                    <Decorator_Wait>
+                                        <Input_WaitDuration VarName="$OneTurn"/>
+                                    </Decorator_Wait>
+                                    <Decorator_PostEndTurn/>
+                                    <!-- One alert, wait another turn-->
+                                    <Action_Message Message="NoHomeSystem-Countdown4">
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                    </Action_Message>
+                                    <Decorator_Wait>
+                                        <Input_WaitDuration VarName="$OneTurn"/>
+                                    </Decorator_Wait>
+                                    <Decorator_PostEndTurn/>
+                                    <!-- One alert, wait another turn-->
+                                    <Action_Message Message="NoHomeSystem-Countdown3">
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                    </Action_Message>
+                                    <Decorator_Wait>
+                                        <Input_WaitDuration VarName="$OneTurn"/>
+                                    </Decorator_Wait>
+                                    <Decorator_PostEndTurn/>
+                                    <!-- One alert, wait another turn-->
+                                    <Action_Message Message="NoHomeSystem-Countdown2">
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                    </Action_Message>
+                                    <Decorator_Wait>
+                                        <Input_WaitDuration VarName="$OneTurn"/>
+                                    </Decorator_Wait>
+                                    <Decorator_PostEndTurn/>
+                                    <!-- Last alert, wait a last turn-->
+                                    <Action_Message Message="NoHomeSystem-Countdown1">
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                    </Action_Message>
+                                    <Decorator_Wait>
+                                        <Input_WaitDuration VarName="$OneTurn"/>
+                                    </Decorator_Wait>
+
+                                    <Decorator_PostEndTurn/>
+                                </Sequence>
+                            </Parallel>
+                            <Action_EliminateEmpire>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                            </Action_EliminateEmpire>
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- No Home System = defeat for Vaulters -->
+    <QuestDefinition Name="QuestDefeatByColonizer" Category="VictoryCondition" SubCategory="Elimination">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn,Hidden</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <Vars>
+            <Var VarName="$ZeroSystem" IntValue="0"/>
+            <Var VarName="$OneSystem" IntValue="1"/>
+            <Var VarName="$OneTurn" IntValue="1"/>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$Expression01" StringValue="Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip') ge 1"/>
+            <Var VarName="$Expression02" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateColony') ge 1"/>
+            <Var VarName="$Expression03" StringValue="Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip') lt 1"/>
+            <Var VarName="$Expression04" StringValue="Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip,ShipRoleSuperColonizer') ge 1"/>
+        </Vars>
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite" Inverted="false">ClassEmpire,FactionTraitManualHomeSystem</PathPrerequisite>
+        </Prerequisites>
+
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step1_Objective1">
+                        <Parallel CompletionPolicy="First" ResetPolicy="OnFail">
+                            <Sequence>
+                                <Parallel CompletionPolicy="First" ResetPolicy="OnFail">
+                                    <Sequence>
+                                        <!-- But if at anytime you have a system, start the whole sequence over again -->
+                                        <Decorator_PostEndTurn>
+                                            <Condition_HasSystems>
+                                                <Input_Empires VarName="$CurrentEmpire"/>
+                                                <Input_MinimumAmount VarName="$OneSystem"/>
+                                            </Condition_HasSystems>
+                                        </Decorator_PostEndTurn>
+                                        <Action_Fail/>
+                                    </Sequence>
+                                    <Sequence>
+                                        <!-- But if at anytime you have a system, start the whole sequence over again -->
+                                        <Decorator_PostEndTurn>
+                                            <Condition_CheckInterpreter>
+                                                <Input_Context VarName="$CurrentEmpire"/>
+                                                <Input_Expression VarName="$Expression01"/>
+                                            </Condition_CheckInterpreter>
+                                        </Decorator_PostEndTurn>
+                                        <Action_Fail/>
+                                    </Sequence>                                
+                                    <Sequence>
+                                        <!-- When you have zero systems, start the countdown! -->
+                                        <Decorator_PostEndTurn>
+                                            <Condition_CheckInterpreter>
+                                                <Input_Context VarName="$CurrentEmpire"/>
+                                                <Input_Expression VarName="$Expression03"/>
+                                            </Condition_CheckInterpreter>
+                                        </Decorator_PostEndTurn>
+                                    </Sequence>
+                                </Parallel>
+                                <Action_EliminateEmpire>
+                                    <Input_Empire VarName="$CurrentEmpire"/>
+                                </Action_EliminateEmpire>
+                            </Sequence>
+                            <Sequence>
+                                <Parallel CompletionPolicy="First" ResetPolicy="OnFail">
+                                    <Sequence>
+                                        <!-- But if at anytime you have a system, start the whole sequence over again -->
+                                        <Decorator_PostEndTurn>
+                                            <Condition_HasSystems>
+                                                <Input_Empires VarName="$CurrentEmpire"/>
+                                                <Input_MinimumAmount VarName="$OneSystem"/>
+                                            </Condition_HasSystems>
+                                        </Decorator_PostEndTurn>
+                                        <Action_Fail/>
+                                    </Sequence>
+                                    <Sequence>
+                                        <Decorator_PostEndTurn>
+                                            <Condition_CheckInterpreter>
+                                                <Input_Context VarName="$CurrentEmpire"/>
+                                                <Input_Expression VarName="$Expression04"/>
+                                            </Condition_CheckInterpreter>
+                                        </Decorator_PostEndTurn>
+                                        <Action_Fail/>
+                                    </Sequence>
+                                    <Sequence>
+                                        <!-- When you have zero systems, start the countdown! -->
+                                        <Decorator_PostEndTurn>
+                                            <Condition_HasSystems>
+                                                <Input_Empires VarName="$CurrentEmpire"/>
+                                                <Input_MaximumAmount VarName="$ZeroSystem"/>
+                                            </Condition_HasSystems>
+                                        </Decorator_PostEndTurn>
+                                        <!-- One alert, wait a turn-->
+                                        <Action_Message Message="NoSystem-Countdown3">
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                        </Action_Message>
+                                        <Decorator_Wait>
+                                            <Input_WaitDuration VarName="$OneTurn"/>
+                                        </Decorator_Wait>
+                                        <Decorator_PostEndTurn/>
+                                        <!-- One alert, wait another turn-->
+                                        <Action_Message Message="NoSystem-Countdown2">
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                        </Action_Message>
+                                        <Decorator_Wait>
+                                            <Input_WaitDuration VarName="$OneTurn"/>
+                                        </Decorator_Wait>
+                                        <Decorator_PostEndTurn/>
+                                        <!-- Last alert, wait a last turn-->
+                                        <Action_Message Message="NoSystem-Countdown1">
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                        </Action_Message>
+                                        <Decorator_Wait>
+                                            <Input_WaitDuration VarName="$OneTurn"/>
+                                        </Decorator_Wait>
+
+                                        <Decorator_PostEndTurn/>
+                                    </Sequence>
+                                </Parallel>
+                                <Action_EliminateEmpire>
+                                    <Input_Empire VarName="$CurrentEmpire"/>
+                                </Action_EliminateEmpire>
+                            </Sequence>
+                        </Parallel>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+    <!-- no money for bailif = defeat-->
+    <QuestDefinition Name="QuestDefeatByBailif" Category="VictoryCondition" SubCategory="Elimination">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn,Hidden</Tags>
+
+        <QuestContextSolo/>
+        
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <Vars>
+            <Var VarName="$TargetedBankAccount" IntValue="0"/>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$Maximum" IntValue="0"/>
+            <Var VarName="$ResourceName" StringValue="EmpireMoney"/>
+        </Vars>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step1_Objective1">
+                        <Sequence>
+                            <Decorator_PostEndTurn>
+                                <Condition_HasResource>
+                                    <Input_Location VarName="$CurrentEmpire"/>
+                                    <Input_ResourceName VarName="$ResourceName"/>
+                                    <Input_Maximum VarName="$Maximum"/>
+                                </Condition_HasResource>
+                                <Condition_HasFidsi Inverted="true">
+                                    <Input_Location VarName="$CurrentEmpire"/>
+                                    <Input_Dust VarName="$TargetedBankAccount"/>
+                                </Condition_HasFidsi>
+                            </Decorator_PostEndTurn>
+                            <Action_EliminateEmpire>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                            </Action_EliminateEmpire>
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+    
+    <QuestDefinition Name="QuestPirateDefeat" Category="VictoryCondition" SubCategory="Elimination">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn,Hidden</Tags>
+
+        <QuestContextMulti ParticipantsVarName="$AllEmpires"/>
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="1"
+                          NumberOfOccurrencesPerEmpire="0"
+                          NumberOfConcurrentInstances="0"/>
+
+        <Vars>
+            <Var VarName="$AllEmpires">
+                <From Source="$MajorEmpires"/>
+            </Var>
+            <Var VarName="$Pirates">
+                <From Source="$PirateEmpire"/>
+            </Var>
+            <Var VarName="$ZeroSystem" IntValue="0"/>
+            <Var VarName="$OneSystem" IntValue="1"/>
+            <Var VarName="$ThreeTurns" IntValue="3"/>
+        </Vars>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step1_Objective1">
+                        <Sequence>
+                            <!-- Wait until at least one lair has spawned. -->
+                            <Decorator_PostEndTurn>
+                                <Condition_HasSystems>
+                                    <Input_Empires VarName="$Pirates"/>
+                                    <Input_MinimumAmount VarName="$OneSystem"/>
+                                </Condition_HasSystems>
+                            </Decorator_PostEndTurn>
+
+                            <!-- Wait three turns in a row with 0 lairs. -->
+                            <Parallel CompletionPolicy="First" ResetPolicy="OnFail">
+                                <Sequence>
+                                    <!-- Restart (fail) the sequence if pirate has systems. -->
+                                    <Decorator_PostEndTurn>
+                                        <Condition_HasSystems>
+                                            <Input_Empires VarName="$Pirates"/>
+                                            <Input_MinimumAmount VarName="$OneSystem"/>
+                                        </Condition_HasSystems>
+                                    </Decorator_PostEndTurn>
+                                    <Action_Fail/>
+                                </Sequence>
+                                <Sequence>
+                                    <!-- Wait 3 turns, but using BeginTurn to cover case where a lair is spawned at the end of the last turn -->
+                                    <Loop Count="3">
+                                        <Decorator_BeginTurn>
+                                            <Condition_HasSystems>
+                                                <Input_Empires VarName="$Pirates"/>
+                                                <Input_MaximumAmount VarName="$ZeroSystem"/>
+                                            </Condition_HasSystems>
+                                        </Decorator_BeginTurn>
+                                    </Loop>
+                                </Sequence>
+                            </Parallel>
+
+                            <!-- Once the sequence is a success, eliminate the pirates -->
+                            <Action_EliminateEmpire>
+                                <Input_Empire VarName="$Pirates"/>
+                            </Action_EliminateEmpire>
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+    
+</Datatable>
