@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+
+<QuestDefinition Name="SpectatorQuest-Chapter00" Category="MajorQuest" SubCategory="Spectator">      
+
+        <!--============ TAGS ============-->
+        
+        <Tags>BeginTurn,Hidden</Tags>        
+
+        <!--============ CONTEXT ============-->
+        
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+           
+            <Var VarName="$HomeSystem">
+                <From Source="$CurrentEmpire.$StartingNode"/>
+            </Var>
+
+            <Var VarName="$DefinitionName1" StringValue="ReplacementSpectator"/>     
+            <Var VarName="$PopulationAffinity" StringValue="AffinityCravers"/> 
+            <Var VarName="$Amount" IntValue="-2"/> 
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">ClassEmpire,AffinitySpectator</PathPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Objective_Fake">
+                        <Sequence>
+                            <Action_SpawnPopulation>
+                                <Input_Empire VarName="$CurrentEmpire"/>
+                                <Input_System VarName="$HomeSystem"/>
+                                <Input_Amount VarName="$Amount"/>
+                                <Input_PopulationAffinity VarName="$PopulationAffinity"/>
+                            </Action_SpawnPopulation>   
+                            <Action_ApplyStarSystemDefinition>
+                                <Input_DefinitionName VarName="$DefinitionName1"/>
+                                <Input_StarSystemNode VarName="$HomeSystem"/>
+                            </Action_ApplyStarSystemDefinition>        
+                            <Action_ChooseOutcome Name="Outcome1"/>                 
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+</Datatable>
