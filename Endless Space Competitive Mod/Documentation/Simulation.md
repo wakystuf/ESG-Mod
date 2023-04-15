@@ -50,7 +50,7 @@ Example:
 | TooltipOverride            | `N/A`             | This manually replaces the tooltip of a modifier with a defined localization pair.
 | ValueMustBePositive        | `false`           | If the result of the binary operation ends up being negative, the math instead returns 0.
 | UseIfInsteadOfWhere        | `false`           | The modifier is only applied if the path is found, and will be applied on the source object, rather than the path.
-| ForceFrom                  | `false`           | Sets the source path to be whatever the path is set to (unconfirmed)
+| ForceFrom                  | `false`           | Adds the source descriptor's name to the modifier. (Off) +1 [dust] per [ship] on Empire. (On) +1 [dust] per [ship] on Empire from Lodestone.
 | EnforceContext             | `false`           | Immediately stops the modifier as soon as its source tag is removed (unconfirmed)
 
 Example:
@@ -76,7 +76,7 @@ Example:
 | TooltipOverride            | `N/A`             | This manually replaces the tooltip of a modifier with a defined localization pair.
 | ValueMustBePositive        | `false`           | If the result of the binary operation ends up being negative, the math instead returns 0.
 | UseIfInsteadOfWhere        | `false`           | The modifier is only applied if the path is found, and will be applied on the source object, rather than the path.
-| ForceFrom                  | `false`           | Sets the source path to be whatever the path is set to (unconfirmed)
+| ForceFrom                  | `false`           | Adds the source descriptor's name to the modifier. (Off) +1 [dust] per [ship] on Empire. (On) +1 [dust] per [ship] on Empire from Lodestone.
 | EnforceContext             | `false`           | Immediately stops the modifier as soon as its source tag is removed (unconfirmed)
 
 Example:
@@ -103,7 +103,7 @@ Example:
 | TooltipOverride            | `N/A`             | This manually replaces the tooltip of a modifier with a defined localization pair.
 | ValueMustBePositive        | `false`           | If the result of the binary operation ends up being negative, the math instead returns 0.
 | UseIfInsteadOfWhere        | `false`           | The modifier is only applied if the path is found, and will be applied on the source object, rather than the path.
-| ForceFrom                  | `false`           | Sets the source path to be whatever the path is set to (unconfirmed)
+| ForceFrom                  | `false`           | Adds the source descriptor's name to the modifier. (Off) +1 [dust] per [ship] on Empire. (On) +1 [dust] per [ship] on Empire from Lodestone.
 | EnforceContext             | `false`           | Immediately stops the modifier as soon as its source tag is removed (unconfirmed)
 
 Example:
