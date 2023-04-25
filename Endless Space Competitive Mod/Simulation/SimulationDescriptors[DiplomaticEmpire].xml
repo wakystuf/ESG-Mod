@@ -25,6 +25,16 @@
     <Property Name="PressureValue"                  MinValue="-100" MaxValue="100"  IsSealed="true"/>
     <Property Name="PressureTrend"                  MinValue="-12" MaxValue="12" />
 
+    <!-- Warning Progession -->
+    <Property Name="GameSpeedTimeMultiplier"        BaseValue="1"/>
+    <Property Name="WarningProgression"             BaseValue="-1" MinValue="Negative"/>
+    <Property Name="WarningProgressionStock"        BaseValue="0" MinValue="0" IsSealed="true"/>
+    <Property Name="WarningProgressionAccumulator"  BaseValue="0" MinValue="0" IsSealed="true"/>
+    <Property Name="NetWarningProgression"          BaseValue="0" MinValue="Negative"/>
+    <Property Name="MinimumWarningProgressionStock" BaseValue="0"/>
+    <Property Name="MaximumWarningProgressionStock" BaseValue="999"/>
+    <Property Name="WarningProgressionUpkeep"       BaseValue="0" MinValue="Negative"/>
+
     <!-- Set by code:
                 SystemsUnderInfluence = count (negative for influencer, positive for influenced);
                 SystemsBorderFrictionValue = net influence difference between systems whose influence zone overlap. -->
@@ -94,7 +104,7 @@
 
     <BinaryModifier TargetProperty="PressureFromCoveredSystems" Operation="Addition"  Left="4" BinaryOperation="Multiplication" Right="$(SystemsUnderInfluence)" Priority="1"/>
     <Modifier       TargetProperty="PressureFromCoveredSystems" Operation="Multiplication"        Value="$(CombinedBasePressureMultipliers)" Priority="2"/>
-<!-- Removed due to the fact that score is a poor metric for overall success
+    <!-- Removed due to the fact that score is a poor metric for overall success
     <Modifier TargetProperty="PressureTrend" Operation="Addition" Value="$(PressureFromScore)"/>-->
     <Modifier TargetProperty="PressureTrend" Operation="Addition" Value="$(PressureFromFriction)"/>
     <Modifier TargetProperty="PressureTrend" Operation="Addition" Value="$(PressureFromCoveredSystems)"/>
@@ -105,6 +115,10 @@
     <Modifier TargetProperty="PressureTrend" Operation="Addition"       Value="$(ContextualDiplomacyPressureHiddenBonus)" TooltipHidden="true" />
     <Modifier TargetProperty="PressureTrend" Operation="Addition"       Value="$(CurrentEffectsBonus)"/>
     <Modifier TargetProperty="PressureTrend" Operation="Multiplication" Value="$(CurrentRelationMultiplier)"/>
+
+    <!-- Warning Progression -->
+    <Modifier TargetProperty="WarningProgression" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="998"/>
+    <Modifier TargetProperty="NetWarningProgression" Operation="Addition" Value="$(WarningProgression)" Priority="999"/>
 
   </SimulationDescriptor>
 </Datatable>

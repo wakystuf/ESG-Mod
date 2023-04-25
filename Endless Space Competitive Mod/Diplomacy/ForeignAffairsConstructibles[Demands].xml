@@ -29,11 +29,14 @@
     <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Discard" Responsible="RelationOfEmpireWhichProvides">
       <InterpreterPrerequisite Flags="Prerequisite,Discard">not(Path(Context,@'ClassDiplomaticEmpire,DiplomaticWarningInitiator'))</InterpreterPrerequisite>
     </DiplomaticRelationStateEmpirePrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Discard" Responsible="RelationOfEmpireWhichProvides">
+      <InterpreterPrerequisite Flags="Prerequisite,Discard">not(Path(Context,@'ClassDiplomaticEmpire,DiplomaticWarningMilitaristsInitiator'))</InterpreterPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
     <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Discard" Responsible="EmpireWhichProvides">
       <InterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context,@'../ClassEmpire',IsAIControlled) eq 0</InterpreterPrerequisite>
     </DiplomaticRelationStateEmpirePrerequisite>
-    <DiplomaticRelationStateEmpirePrerequisite Inverted="true" Flags="Prerequisite,Discard" Responsible="EmpireWhichProvides">
-      <InterpreterPrerequisite Flags="Prerequisite,Discard">Path(Context,@'../ClassEmpire/ClassSenate/ClassLaw,LawEffectP06L00') or Path(Context,@'../ClassEmpire/ClassSenate/ClassSenator,Politics06')</InterpreterPrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Inverted="false" Flags="Prerequisite,Discard" Responsible="EmpireWhichProvides">
+      <InterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context,@'../ClassEmpire',MilitaristWarnings) eq 0</InterpreterPrerequisite>
     </DiplomaticRelationStateEmpirePrerequisite>
     <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateColdWar</DiplomaticRelationStatePrerequisite>
@@ -43,18 +46,21 @@
     <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">30 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,AggressiveTreatyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,RaisePressureCostReduction) * Property(OtherSideOfRelation,@ClassDiplomaticEmpire,ReceivedAggressiveTreatyCostReduction)</DiplomaticCustomCost>
     <DiplomaticPressureEffectDefinitionReference Name="DiplomaticWarning"/>
   </DiplomaticTermPressureEffectDefinition>
-
+ 
   <DiplomaticTermPressureEffectDefinition Name="DiplomaticWarningMilitarists" PropositionMethod="Declaration" ApplicationMethod="ProviderOnly" Category="CategoryTreaty" Alignment="Bad">
     <GameSettingPrerequisite Flags="Prerequisite,Discard">DiplomacyRework,True</GameSettingPrerequisite>
     <DiplomaticRelationStatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Responsible="EmpireWhichReceives">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
     <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Discard" Responsible="RelationOfEmpireWhichProvides">
       <InterpreterPrerequisite Flags="Prerequisite,Discard">not(Path(Context,@'ClassDiplomaticEmpire,DiplomaticWarningInitiator'))</InterpreterPrerequisite>
     </DiplomaticRelationStateEmpirePrerequisite>
+    <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Discard" Responsible="RelationOfEmpireWhichProvides">
+      <InterpreterPrerequisite Flags="Prerequisite,Discard">not(Path(Context,@'ClassDiplomaticEmpire,DiplomaticWarningMilitaristsInitiator'))</InterpreterPrerequisite>
+    </DiplomaticRelationStateEmpirePrerequisite>
     <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Discard" Responsible="EmpireWhichProvides">
       <InterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context,@'../ClassEmpire',IsAIControlled) eq 0</InterpreterPrerequisite>
     </DiplomaticRelationStateEmpirePrerequisite>
     <DiplomaticRelationStateEmpirePrerequisite Inverted="false" Flags="Prerequisite,Discard" Responsible="EmpireWhichProvides">
-      <InterpreterPrerequisite Flags="Prerequisite,Discard">Path(Context,@'../ClassEmpire/ClassSenate/ClassLaw,LawEffectP06L00') or Path(Context,@'../ClassEmpire/ClassSenate/ClassSenator,Politics06')</InterpreterPrerequisite>
+      <InterpreterPrerequisite Flags="Prerequisite,Discard">Property(Context,@'../ClassEmpire',MilitaristWarnings) eq 1</InterpreterPrerequisite>
     </DiplomaticRelationStateEmpirePrerequisite>
     <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
       <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateColdWar</DiplomaticRelationStatePrerequisite>
@@ -64,20 +70,4 @@
     <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">30 * Property(EmpireWhichProposes,@ClassEmpire,DiplomacyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,AggressiveTreatyCostReduction) * Property(Relation,@ClassDiplomaticEmpire,RaisePressureCostReduction) * Property(OtherSideOfRelation,@ClassDiplomaticEmpire,ReceivedAggressiveTreatyCostReduction)</DiplomaticCustomCost>
     <DiplomaticPressureEffectDefinitionReference Name="DiplomaticWarningMilitarists"/>
   </DiplomaticTermPressureEffectDefinition>
-
-  <!-- Prepare for War -->
-  <DiplomaticTermPressureEffectDefinition Name="PrepareForWar" PropositionMethod="Declaration" ApplicationMethod="ProviderOnly" Category="CategoryTreaty" Alignment="Bad">
-    <DiplomaticRelationStateEmpirePrerequisite Flags="Prerequisite,Discard" Responsible="RelationOfEmpireWhichProvides">
-      <InterpreterPrerequisite Flags="Prerequisite,Discard">not(Path(Context,@'ClassDiplomaticEmpire,PrepareForWarInitiator')) and Path(Context,@'ClassDiplomaticEmpire,DiplomaticWarningInitiator')</InterpreterPrerequisite>
-    </DiplomaticRelationStateEmpirePrerequisite>
-    <DiplomaticRelationStatePrerequisite Inverted="true" Flags="Prerequisite,Discard" Responsible="EmpireWhichReceives">DiplomaticRelationStateUnknown</DiplomaticRelationStatePrerequisite>
-    <DiplomaticMetaPrerequisite Flags="Prerequisite,Discard" Operator="OR">
-      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateColdWar</DiplomaticRelationStatePrerequisite>
-      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStatePeace</DiplomaticRelationStatePrerequisite>
-      <DiplomaticRelationStatePrerequisite>DiplomaticRelationStateAlliance</DiplomaticRelationStatePrerequisite>
-    </DiplomaticMetaPrerequisite>
-    <DiplomaticCustomCost Responsible="EmpireWhichProposes" ResourceName="EmpireEmpirePoint">0</DiplomaticCustomCost>
-    <DiplomaticPressureEffectDefinitionReference Name="PrepareForWar"/>
-  </DiplomaticTermPressureEffectDefinition>
-
 </Datatable>

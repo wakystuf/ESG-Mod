@@ -1070,9 +1070,10 @@
       <Var VarName="$AllEmpires">
         <From Source="$Empires"/>
       </Var>
+      <Var VarName="$MinimumAmount" IntValue="1"/>
+      <Var VarName="$Ship"/>
       <Var VarName="$Amount00" IntValue="999"/>
       <Var VarName="$Amount01" IntValue="1000"/>
-      <Var VarName="$Expression01" StringValue="Max(Property(Context, @'ClassEmpire//ClassShip',OffensiveMilitaryPower)) ge $(Amount00)"/>
       <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
       <Var VarName="$Path" StringValue="EmpireTypeMajor/ClassResearch,TechnologyStageMilitary3"/>
     </Vars>
@@ -1099,12 +1100,15 @@
           <Objective Name="Deeds_Regular_Military_Stage3_A-Objective">
             <Parallel CompletionPolicy="All">
               <Sequence>
-                <Decorator_BeginTurn>
-                  <Condition_CheckInterpreter>
-                    <Input_Context VarName="$CurrentEmpire"/>
-                    <Input_Expression VarName="$Expression01"/>
-                  </Condition_CheckInterpreter>
-                </Decorator_BeginTurn>
+                <Decorator_ShipConstructed Initiator="Team">
+                  <Condition_ShipStats>
+                    <Input_ShipList VarName="$Ship"/>
+                    <Input_MinimumAmount VarName="$MinimumAmount"/>
+                    <Input_MinimumOffensiveMilitaryPower VarName="$Amount00"/>
+                  </Condition_ShipStats>
+                  <Output_Ship VarName="$Ship"/>
+                </Decorator_ShipConstructed>
+                <Decorator_BeginTurn/>
               </Sequence>
               <Sequence>
                 <Decorator_BeginTurn>

@@ -25,6 +25,7 @@
     <Property Name="HPPerSecondDynamic" BaseValue="0" MinValue="0"/>
     <Property Name="AdditionalGroundBattleManpowerLimit" BaseValue="0" RoundingFunction="Floor"/>
     <Property Name="BonusManpowerLimit" BaseValue="0"/>
+    <Property Name="ShipBuyoutReduction"        MaxValue="0.75"/>
 
     <!-- Mavros Mod Properties -->
     <Property Name="ScrapPerCP" 	          BaseValue="0" />
@@ -418,7 +419,8 @@
     <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic6Cost)" BinaryOperation="Multiplication" Right="$(Strategic6Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
 
     <!--Adjust for stupid Market shenanigans -->
-    <Modifier TargetProperty="TradeValue" Operation="Multiplication" Value="1" Path="ClassShip,!ShipSizeJuggernaut"/>
+    <BinaryModifier TargetProperty="TradeValue" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(ShipBuyoutReduction)"  Path="ClassShip"/>
+    <Modifier       TargetProperty="TradeValue" Operation="Multiplication" Value="1"                                                              Path="ClassShip,!ShipSizeJuggernaut"/>
 
     <!-- GamespeedMultiplier for Modules! -->
     <Modifier TargetProperty="GameSpeedMultiplier"  Operation="Force"    Value="$(GameSpeedMultiplier)" Path="ClassShip//ClassModule"/>
