@@ -312,7 +312,7 @@
     <xs:attribute name="CountVarName" type="xs:string" />
     <xs:attribute name="EmpireVarName" type="xs:string" />
     <xs:attribute name="DisplayedTypeVarName" type="xs:string" />
-    <xs:attribute name="FilteringOperation" type="PlanetCuriosityFilteringOperation" />
+    <xs:attribute name="FilteringOperation" type="PlanetCuriosityFilteringOperation" use="required" />
     <xs:attribute default="Min" name="CountOperation" type="PlanetCuriosityCountOperation" />
   </xs:complexType>
   <xs:simpleType name="PlanetCuriosityFilteringOperation">
@@ -341,24 +341,10 @@
     <xs:attribute default="" name="TraitorOwnerVarName" type="xs:string" />
   </xs:complexType>
   <xs:complexType name="XmlQuerySorter">
-    <xs:choice minOccurs="1">
-      <xs:sequence>
-        <xs:element minOccurs="0" name="SortSystemByDistance" type="QuestSorterSystemByDistance" />
-      </xs:sequence>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="SortRemovePlanetsOfSameSystem" type="xs:string"/>
-      </xs:sequence>
-      <xs:sequence>
-        <xs:element minOccurs="0" name="SortSystemByQuestNodeRank" type="QuestSorterSystemByQuestNodeRank"/>
-      </xs:sequence>
-      <xs:sequence>
-      <xs:element minOccurs="0" name="SortConstellationByDistance" type="QuestSorterConstellationByDistance"/>
-      </xs:sequence>
-    </xs:choice>
-  </xs:complexType>
-  <xs:complexType name="QuestSorterConstellationByDistance">
-    <xs:attribute name="OriginVarName" type="xs:string" />
-    <xs:attribute default="Nearest" name="SortBy" type="SortingType" />
+    <xs:sequence maxOccurs="1">
+      <xs:element minOccurs="0" maxOccurs="1" name="SortSystemByDistance" type="QuestSorterSystemByDistance" />
+      <xs:element minOccurs="0" maxOccurs="1" name="SortSystemByQuestNodeRank" type="QuestSorterSystemByQuestNodeRank" />
+    </xs:sequence>
   </xs:complexType>
   <xs:complexType name="QuestSorterSystemByDistance">
     <xs:attribute name="OriginVarName" type="xs:string" />
@@ -369,7 +355,7 @@
     <xs:attribute default="false" name="ConsiderFreeMovement" type="xs:boolean" />
   </xs:complexType>
   <xs:complexType name="QuestSorterSystemByQuestNodeRank">
-    <xs:attribute name="SortBy" type="QuestProgressionType" use="required"/>
+    <xs:attribute default="Ascending" name="SortBy" type="QuestProgressionType" />
   </xs:complexType>
   <xs:simpleType name="SortingType">
     <xs:restriction base="xs:string">
@@ -382,7 +368,7 @@
       <xs:element minOccurs="0" maxOccurs="1" name="From" type="XmlQuery" />
     </xs:sequence>
   </xs:complexType>
-  
+
   <xs:complexType name="XmlQueryLimit">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="1" name="From" type="XmlQuery" />
@@ -392,14 +378,14 @@
     <xs:attribute name="LimitMax" type="xs:int" use="required" />
     <xs:attribute name="Clamp" type="xs:boolean" use="required" />
   </xs:complexType>
-  
+
   <xs:complexType name="XmlQuerySelect">
     <xs:sequence>
       <xs:element minOccurs="0" maxOccurs="1" name="From" type="XmlQuery" />
     </xs:sequence>
     <xs:attribute name="Index" type="xs:int" use="required" />
   </xs:complexType>
-  
+
   <xs:simpleType name="Extremities">
     <xs:restriction base="xs:string">
       <xs:enumeration value="First" />
@@ -5114,7 +5100,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="QuestExecutionTreeDecorator_HeroAssigned">
     <xs:complexContent mixed="false">
       <xs:extension base="QuestExecutionTreeDecorator_EmpireEventOfEventHeroAssigned">
@@ -5220,7 +5206,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-   
+
   <xs:complexType name="QuestExecutionTreeDecoratorOfEventConstructionQueued">
     <xs:complexContent mixed="false">
       <xs:extension base="QuestExecutionTreeNode">
@@ -5910,7 +5896,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="QuestExecutionTreeDecoratorOfEventGroundBattleOutcomeApplied">
     <xs:complexContent mixed="false">
       <xs:extension base="QuestExecutionTreeNode">
@@ -5973,7 +5959,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="QuestExecutionTreeDecorator_InvadeSystem">
     <xs:complexContent mixed="false">
       <xs:extension base="QuestExecutionTreeDecoratorOfEventGroundBattleOutcomeApplied">
@@ -5999,7 +5985,7 @@
       <xs:enumeration value="Pillage" />
     </xs:restriction>
   </xs:simpleType>
-  
+
   <xs:complexType name="QuestExecutionTreeDecoratorOfEventGroundBattleFinished">
     <xs:complexContent mixed="false">
       <xs:extension base="QuestExecutionTreeNode">
@@ -6062,7 +6048,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-    
+
   <xs:complexType name="QuestExecutionTreeDecorator_GroundBattleFinished">
     <xs:complexContent mixed="false">
       <xs:extension base="QuestExecutionTreeDecoratorOfEventGroundBattleFinished">
@@ -6088,11 +6074,11 @@
       <xs:enumeration value="Aborted_AttackerEliminated" />
       <xs:enumeration value="Standy" />
       <xs:enumeration value="AttackerVictory" />
-      <xs:enumeration value="DefenderVictory" />	  
+      <xs:enumeration value="DefenderVictory" />
     </xs:restriction>
   </xs:simpleType>
-    
-  
+
+
   <xs:complexType name="QuestExecutionTreeDecoratorOfEventPopulationGained">
     <xs:complexContent mixed="false">
       <xs:extension base="QuestExecutionTreeNode">
@@ -8246,7 +8232,7 @@
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_ProbeLaunched" type="QuestExecutionTreeDecorator_ProbeLaunched" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_FleetMoved" type="QuestExecutionTreeDecorator_FleetMoved" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_HeroAssigned" type="QuestExecutionTreeDecorator_HeroAssigned" />
-            <xs:element minOccurs="0" maxOccurs="1" name="Decorator_HeroInjured" type="QuestExecutionTreeDecorator_HeroInjured" />			
+            <xs:element minOccurs="0" maxOccurs="1" name="Decorator_HeroInjured" type="QuestExecutionTreeDecorator_HeroInjured" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_ConstructionQueued" type="QuestExecutionTreeDecorator_ConstructionQueued" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_ResearchQueued" type="QuestExecutionTreeDecorator_ResearchQueued" />
             <xs:element minOccurs="0" maxOccurs="1" name="Decorator_HasTutorialKeys" type="QuestExecutionTreeDecorator_HasTutorialKeys" />
