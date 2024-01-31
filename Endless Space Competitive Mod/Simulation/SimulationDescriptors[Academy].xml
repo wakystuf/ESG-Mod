@@ -11,8 +11,8 @@
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="AcademyRoleMasterOfDust" Type="AcademyRole">
-    <Modifier TargetProperty="TradeAgreementCost"          Operation="Addition"        Value="-2"     Path="../ClassEmpire" TooltipHidden="true"/>
-    <Modifier TargetProperty="TradeAgreementCost"          Operation="Addition"        Value="-2"     Path="../ClassEmpire/ClassDiplomacy/ClassDiplomaticEmpire" Priority="1" TooltipHidden="true"/>
+    <Modifier TargetProperty="CanUseAllMinorFactionBoosts" Operation="Force"          Value="1" Path="ClassEmpire"/>
+    <Modifier TargetProperty="DeclareWarOnCostMultiplier"  Operation="Multiplication" Value="3" Path="ClassEmpire,EmpireTypeMajor"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="AcademyRoleVaultKeeper" Type="AcademyRole">
@@ -28,6 +28,7 @@
   <SimulationDescriptor Name="EmpireTypeAcademy"  Type="EmpireType">
     <Property Name="Stress"                     BaseValue="0"   IsSealed="true"/>
     <Property Name="NetAcademyStress"           BaseValue="0"   MinValue="Negative"/>
+    <Property Name="AcademyLevel"               BaseValue="0"   IsSealed="true"/>
     <Property Name="HasPopulationDiversityEffect"   BaseValue="1"/>
 
     <Property Name="NetAcademyEmpireMoney" BaseValue="0"/>
@@ -45,7 +46,7 @@
     <Property Name="MinimumAcademyEmpireDiplomacyMoneyStock"   BaseValue="0"/>
 
     <Property Name="AcademyFleetUpkeep"/>
-    <Property Name="Multiplier"        BaseValue ="1"/>
+    <Property Name="MaxConcurrentFleetsMultiplier"        BaseValue ="1"/>
 
     <Property Name="AggressivenessMultiplier"             BaseValue ="1"/>
 
@@ -56,16 +57,34 @@
     <Property Name="PlayerCountBoost" BaseValue="1" MinValue="1"/>
     <Property Name="TurnBoost" BaseValue="0" MaxValue="100"/>
     <Property Name="TurnReset" BaseValue="-1" MaxValue="0" MinValue="-1"/>
+    <Property Name="CanColonize"                    BaseValue="0" MinValue="0" MaxValue="1"/>
+    <Property Name="HasNoColonizationCap"           BaseValue="1"/>
+    <Property Name="HasNoColonizationPeriod"        BaseValue="1"/>
 
-    <Modifier TargetProperty="NetAcademyEmpireMoney"  Operation="Subtraction" Value="$(AcademyFleetUpkeep)" Priority="1"/>
-    <Modifier TargetProperty="NetAcademyEmpireMoney"  Operation="Addition" Value="$(CurrentTurn)"/>
-    <Modifier TargetProperty="MaximumHackingOperationsCount" Operation="Force" Value="0" Priority="1000"/>
+    <Property Name="ColonizationPeriod"             BaseValue="1" MinValue="1"/>
 
-    <Modifier TargetProperty="MaxConcurrentFleetMultiplier" Operation="Multiplication" Value="$(PlayerCountBoost)"/>
-    <Modifier TargetProperty="NetAcademyStress" Operation="Division" Value="$(PlayerCountBoost)"/>
-    <BinaryModifier TargetProperty="TurnBoost" Operation="Force" Left="$(CurrentTurn)" Right="$(CurrentTurn)" BinaryOperation="Multiplication"/>
-    <BinaryModifier TargetProperty="TurnReset" Operation="Force" Left="-2" Right="$(CurrentTurn)" BinaryOperation="Addition"/>
-    <BinaryModifier TargetProperty="NetAcademyStress" Operation="Multiplication" Left="$(TurnBoost)" Right="0.01" BinaryOperation="Multiplication"/>
-    <BinaryModifier TargetProperty="NetAcademyStress" Operation="Addition" Left="$(TurnReset)" Right="$(Stress)" BinaryOperation="Multiplication" Priority="2"/>
+    <Property Name="ColonizationPeriodFormulaNumerator"/>
+    <Property Name="ColonizationPeriodFormulaDenominator"/>
+    <Property Name="ColonizationCapFormulaNumerator"/>
+    <Property Name="ColonizationCapFormulaDenominator"/>
+
+    <BinaryModifier TargetProperty="ColonizationPeriodFormulaNumerator" Operation="Addition" Left="$(ColonizationPeriod)" BinaryOperation="Subtraction" Right="$(CurrentTurn)"/>
+    <Modifier TargetProperty="ColonizationPeriodFormulaNumerator" Operation="Addition" Value="1"/>
+    <Modifier TargetProperty="ColonizationPeriodFormulaNumerator" Operation="Maximum" Value="$(HasNoColonizationPeriod)"/>
+    <Modifier TargetProperty="ColonizationPeriodFormulaDenominator" Operation="Addition" Value="$(ColonizationPeriod)"/>
+
+    <BinaryModifier TargetProperty="CanColonize" Operation="Addition" Left="$(ColonizationPeriodFormulaNumerator)" BinaryOperation="Division" Right="$(ColonizationPeriodFormulaDenominator)"/>
+
+    <BinaryModifier TargetProperty="ColonizationCapFormulaNumerator" Operation="Addition" Left="$(OverColonizationThreshold)" BinaryOperation="Subtraction" Right="$(ColonizedStarSystemStateColonyCount)"/>
+    <Modifier TargetProperty="ColonizationCapFormulaNumerator" Operation="Addition" Value="1"/>
+    <Modifier TargetProperty="ColonizationCapFormulaNumerator" Operation="Maximum" Value="$(HasNoColonizationCap)"/>
+    <BinaryModifier TargetProperty="ColonizationCapFormulaDenominator" Operation="Addition" Left="$(OverColonizationThreshold)" BinaryOperation="Addition" Right="1"/>
+
+    <BinaryModifier TargetProperty="CanColonize" Operation="Addition" Left="$(ColonizationCapFormulaNumerator)" BinaryOperation="Division" Right="$(ColonizationCapFormulaDenominator)"/>
+
+    <Modifier TargetProperty="NetAcademyEmpireMoney"  Operation="Subtraction" Value="$(AcademyFleetUpkeep)" Priority="1"/> <!-- Counteract effect innate to their ships -->
+    <Modifier TargetProperty="CanInvade" Operation="Force" Value="1" Path="ClassEmpire//ClassGarrisonFleet"/> <!-- Doesn't need to have colonization techs -->
+    <Modifier TargetProperty="PlanetInitialFIDSPenalty"        Operation="Force"     Value="0"    Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/> <!-- Add property to academy systems -->
+    <Modifier TargetProperty="IsAcademyOwned" Operation="Force" Value="1" Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
   </SimulationDescriptor>
 </Datatable>
