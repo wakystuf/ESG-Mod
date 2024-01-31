@@ -40,22 +40,32 @@
     <Property Name="ReducedAnomalyCount" BaseValue="0"/>
 
     <!-- Planet's raw resources -->
-    <Property Name="PlanetInitialFIDSPenalty" BaseValue="0" MinValue="Negative"/>
+    <Property Name="PlanetInitialFIDSPenalty" BaseValue="-0.5" MinValue="Negative"/>
 
-    <Property Name="PlanetInitialFood" MinValue="Negative"/>
-    <Property Name="PlanetInitialIndustry" MinValue="Negative"/>
-    <Property Name="PlanetInitialDust" MinValue="Negative"/>
-    <Property Name="PlanetInitialScience" MinValue="Negative"/>
-    <Property Name="PlanetInitialPrestige" MinValue="Negative"/>
+    <Property Name="PlanetInitialFood"/>
+    <Property Name="PlanetInitialIndustry"/>
+    <Property Name="PlanetInitialDust"/>
+    <Property Name="PlanetInitialScience"/>
+    <Property Name="PlanetInitialPrestige"/>
+    <Property Name="PlanetInitialFIDS"/>
+    <Property Name="PlanetInitialFIDSI"/>
 
+    <!-- These function identically to the properties above, but display as "per population" -->
+    <Property Name="PlanetInitialFoodPerPopulation"/>
+    <Property Name="PlanetInitialIndustryPerPopulation"/>
+    <Property Name="PlanetInitialDustPerPopulation"/>
+    <Property Name="PlanetInitialSciencePerPopulation"/>
+    <Property Name="PlanetInitialPrestigePerPopulation"/>
+    <Property Name="PlanetInitialFIDSPerPopulation"/>
+    <Property Name="PlanetInitialFIDSIPerPopulation"/>
 
-    <Property Name="PlanetRawFood" MinValue="Negative"/>
-    <Property Name="PlanetRawIndustry" MinValue="Negative"/>
-    <Property Name="PlanetRawDust" MinValue="Negative"/>
-    <Property Name="PlanetRawScience" MinValue="Negative"/>
-    <Property Name="PlanetRawPrestige" MinValue="Negative"/>
-    <Property Name="PlanetRawFIDSI" MinValue="Negative"/>
-    <Property Name="PlanetRawFIDS" MinValue="Negative"/>
+    <Property Name="PlanetRawFood"/>
+    <Property Name="PlanetRawIndustry"/>
+    <Property Name="PlanetRawDust"/>
+    <Property Name="PlanetRawScience"/>
+    <Property Name="PlanetRawPrestige"/>
+    <Property Name="PlanetRawFIDSI"/>
+    <Property Name="PlanetRawFIDS"/>
 
     <Property Name="PlanetDepletionPoints" IsSealed="true"/>
     <Property Name="PlanetDepletionPerTurn" MinValue="Negative"/>
@@ -122,45 +132,112 @@
 
     <Property Name="PlanetIsDestroyed" 	BaseValue="0" MinValue="0" MaxValue="1"/>
 
-    <Property Name="PlanetInitialFIDSPenalty" BaseValue="0"/>
+    <!-- 2023 Patch -->
+    <Property Name="TempleScienceToInfluenceFactor" BaseValue="1"/>
+
+    <Property Name="MinimumFIDS"     BaseValue="-1000" MinValue="Negative"/>
+    <Property Name="MinimumFIDSI"    BaseValue="-1000" MinValue="Negative"/>
+    <Property Name="MinimumFood"     BaseValue="-1000" MinValue="Negative"/>
+    <Property Name="MinimumIndustry" BaseValue="-1000" MinValue="Negative"/>
+    <Property Name="MinimumDust"     BaseValue="-1000" MinValue="Negative"/>
+    <Property Name="MinimumScience"  BaseValue="-1000" MinValue="Negative"/>
+    <Property Name="MinimumPrestige" BaseValue="-1000" MinValue="Negative"/>
+    <Property Name="MinimumApproval" BaseValue="-1000" MinValue="Negative"/>
+
+    <Property Name="PlanetInitialFIDSPenaltyFood"      MinValue="Negative"/>
+    <Property Name="PlanetInitialFIDSPenaltyIndustry"  MinValue="Negative"/>
+    <Property Name="PlanetInitialFIDSPenaltyDust"      MinValue="Negative"/>
+    <Property Name="PlanetInitialFIDSPenaltyScience"   MinValue="Negative"/>
+
+    <Property Name="PlanetAnomalies"         BaseValue="0" />
+    <Property Name="PlanetStrategicDeposits" BaseValue="0" />
+    <Property Name="PlanetLuxuryDeposits"    BaseValue="0" />
 
     <!-- ########################################################## -->
     <!-- ######################## MODIFIER ######################## -->
     <!-- ########################################################## -->
 
-    <Modifier TargetProperty="PlanetInitialFood"        Operation="Percent"    Value="$(PlanetInitialFIDSPenalty)"  TooltipHidden="true"  />
-    <Modifier TargetProperty="PlanetInitialIndustry"    Operation="Percent"    Value="$(PlanetInitialFIDSPenalty)"  TooltipHidden="true"  />
-    <Modifier TargetProperty="PlanetInitialDust"        Operation="Percent"    Value="$(PlanetInitialFIDSPenalty)"  TooltipHidden="true"  />
-    <Modifier TargetProperty="PlanetInitialScience"     Operation="Percent"    Value="$(PlanetInitialFIDSPenalty)"  TooltipHidden="true"  />
-    <Modifier TargetProperty="PlanetInitialPrestige"    Operation="Percent"    Value="$(PlanetInitialFIDSPenalty)"  TooltipHidden="true"    />
+    <!-- 2023 Patch -->
+    <!-- FIDS Penalty -->
+    <BinaryModifier TargetProperty="PlanetInitialFIDSPenaltyFood"     Operation="Addition" Left="$(PlanetInitialFood)"     BinaryOperation="Multiplication" Right="$(PlanetInitialFIDSPenalty)" />
+    <BinaryModifier TargetProperty="PlanetInitialFIDSPenaltyIndustry" Operation="Addition" Left="$(PlanetInitialIndustry)" BinaryOperation="Multiplication" Right="$(PlanetInitialFIDSPenalty)" />
+    <BinaryModifier TargetProperty="PlanetInitialFIDSPenaltyDust"     Operation="Addition" Left="$(PlanetInitialDust)"     BinaryOperation="Multiplication" Right="$(PlanetInitialFIDSPenalty)" />
+    <BinaryModifier TargetProperty="PlanetInitialFIDSPenaltyScience"  Operation="Addition" Left="$(PlanetInitialScience)"  BinaryOperation="Multiplication" Right="$(PlanetInitialFIDSPenalty)" />
+
+    <BinaryModifier TargetProperty="PlanetFood"     Operation="Addition" Left="$(PlanetInitialFIDSPenaltyFood)"     BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedPlanet"/>
+    <BinaryModifier TargetProperty="PlanetIndustry" Operation="Addition" Left="$(PlanetInitialFIDSPenaltyIndustry)" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedPlanet"/>
+    <BinaryModifier TargetProperty="PlanetDust"     Operation="Addition" Left="$(PlanetInitialFIDSPenaltyDust)"     BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedPlanet"/>
+    <BinaryModifier TargetProperty="PlanetScience"  Operation="Addition" Left="$(PlanetInitialFIDSPenaltyScience)"  BinaryOperation="Multiplication" Right="$(Population)" Path="ClassColonizedPlanet"/>
+
+    <Modifier TargetProperty="PlanetInitialFood"               Operation="Addition" Value="$(PlanetInitialFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialIndustry"           Operation="Addition" Value="$(PlanetInitialFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialDust"               Operation="Addition" Value="$(PlanetInitialFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialScience"            Operation="Addition" Value="$(PlanetInitialFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFood"               Operation="Addition" Value="$(PlanetInitialFIDSI)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialIndustry"           Operation="Addition" Value="$(PlanetInitialFIDSI)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialDust"               Operation="Addition" Value="$(PlanetInitialFIDSI)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialScience"            Operation="Addition" Value="$(PlanetInitialFIDSI)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialPrestige"           Operation="Addition" Value="$(PlanetInitialFIDSI)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFood"               Operation="Addition" Value="$(PlanetInitialFoodPerPopulation)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialIndustry"           Operation="Addition" Value="$(PlanetInitialIndustryPerPopulation)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialDust"               Operation="Addition" Value="$(PlanetInitialDustPerPopulation)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialScience"            Operation="Addition" Value="$(PlanetInitialSciencePerPopulation)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialPrestige"           Operation="Addition" Value="$(PlanetInitialPrestigePerPopulation)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDS"               Operation="Addition" Value="$(PlanetInitialFIDSPerPopulation)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFIDSI"              Operation="Addition" Value="$(PlanetInitialFIDSIPerPopulation)" TooltipHidden="true"/>
 
     <!-- Depletion -->
     <BinaryModifier TargetProperty="PlanetDepletionPercent"     Operation="Addition"   Left="$(PlanetDepletionPoints)" BinaryOperation="Division" Right="$(PlanetDepletionMax)"  TooltipHidden="true"/>
     <BinaryModifier TargetProperty="PlanetDepletionFIDSPenalty" Operation="Addition"   Left="$(PlanetDepletionPercent)" BinaryOperation="Multiplication" Right="0.5"  TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PlanetRawFood" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PlanetRawIndustry" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PlanetRawDust" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PlanetRawScience" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PlanetRawPrestige" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetFood" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetIndustry" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetDust" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetScience" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetPrestige" Operation="Percent" Left="-1" BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
     <Modifier TargetProperty="PlanetDepletionFIDSRemaining" Operation="Subtraction" Value="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
-    
+
     <Modifier TargetProperty="PlanetDepletionFIDSRemaining"    Operation="Force"    Value="$(PlanetDepletionFIDSRemaining)" Path="ClassColonizedPlanet/ClassPopulationPlanet" TooltipHidden="true"/>
     <Modifier TargetProperty="PlanetDepletionFIDSPenalty"      Operation="Force"    Value="$(PlanetDepletionFIDSPenalty)" Path="ClassColonizedPlanet/ClassPopulationPlanet" TooltipHidden="true"/>
 
+    <Modifier TargetProperty="PlanetInitialFood"              Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFood"              Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFood"              Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFood"              Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFood"              Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFood"              Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFood"              Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
 
-    <!-- Population max -->
-    <Modifier TargetProperty="PlanetRawFood"        Operation="Addition"    Value="$(PlanetInitialFood)"        Priority="-5"   TooltipHidden="true"/>
-    <Modifier TargetProperty="PlanetRawIndustry"    Operation="Addition"    Value="$(PlanetInitialIndustry)"    Priority="-5"   TooltipHidden="true"/>
-    <Modifier TargetProperty="PlanetRawDust"        Operation="Addition"    Value="$(PlanetInitialDust)"        Priority="-5"   TooltipHidden="true"/>
-    <Modifier TargetProperty="PlanetRawScience"     Operation="Addition"    Value="$(PlanetInitialScience)"     Priority="-5"   TooltipHidden="true"/>
-    <Modifier TargetProperty="PlanetRawPrestige"    Operation="Addition"    Value="$(PlanetInitialPrestige)"    Priority="-5"   TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialFood"              Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialIndustry"          Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialDust"              Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialScience"           Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="MinimumFood"              Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="MinimumIndustry"          Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="MinimumDust"              Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+    <Modifier TargetProperty="MinimumScience"           Operation="Maximum" Value="$(MinimumFIDS)" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="MinimumFood"              Operation="Maximum" Value="$(MinimumFIDSI)" TooltipHidden="true"/>
+    <Modifier TargetProperty="MinimumIndustry"          Operation="Maximum" Value="$(MinimumFIDSI)" TooltipHidden="true"/>
+    <Modifier TargetProperty="MinimumDust"              Operation="Maximum" Value="$(MinimumFIDSI)" TooltipHidden="true"/>
+    <Modifier TargetProperty="MinimumScience"           Operation="Maximum" Value="$(MinimumFIDSI)" TooltipHidden="true"/>
+    <Modifier TargetProperty="MinimumPrestige"          Operation="Maximum" Value="$(MinimumFIDSI)" TooltipHidden="true"/>
+
+    <Modifier TargetProperty="PlanetInitialFood"        Operation="Maximum" Value="$(MinimumFood)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialIndustry"    Operation="Maximum" Value="$(MinimumIndustry)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialDust"        Operation="Maximum" Value="$(MinimumDust)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialScience"     Operation="Maximum" Value="$(MinimumScience)" TooltipHidden="true"/>
+    <Modifier TargetProperty="PlanetInitialPrestige"    Operation="Maximum" Value="$(MinimumPrestige)" TooltipHidden="true"/>
+
+    <BinaryModifier TargetProperty="Happiness"          Operation="Maximum" Left= "$(MinimumApproval)" BinaryOperation="Multiplication" Right="$(Population)" TooltipHidden="true"/>
+    <Modifier TargetProperty="HappinessRaw"             Operation="Maximum" Value="$(MinimumApproval)" TooltipHidden="true"/>
 
     <!-- FOR OUTPOSTS -->
-    <Modifier TargetProperty="AdditionalFood"        Operation="Addition"    Value="$(PlanetRawFood)"        Priority="-5"   TooltipHidden="true"   Path="../ClassColonizedStarSystem,ColonizedStarSystemStateOutpost"/>
-    <Modifier TargetProperty="AdditionalIndustry"    Operation="Addition"    Value="$(PlanetRawIndustry)"    Priority="-5"   TooltipHidden="true"   Path="../ClassColonizedStarSystem,ColonizedStarSystemStateOutpost"/>
-    <Modifier TargetProperty="AdditionalDust"        Operation="Addition"    Value="$(PlanetRawDust)"        Priority="-5"   TooltipHidden="true"   Path="../ClassColonizedStarSystem,ColonizedStarSystemStateOutpost"/>
-    <Modifier TargetProperty="AdditionalScience"     Operation="Addition"    Value="$(PlanetRawScience)"     Priority="-5"   TooltipHidden="true"   Path="../ClassColonizedStarSystem,ColonizedStarSystemStateOutpost"/>
-    <Modifier TargetProperty="AdditionalPrestige"    Operation="Addition"    Value="$(PlanetRawPrestige)"    Priority="-5"   TooltipHidden="true"   Path="../ClassColonizedStarSystem,ColonizedStarSystemStateOutpost"/>
+    <Modifier TargetProperty="AdditionalFood"        Operation="Addition"    Value="$(PlanetInitialFood)"        Priority="-5"   TooltipHidden="true"   Path="../ClassColonizedStarSystem,ColonizedStarSystemStateOutpost"/>
+    <Modifier TargetProperty="AdditionalIndustry"    Operation="Addition"    Value="$(PlanetInitialIndustry)"    Priority="-5"   TooltipHidden="true"   Path="../ClassColonizedStarSystem,ColonizedStarSystemStateOutpost"/>
+    <Modifier TargetProperty="AdditionalDust"        Operation="Addition"    Value="$(PlanetInitialDust)"        Priority="-5"   TooltipHidden="true"   Path="../ClassColonizedStarSystem,ColonizedStarSystemStateOutpost"/>
+    <Modifier TargetProperty="AdditionalScience"     Operation="Addition"    Value="$(PlanetInitialScience)"     Priority="-5"   TooltipHidden="true"   Path="../ClassColonizedStarSystem,ColonizedStarSystemStateOutpost"/>
+    <Modifier TargetProperty="AdditionalPrestige"    Operation="Addition"    Value="$(PlanetInitialPrestige)"    Priority="-5"   TooltipHidden="true"   Path="../ClassColonizedStarSystem,ColonizedStarSystemStateOutpost"/>
 
 
     <Modifier TargetProperty="BaseMaximumPopulation"    Operation="Addition"    Value="$(RawMaximumPopulation)" TooltipHidden="true"/>
@@ -189,23 +266,16 @@
 
     <Modifier TargetProperty="PlanetHasAnomaly"            Operation="Addition"    Value="$(PlanetHasAnomaly)" Path="ClassPlanet/ClassPopulationPlanet" TooltipHidden="true"/>
 
-
-    <BinaryModifier TargetProperty="ShouldForceRawFood" Operation="Addition" Left="5" BinaryOperation="Subtraction" Right="$(PlanetInitialFood)"           TooltipHidden="true" />
-    <Modifier       TargetProperty="ShouldForceRawFood" Operation="Multiplication"    Value="$(ApplyShouldForceRawFood)" TooltipHidden="true"/>
-    <BinaryModifier    TargetProperty="PlanetRawFood"            Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(ShouldForceRawFood)"    Priority="-4"   TooltipHidden="true"/>
-    <BinaryModifier     TargetProperty="PlanetRawFood"          Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(ShouldForceRawFood)"      Priority="-3"     TooltipHidden="true"/>
-
-    <BinaryModifier TargetProperty="ShouldForceRawScience" Operation="Addition" Left="5" BinaryOperation="Subtraction" Right="$(PlanetInitialScience)"           TooltipHidden="true" />
-    <Modifier       TargetProperty="ShouldForceRawScience" Operation="Multiplication"    Value="$(ApplyShouldForceRawScience)"      TooltipHidden="true" />
-    <BinaryModifier    TargetProperty="PlanetRawScience"            Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(ShouldForceRawScience)"    Priority="-4" TooltipHidden="true"/>
-    <BinaryModifier     TargetProperty="PlanetRawScience"          Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(ShouldForceRawScience)"      Priority="-3"   TooltipHidden="true"/>
-
     <Modifier TargetProperty="PlanetDepletionPerTurn" Operation="Addition" Value="$(PlanetDepletionPerTurnFromFleets)"/>
     <Modifier TargetProperty="PlanetDepletionPerTurn" Operation="Addition" Value="$(PlanetDepletionPerTurnFromMiningProbe)"/>
     <Modifier TargetProperty="PlanetDepletionPerTurn" Operation="Percent" Value="$(PlanetDepletionMultiplier)"/>
 
+    <Modifier TargetProperty="PlanetRawFood" Operation="Addition" Value="$(PlanetInitialFood)"/>
+    <Modifier TargetProperty="PlanetRawIndustry" Operation="Addition" Value="$(PlanetInitialIndustry)"/>
+    <Modifier TargetProperty="PlanetRawDust" Operation="Addition" Value="$(PlanetInitialDust)"/>
+    <Modifier TargetProperty="PlanetRawScience" Operation="Addition" Value="$(PlanetInitialScience)"/>
+    <Modifier TargetProperty="PlanetRawPrestige" Operation="Addition" Value="$(PlanetInitialPrestige)"/>
   </SimulationDescriptor>
-
 
   <SimulationDescriptor Name="PlanetSizeHuge" Type="PlanetSize" >
     <Property Name="OwnedHugePlanets"                           BaseValue="1" />
