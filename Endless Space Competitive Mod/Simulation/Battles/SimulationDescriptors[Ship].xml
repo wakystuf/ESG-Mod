@@ -424,36 +424,6 @@
 
   </SimulationDescriptor>
 
-  <!-- ******************** -->
-  <!-- **SECTION CLASS** -->
-  <!-- ******************** -->
-  <SimulationDescriptor Name="ClassSection" Type="Class">
-    <Property Name="MaximumMovement"/>
-    <Property Name="VisionRange"     Composition="Sum"/>
-
-    <Property Name="OffensiveMilitaryPower" Composition="Sum"/>
-    <Property Name="DefensiveMilitaryPower" Composition="Sum"/>
-    <Property Name="OffensiveMilitaryPowerForSimplifiedBattles" Composition="Sum"/>
-
-    <!-- Calculate base trade value including strat costs (computed using pseudoprices) -->
-    <Modifier TargetProperty="TotalIndustryCost" Operation="Multiplication" Value="$(GameSpeedMultiplier)"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalIndustryCost)"   BinaryOperation="Multiplication" Right="0.4"                Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic1Cost)" BinaryOperation="Multiplication" Right="$(Strategic1Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic2Cost)" BinaryOperation="Multiplication" Right="$(Strategic2Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic3Cost)" BinaryOperation="Multiplication" Right="$(Strategic3Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic4Cost)" BinaryOperation="Multiplication" Right="$(Strategic4Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic5Cost)" BinaryOperation="Multiplication" Right="$(Strategic5Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic6Cost)" BinaryOperation="Multiplication" Right="$(Strategic6Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic6Cost)" BinaryOperation="Multiplication" Right="$(Strategic6Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
-
-    <!--Adjust for stupid Market shenanigans -->
-    <BinaryModifier TargetProperty="TradeValue" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(ShipBuyoutReduction)"  Path="ClassShip"/>
-    <Modifier       TargetProperty="TradeValue" Operation="Multiplication" Value="1"                                                              Path="ClassShip,!ShipSizeJuggernaut"/>
-
-    <!-- GamespeedMultiplier for Modules! -->
-    <Modifier TargetProperty="GameSpeedMultiplier"  Operation="Force"    Value="$(GameSpeedMultiplier)" Path="ClassShip//ClassModule"/>
-
-  </SimulationDescriptor>
   <SimulationDescriptor Name="ShipRoleRootCreator"      Type="ShipRole">
     <Modifier TargetProperty="ScrapPriority"            Operation="Subtraction" Value="7"  Path="ClassShip"/>
     <Modifier TargetProperty="MaximumMovement"          Operation="Addition"    Value="1"     Path="ClassShip"/>
