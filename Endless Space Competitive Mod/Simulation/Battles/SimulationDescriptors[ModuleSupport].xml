@@ -261,21 +261,23 @@
   <SimulationDescriptor Name="ModuleSupportBait"                 Type="ModuleSupportBait">
     <Property Name="TargetingWeightBonus"                BaseValue="0"/>
     <Property Name="HPRestoredPerSecond" BaseValue="0" MinValue="0"/>
+    <Property Name="MaximumMovement" BaseValue="0"/>
     <Modifier TargetProperty="TargetingWeightBonus"      Operation="Addition" Value="$(TargetingWeightBonus)"       Path="../ClassShip"     Priority="1"/>
     <Modifier TargetProperty="HPRestoredPerSecond"                            Operation="Multiplication" Value="$(Multiplier)"         TooltipHidden="true"/>
     <Modifier TargetProperty="HPRestoredPerSecond"              Operation="Addition" Value="$(HPRestoredPerSecond)"    Path="../ClassShip"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="$(MaximumMovement)" Path="../ClassShip" Priority="1"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleSupportBait1Strategic4"      Type="ModuleSupportBait">
     <Modifier TargetProperty="TargetingWeightBonus" Operation="Addition" Value="10" Path="ModuleSupportBait"/>
-    <Modifier TargetProperty="HPRestoredPerSecond" Operation="Addition" Value="20" Path="ModuleSupportBait"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="4" Path="ModuleSupportBait"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalStrategic4Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleSupportBait2Strategic6"      Type="ModuleSupportBait">
-    <Modifier TargetProperty="TargetingWeightBonus" Operation="Addition" Value="20" Path="ModuleSupportBait"/>
-    <Modifier TargetProperty="HPRestoredPerSecond" Operation="Addition" Value="35" Path="ModuleSupportBait"/>
+    <Modifier TargetProperty="TargetingWeightBonus" Operation="Addition" Value="30" Path="ModuleSupportBait"/>
+    <Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="5" Path="ModuleSupportBait"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="55" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalStrategic6Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
@@ -658,6 +660,7 @@
   <!-- Coordinated Flak -->
   <SimulationDescriptor Name="ModuleSupportFlakEnhancer"              Type="ModuleSupportFlakEnhancer">
     <Property Name="FlotillaFlakDamageModifierVar" BaseValue="0"/>
+    <Property Name="FlotillaFlakFireRateModifierVar" BaseValue="0"/>
     <Property Name="FlotillaFlakRangePenalty" BaseValue="0" MinValue="Negative"/>
     <Modifier TargetProperty="FlotillaFlakDamageModifier"            Operation="Addition"	Value="$(FlotillaFlakDamageModifierVar)"      Path="../ClassShip" TooltipHidden="true"/>
     <Modifier TargetProperty="FlotillaFlakMediumRangePenalty"           Operation="Addition" Value="$(FlotillaFlakRangePenalty)"         Path="../ClassShip" TooltipHidden="true"/>
@@ -778,13 +781,13 @@
 
   <SimulationDescriptor Name="ModuleSupportJammer1Strategic3"      Type="ModuleSupportJammer">
     <Modifier TargetProperty="TargetingWeightPenalty" Operation="Addition" Value="10" Path="ModuleSupportJammer"/>
-    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="3"      Path="ModuleSupportJammer"/>
+    <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="4"      Path="ModuleSupportJammer"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="40" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalStrategic3Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleSupportJammer2Strategic5"      Type="ModuleSupportJammer">
-    <Modifier TargetProperty="TargetingWeightPenalty" Operation="Addition" Value="20" Path="ModuleSupportJammer"/>
+    <Modifier TargetProperty="TargetingWeightPenalty" Operation="Addition" Value="30" Path="ModuleSupportJammer"/>
     <Modifier TargetProperty="MaximumMovement"         Operation="Addition"     Value="5"      Path="ModuleSupportJammer"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="55" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalStrategic5Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
@@ -893,15 +896,19 @@
   <SimulationDescriptor Name="ModuleSupportRepair"            Type="ModuleSupportRepair">
     <Property Name="RepairAfterBattle"                BaseValue="0"/>
     <Property Name="RepairAfterPhase"                BaseValue="0"/>
+    <Property Name="HullWeakness"                BaseValue="0"/>
     <Property Name="HealthRegenerationRatio"                BaseValue="0"/>
     <Modifier TargetProperty="RepairAfterBattle"      Operation="Addition" Value="$(RepairAfterBattle)"       Path="../ClassShip"     Priority="1"/>
     <Modifier TargetProperty="RepairAfterPhase"      Operation="Addition" Value="$(RepairAfterPhase)"       Path="../ClassShip"     Priority="1"/>
     <Modifier TargetProperty="HealthRegenerationRatio"      Operation="Addition" Value="$(HealthRegenerationRatio)"       Path="../ClassShip"     Priority="1"/>
+    <Modifier TargetProperty="HullWeakness"      Operation="Multiplication" Value="$(Multiplier)"/>
+    <Modifier TargetProperty="HullWeakness"      Operation="Subtraction" Value="$(HullWeakness)"       Path="../ClassShip"     Priority="1"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ModuleSupportRepair1" Type="ModuleSupportRepair">
     <Modifier TargetProperty="SectionHealthBonus"       Operation="Addition" Value="150"    Path="ClassModule"/>
     <Modifier TargetProperty="RepairAfterBattle" Operation="Addition" Value="0.1" Path="ModuleSupportRepair"/>
+    <Modifier TargetProperty="HullWeakness" Operation="Addition" Value="10" Path="ModuleSupportRepair"/>
     <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.03" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="80" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
@@ -910,6 +917,7 @@
     <Modifier TargetProperty="SectionHealthBonus"       Operation="Addition" Value="225"    Path="ClassModule"/>
     <Modifier TargetProperty="RepairAfterBattle" Operation="Addition" Value="0.10" Path="ModuleSupportRepair"/>
     <Modifier TargetProperty="RepairAfterPhase" Operation="Addition" Value="0.05" Path="ModuleSupportRepair"/>
+    <Modifier TargetProperty="HullWeakness" Operation="Addition" Value="10" Path="ModuleSupportRepair"/>
     <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.08" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalStrategic1Cost"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
@@ -918,6 +926,7 @@
   <SimulationDescriptor Name="ModuleSupportRepair2Strategic2" Type="ModuleSupportRepair">
     <Modifier TargetProperty="SectionHealthBonus"       Operation="Addition" Value="300"    Path="ClassModule"/>
     <Modifier TargetProperty="RepairAfterBattle" Operation="Addition" Value="0.15" Path="ModuleSupportRepair"/>
+    <Modifier TargetProperty="HullWeakness" Operation="Addition" Value="10" Path="ModuleSupportRepair"/>
     <Modifier TargetProperty="HealthRegenerationRatio" Operation="Addition" Value="0.05" Path="ModuleSupportRepair"/>
     <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.08" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="100" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
@@ -928,6 +937,7 @@
     <Modifier TargetProperty="SectionHealthBonus"       Operation="Addition" Value="400"    Path="ClassModule"/>
     <Modifier TargetProperty="RepairAfterBattle" Operation="Addition" Value="0.2" Path="ModuleSupportRepair"/>
     <Modifier TargetProperty="RepairAfterPhase" Operation="Addition" Value="0.15" Path="ModuleSupportRepair"/>
+    <Modifier TargetProperty="HullWeakness" Operation="Addition" Value="15" Path="ModuleSupportRepair"/>
     <Modifier TargetProperty="HealthRegenerationRatio" Operation="Addition" Value="0.1" Path="ModuleSupportRepair"/>
     <Modifier TargetProperty="DefensiveMilitaryPower"   Operation="Percent" Value="0.16" Path="../ClassShip"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="120" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="../ClassShip" TooltipHidden="true"/>
