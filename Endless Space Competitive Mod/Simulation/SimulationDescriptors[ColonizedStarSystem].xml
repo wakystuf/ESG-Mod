@@ -36,38 +36,9 @@
     <Property Name="StarSystemImprovementUniqueCurioHeroVariable"	BaseValue="0"/>
     <Property Name="HullTypes" BaseValue="0"/>
 
-    <!-- Food rework -->
-    <Property Name="SystemGrowthStockNextTurn"					BaseValue="0" MinValue="0"/>
-    <Property Name="SystemGrowthStockRequiredForNextPop" BaseValue="0" MinValue="0"/>
-    <Property Name="MaximumUsefulSystemGrowthStock" 	  BaseValue="0" MinValue="0"/>
-    <Property Name="SystemGrowthStockAdjustmentToMaximum" BaseValue="0" MinValue="0"/>
-
-    <Property Name="WastedGrowth"				 		            BaseValue="0" MinValue="0"/>
     <Property Name="CurrentTurn" 						            BaseValue="1"/>
-    <Property Name="GameSettingFoodReworkEnabled"		    BaseValue="1" MinValue="0" MaxValue="1"/>
-    <Property Name="GameSettingFoodReworkScalingEnabled" BaseValue="0" MinValue="0" MaxValue="1"/>
-    <Property Name="CanConvertWastedFoodtoDust1"				BaseValue="0" MinValue="0" MaxValue="1"/>
-    <Property Name="CanConvertWastedFoodtoDust2"				BaseValue="0" MinValue="0" MaxValue="1"/>
-    <Property Name="CanConvertWastedFoodtoMP1"		 			BaseValue="0" MinValue="0" MaxValue="1"/>
-    <Property Name="CanConvertWastedFoodtoMP2"		 			BaseValue="0" MinValue="0" MaxValue="1"/>
-    <Property Name="CanConvertWastedFoodtoApproval"			BaseValue="0" MinValue="0" MaxValue="1"/>
-    <Property Name="WastedFoodtoDust"		 								BaseValue="0" MinValue="0"/>
-    <Property Name="WastedFoodtoMP"		 									BaseValue="0" MinValue="0"/>
-    <Property Name="WastedFoodtoApproval"		 						BaseValue="0" MinValue="0" MaxValue="10"/>
-
-    <Property Name="CurrentTurnModuloEndlessCeil"				BaseValue="0" RoundingFunction="Ceil"/>
-    <Property Name="CurrentTurnModuloEndlessFloor"			BaseValue="0" RoundingFunction="Floor"/>
-    <Property Name="CurrentTurnModuloEndless"						BaseValue="0" MinValue="0" MaxValue="1"/>
     <Property Name="GameSettingEndlessBoolean"					BaseValue="0" MinValue="0" MaxValue="1"/>
-
-    <Property Name="CurrentTurnModuloSlowCeil"					BaseValue="0" RoundingFunction="Ceil"/>
-    <Property Name="CurrentTurnModuloSlowFloor"					BaseValue="0" RoundingFunction="Floor"/>
-    <Property Name="CurrentTurnModuloSlow"							BaseValue="0" MinValue="0" MaxValue="1"/>
     <Property Name="GameSettingSlowBoolean"							BaseValue="0" MinValue="0" MaxValue="1"/>
-
-    <Property Name="CurrentTurnModuloNormalCeil"				BaseValue="0" RoundingFunction="Ceil"/>
-    <Property Name="CurrentTurnModuloNormalFloor"				BaseValue="0" RoundingFunction="Floor"/>
-    <Property Name="CurrentTurnModuloNormal"						BaseValue="0" MinValue="0" MaxValue="1"/>
     <Property Name="GameSettingNormalBoolean"						BaseValue="0" MinValue="0" MaxValue="1"/>
 
     <!-- Law Rework -->
@@ -85,17 +56,7 @@
     <Property Name="VisionRangeDevelopment"							BaseValue="1"/>
 
     <!-- Update this once a week until Chaos does what he promised -->
-    <Property Name="WeeksChaosHasDelayed"  BaseValue="3"/>
-
-    <!-- Luxury Rework -->
-    <Property Name="LuxuryReworkEnabled"                BaseValue="0"/>
-    <Property Name="LuxuryReworkDisabled"               BaseValue="0" />
-    <Property Name="LuxuryReworkEnabledNonNakalim"      BaseValue="0"/>
-    <Property Name="LuxuryReworkDisabledNonNakalim"     BaseValue="0" />
-    <Property Name="LuxuryReworkDisabledNakalim"        BaseValue="0" />
-    <Property Name="LuxuryReworkEnabledNakalim"         BaseValue="0" />
-    <Property Name="LuxuryReworkEnabledPerSystemLevel"  BaseValue="0" />
-    <Property Name="LuxuryReworkDisabledPerSystemLevel" BaseValue="0" />
+    <Property Name="WeeksChaosHasDelayed"  BaseValue="173"/>
 
     <!-- Luxuries Used for SD -->
     <Property Name="SD_Luxury1"														BaseValue="0" MinValue="0" MaxValue="1"/>
@@ -232,9 +193,6 @@
     <Property Name="IndustryInterestRatioToIndustryNet" BaseValue="0" MaxValue="0.5"/>
     <Property Name="IndustryInterestFinal" BaseValue="0"/>
     <Property Name="SystemLevelCutBy4" BaseValue="0"/>
-
-
-
 
     <!-- ########################################################## -->
     <!-- ######################## PROPERTY ######################## -->
@@ -1523,69 +1481,6 @@
 
     <!-- Temples -->
     <BinaryModifier     TargetProperty="NonTemplePopulation" Operation="Addition" Left="$(Population)" BinaryOperation="Subtraction" Right="$(TemplePopulationCount)" />
-
-		<!-- FOOD REWORK -->
-
-		<!-- Calculate amount of cumulative food stock system will have next turn in absence of any adjustment -->
-		<BinaryModifier TargetProperty="SystemGrowthStockNextTurn"  Operation="Force" Left="$(SystemGrowthStock)" BinaryOperation="Addition" Right="$(NetSystemGrowth_ESG)" Priority="1"/>
-
-		<!-- Calculate amount of cumulative food stock needed to increment TWO more pop (to enable food to roll over into making the next pop), mirroring the formula from the registry but adjusting for how Unity actually applies the formula -->
-		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Value="1" Priority="1"/>
-		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Value="$(Population)" Priority="1"/>
-		<BinaryModifier TargetProperty="SystemGrowthStockRequiredForNextPop"  Operation="Multiplication" Left="$(Population)" BinaryOperation="Addition" Right="2" Priority="2"/>
-		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Multiplication" Value="5" Priority="3"/> <!-- Note: 5 = 10 more food to increment a pop each time / 2 from formula for triangular number -->
-		<BinaryModifier TargetProperty="SystemGrowthStockRequiredForNextPop"  Operation="Addition" Left="$(Population)" BinaryOperation="Multiplication" Right="305" Priority="4"/>
-		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Addition" Value="610" Priority="4"/><!-- Note: 2 x 305  -->
-		<Modifier TargetProperty="SystemGrowthStockRequiredForNextPop" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="5"/>
-		<BinaryModifier TargetProperty="SystemGrowthStockAdjustmentToMaximum" Operation="Addition" Left="$(SystemGrowthStockRequiredForNextPop)" BinaryOperation="Subtraction" Right="$(MaximumSystemGrowthStock)" Priority="6"/>
-		<BinaryModifier TargetProperty="MaximumUsefulSystemGrowthStock" Operation="Addition" Left="$(SystemGrowthStockRequiredForNextPop)" BinaryOperation="Subtraction" Right="$(SystemGrowthStockAdjustmentToMaximum)" Priority="7"/>
-
-		<!-- Calculate amount of food that will be wasted and filter for GameSetting and whether conversion is unlocked -->
-		<BinaryModifier TargetProperty="WastedGrowth"  Operation="Addition" Left="$(SystemGrowthStockNextTurn)" BinaryOperation="Subtraction" Right="$(MaximumUsefulSystemGrowthStock)" Priority="8"/>
-		<Modifier TargetProperty="WastedGrowth"  Operation="Subtraction" Value="1" Priority="8"/> <!-- this tweak exists to round down, solving floating point exception issues -->
-		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(GameSettingFoodReworkEnabled)" Priority="9"/>
-		<Modifier TargetProperty="WastedGrowth"  Operation="Multiplication" Value="$(ShouldUseGrowth)" Priority="9"/>
-
-		<!-- Convert food as appropriate (using separate intermediate variables so that it shows up clearly in the GUI) -->
-		<BinaryModifier TargetProperty="WastedFoodtoDust"  Operation="Addition" Left="$(CanConvertWastedFoodtoDust1)" BinaryOperation="Addition" Right="$(CanConvertWastedFoodtoDust2)" Priority="1"/>
-		<Modifier 		TargetProperty="WastedFoodtoDust"  Operation="Division" Value="4" 																								Priority="2"/>
-		<Modifier 		TargetProperty="WastedFoodtoDust"  Operation="Multiplication" Value="$(WastedGrowth)"																			Priority="10"/>
-
-		<BinaryModifier TargetProperty="WastedFoodtoMP"    Operation="Addition" Left="$(CanConvertWastedFoodtoMP1)" BinaryOperation="Addition" Right="$(CanConvertWastedFoodtoMP2)" 	Priority="1"/>
-		<Modifier 		TargetProperty="WastedFoodtoMP"    Operation="Division" Value="4" 																								Priority="2"/>
-		<Modifier 		TargetProperty="WastedFoodtoMP"    Operation="Multiplication" Value="$(WastedGrowth)"																			Priority="10"/>
-
-		<!-- Convert food as appropriate (using separate intermediate variables so that it shows up clearly in the GUI)
-		<BinaryModifier TargetProperty="WastedFoodtoApproval" Operation="Addition" Left="$(CanConvertWastedFoodtoApproval)" BinaryOperation="Multiplication" Right="$(WastedGrowth)" 	Priority="8"/>
-		<Modifier 		TargetProperty="WastedFoodtoApproval"    Operation="Multiplication" Value="999"																					Priority="8"/>-->
-
-		<Modifier 		TargetProperty="NetSystemGrowth"   Operation="Subtraction" Value="$(WastedGrowth)" 	       Priority="10" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem,!ColonizedStarSystemStateOutpost,!NodeTypeSpecialNode, !ColonizedStarSystemStateGhost"/>
-		<Modifier 		TargetProperty="NetSystemMoney"    Operation="Addition"    Value="$(WastedFoodtoDust)" 	   Priority="11"/>
-		<Modifier 		TargetProperty="EmpireManpower"    Operation="Addition"    Value="$(WastedFoodtoMP)" 	   Priority="11" Path="../ClassEmpire"/>
-		<!--<Modifier 		TargetProperty="Happiness"    	   Operation="Addition"    Value="$(WastedFoodtoApproval)" Priority="9"/>-->
-
-		<!-- Determine whether pop is allowed to grow this turn based on turn, presence of trait and gamespeed, and apply adjustment if needed -->
-		<BinaryModifier     TargetProperty="CurrentTurnModuloEndlessCeil"  Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="4" Priority="1"/>
-		<BinaryModifier     TargetProperty="CurrentTurnModuloEndlessFloor" Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="4" Priority="1"/>
-		<BinaryModifier     TargetProperty="CurrentTurnModuloEndless" 	   Operation="Addition" Left="$(CurrentTurnModuloEndlessCeil)" BinaryOperation="Subtraction" Right="$(CurrentTurnModuloEndlessFloor)" Priority="2"/>
-		<Modifier 			TargetProperty="CurrentTurnModuloEndless" 	   Operation="Multiplication" Value="$(GameSettingEndlessBoolean)" Priority="3"/>
-		<Modifier 			TargetProperty="CurrentTurnModuloEndless" 	   Operation="Multiplication" Value="$(GameSettingFoodReworkScalingEnabled)" Priority="3"/>
-		<!-- Cannot use Force for this, since during the turns when pop IS allowed to increment we don't want to override other effects like the major/minor law growth -->
-		<BinaryModifier 	TargetProperty="ShouldPopulationGrow" 	   	   Operation="Subtraction" Left="$(CurrentTurnModuloEndless)" BinaryOperation="Multiplication" Right="999" Path="ClassColonizedStarSystem,ColonizedStarSystemStateColony/ClassPopulationStarSystem" Priority="999"/>
-
-		<BinaryModifier     TargetProperty="CurrentTurnModuloSlowCeil"  Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="3" Priority="1"/>
-		<BinaryModifier     TargetProperty="CurrentTurnModuloSlowFloor" Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="3" Priority="1"/>
-		<BinaryModifier     TargetProperty="CurrentTurnModuloSlow" 	    Operation="Addition" Left="$(CurrentTurnModuloSlowCeil)" BinaryOperation="Subtraction" Right="$(CurrentTurnModuloSlowFloor)" Priority="2"/>
-		<Modifier 			TargetProperty="CurrentTurnModuloSlow" 	    Operation="Multiplication" Value="$(GameSettingSlowBoolean)" Priority="3"/>
-		<Modifier 			TargetProperty="CurrentTurnModuloSlow" 	    Operation="Multiplication" Value="$(GameSettingFoodReworkScalingEnabled)" Priority="3"/>
-		<BinaryModifier 	TargetProperty="ShouldPopulationGrow" 	   	   Operation="Subtraction" Left="$(CurrentTurnModuloSlow)" BinaryOperation="Multiplication" Right="999" Path="ClassColonizedStarSystem,ColonizedStarSystemStateColony/ClassPopulationStarSystem" Priority="999"/>
-
-		<BinaryModifier     TargetProperty="CurrentTurnModuloNormalCeil"   Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="2" Priority="1"/>
-		<BinaryModifier     TargetProperty="CurrentTurnModuloNormalFloor"  Operation="Force" Left="$(CurrentTurn)" BinaryOperation="Division" Right="2" Priority="1"/>
-		<BinaryModifier     TargetProperty="CurrentTurnModuloNormal" 	   Operation="Addition" Left="$(CurrentTurnModuloNormalCeil)" BinaryOperation="Subtraction" Right="$(CurrentTurnModuloNormalFloor)" Priority="2"/>
-		<Modifier 			TargetProperty="CurrentTurnModuloNormal" 	   Operation="Multiplication" Value="$(GameSettingNormalBoolean)" Priority="3"/>
-		<Modifier 			TargetProperty="CurrentTurnModuloNormal" 	   Operation="Multiplication" Value="$(GameSettingFoodReworkScalingEnabled)" Priority="3"/>
-		<BinaryModifier 	TargetProperty="ShouldPopulationGrow" 	   	   Operation="Subtraction" Left="$(CurrentTurnModuloNormal)" BinaryOperation="Multiplication" Right="999" Path="ClassColonizedStarSystem,ColonizedStarSystemStateColony/ClassPopulationStarSystem" Priority="999"/>
 
     <!-- Ground Battle Modifiers -->
     <Modifier TargetProperty="GroundBattleBombardmentAttackerDamagesMin"          Operation="Percent" Value="$(GroundBattleBombardmentAttackerDamageReduction)"  TooltipHidden="true"/>
