@@ -369,7 +369,8 @@
   <SimulationDescriptor Name="PersonalityCanGetGreedy" Type="FactionTrait"/>
   <SimulationDescriptor Name="PersonalityCanGetVengeful" Type="FactionTrait"/>
   <SimulationDescriptor Name="PersonalityCanGetImpassive" Type="FactionTrait"/>
- 
+  <SimulationDescriptor Name="PersonalityCanGetImperious" Type="FactionTrait"/>
+
   <!-- Colonization Cap -->
   <SimulationDescriptor Name="FactionTraitOvercolonizationCapThree" Type="FactionTrait">
     <Modifier TargetProperty="OverColonizationThreshold" Operation="Multiplication" Value="0.75" Path="ClassEmpire" Priority="1"/>
@@ -406,17 +407,6 @@
   </SimulationDescriptor>
   <SimulationDescriptor Name="FactionTraitOvercolonizationCapFourteen" Type="FactionTrait">
     <Modifier TargetProperty="OverColonizationThreshold" Operation="Multiplication" Value="3.5" Path="ClassEmpire" Priority="1"/>
-  </SimulationDescriptor>
-
-  <!-- Enable Luxury Rework -->
-  <SimulationDescriptor Name="FactionTraitEnableLuxuryRework" Type="FactionTrait">
-    <Modifier TargetProperty="LuxuryReworkEnabled"  Operation="Force" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
-    <Modifier TargetProperty="LuxuryReworkDisabled" Operation="Force" Value="0" Path="ClassEmpire" TooltipHidden="true"/>
-  </SimulationDescriptor>
-
-  <SimulationDescriptor Name="FactionTraitDisableLuxuryRework" Type="FactionTrait">
-    <Modifier TargetProperty="LuxuryReworkEnabled"  Operation="Force" Value="0" Path="ClassEmpire" TooltipHidden="true"/>
-    <Modifier TargetProperty="LuxuryReworkDisabled" Operation="Force" Value="1" Path="ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <!-- Galaxy Generation Failsafes -->
@@ -516,9 +506,9 @@
 
   <!-- Smaller Influence Radius (UE) -->
   <SimulationDescriptor Name="FactionTraitSmallerInfluenceRadius" Type="FactionTrait">
-    <Modifier TargetProperty="SystemInfluenceRadiusMultiplier" Operation="Subtraction" Value="0.4" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%SmallerInfluenceRadiusEffect" Priority="1"/>
+    <Modifier TargetProperty="InfluenceRadiusModifier" Operation="Subtraction" Value="0.4" Path="../ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%SmallerInfluenceRadiusEffect" Priority="1"/>
   </SimulationDescriptor>
-  
+
   <!-- Empire Points per CP Destroyed -->
   <SimulationDescriptor Name="FactionTraitEmpirePointPerCPDestroyed" Type="FactionTrait">
     <Modifier TargetProperty="AdditionalOpponentRecyclingEmpirePointPerCP"          Operation="Addition"     Value="10"  Path="ClassEmpire" TooltipHidden="true"/>
@@ -529,7 +519,7 @@
   <SimulationDescriptor Name="FactionTraitIncreasedSystemUpkeep" Type="FactionTrait">
     <Modifier TargetProperty="SystemMoneyUpkeep" Operation="Percent" Value="0.5" Path="../ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
-  
+
   <!-- Nakalim -->
   <SimulationDescriptor Name="FactionTraitHeroAssignmentTemplars" Type="FactionTrait">
     <Modifier TargetProperty="AssignmentCooldownDecrementPerTurn"    Operation="Percent"  Value="0.5" Path="ClassEmpire//ClassHero"/>
@@ -545,9 +535,9 @@
 
   <!-- Exotic Gourmands -->
   <SimulationDescriptor Name="FactionTraitExoticGourmands" Type="FactionTrait">
-    <Modifier TargetProperty="PlanetRawFood" Operation="Addition" Value="5" Path="ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeMeager"/>
-    <Modifier TargetProperty="PlanetRawFood" Operation="Addition" Value="5" Path="ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeGas"/>
-    <Modifier TargetProperty="PlanetRawFood" Operation="Addition" Value="-5" Path="ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeTeeming"/>
+    <BinaryModifier TargetProperty="PlanetFood" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeMeager" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="PlanetFood" Operation="Addition" Left="5" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeGas" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="PlanetFood" Operation="Addition" Left="-5" BinaryOperation="Multiplication" Right="$(Population)" Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeTeeming" SearchValueFromPath="true"/>
   </SimulationDescriptor>
 
   <!-- Deep Space Exploiters I -->
@@ -648,26 +638,26 @@
   <SimulationDescriptor Name="FactionTraitCheat500" Type="FactionTrait"/>
   <SimulationDescriptor Name="FactionTraitCheat1000" Type="FactionTrait"/>
   <SimulationDescriptor Name="FactionTraitCheat10000" Type="FactionTrait"/>
-	
+
 	<!-- Well Founded -->
   <SimulationDescriptor Name="FactionTraitRevealMinorSystems" Type="FactionTrait"/>
-	
+
 	<!-- Law Rework -->
 	<SimulationDescriptor Name="FactionTraitEnableLawRework" Type="FactionTrait"/>
 	<SimulationDescriptor Name="FactionTraitDisableLawRework" Type="FactionTrait"/>
 	<SimulationDescriptor Name="FactionTraitEnableMinorLaws" Type="FactionTrait"/>
 	<SimulationDescriptor Name="FactionTraitDisableMinorLaws" Type="FactionTrait"/>
-	
+
 	<!-- Scavenger's Code -->
   <SimulationDescriptor Name="FactionTraitDefensiveEconomy" Type="FactionTrait"/>
-	
+
 	<!-- Colonization Cap Standard -->
 	<SimulationDescriptor Name="FactionTraitColonizationCapStandard1" Type="FactionTrait"/>
 	<SimulationDescriptor Name="FactionTraitColonizationCapStandard2" Type="FactionTrait"/>
 
   <!-- Curiosity -->
   <SimulationDescriptor Name="FactionTraitRevealAllCuriosities" Type="FactionTrait"/>
-  
+
   <!-- Penance -->
   <SimulationDescriptor Name="FactionTraitPenanceForYourSins" Type="FactionTrait">
     <BinaryModifier TargetProperty="SystemFIDSIPercent" Operation="Addition" Left="$(Population)" BinaryOperation="Multiplication" Right="$(WeeksChaosHasDelayed)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" TooltipOverride="%FactionTraitPenanceForYourSinsOverride"/>
@@ -676,15 +666,6 @@
   <!-- Diplomacy Rework -->
   <SimulationDescriptor Name="FactionTraitDisableDiplomacyRework" Type="FactionTrait">
     <Modifier TargetProperty="DiplomacyReworkDisabled" Operation="Subtraction" Value="1" Path="ClassEmpire"/>
-  </SimulationDescriptor>
-
-  <!-- Food Rework -->
-  <SimulationDescriptor Name="FactionTraitDisableFoodRework" Type="FactionTrait">
-    <Modifier TargetProperty="GameSettingFoodReworkEnabled" Operation="Force" Value="0" Path="ClassEmpire/ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="GameSettingFoodReworkScalingEnabled" Operation="Force" Value="0" Path="ClassEmpire/ClassColonizedStarSystem"/>
-  </SimulationDescriptor>
-  <SimulationDescriptor Name="FactionTraitPartialFoodRework" Type="FactionTrait">
-    <Modifier TargetProperty="GameSettingFoodReworkScalingEnabled" Operation="Force" Value="0" Path="ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
 
   <!-- No Migration -->
@@ -696,12 +677,12 @@
   <SimulationDescriptor Name="FactionTraitIncreasedMigration" Type="FactionTrait">
     <Modifier TargetProperty="MigrationScore"             Operation="Percent"     Value="0.4"    Priority="10" Path="ClassEmpire/ClassColonizedStarSystem"     TooltipHidden="false"/>
   </SimulationDescriptor>
-  
+
   <!-- Roughnecks -->
   <SimulationDescriptor Name="FactionTraitRoughnecks" Type="FactionTrait">
     <BinaryModifier TargetProperty="MaximumSystemManpower" Operation="Addition" Left="200" BinaryOperation="Multiplication" Right="$(OwnedStrategicDeposits)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
   </SimulationDescriptor>
-    
+
   <!-- Cheat Food -->
   <SimulationDescriptor Name="FactionTraitCheatFood1" Type="FactionTrait">
     <Modifier TargetProperty="SystemGrowth" Operation="Percent" Value="0.1" Path="ClassEmpire/ClassColonizedStarSystem"/>
@@ -733,7 +714,7 @@
   <SimulationDescriptor Name="FactionTraitCheatFood10" Type="FactionTrait">
     <Modifier TargetProperty="SystemGrowth" Operation="Percent" Value="1" Path="ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
-  
+
   <!-- Cheat Industry -->
   <SimulationDescriptor Name="FactionTraitCheatIndustry1" Type="FactionTrait">
     <Modifier TargetProperty="SystemProduction" Operation="Percent" Value="0.1" Path="ClassEmpire/ClassColonizedStarSystem"/>
@@ -765,7 +746,7 @@
   <SimulationDescriptor Name="FactionTraitCheatIndustry10" Type="FactionTrait">
     <Modifier TargetProperty="SystemProduction" Operation="Percent" Value="1" Path="ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
-  
+
   <!-- Cheat Dust -->
   <SimulationDescriptor Name="FactionTraitCheatDust1" Type="FactionTrait">
     <Modifier TargetProperty="SystemMoney" Operation="Percent" Value="0.1" Path="ClassEmpire/ClassColonizedStarSystem"/>
@@ -797,7 +778,7 @@
   <SimulationDescriptor Name="FactionTraitCheatDust10" Type="FactionTrait">
     <Modifier TargetProperty="SystemMoney" Operation="Percent" Value="1" Path="ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
-  
+
   <!-- Cheat Science -->
   <SimulationDescriptor Name="FactionTraitCheatScience1" Type="FactionTrait">
     <Modifier TargetProperty="SystemResearch" Operation="Percent" Value="0.1" Path="ClassEmpire/ClassColonizedStarSystem"/>
@@ -861,7 +842,7 @@
   <SimulationDescriptor Name="FactionTraitCheatInfluence10" Type="FactionTrait">
     <Modifier TargetProperty="SystemEmpirePoint" Operation="Percent" Value="1" Path="ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
-  
+
   <!-- Cheat Manpower -->
   <SimulationDescriptor Name="FactionTraitCheatManpower1" Type="FactionTrait">
     <Modifier TargetProperty="NetSystemManpower" Operation="Percent" Value="0.1" Path="ClassEmpire/ClassColonizedStarSystem"/>
@@ -942,13 +923,13 @@
   <SimulationDescriptor Name="FactionTraitCheatCP5" Type="FactionTrait">
     <Modifier TargetProperty="MaximumCommandPoints" Operation="Addition" Value="500" Path="ClassEmpire/ClassColonizedStarSystem"/>
   </SimulationDescriptor>
-    
+
   <!-- Cheat Vision -->
   <SimulationDescriptor Name="FactionTraitCheatVision" Type="FactionTrait">
     <Modifier TargetProperty="VisionRange" Operation="Addition" Value="5000" Path="ClassEmpire/ClassColonizedStarSystem" TooltipOverride="%FactionTraitCheatVisionTooltip"/>
     <Modifier TargetProperty="VisionRange" Operation="Addition" Value="5000" Path="ClassEmpire//ClassShip" TooltipHidden="true"/>
   </SimulationDescriptor>
-  
+
   <!-- Troop Cost -->
   <!-- Air -->
   <SimulationDescriptor Name="FactionTraitCheaperAirUnitsI" Type="FactionTrait">
@@ -1003,8 +984,8 @@
 
   <SimulationDescriptor Name="FactionTraitStrongerInfantryUnitsII" Type="FactionTrait">
     <Modifier TargetProperty="InfantryDamagesBonus" Operation="Addition" Value="0.3" Path="ClassEmpire"/>
-  </SimulationDescriptor>  
-  
+  </SimulationDescriptor>
+
   <!-- Troop Health -->
   <!-- Air -->
   <SimulationDescriptor Name="FactionTraitHealthyAirUnitsI" Type="FactionTrait">
@@ -1032,18 +1013,18 @@
   <SimulationDescriptor Name="FactionTraitHealthyInfantryUnitsII" Type="FactionTrait">
     <Modifier TargetProperty="InfantryMaxHealth" Operation="Percent" Value="0.3" Path="ClassEmpire"/>
   </SimulationDescriptor>
-  
+
   <!-- Starting Movement -->
   <SimulationDescriptor Name="FactionTraitStartingWormholes" Type="FactionTrait">
     <Modifier TargetProperty="WormholeSpeed"            Operation="Addition" Value="1" Path="ClassEmpire/ClassGarrisonFleet/ClassShip" TooltipOverride="%FactionTraitStartingWormholesTooltip"/>
     <Modifier TargetProperty="BaseWormholeSpeed"        Operation="Addition" Value="1" Path="ClassEmpire" TooltipHidden="true" />
   </SimulationDescriptor>
-  
+
   <SimulationDescriptor Name="FactionTraitStartingWarp" Type="FactionTrait">
     <Modifier TargetProperty="FreeMovementSpeed"                Operation="Addition"    Value="0.4"    Path="ClassEmpire/ClassGarrisonFleet/ClassShip"  TooltipOverride="%FactionTraitStartingWarpTooltip"/>
     <Modifier TargetProperty="BaseFreeMovementSpeed"            Operation="Addition"    Value="0.4"    Path="ClassEmpire" TooltipHidden="true"/>
   </SimulationDescriptor>
-  
+
   <!-- Empire Indexing -->
   <SimulationDescriptor Name="FactionTraitIsEmpire0" Type="FactionTrait"/>
   <SimulationDescriptor Name="FactionTraitIsEmpire1" Type="FactionTrait"/>
@@ -1057,7 +1038,7 @@
   <SimulationDescriptor Name="FactionTraitIsEmpire9" Type="FactionTrait"/>
   <SimulationDescriptor Name="FactionTraitIsEmpire10" Type="FactionTrait"/>
   <SimulationDescriptor Name="FactionTraitIsEmpire11" Type="FactionTrait"/>
-  
+
   <!-- Pre-Determined Teams -->
   <SimulationDescriptor Name="FactionTraitIsTeam1" Type="FactionTrait"/>
   <SimulationDescriptor Name="FactionTraitIsTeam2" Type="FactionTrait"/>
@@ -1065,7 +1046,7 @@
   <SimulationDescriptor Name="FactionTraitIsTeam4" Type="FactionTrait"/>
   <SimulationDescriptor Name="FactionTraitIsTeam5" Type="FactionTrait"/>
   <SimulationDescriptor Name="FactionTraitIsTeam6" Type="FactionTrait"/>
-  
+
   <!-- Is Pre-Determined Teams Enabled (for Interpreter) -->
   <SimulationDescriptor Name="FactionTraitSettingTeamsDisabled" Type="FactionTrait"/>
   <SimulationDescriptor Name="FactionTraitSettingTeamsStandard" Type="FactionTrait"/>

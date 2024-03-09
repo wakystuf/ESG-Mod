@@ -213,8 +213,11 @@
       <xs:extension base="ColonizeFleetAction">
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="1" name="TemporaryEffect" type="ColonizationTemporaryEffectReference" />
+          <xs:element minOccurs="0" maxOccurs="1" name="Relics" type="xs:int" />
         </xs:sequence>
         <xs:attribute name="PropertyToReset" type="xs:string" />
+        <xs:attribute name="InitialPopulation" type="xs:int" />
+        <xs:attribute name="DescriptorToApply" type="xs:string" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -390,7 +393,11 @@
   <xs:element name="SleepFleetAction" nillable="true" type="SleepFleetAction" />
   <xs:complexType name="SleepFleetAction">
     <xs:complexContent mixed="false">
-      <xs:extension base="FleetActionDefinition" />
+      <xs:extension base="FleetActionDefinition">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="1" name="MovementCostFormula" type="FleetActionMovementCost" />
+        </xs:sequence>
+      </xs:extension>
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="SleepForThisTurnFleetAction" nillable="true" type="SleepForThisTurnFleetAction" />
@@ -1073,6 +1080,50 @@
         <xs:sequence>
           <xs:element minOccurs="0" maxOccurs="1" name="MovementCostFormula" type="FleetActionMovementCost" />
         </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="AcademyDiplomaticAction" nillable="true" type="AcademyDiplomaticAction" />
+  <xs:complexType name="AcademyDiplomaticAction">
+    <xs:complexContent mixed="false">
+      <xs:extension base="EmpireActionDefinition">
+        <xs:sequence>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="AcademyPathPrerequisite" type="PathPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="AcademyInterpreterPrerequisite" type="InterpreterPrerequisite" />
+          </xs:choice>          
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticMetaPrerequisite" type="SimpleDiplomaticMetaPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticRelationStatePrerequisite" type="DiplomaticRelationStatePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="DiplomaticAbilityPrerequisite" type="DiplomaticAbilityPrerequisite" />
+          </xs:choice>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="PointsPrerequisite" type="EmpireDiplomaticRelationPointsPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="StatePrerequisite" type="EmpireDiplomaticRelationStatePrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="BestRelationPrerequisite" type="EmpireDiplomaticBestRelationPrerequisite" />
+          </xs:choice>
+          <xs:choice minOccurs="0" maxOccurs="unbounded">
+            <xs:element minOccurs="0" maxOccurs="1" name="RelationPathPrerequisite" type="PathPrerequisite" />
+            <xs:element minOccurs="0" maxOccurs="1" name="RelationInterpreterPrerequisite" type="InterpreterPrerequisite" />
+          </xs:choice>
+          <xs:element minOccurs="0" maxOccurs="1" name="AcademyRelationPointChange" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AcademyRelationSetPoints" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PopulationEvent" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="AcademyRelationPointsGain" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="RemoveDiplomaticAbility" type="xs:string" />
+          
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PopulationEventOnSelf" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ScoreProviderEventOnSelf" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="PopulationEventOnTarget" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="ScoreProviderEventOnTarget" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TemporaryEffect" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TemporaryEffectOnEmpire" type="xs:string" />
+          <xs:element minOccurs="0" maxOccurs="1" name="TemporaryEffectOnAcademy" type="xs:string" />
+        </xs:sequence>
+        <xs:attribute name="IncrementProperty" type="xs:int" use="required" />
+        <xs:attribute name="ResultingDiplomaticRelationState" type="xs:int" use="required" />
+        <xs:attribute default="false" name="RefreshRelationPoint" type="xs:boolean" />
+        <xs:attribute default="false" name="HidePanelOnClick" type="xs:boolean" />
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

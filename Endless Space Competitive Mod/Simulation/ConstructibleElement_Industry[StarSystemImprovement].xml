@@ -104,19 +104,23 @@
   </StarSystemImprovementDefinition>
 
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniqueTemplars" SubCategory="SubCategoryInfluence" ScoreProvider="StarSystemImprovementBuilt">
-    <SupervisorGain Name="SScience"    Weight="3" />
-    <QueuedSimulationDescriptorReference Name="BuildingStarSystemImprovementUniqueTemplars" />
-    <Cost ResourceName="SystemProduction">4240</Cost>
-    <Cost ResourceName="Strategic4" Instant="true">30</Cost>
-    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">../ClassEmpire/Uniques,StarSystemImprovementUniqueTemplars</PathPrerequisite>
-    <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
-    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementUniqueTemplars,!FastForwardedImprovement</PathPrerequisite>
-    <InterpreterPrerequisite Inverted="true"    Flags="Prerequisite,Discard">Path(Context,@'../ClassEmpire/ClassStarSystem,BuildingStarSystemImprovementUniqueTemplars') and not(Path(Context,@'ClassStarSystem,BuildingStarSystemImprovementUniqueTemplars'))</InterpreterPrerequisite>
-    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyUnique1Templars</TechnologyPrerequisite>
+    <SupervisorGain Name="Food"         Weight="3"  />
+    <SupervisorGain Name="Industry"     Weight="3"  />
+    <SupervisorGain Name="Dust"         Weight="3"  />
+    <SupervisorGain Name="Science"      Weight="3"  />
+    <SupervisorGain Name="Prestige"     Weight="3"  />
+    <SupervisorGain Name="Military"     Weight="3"  />
+    <QueuedSimulationDescriptorReference Name="StarSystemImprovementUniqueTemplarsQueued"/>
+    <Cost ResourceName="SystemProduction">1120</Cost>
+    <PathPrerequisite                 Flags="Prerequisite,Discard,UnlockAvailability,Faction">../ClassEmpire,AffinityGameplayTemplars</PathPrerequisite>
+    <PathPrerequisite                 Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite Inverted="true" Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementUniqueTemplars,!FastForwardedImprovement</PathPrerequisite>
+    <InterpreterPrerequisite          Flags="Enqueue,NotEnoughTemples">Property(Context,@'../ClassEmpire', TotalCathedralsIncludingInQueue) lt Property(Context,@'../ClassEmpire', AllowedCathedrals)</InterpreterPrerequisite>
+    <PathPrerequisite Flags="Enqueue,OnlyOneCathedral" Inverted="true">../ClassEmpire/ClassColonizedStarSystem,ColonizedStarSystemStateColony,StarSystemImprovementUniqueTemplarsQueued</PathPrerequisite>
+
+    <InterpreterPrerequisite          Flags="Prerequisite,NotEnoughTemples">Property(Context,@'../ClassEmpire', TotalCathedrals) lt Property(Context,@'../ClassEmpire', AllowedCathedrals)</InterpreterPrerequisite>
     <SimulationDescriptorReference Name="StarSystemImprovementUniqueTemplars" />
-    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage4High" />
-    <SimulationDescriptorReference Name="StarSystemImprovementOncePerEmpire" />
-    <UniqueTags>StarSystemImprovementUniqueTemplars</UniqueTags>
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage2High" />
   </StarSystemImprovementDefinition>
 
   <!-- #################### -->
@@ -221,7 +225,7 @@
     <InterpreterPrerequisite Flags="Prerequisite">(Property(Context,@ClassColonizedStarSystem, MaximumPopulation) ge (Property(Context,@ClassColonizedStarSystem, Population) + Property(Context,@ClassColonizedStarSystem, VirtualPopulation)))</InterpreterPrerequisite>
     <SimulationDescriptorReference Name="StarSystemImprovementCreateMajorPopulation" />
   </StarSystemPopulationTransformImprovementDefinition>
-  
+
   <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementCreateMajorPopulationFast" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt" PopulationDestination="Major"  PopulationToTransformCount="2" CreateIfNotAvailable="true">
     <AIGain RessourceName="PopulationGain" Inverted="false"></AIGain>
     <SupervisorGain Name="Industry" Weight="0.15" />
@@ -451,7 +455,7 @@
     <SimulationDescriptorReference Name="StarSystemImprovementUniqueVaulters" />
     <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage4Normal" />
   </StarSystemImprovementDefinition>
-  
+
   <!-- Vaulter Vaults -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementVault" SubCategory="SubCategoryColony">
     <Tags>Indestructible,NonTransferable</Tags>
@@ -1772,7 +1776,7 @@
     <Cost ResourceName="SystemProduction">1</Cost>
     <PathPrerequisite Flags="Prerequisite,Disable,RequiresSystemLevel4">ColonizedStarSystemStateColony,StarSystemImprovementLevel4</PathPrerequisite>
     <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyInfluenceConversion</TechnologyPrerequisite>
-    <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,!AffinityGameplayUmbralChoir,!AffinityGameplayMajorHisshos,!AffinityGameplayTerrans,!AffinityGameplayTemplars</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,!AffinityGameplayUmbralChoir,!AffinityGameplayMajorHisshos,!AffinityGameplayTerrans</PathPrerequisite>
     <SimulationDescriptorReference Name="StarSystemImprovementOnlyOnLevelMax" />
     <SimulationDescriptorReference Name="StarSystemImprovementInfluenceSink" />
     <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionApproval1" />
@@ -1785,7 +1789,7 @@
     <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">2000 * (1 + Property(StockLocation,@'../ClassEmpire', ArcologicalAdministrationCount)) * (1 + Property(StockLocation,@ClassColonizedStarSystem, ArcologicalAdministrationCount))  * Property(StockLocation,@'../ClassEmpire', GameSpeedMultiplier)</CustomCost>
     <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyInfluenceConversion</TechnologyPrerequisite>
     <PathPrerequisite Flags="Prerequisite,Disable,RequiresSystemLevel4">ColonizedStarSystemStateColony,StarSystemImprovementLevel4</PathPrerequisite>
-    <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,!AffinityGameplayCravers,!AffinityGameplayVenetians,!AffinityGameplayVampirilis,!AffinityGameplayTimeLords,!AffinityGameplayUnfallen,!AffinityGameplaySophons,!AffinityGameplayHoratio,!AffinityGameplayVaulters</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,!AffinityGameplayCravers,!AffinityGameplayVenetians,!AffinityGameplayVampirilis,!AffinityGameplayTimeLords,!AffinityGameplayUnfallen,!AffinityGameplaySophons,!AffinityGameplayHoratio,!AffinityGameplayVaulters,!!AffinityGameplayTemplars</PathPrerequisite>
     <SimulationDescriptorReference Name="StarSystemImprovementOnlyOnLevelMax" />
     <SimulationDescriptorReference Name="StarSystemImprovementInfluenceSink_Alt" />
     <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionApproval1" />
@@ -2362,7 +2366,7 @@
     <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage5Normal" />
     <PopulationEvent Name="PopulationPoliticalEventBuildingConstructionIndustry1" />
   </StarSystemImprovementDefinition>
-  
+
   <!-- Alliance Portal -->
   <StarSystemImprovementDefinition Name="StarSystemImprovementUniquePortal" Category="CategoryStarSystemImprovementUnique" SubCategory="SubCategoryExploration" ScoreProvider="StarSystemImprovementBuilt">
     <SupervisorGain Name="UniqueMilitary" />
@@ -2383,5 +2387,22 @@
     <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage5Normal" />
     <SimulationDescriptorReference Name="StarSystemImprovementOncePerEmpire" />
     <UniqueTags>StarSystemImprovementUniquePortal</UniqueTags>
+  </StarSystemImprovementDefinition>
+
+  <!-- Heavenly Campus -->
+  <StarSystemImprovementDefinition Name="StarSystemImprovementScience8Templars" SubCategory="SubCategoryScience" ScoreProvider="StarSystemImprovementBuilt">
+    <SupervisorGain Name="Science" />
+    <Tags>NoBailiff</Tags>
+    <Cost ResourceName="SystemProduction">1120</Cost>
+    <PathPrerequisite                           Flags="Prerequisite,Discard">ColonizedStarSystemStateColony</PathPrerequisite>
+    <PathPrerequisite                           Flags="Prerequisite,Discard">ClassColonizedStarSystem/ClassColonizedPlanet,PlanetAnomaly</PathPrerequisite>
+    <PathPrerequisite       Inverted="false"    Flags="Prerequisite,Discard,AffinityGameplayTechnologyTemplars,UnlockAvailability,Faction">../ClassEmpire,AffinityGameplayTemplars</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementScience8,!FastForwardedImprovement</PathPrerequisite>
+    <PathPrerequisite       Inverted="true"     Flags="Prerequisite,Discard">ClassColonizedStarSystem/StarSystemImprovementScience8Templars,!FastForwardedImprovement</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyAnomalyReduction3</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="StarSystemImprovementScience8Templars" />
+    <SimulationDescriptorReference Name="StarSystemImprovementUpkeepStage5Normal" />
+    <SimulationDescriptorReference Name="ScienceConstruction" />
+    <PopulationEvent Name="PopulationPoliticalEventScienceBuildingConstruction1"/>
   </StarSystemImprovementDefinition>
 </Datatable>

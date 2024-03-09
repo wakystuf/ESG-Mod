@@ -210,6 +210,8 @@
     <Property Name="Accuracy"                       BaseValue="0" MinValue="-0.95"/>
 
     <Property Name="DamageBonusPerTargetCommandPoints"          				BaseValue="0"  MinValue="Negative"/>
+    <Property Name="DamageBonusPerOpponentShipAtLongRange"      BaseValue="0"  MinValue="Negative"/>
+    <Property Name="DamageBonusPerTargetCommandPointsFlotilla"      BaseValue="0" MaxValue="0.07" MinValue="Negative"/>
     <Property Name="DamageBonusPerTargetCommandPoints_LockOnBasic"          	BaseValue="0"  MinValue="Negative" MaxValue="0.08"/>
     <Property Name="DamageBonusPerTargetCommandPoints_LockOnAdvanced"       	BaseValue="0"  MinValue="Negative" MaxValue="0.04"/>
     <Property Name="DamageBonusPerOpponentShipAtLongRange"      				BaseValue="0"  MinValue="Negative"/>
@@ -236,6 +238,7 @@
     <Property Name="ShieldReloadPerPhase"               BaseValue="0"/>
     <Property Name="ShieldRegeneratePerSecond"          BaseValue="0"/>
     <Property Name="ShieldRegeneratePerSecondDynamic"   BaseValue="0"/>
+    <Property Name="FlotillaShieldReloadPerPhase"       BaseValue="0"/>
 
     <Property Name="HullPlatingAbsorption"                  BaseValue="0" MinValue="Negative"/>
     <Property Name="HullPlatingAbsorptionPercent"           BaseValue="1"/>
@@ -243,6 +246,7 @@
     <Property Name="HullPlatingAbsorptionEndMultiplierTemp" BaseValue="0"/>
     <Property Name="HullPlatingAbsorptionDebuffDynamic"     BaseValue="0" MinValue="-1"/>
     <Property Name="HullPlatingVulnerability"               BaseValue="1"/>
+    <Property Name="HullPlatingAbsorptionEndMultiplier"    BaseValue="0"/>
 
 
     <Property Name="ShipHealth"                         BaseValue="0"  MinValue="Negative"      Composition="Sum"/>
@@ -252,6 +256,7 @@
     <Property Name="DefenseBonusAtShortRange"           BaseValue="0"  MinValue="Negative"/>
     <Property Name="DefenseBonusAtMediumRange"          BaseValue="0"  MinValue="Negative"/>
     <Property Name="DefenseBonusAtLongRange"            BaseValue="0"  MinValue="Negative"/>
+    <Property Name="DefenseAgainstSquadron"            BaseValue="0" MaxValue="0.95" MinValue="0"/>
 
     <Property Name="OpponentCriticalHitDamagePercent"           BaseValue="0"  MinValue="Negative"/>
     <Property Name="FleetXPPerDamageAbsorbedByHullPlating"      BaseValue="0"/>
@@ -289,10 +294,15 @@
     <Property Name="FlotillaFlakMediumRangePenalty"           BaseValue="0" MinValue="Negative"/>
     <Property Name="FlotillaFlakShortRangePenalty"            BaseValue="0" MinValue="Negative"/>
     <Property Name="FlotillaManpowerDamageOverTimeIncrease"   BaseValue="0"/>
+    <Property Name="IsntImmuneToSpecialNodes"                 BaseValue="1"/>
+
+    <!-- 2023 PATCH -->
+    <Property Name="FlotillaFlakFireRateModifier"             BaseValue="1" MaxValue="2" MinValue="Negative"/>
     <Property Name="EMPFlotillaDefense"                       BaseValue="0"/>
     <Property Name="MaximumShieldCapForFlotilla"              BaseValue="0"/>
     <Property Name="ShieldAbsorptionForFlotilla"              BaseValue="0"/>
-    <Property Name="IsntImmuneToSpecialNodes"                 BaseValue="1"/>
+    <Property Name="DefenseModuleCount"                       BaseValue="0"/>
+    <Property Name="FlotillaManpowerDamageOverTimeIncrease"   BaseValue="0"/>
 
     <!--Automatons-->
     <Property Name="AutomatonsSkillBonus" BaseValue="0"/>
@@ -407,24 +417,11 @@
     <BinaryModifier TargetProperty="ShipTradingRouteBlockadePower" Operation="Addition" Left="$(MilitaryPower)" BinaryOperation="Division" Right="2000" />
     <Modifier TargetProperty="TradingRouteBlockadePower" Operation="Addition" Value="$(ShipTradingRouteBlockadePower)" Path="./ClassGarrisonFleet" />
 
-    <!-- Calculate base trade value including strat costs (computed using pseudoprices) -->
-    <Modifier TargetProperty="TotalIndustryCost" Operation="Multiplication" Value="$(GameSpeedMultiplier)"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalIndustryCost)"   BinaryOperation="Multiplication" Right="0.4"                Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic1Cost)" BinaryOperation="Multiplication" Right="$(Strategic1Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic2Cost)" BinaryOperation="Multiplication" Right="$(Strategic2Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic3Cost)" BinaryOperation="Multiplication" Right="$(Strategic3Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic4Cost)" BinaryOperation="Multiplication" Right="$(Strategic4Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic5Cost)" BinaryOperation="Multiplication" Right="$(Strategic5Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic6Cost)" BinaryOperation="Multiplication" Right="$(Strategic6Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
-    <BinaryModifier TargetProperty="TradeValue" Operation="Addition" Left="$(TotalStrategic6Cost)" BinaryOperation="Multiplication" Right="$(Strategic6Price)" Path="ClassShip,!ShipSizeJuggernaut"/>
+    <!-- 2023 PATCH -->
+    <!--<Modifier       TargetProperty="Evasion"        Operation="Multiplication"   Value="2"              Path="ClassShip" Priority="1"/>
+    Due accuracy correction algorithm evasion counts as half, this fixes it in the simplest form 
+    Deprecated since ESG already accounts for accuracy correction elsewhere and this would double-count the bonus -->
 
-    <!--Adjust for stupid Market shenanigans -->
-    <BinaryModifier TargetProperty="TradeValue" Operation="Multiplication" Left="1" BinaryOperation="Subtraction" Right="$(ShipBuyoutReduction)"  Path="ClassShip"/>
-    <Modifier       TargetProperty="TradeValue" Operation="Multiplication" Value="1"                                                              Path="ClassShip,!ShipSizeJuggernaut"/>
-
-    <!-- GamespeedMultiplier for Modules! -->
-    <Modifier TargetProperty="GameSpeedMultiplier"  Operation="Force"    Value="$(GameSpeedMultiplier)" Path="ClassShip//ClassModule"/>
-    
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ShipRoleRootCreator"      Type="ShipRole">
@@ -714,10 +711,13 @@
   <SimulationDescriptor Name="ClassSectionCoreLargeCarrier" Type="ClassSectionCore">
     <Modifier TargetProperty="MaximumHealth" Operation="Addition" Value="20000" Path="ClassSection"/>
   </SimulationDescriptor>
+  <SimulationDescriptor Name="ClassSectionCoreMothership" Type="ClassSectionCore">
+		<Modifier TargetProperty="MaximumHealth" Operation="Addition" Value="14000" Path="ClassSection"/>
+	</SimulationDescriptor>
 
   <!--Heroes-->
   <SimulationDescriptor Name="ClassSectionCoreHeroAdmiral" Type="ClassSectionCore">
-    <Modifier TargetProperty="MaximumHealth" Operation="Addition" Value="3500" Path="ClassSection"/>
+    <Modifier TargetProperty="MaximumHealth" Operation="Addition" Value="4000" Path="ClassSection"/>
   </SimulationDescriptor>
 
   <!--ClassHulls: infos on ships-->

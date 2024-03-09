@@ -2,8 +2,8 @@
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
   <SimulationDescriptor Name="GameDifficultyAINewbie" Type="GameDifficulty">
     <Modifier TargetProperty="DifficultyLevel"                          Operation="Force"           Value="0"       Path="ClassEmpire" />
-    <Modifier TargetProperty="PlanetRawFIDSI"                           Operation="Subtraction"     Value="1"       Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet" Priority="-100" />
-    <Modifier TargetProperty="PlanetRawPrestige"                        Operation="Addition"        Value="1"       Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet" Priority="-100" />
+    <BinaryModifier TargetProperty="PlanetFIDS"                         Operation="Subtraction"     Left="1" BinaryOperation="Multiplication" Right="$(Population)"       Path="ClassEmpire//ClassPlanet" Priority="-100" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="PlanetPrestige"                     Operation="Subtraction"     Left="0.5" BinaryOperation="Multiplication" Right="$(Population)"       Path="ClassEmpire//ClassPlanet" Priority="-100" SearchValueFromPath="true"/>
     <Modifier TargetProperty="Happiness"                                Operation="Subtraction"     Value="10"      Path="ClassEmpire/ClassColonizedStarSystem"             Priority="-100" />
     <Modifier TargetProperty="OverColonizationPenaltiesReduction"       Operation="Addition"        Value="0.1"     Path="ClassEmpire"                                      Priority="-100" />
     <Modifier TargetProperty="OverPopulationPenaltiesReduction"         Operation="Addition"        Value="0.1"     Path="ClassEmpire/ClassColonizedStarSystem"             Priority="-100" />
@@ -27,8 +27,7 @@
 
   <SimulationDescriptor Name="GameDifficultyAIEasy" Type="GameDifficulty">
     <Modifier TargetProperty="DifficultyLevel"                           Operation="Force"          Value="1"    Path="ClassEmpire" />
-    <Modifier TargetProperty="PlanetRawFIDSI"                            Operation="Subtraction"    Value="0.5"  Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet" Priority="-100" />
-    <Modifier TargetProperty="PlanetRawPrestige"                         Operation="Addition"       Value="0.5"  Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet" Priority="-100" />
+    <BinaryModifier TargetProperty="PlanetFIDS"                          Operation="Subtraction"     Left="0.5" BinaryOperation="Multiplication" Right="$(Population)"       Path="ClassEmpire//ClassPlanet" Priority="-100" SearchValueFromPath="true"/>
     <Modifier TargetProperty="Happiness"                                 Operation="Subtraction"    Value="5"    Path="ClassEmpire/ClassColonizedStarSystem"             Priority="-100" />
     <Modifier TargetProperty="OverColonizationPenaltiesReduction"        Operation="Addition"       Value="0.05" Path="ClassEmpire"                                      Priority="-100" />
     <Modifier TargetProperty="OverPopulationPenaltiesReduction"          Operation="Addition"       Value="0.05" Path="ClassEmpire/ClassColonizedStarSystem"             Priority="-100" />
@@ -64,7 +63,7 @@
     <Modifier TargetProperty="ScienceAgreementUpkeep"                   Operation="Multiplication"  Value="0.5"     Path="ClassEmpire"                                      Priority="100"/>
     <Modifier TargetProperty="TradeAgreementUpkeep"                     Operation="Multiplication"  Value="0.5"     Path="ClassEmpire"                                      Priority="100"/>
     <Modifier TargetProperty="DepositValue"         Operation="Addition"  Value="1.5"  Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeStrategic" Priority="100"/>
-    <BinaryModifier TargetProperty="SiegePower"                         Operation="Addition" Left="6" BinaryOperation="Multiplication" Right="$(CommandPoints)" SearchValueFromPath="true" Path="ClassEmpire,EmpireTypeMajor//ClassGarrisonFleet"/>         
+    <BinaryModifier TargetProperty="SiegePower"                         Operation="Addition" Left="6" BinaryOperation="Multiplication" Right="$(CommandPoints)" SearchValueFromPath="true" Path="ClassEmpire,EmpireTypeMajor//ClassGarrisonFleet"/>
 
 
     <Modifier TargetProperty="IsAIControlled"                           Operation="Addition"        Value="1"       Path="ClassEmpire"/>
@@ -72,8 +71,8 @@
 
   <SimulationDescriptor Name="GameDifficultyAIHard" Type="GameDifficulty">
     <Modifier TargetProperty="DifficultyLevel"                           Operation="Force"          Value="3"    Path="ClassEmpire" />
-    <Modifier TargetProperty="PlanetRawFIDSI"                            Operation="Addition"       Value="1"    Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet" Priority="-100" />
-    <Modifier TargetProperty="PlanetRawPrestige"                         Operation="Subtraction"    Value="1"    Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet" Priority="-100" />
+    <BinaryModifier TargetProperty="PlanetFIDS"                          Operation="Addition"       Left="1" BinaryOperation="Multiplication" Right="$(Population)"       Path="ClassEmpire//ClassPlanet" Priority="-100" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="PlanetPrestige"                      Operation="Addition"       Left="0.5" BinaryOperation="Multiplication" Right="$(Population)"       Path="ClassEmpire//ClassPlanet" Priority="-100" SearchValueFromPath="true"/>
     <Modifier TargetProperty="Happiness"                                 Operation="Addition"       Value="10"   Path="ClassEmpire/ClassColonizedStarSystem"             Priority="-100" />
     <Modifier TargetProperty="OverColonizationPenaltiesReduction"        Operation="Subtraction"    Value="0.1"  Path="ClassEmpire"                                      Priority="-100" />
     <Modifier TargetProperty="OverPopulationPenaltiesReduction"          Operation="Subtraction"    Value="0.1"  Path="ClassEmpire/ClassColonizedStarSystem"             Priority="-100" />
@@ -100,16 +99,16 @@
     <Modifier TargetProperty="RootingIncreasePerTurn" Operation="Addition" Value="0.075" Path="ClassEmpire//ClassShip,ShipRoleRootCreator"/>
 
 	<!--Better AI Empires General OVERCOL FIX-->
-	<Modifier TargetProperty="OverColonizationThresholdHissho"          Operation="Addition"    Value="1" Path="ClassEmpire"    Priority="100" /> 
+	<Modifier TargetProperty="OverColonizationThresholdHissho"          Operation="Addition"    Value="1" Path="ClassEmpire"    Priority="100" />
 
-    
+
     <Modifier TargetProperty="IsAIControlled"                           Operation="Addition"        Value="1"       Path="ClassEmpire"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="GameDifficultyAISerious" Type="GameDifficulty">
     <Modifier TargetProperty="DifficultyLevel"                           Operation="Force"          Value="4"   Path="ClassEmpire" />
-    <Modifier TargetProperty="PlanetRawFIDSI"                            Operation="Addition"       Value="2"    Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet" Priority="-100" />
-    <Modifier TargetProperty="PlanetRawPrestige"                         Operation="Subtraction"    Value="1.5"  Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet" Priority="-100" />
+    <BinaryModifier TargetProperty="PlanetFIDS"                          Operation="Addition"       Left="2" BinaryOperation="Multiplication" Right="$(Population)"       Path="ClassEmpire//ClassPlanet" Priority="-100" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="PlanetPrestige"                      Operation="Addition"       Left="1" BinaryOperation="Multiplication" Right="$(Population)"       Path="ClassEmpire//ClassPlanet" Priority="-100" SearchValueFromPath="true"/>
     <Modifier TargetProperty="Happiness"                                 Operation="Addition"       Value="20"   Path="ClassEmpire/ClassColonizedStarSystem"             Priority="-100" />
     <Modifier TargetProperty="OverColonizationPenaltiesReduction"        Operation="Subtraction"    Value="0.2"  Path="ClassEmpire"                                      Priority="-100" />
     <Modifier TargetProperty="OverPopulationPenaltiesReduction"          Operation="Subtraction"    Value="0.2"  Path="ClassEmpire/ClassColonizedStarSystem"             Priority="-100" />
@@ -118,9 +117,9 @@
     <Modifier TargetProperty="Upkeep"                                    Operation="Percent"        Value="-0.2" Path="ClassEmpire/ClassColonizedStarSystem/ClassHero"   Priority="100" />
     <Modifier TargetProperty="Upkeep"                                    Operation="Percent"        Value="-0.2" Path="ClassEmpire/ClassGarrison/ClassHero"              Priority="100" />
     <Modifier TargetProperty="Upkeep"                                    Operation="Percent"        Value="-0.2" Path="ClassEmpire/ClassHero"                            Priority="100" />
-    <Modifier TargetProperty="MaximumShipProbeStock"                     Operation="Multiplication" Value="1.25"    Path="../ClassEmpire/ClassGarrison/ClassShip,!ShipRoleBehemoth" Priority="999"/>
-    <Modifier TargetProperty="NetShipProbe"                              Operation="Multiplication" Value="1.25"    Path="../ClassEmpire/ClassGarrison/ClassShip,!ShipRoleBehemoth" Priority="999"/>
-    <Modifier TargetProperty="MaximumMovement"                           Operation="Multiplication" Value="1.25"    Path="../ClassEmpire/ClassGarrison/ClassShip,ShipRoleExploration" Priority="999"/>
+    <Modifier TargetProperty="MaximumShipProbeStock"                     Operation="Multiplication" Value="1.25"    Path="ClassEmpire/ClassGarrison/ClassShip,!ShipRoleBehemoth" Priority="999"/>
+    <Modifier TargetProperty="NetShipProbe"                              Operation="Multiplication" Value="1.25"    Path="ClassEmpire/ClassGarrison/ClassShip,!ShipRoleBehemoth" Priority="999"/>
+    <Modifier TargetProperty="MaximumMovement"                           Operation="Multiplication" Value="1.25"    Path="ClassEmpire/ClassGarrison/ClassShip,ShipRoleExploration" Priority="999"/>
     <Modifier TargetProperty="NetEmpireHonor"                            Operation="Addition"       Value="2"    Path="ClassEmpire"                                      Priority="100" />
     <BinaryModifier TargetProperty="NetEmpireHonor"                      Operation="Addition"       Left="2"     BinaryOperation="Multiplication"   Right="$(IsOverColonizationThreshold)"  Path="ClassEmpire"  Priority="100" SearchValueFromPath="true" />
     <!-- Lifeforce compensation -->
@@ -139,49 +138,49 @@
     <Modifier TargetProperty="RootingIncreasePerTurn" Operation="Addition" Value="0.1" Path="ClassEmpire//ClassShip,ShipRoleRootCreator"/>
 
 	<!--Better AI Empires General OVERCOL FIX-->
-	<Modifier TargetProperty="OverColonizationThresholdHissho"          Operation="Addition"    Value="1" Path="ClassEmpire"    Priority="100" /> 
-	  
-	<!--Better AI Empires SCIENCE JUGGERNAUGHT FIX--> 
+	<Modifier TargetProperty="OverColonizationThresholdHissho"          Operation="Addition"    Value="1" Path="ClassEmpire"    Priority="100" />
+
+	<!--Better AI Empires SCIENCE JUGGERNAUGHT FIX-->
 	  <BinaryModifier TargetProperty="TechnologyCostReduction"       Operation="Addition"     Left="$(JuggernautResearchModulesCount)"  BinaryOperation="Multiplication"    Right="-0.03"   Priority="-1"   Path="ClassEmpire/ClassResearch"/>
 
 	<!--Better AI Empires General SEIGE FIX-->
-    <Modifier TargetProperty="MaximumShipManpower"                        Operation="Addition"    Value="120"     Path="../ClassEmpire//ClassShip"/>
-    <Modifier TargetProperty="AdditionalGroundBattleManpowerLimit"  Operation="Addition"    Value="60"      Path="../ClassEmpire//ClassShip"/>  
-	<Modifier TargetProperty="EmpireManpower"            Operation="Addition"    Value="300"  Priority="-1"   Path="../ClassEmpire,EmpireTypeMajor"/>	    
-	  	  
-	<!--Better AI Empires Hissho Tweak MINING PROBE COMPENSATION-->	  
-	<BinaryModifier TargetProperty="SystemFIDSPercent"            Operation="Addition"     Left="$(BetterHisshoTweak)"  BinaryOperation="Multiplication"    Right="$(OwnedSystems)"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="MaximumShipManpower"                        Operation="Addition"    Value="120"     Path="ClassEmpire//ClassShip"/>
+    <Modifier TargetProperty="AdditionalGroundBattleManpowerLimit"  Operation="Addition"    Value="60"      Path="ClassEmpire//ClassShip"/>
+	  <Modifier TargetProperty="EmpireManpower"            Operation="Addition"    Value="300"  Priority="-1"   Path="ClassEmpire"/>
+
+	<!--Better AI Empires Hissho Tweak MINING PROBE COMPENSATION-->
+	  <BinaryModifier TargetProperty="SystemFIDSPercent"            Operation="Addition"     Left="$(BetterHisshoTweak)"  BinaryOperation="Multiplication"    Right="$(OwnedSystems)"   Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 	<!--Better AI Empires Vaulters Tweak INDUSTRY FIX-->
-	  <BinaryModifier TargetProperty="PlanetRawIndustry"    Operation="Addition"     Left="$(BetterVaultersTweak)"  BinaryOperation="Multiplication"    Right="4"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
-	  <BinaryModifier TargetProperty="PlanetRawResearch"    Operation="Addition"     Left="$(BetterVaultersTweak)"  BinaryOperation="Multiplication"    Right="1"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
-	  
+	  <BinaryModifier TargetProperty="PlanetInitialIndustryPerPopulation"    Operation="Addition"     Left="$(BetterVaultersTweak)"  BinaryOperation="Multiplication"    Right="4"   Priority="-1"   Path="ClassEmpire//ClassColonizedPlanet"/>
+	  <BinaryModifier TargetProperty="PlanetInitialSciencePerPopulation"    Operation="Addition"     Left="$(BetterVaultersTweak)"  BinaryOperation="Multiplication"    Right="1"   Priority="-1"   Path="ClassEmpire//ClassColonizedPlanet"/>
+
 	<!--Better AI Empires Nakalim Tweak INDUSTRY FIX-->
-	<BinaryModifier TargetProperty="SystemProduction"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Multiplication"    Right="$(NetEmpireRelics)"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem"/>
-	  <BinaryModifier TargetProperty="ProbeSpeed"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Subtraction"    Right="14"   Priority="-1"   Path="../ClassEmpire"/>
-	  <BinaryModifier TargetProperty="ProbeVisionRange"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Subtraction"    Right="12"   Priority="-1"   Path="../ClassEmpire"/>
-	  
+	<BinaryModifier TargetProperty="SystemProduction"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Multiplication"    Right="$(NetEmpireRelics)"   Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem"/>
+	  <BinaryModifier TargetProperty="ProbeSpeed"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Subtraction"    Right="14"   Priority="-1"   Path="ClassEmpire"/>
+	  <BinaryModifier TargetProperty="ProbeVisionRange"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Subtraction"    Right="12"   Priority="-1"   Path="ClassEmpire"/>
+
 	<!--Better AI Empires Sophons Tweak INDUSTRY FIX-->
-	<BinaryModifier TargetProperty="PlanetRawIndustry"    Operation="Addition"     Left="$(BetterSophonsTweak)"  BinaryOperation="Multiplication"    Right="3"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
-	  <BinaryModifier TargetProperty="PlanetRawResearch"    Operation="Addition"     Left="$(BetterSophonsTweak)"  BinaryOperation="Multiplication"    Right="2"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
-	  	  
+	<BinaryModifier TargetProperty="PlanetInitialIndustryPopulation"    Operation="Addition"     Left="$(BetterSophonsTweak)"  BinaryOperation="Multiplication"    Right="3"   Priority="-1"   Path="ClassEmpire//ClassColonizedPlanet"/>
+	  <BinaryModifier TargetProperty="PlanetInitialSciencePerPopulation"    Operation="Addition"     Left="$(BetterSophonsTweak)"  BinaryOperation="Multiplication"    Right="2"   Priority="-1"   Path="ClassEmpire//ClassColonizedPlanet"/>
+
 	<!--Better AI Empires Horatio Tweak FOOD USE FIX-->
-	<BinaryModifier TargetProperty="SystemProduction"    Operation="Addition"    Left="$(BetterHoratioTweak)"  BinaryOperation="Multiplication"    Right="$(Population)"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem"/>	  
+	<BinaryModifier TargetProperty="SystemProduction"    Operation="Addition"    Left="$(BetterHoratioTweak)"  BinaryOperation="Multiplication"    Right="$(Population)"   Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 	<!--Better AI Empires Unfallen Tweak INDUSTRY FIX-->
-	<BinaryModifier TargetProperty="PlanetRawIndustry"    Operation="Addition"     Left="$(BetterUnfallenTweak)"  BinaryOperation="Multiplication"    Right="5"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/> 
+	<BinaryModifier TargetProperty="PlanetInitialIndustryPopulation"    Operation="Addition"     Left="$(BetterUnfallenTweak)"  BinaryOperation="Multiplication"    Right="5"   Priority="-1"   Path="ClassEmpire//ClassColonizedPlanet"/>
 
 	<!--Better AI Empires Craver SHIP COST FIX-->
 	<BinaryModifier TargetProperty="ShipProductionCostReduction"    Operation="Addition"     Left="$(BetterCraversTweak)"  BinaryOperation="Multiplication"    Right="-0.07" Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem"/>
-    
-    
+
+
     <Modifier TargetProperty="IsAIControlled"                           Operation="Addition"        Value="1"       Path="ClassEmpire"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="GameDifficultyAIImpossible" Type="GameDifficulty">
     <Modifier TargetProperty="DifficultyLevel"                           Operation="Force"          Value="5"   Path="ClassEmpire" />
-    <Modifier TargetProperty="PlanetRawFIDSI"                            Operation="Addition"       Value="3"    Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet" Priority="-100" />
-    <Modifier TargetProperty="PlanetRawPrestige"                         Operation="Subtraction"    Value="1.5"  Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet" Priority="-100" />
+    <BinaryModifier TargetProperty="PlanetFIDS"                          Operation="Addition"       Left="3" BinaryOperation="Multiplication" Right="$(Population)"       Path="ClassEmpire//ClassPlanet" Priority="-100" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="PlanetPrestige"                      Operation="Addition"       Left="1.5" BinaryOperation="Multiplication" Right="$(Population)"       Path="ClassEmpire//ClassPlanet" Priority="-100" SearchValueFromPath="true"/>
     <Modifier TargetProperty="Happiness"                                 Operation="Addition"       Value="40"   Path="ClassEmpire/ClassColonizedStarSystem"             Priority="-100" />
     <Modifier TargetProperty="OverColonizationPenaltiesReduction"        Operation="Subtraction"    Value="0.4"  Path="ClassEmpire"                                      Priority="-100" />
     <Modifier TargetProperty="OverPopulationPenaltiesReduction"          Operation="Subtraction"    Value="0.4"  Path="ClassEmpire/ClassColonizedStarSystem"             Priority="-100" />
@@ -190,9 +189,9 @@
     <Modifier TargetProperty="Upkeep"                                    Operation="Percent"        Value="-0.4" Path="ClassEmpire/ClassColonizedStarSystem/ClassHero"  Priority="100" />
     <Modifier TargetProperty="Upkeep"                                    Operation="Percent"        Value="-0.4" Path="ClassEmpire/ClassGarrison/ClassHero"             Priority="100" />
     <Modifier TargetProperty="Upkeep"                                    Operation="Percent"        Value="-0.4" Path="ClassEmpire/ClassHero"                           Priority="100" />
-    <Modifier TargetProperty="MaximumShipProbeStock"                     Operation="Multiplication" Value="1.5"    Path="../ClassEmpire/ClassGarrison/ClassShip,!ShipRoleBehemoth" Priority="999"/>
-    <Modifier TargetProperty="NetShipProbe"                              Operation="Multiplication" Value="1.5"    Path="../ClassEmpire/ClassGarrison/ClassShip,!ShipRoleBehemoth" Priority="999"/>
-    <Modifier TargetProperty="MaximumMovement"                           Operation="Multiplication" Value="1.5"    Path="../ClassEmpire/ClassGarrison/ClassShip,ShipRoleExploration" Priority="999"/>
+    <Modifier TargetProperty="MaximumShipProbeStock"                     Operation="Multiplication" Value="1.5"    Path="ClassEmpire/ClassGarrison/ClassShip,!ShipRoleBehemoth" Priority="999"/>
+    <Modifier TargetProperty="NetShipProbe"                              Operation="Multiplication" Value="1.5"    Path="ClassEmpire/ClassGarrison/ClassShip,!ShipRoleBehemoth" Priority="999"/>
+    <Modifier TargetProperty="MaximumMovement"                           Operation="Multiplication" Value="1.5"    Path="ClassEmpire/ClassGarrison/ClassShip,ShipRoleExploration" Priority="999"/>
     <Modifier TargetProperty="NetEmpireHonor"                            Operation="Addition"       Value="2"    Path="ClassEmpire"                                     Priority="100" />
     <BinaryModifier TargetProperty="NetEmpireHonor"                      Operation="Addition"       Left="2"     BinaryOperation="Multiplication"   Right="$(IsOverColonizationThreshold)"  Path="ClassEmpire"  Priority="100" SearchValueFromPath="true" />
     <!-- Lifeforce compensation -->
@@ -212,52 +211,52 @@
     <Modifier TargetProperty="RootingIncreasePerTurn" Operation="Addition" Value="0.125" Path="ClassEmpire//ClassShip,ShipRoleRootCreator"/>
 
 	<!--Better AI Empires AI IMPOSSIBLE Quickstart-->
-	<Modifier TargetProperty="SystemFIDSFlat"        Operation="Addition"     Value="10"   Priority="-1"   Path="../ClassEmpire,EmpireTypeMajor/ClassColonizedStarSystem"/>	  
-	  
+	<Modifier TargetProperty="SystemFIDSFlat"        Operation="Addition"     Value="10"   Priority="-1"   Path="ClassEmpire,EmpireTypeMajor/ClassColonizedStarSystem"/>
+
 	<!--Better AI Empires General OVERCOL FIX-->
-	<Modifier TargetProperty="OverColonizationThresholdHissho"          Operation="Addition"    Value="1" Path="ClassEmpire"    Priority="100" /> 
-	  
-	<!--Better AI Empires SCIENCE JUGGERNAUGHT FIX--> 
+	<Modifier TargetProperty="OverColonizationThresholdHissho"          Operation="Addition"    Value="1" Path="ClassEmpire"    Priority="100" />
+
+	<!--Better AI Empires SCIENCE JUGGERNAUGHT FIX-->
 	  <BinaryModifier TargetProperty="TechnologyCostReduction"       Operation="Addition"     Left="$(JuggernautResearchModulesCount)"  BinaryOperation="Multiplication"    Right="-0.04"   Priority="-1"   Path="ClassEmpire/ClassResearch"/>
     <Modifier TargetProperty="MaximumJuggernauts" Operation="Force" Value="1" Path="ClassEmpire" Priority="100" />
 	<!--Better AI Empires General SEIGE FIX-->
-  
-    <Modifier TargetProperty="MaximumShipManpower"                          Operation="Addition"    Value="150"     Path="../ClassEmpire//ClassShip"/>
-    <Modifier TargetProperty="AdditionalGroundBattleManpowerLimit"          Operation="Addition"    Value="75"      Path="../ClassEmpire//ClassShip"/>  
-	<Modifier TargetProperty="EmpireManpower"                               Operation="Addition"    Value="400"  Priority="-1"   Path="../ClassEmpire,EmpireTypeMajor"/>
-	  	  
-	<!--Better AI Empires Hissho Tweak MINING PROBE COMPENSATION-->	  
-	<BinaryModifier TargetProperty="SystemFIDSPercent"            Operation="Addition"     Left="$(BetterHisshoTweak)"  BinaryOperation="Multiplication"    Right="$(OwnedSystems)"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem"/>
+
+    <Modifier TargetProperty="MaximumShipManpower"                          Operation="Addition"    Value="150"     Path="ClassEmpire//ClassShip"/>
+    <Modifier TargetProperty="AdditionalGroundBattleManpowerLimit"          Operation="Addition"    Value="75"      Path="ClassEmpire//ClassShip"/>
+	<Modifier TargetProperty="EmpireManpower"                               Operation="Addition"    Value="400"  Priority="-1"   Path="ClassEmpire,EmpireTypeMajor"/>
+
+	<!--Better AI Empires Hissho Tweak MINING PROBE COMPENSATION-->
+	<BinaryModifier TargetProperty="SystemFIDSPercent"            Operation="Addition"     Left="$(BetterHisshoTweak)"  BinaryOperation="Multiplication"    Right="$(OwnedSystems)"   Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 	<!--Better AI Empires Vaulters Tweak INDUSTRY FIX-->
-	  <BinaryModifier TargetProperty="PlanetRawIndustry"    Operation="Addition"     Left="$(BetterVaultersTweak)"  BinaryOperation="Multiplication"    Right="6"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
-	  <BinaryModifier TargetProperty="PlanetRawResearch"    Operation="Addition"     Left="$(BetterVaultersTweak)"  BinaryOperation="Multiplication"    Right="1"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
-	  
+	  <BinaryModifier TargetProperty="PlanetInitialIndustryPopulation"    Operation="Addition"     Left="$(BetterVaultersTweak)"  BinaryOperation="Multiplication"    Right="6"   Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
+	  <BinaryModifier TargetProperty="PlanetInitialSciencePerPopulation"    Operation="Addition"     Left="$(BetterVaultersTweak)"  BinaryOperation="Multiplication"    Right="1"   Priority="-1"   Path="ClassEmpire//ClassColonizedPlanet"/>
+
 	<!--Better AI Empires Nakalim Tweak INDUSTRY FIX-->
-	<BinaryModifier TargetProperty="SystemProduction"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Multiplication"    Right="$(NetEmpireRelics)"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem"/>
-	  <BinaryModifier TargetProperty="ProbeSpeed"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Subtraction"    Right="14"   Priority="-1"   Path="../ClassEmpire"/>
-	  <BinaryModifier TargetProperty="ProbeVisionRange"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Subtraction"    Right="12"   Priority="-1"   Path="../ClassEmpire"/>
-	  
+	<BinaryModifier TargetProperty="SystemProduction"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Multiplication"    Right="$(NetEmpireRelics)"   Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem"/>
+	  <BinaryModifier TargetProperty="ProbeSpeed"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Subtraction"    Right="14"   Priority="-1"   Path="ClassEmpire"/>
+	  <BinaryModifier TargetProperty="ProbeVisionRange"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Subtraction"    Right="12"   Priority="-1"   Path="ClassEmpire"/>
+
 	<!--Better AI Empires Sophons Tweak INDUSTRY FIX-->
-	<BinaryModifier TargetProperty="PlanetRawIndustry"    Operation="Addition"     Left="$(BetterSophonsTweak)"  BinaryOperation="Multiplication"    Right="5"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
-	  <BinaryModifier TargetProperty="PlanetRawResearch"    Operation="Addition"     Left="$(BetterSophonsTweak)"  BinaryOperation="Multiplication"    Right="2"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
-	  	  
+	<BinaryModifier TargetProperty="PlanetInitialIndustryPopulation"    Operation="Addition"     Left="$(BetterSophonsTweak)"  BinaryOperation="Multiplication"    Right="5"   Priority="-1"   Path="ClassEmpire//ClassColonizedPlanet"/>
+	  <BinaryModifier TargetProperty="PlanetInitialSciencePerPopulation"    Operation="Addition"     Left="$(BetterSophonsTweak)"  BinaryOperation="Multiplication"    Right="2"   Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
+
 	<!--Better AI Empires Horatio Tweak FOOD USE FIX-->
-	<BinaryModifier TargetProperty="SystemProduction"    Operation="Addition"    Left="$(BetterHoratioTweak)"  BinaryOperation="Multiplication"    Right="$(Population)"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem"/>	  
+	<BinaryModifier TargetProperty="SystemProduction"    Operation="Addition"    Left="$(BetterHoratioTweak)"  BinaryOperation="Multiplication"    Right="$(Population)"   Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 	<!--Better AI Empires Unfallen Tweak INDUSTRY FIX-->
-	<BinaryModifier TargetProperty="PlanetRawIndustry"    Operation="Addition"     Left="$(BetterUnfallenTweak)"  BinaryOperation="Multiplication"    Right="7"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
+	<BinaryModifier TargetProperty="PlanetInitialIndustryPopulation"    Operation="Addition"     Left="$(BetterUnfallenTweak)"  BinaryOperation="Multiplication"    Right="7"   Priority="-1"   Path="ClassEmpire//ClassColonizedPlanet"/>
 
 	<!--Better AI Empires Craver SHIP COST FIX-->
 	<BinaryModifier TargetProperty="ShipProductionCostReduction"    Operation="Addition"     Left="$(BetterCraversTweak)"  BinaryOperation="Multiplication"    Right="-0.10" Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem"/>
-    
+
     <Modifier TargetProperty="IsAIControlled"                           Operation="Addition"        Value="1"       Path="ClassEmpire"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="GameDifficultyAIEndless" Type="GameDifficulty">
     <Modifier TargetProperty="DifficultyLevel"                           Operation="Force"          Value="6"   Path="ClassEmpire" />
-    <Modifier TargetProperty="PlanetRawFIDSI"                            Operation="Addition"       Value="4"    Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet" Priority="-100" />
-    <Modifier TargetProperty="PlanetRawPrestige"                         Operation="Subtraction"    Value="1.5"  Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet" Priority="-100" />
+    <BinaryModifier TargetProperty="PlanetFIDS"                          Operation="Addition"       Left="4" BinaryOperation="Multiplication" Right="$(Population)"       Path="ClassEmpire//ClassPlanet" Priority="-100" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="PlanetPrestige"                      Operation="Addition"       Left="2" BinaryOperation="Multiplication" Right="$(Population)"       Path="ClassEmpire//ClassPlanet" Priority="-100" SearchValueFromPath="true"/>
     <Modifier TargetProperty="Happiness"                                 Operation="Addition"       Value="60"   Path="ClassEmpire/ClassColonizedStarSystem"             Priority="-100" />
     <Modifier TargetProperty="OverColonizationPenaltiesReduction"        Operation="Subtraction"    Value="0.6"  Path="ClassEmpire"                                      Priority="-100" />
     <Modifier TargetProperty="OverPopulationPenaltiesReduction"          Operation="Subtraction"    Value="0.6"  Path="ClassEmpire/ClassColonizedStarSystem"             Priority="-100" />
@@ -266,9 +265,9 @@
     <Modifier TargetProperty="Upkeep"                                    Operation="Percent"        Value="-0.6" Path="ClassEmpire/ClassColonizedStarSystem/ClassHero"   Priority="100" />
     <Modifier TargetProperty="Upkeep"                                    Operation="Percent"        Value="-0.6" Path="ClassEmpire/ClassGarrison/ClassHero"              Priority="100" />
     <Modifier TargetProperty="Upkeep"                                    Operation="Percent"        Value="-0.6" Path="ClassEmpire/ClassHero"                            Priority="100" />
-    <Modifier TargetProperty="MaximumShipProbeStock"                     Operation="Multiplication" Value="2"    Path="../ClassEmpire/ClassGarrison/ClassShip,!ShipRoleBehemoth" Priority="999"/>
-    <Modifier TargetProperty="NetShipProbe"                              Operation="Multiplication" Value="2"    Path="../ClassEmpire/ClassGarrison/ClassShip,!ShipRoleBehemoth" Priority="999"/>
-    <Modifier TargetProperty="MaximumMovement"                           Operation="Multiplication" Value="2"    Path="../ClassEmpire/ClassGarrison/ClassShip,ShipRoleExploration" Priority="999"/>
+    <Modifier TargetProperty="MaximumShipProbeStock"                     Operation="Multiplication" Value="2"    Path="ClassEmpire/ClassGarrison/ClassShip,!ShipRoleBehemoth" Priority="999"/>
+    <Modifier TargetProperty="NetShipProbe"                              Operation="Multiplication" Value="2"    Path="ClassEmpire/ClassGarrison/ClassShip,!ShipRoleBehemoth" Priority="999"/>
+    <Modifier TargetProperty="MaximumMovement"                           Operation="Multiplication" Value="2"    Path="ClassEmpire/ClassGarrison/ClassShip,ShipRoleExploration" Priority="999"/>
 
     <Modifier TargetProperty="NetEmpireHonor"                            Operation="Addition"       Value="2"    Path="ClassEmpire"                                      Priority="100" />
     <BinaryModifier TargetProperty="NetEmpireHonor"                      Operation="Addition"       Left="2"     BinaryOperation="Multiplication"   Right="$(IsOverColonizationThreshold)"  Path="ClassEmpire"  Priority="100" SearchValueFromPath="true" />
@@ -289,48 +288,54 @@
     <Modifier TargetProperty="RootingIncreasePerTurn" Operation="Addition" Value="0.125" Path="ClassEmpire//ClassShip,ShipRoleRootCreator"/>
 
 	<!--Better AI Empires - AI ENDLESS QUICKSTART-->
-	<Modifier TargetProperty="SystemFIDSFlat"        Operation="Addition"       Value="25"      Priority="-1"   Path="../ClassEmpire,EmpireTypeMajor/ClassColonizedStarSystem,ColonizedStarSystemStateColony"/>
+	<Modifier TargetProperty="SystemFIDSFlat"        Operation="Addition"       Value="25"      Priority="-1"   Path="ClassEmpire,EmpireTypeMajor/ClassColonizedStarSystem,ColonizedStarSystemStateColony"/>
 	<Modifier TargetProperty="MaximumMovement"       Operation="Addition"       Value="1"       Path="ClassEmpire/ClassGarrisonFleet/ClassShip" Priority="-100" />
-	  
+
 	<!--Better AI Empires General OVERCOL FIX-->
-	<Modifier TargetProperty="OverColonizationThresholdHissho"          Operation="Addition"    Value="1" Path="ClassEmpire"    Priority="100" /> 
-	  
-	<!--Better AI Empires SCIENCE JUGGERNAUGHT FIX--> 
+	<Modifier TargetProperty="OverColonizationThresholdHissho"          Operation="Addition"    Value="1" Path="ClassEmpire"    Priority="100" />
+
+	<!--Better AI Empires SCIENCE JUGGERNAUGHT FIX-->
 	  <BinaryModifier TargetProperty="TechnologyCostReduction"       Operation="Addition"     Left="$(JuggernautResearchModulesCount)"  BinaryOperation="Multiplication"    Right="-0.04"   Priority="-1"   Path="ClassEmpire/ClassResearch"/>
     <Modifier TargetProperty="MaximumJuggernauts" Operation="Force" Value="1" Path="ClassEmpire" Priority="100" />
 	<!--Better AI Empires General SEIGE FIX-->
 
-    <Modifier TargetProperty="MaximumShipManpower"                          Operation="Addition"    Value="150"     Path="../ClassEmpire//ClassShip"/>
-    <Modifier TargetProperty="AdditionalGroundBattleManpowerLimit"          Operation="Addition"    Value="75"      Path="../ClassEmpire//ClassShip"/>  
-	<Modifier TargetProperty="EmpireManpower"                               Operation="Addition"    Value="400"  Priority="-1"   Path="../ClassEmpire,EmpireTypeMajor"/>   
-	  	  
-	<!--Better AI Empires Hissho Tweak MINING PROBE COMPENSATION-->	  
-	<BinaryModifier TargetProperty="SystemFIDSPercent"            Operation="Addition"     Left="$(BetterHisshoTweak)"  BinaryOperation="Multiplication"    Right="$(OwnedSystems)"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="MaximumShipManpower"                          Operation="Addition"    Value="150"     Path="ClassEmpire//ClassShip"/>
+    <Modifier TargetProperty="AdditionalGroundBattleManpowerLimit"          Operation="Addition"    Value="75"      Path="ClassEmpire//ClassShip"/>
+	<Modifier TargetProperty="EmpireManpower"                               Operation="Addition"    Value="400"  Priority="-1"   Path="ClassEmpire,EmpireTypeMajor"/>
+
+	<!--Better AI Empires Hissho Tweak MINING PROBE COMPENSATION-->
+	<BinaryModifier TargetProperty="SystemFIDSPercent"            Operation="Addition"     Left="$(BetterHisshoTweak)"  BinaryOperation="Multiplication"    Right="$(OwnedSystems)"   Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 	<!--Better AI Empires Vaulters Tweak INDUSTRY FIX-->
 	<Modifier TargetProperty="BaseTurnsBeforeNextFreeSuperColonization"	        Operation="Subtraction"    Value="2" Path="ClassEmpire"    Priority="100" />
-	  <BinaryModifier TargetProperty="PlanetRawIndustry"    Operation="Addition"     Left="$(BetterVaultersTweak)"  BinaryOperation="Multiplication"    Right="6"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
-	  <BinaryModifier TargetProperty="PlanetRawResearch"    Operation="Addition"     Left="$(BetterVaultersTweak)"  BinaryOperation="Multiplication"    Right="1"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
-	  
-	<!--Better AI Empires Nakalim Tweak INDUSTRY FIX-->  
-	<BinaryModifier TargetProperty="SystemProduction"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Multiplication"    Right="$(NetEmpireRelics)"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem"/>
-	  <BinaryModifier TargetProperty="ProbeSpeed"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Subtraction"    Right="14"   Priority="-1"   Path="../ClassEmpire"/>
-	  <BinaryModifier TargetProperty="ProbeVisionRange"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Subtraction"    Right="12"   Priority="-1"   Path="../ClassEmpire"/>
-	  
+	  <BinaryModifier TargetProperty="PlanetInitialIndustryPopulation"    Operation="Addition"     Left="$(BetterVaultersTweak)"  BinaryOperation="Multiplication"    Right="6"   Priority="-1"   Path="ClassEmpire//ClassColonizedPlanet"/>
+	  <BinaryModifier TargetProperty="PlanetInitialSciencePerPopulation"    Operation="Addition"     Left="$(BetterVaultersTweak)"  BinaryOperation="Multiplication"    Right="1"   Priority="-1"   Path="ClassEmpire//ClassColonizedPlanet"/>
+
+	<!--Better AI Empires Nakalim Tweak INDUSTRY FIX-->
+	<BinaryModifier TargetProperty="SystemProduction"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Multiplication"    Right="$(NetEmpireRelics)"   Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem"/>
+	  <BinaryModifier TargetProperty="ProbeSpeed"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Subtraction"    Right="14"   Priority="-1"   Path="ClassEmpire"/>
+	  <BinaryModifier TargetProperty="ProbeVisionRange"       Operation="Addition"     Left="$(BetterNakalimTweak)"  BinaryOperation="Subtraction"    Right="12"   Priority="-1"   Path="ClassEmpire"/>
+
 	<!--Better AI Empires Sophons Tweak INDUSTRY FIX-->
-	<BinaryModifier TargetProperty="PlanetRawIndustry"    Operation="Addition"     Left="$(BetterSophonsTweak)"  BinaryOperation="Multiplication"    Right="5"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
-	  <BinaryModifier TargetProperty="PlanetRawResearch"    Operation="Addition"     Left="$(BetterSophonsTweak)"  BinaryOperation="Multiplication"    Right="2"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
-	  	  
+	<BinaryModifier TargetProperty="PlanetInitialIndustryPopulation"    Operation="Addition"     Left="$(BetterSophonsTweak)"  BinaryOperation="Multiplication"    Right="5"   Priority="-1"   Path="ClassEmpire//ClassColonizedPlanet"/>
+	  <BinaryModifier TargetProperty="PlanetInitialSciencePerPopulation"    Operation="Addition"     Left="$(BetterSophonsTweak)"  BinaryOperation="Multiplication"    Right="2"   Priority="-1"   Path="ClassEmpire//ClassColonizedPlanet"/>
+
 	<!--Better AI Empires Horatio Tweak FOOD USE FIX-->
-	<BinaryModifier TargetProperty="SystemProduction"    Operation="Addition"    Left="$(BetterHoratioTweak)"  BinaryOperation="Multiplication"    Right="$(Population)"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem"/>	  
+	<BinaryModifier TargetProperty="SystemProduction"    Operation="Addition"    Left="$(BetterHoratioTweak)"  BinaryOperation="Multiplication"    Right="$(Population)"   Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 	<!--Better AI Empires Unfallen Tweak INDUSTRY FIX-->
-	<BinaryModifier TargetProperty="PlanetRawIndustry"    Operation="Addition"     Left="$(BetterUnfallenTweak)"  BinaryOperation="Multiplication"    Right="7"   Priority="-1"   Path="../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet"/>
+	<BinaryModifier TargetProperty="PlanetInitialIndustryPopulation"    Operation="Addition"     Left="$(BetterUnfallenTweak)"  BinaryOperation="Multiplication"    Right="7"   Priority="-1"   Path="ClassEmpire//ClassColonizedPlanet"/>
 
 	<!--Better AI Empires Craver SHIP COST FIX-->
 	<BinaryModifier TargetProperty="ShipProductionCostReduction"    Operation="Addition"     Left="$(BetterCraversTweak)"  BinaryOperation="Multiplication"    Right="-0.10" Priority="-1"   Path="ClassEmpire/ClassColonizedStarSystem"/>
-    
-    
+
+
     <Modifier TargetProperty="IsAIControlled"                           Operation="Addition"        Value="1"       Path="ClassEmpire"/>
+  </SimulationDescriptor>
+
+  <!-- Pirate -->
+  <SimulationDescriptor Name="PirateDifficultyHard" Type="PirateDifficulty">
+    <Modifier TargetProperty="PirateDifficultyMultiplier" Operation="Force" Value="0.5" Path="ClassEmpire"/>
+    <Modifier TargetProperty="MaximumPirateFleetCount"    Operation="Force" Value="3"    Path="ClassEmpire/ClassPirateLair" Priority="2"/>
   </SimulationDescriptor>
 </Datatable>
