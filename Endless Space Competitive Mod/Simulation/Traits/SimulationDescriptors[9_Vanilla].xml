@@ -47,6 +47,18 @@
     <BinaryModifier TargetProperty="PlanetDepletionPerTurn" Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(PopulationCount)" Path="./ClassPlanet" TooltipHidden="true"/>
   </SimulationDescriptor>
 
+  <!-- Cravers -->
+  <SimulationDescriptor Name="ClassPopulationPlanetModifiersTraitPrimaryDepletionFIDS" Type="ClassPopulationPlanet">
+    <Property Name="BonusFromDepletion" BaseValue="1"/>
+    <!--  Tells whether the population benefits from depletion or not.  -->
+    <Modifier TargetProperty="PlanetDepletionPerTurn" Operation="Addition" Value="1" Path="FAKEFORGUI/./ClassPlanet"/>
+    <BinaryModifier TargetProperty="PlanetDepletionPerTurn" Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(PopulationCount)" Path="./ClassPlanet" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="BonusPopulationFIDSPercent" Operation="Addition" Left="1.5" BinaryOperation="Multiplication" Right="$(BonusFromDepletion)" Path="FAKEFORGUI/./PopulationExploitingPlanetWhileDepleting"/>
+    <BinaryModifier TargetProperty="DepletingPopulation"    Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(PopulationCount)" Path="./ClassColonizedPlanet" TooltipHidden="true"/>
+    <Modifier TargetProperty="BonusFromDepletion" Operation="Force" Value="0" TooltipHidden="true" Priority="-1"/>
+    <!--  Property is at 1 by default for Tooltip purposes, and is set to 0 with this operation.  -->
+  </SimulationDescriptor>
+
   <!--Sheredyn-->
   <SimulationDescriptor Name="ClassPopulationPlanetModifiersTraitPrimaryDefense" Type="ClassPopulationPlanet">
     <Modifier TargetProperty="BonusPopulationDefense" Operation="Addition" Value="40"/>

@@ -32,6 +32,10 @@
     <Property Name="PlanetParasitedPopulationScience"   MinValue="Negative" />
     <Property Name="PlanetParasitedPopulationPrestige"  MinValue="Negative" />
 
+    <Property Name="DepletingPopulation"            BaseValue="0"  MinValue="Negative" />
+    <Property Name="DepletingPopulationBoolean"     BaseValue="0"  MaxValue="1" />
+    <Property Name="DepletingAndParasitedBonusFIDS" BaseValue="0"  MinValue="Negative" />
+
     <Property Name="DefaultPlanetFood"/>
     <Property Name="DefaultPlanetIndustry"/>
     <Property Name="DefaultPlanetDust"/>
@@ -175,18 +179,26 @@
     <Modifier TargetProperty="PlanetScience"          Operation="Addition" Value="$(ScienceFromPopulation)"  />
     <Modifier TargetProperty="PlanetPrestige"         Operation="Addition" Value="$(PrestigeFromPopulation)" />
 
-    <Modifier TargetProperty="PlanetFood"             Operation="Addition" Value="$(PlanetDepletingPopulationFood)"     />
-    <Modifier TargetProperty="PlanetIndustry"         Operation="Addition" Value="$(PlanetDepletingPopulationIndustry)" />
-    <Modifier TargetProperty="PlanetDust"             Operation="Addition" Value="$(PlanetDepletingPopulationDust)"     />
-    <Modifier TargetProperty="PlanetScience"          Operation="Addition" Value="$(PlanetDepletingPopulationScience)"  />
-    <Modifier TargetProperty="PlanetPrestige"         Operation="Addition" Value="$(PlanetDepletingPopulationPrestige)" />
+    <!-- Craver Depletion and Enslaved Populations -->
+    <BinaryModifier TargetProperty="DepletingAndParasitedBonusFIDS"       Operation="Addition" Left="$(DepletingPopulation)"     BinaryOperation="Multiplication" Right="1.5" />
+    <Modifier TargetProperty="DepletingAndParasitedBonusFIDS"             Operation="Addition" Value="$(ParasitedPopulation)"   />
+    <Modifier TargetProperty="DepletingAndParasitedBonusFIDS"             Operation="Division" Value="$(Population)"   />
 
-    <Modifier TargetProperty="PlanetFood"             Operation="Addition" Value="$(PlanetParasitedPopulationFood)"     />
-    <Modifier TargetProperty="PlanetIndustry"         Operation="Addition" Value="$(PlanetParasitedPopulationIndustry)" />
-    <Modifier TargetProperty="PlanetDust"             Operation="Addition" Value="$(PlanetParasitedPopulationDust)"     />
-    <Modifier TargetProperty="PlanetScience"          Operation="Addition" Value="$(PlanetParasitedPopulationScience)"  />
-    <Modifier TargetProperty="PlanetPrestige"         Operation="Addition" Value="$(PlanetParasitedPopulationPrestige)" />
+    <Modifier TargetProperty="PlanetFood"                       Operation="Percent"     Value="$(DepletingAndParasitedBonusFIDS)" />
+    <Modifier TargetProperty="PlanetIndustry"                   Operation="Percent"     Value="$(DepletingAndParasitedBonusFIDS)" />
+    <Modifier TargetProperty="PlanetDust"                       Operation="Percent"     Value="$(DepletingAndParasitedBonusFIDS)" />
+    <Modifier TargetProperty="PlanetScience"                    Operation="Percent"     Value="$(DepletingAndParasitedBonusFIDS)" />
+    <Modifier TargetProperty="PlanetPrestige"                   Operation="Percent"     Value="$(DepletingAndParasitedBonusFIDS)" />
 
+    <Modifier TargetProperty="DepletingPopulationBoolean"       Operation="Addition"        Value="$(DepletingPopulation)" />
+    <BinaryModifier TargetProperty="PlanetDepletionFIDSPenalty" Operation="Multiplication"  Left="1"     BinaryOperation="Subtraction"   Right="$(DepletingPopulationBoolean)" />
+    
+    <!-- Craver Depletion and Enslaved Populations -->
+    <Modifier TargetProperty="PlanetFood"                       Operation="Percent"     Value="$(PlanetDepletionFIDSPenaltyGUI)" />
+    <Modifier TargetProperty="PlanetIndustry"                   Operation="Percent"     Value="$(PlanetDepletionFIDSPenaltyGUI)" />
+    <Modifier TargetProperty="PlanetDust"                       Operation="Percent"     Value="$(PlanetDepletionFIDSPenaltyGUI)" />
+    <Modifier TargetProperty="PlanetScience"                    Operation="Percent"     Value="$(PlanetDepletionFIDSPenaltyGUI)" />
+    <Modifier TargetProperty="PlanetPrestige"                   Operation="Percent"     Value="$(PlanetDepletionFIDSPenaltyGUI)" />
 
     <Modifier TargetProperty="PlanetFood"             Operation="Percent" Value="$(PlanetHeroFIDSIPercent)" />
     <Modifier TargetProperty="PlanetIndustry"         Operation="Percent" Value="$(PlanetHeroFIDSIPercent)" />
