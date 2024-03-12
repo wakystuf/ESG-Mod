@@ -76,6 +76,7 @@
     <Property Name="PlanetDepletionMultiplier" BaseValue="0" MinValue="Negative"/>
     <Property Name="PlanetDepletionPercent" BaseValue="0"/>
     <Property Name="PlanetDepletionFIDSPenalty" BaseValue="0"/>
+    <Property Name="PlanetDepletionFIDSPenaltyGUI" BaseValue="0" MinValue="Negative"/>
     <Property Name="PlanetDepletionFIDSRemaining" BaseValue="1"/>
 
     <Property Name="Strategic1"  />
@@ -187,13 +188,15 @@
     <Modifier TargetProperty="PlanetInitialFIDSI"              Operation="Addition" Value="$(PlanetInitialFIDSIPerPopulation)" TooltipHidden="true"/>
 
     <!-- Depletion -->
-    <BinaryModifier TargetProperty="PlanetDepletionPercent"     Operation="Addition"   Left="$(PlanetDepletionPoints)"  BinaryOperation="Division"       Right="$(PlanetDepletionMax)"         TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PlanetDepletionFIDSPenalty" Operation="Addition"   Left="$(PlanetDepletionPercent)" BinaryOperation="Multiplication" Right="0.5"                           TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PlanetFood"                 Operation="Percent"    Left="-1"                        BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" Path="ClassColonizedPlanet"/>
-    <BinaryModifier TargetProperty="PlanetIndustry"             Operation="Percent"    Left="-1"                        BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" Path="ClassColonizedPlanet"/>
-    <BinaryModifier TargetProperty="PlanetDust"                 Operation="Percent"    Left="-1"                        BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" Path="ClassColonizedPlanet"/>
-    <BinaryModifier TargetProperty="PlanetScience"              Operation="Percent"    Left="-1"                        BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" Path="ClassColonizedPlanet"/>
-    <BinaryModifier TargetProperty="PlanetPrestige"             Operation="Percent"    Left="-1"                        BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)" Path="ClassColonizedPlanet"/>
+    <BinaryModifier TargetProperty="PlanetDepletionPercent"        Operation="Addition"   Left="$(PlanetDepletionPoints)"  BinaryOperation="Division"       Right="$(PlanetDepletionMax)"         TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetDepletionFIDSPenalty"    Operation="Addition"   Left="$(PlanetDepletionPercent)" BinaryOperation="Multiplication" Right="0.5"                           TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="PlanetDepletionFIDSPenaltyGUI" Operation="Addition"   Left="-1"                        BinaryOperation="Multiplication" Right="$(PlanetDepletionFIDSPenalty)"/>
+
+    <Modifier TargetProperty="PlanetFood"                       Operation="Percent"     Value="$(PlanetDepletionFIDSPenaltyGUI)" Path="ClassColonizedPlanet"/>
+    <Modifier TargetProperty="PlanetIndustry"                   Operation="Percent"     Value="$(PlanetDepletionFIDSPenaltyGUI)" Path="ClassColonizedPlanet"/>
+    <Modifier TargetProperty="PlanetDust"                       Operation="Percent"     Value="$(PlanetDepletionFIDSPenaltyGUI)" Path="ClassColonizedPlanet"/>
+    <Modifier TargetProperty="PlanetScience"                    Operation="Percent"     Value="$(PlanetDepletionFIDSPenaltyGUI)" Path="ClassColonizedPlanet"/>
+    <Modifier TargetProperty="PlanetPrestige"                   Operation="Percent"     Value="$(PlanetDepletionFIDSPenaltyGUI)" Path="ClassColonizedPlanet"/>
     <Modifier TargetProperty="PlanetDepletionFIDSRemaining"     Operation="Subtraction" Value="$(PlanetDepletionFIDSPenalty)" TooltipHidden="true"/>
 
     <Modifier TargetProperty="PlanetDepletionFIDSRemaining"    Operation="Force"    Value="$(PlanetDepletionFIDSRemaining)" Path="ClassColonizedPlanet/ClassPopulationPlanet" TooltipHidden="true"/>
