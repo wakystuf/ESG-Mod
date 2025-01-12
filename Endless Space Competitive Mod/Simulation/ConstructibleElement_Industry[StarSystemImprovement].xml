@@ -409,13 +409,13 @@
   <StarSystemPopulationTransformImprovementDefinition   Name="StarSystemImprovementCloneMajorPopulation" SubCategory="SubCategoryPopulation" ScoreProvider="StarSystemImprovementBuilt" PopulationSource="Minor" PopulationSourceHeuristic="LowestCount" PopulationDestination="Major" PopulationDestinationHeuristic="LowestCount"  PopulationToTransformCount="1">
       <AIGain RessourceName="PopulationGain" Inverted="false"></AIGain>
       <QueuedSimulationDescriptorReference Name="StarSystemImprovementCloneMajorPopulationQueued" />
-        <CustomCost ResourceName="SystemProduction">200</CustomCost>
-        <InterpreterPrerequisite Inverted="false" Flags="NotEnoughPopulation,Enqueue">(Property(Context, @ClassColonizedStarSystem, Population) -  Property(Context, @ClassColonizedStarSystem, MajorPopulationCount) - Property(Context, @ClassColonizedStarSystem, OnGoingClone) ) gt 0</InterpreterPrerequisite>
-        <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayHoratio</PathPrerequisite>
-        <PathPrerequisite Inverted="false"  Flags="Prerequisite,Disable">ColonizedStarSystemStateColony/ClassColonizedPlanet/PopulationNonMajor, !ClassPopulationPlanetAffinityGuardians</PathPrerequisite>
-        <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyCloneMajorPopulation</TechnologyPrerequisite>
-        <SimulationDescriptorReference Name="StarSystemImprovementCloneMajorPopulation" />
-    </StarSystemPopulationTransformImprovementDefinition>
+      <CustomCost ResourceName="SystemProduction">100 * Property(StockLocation, @../ClassEmpire, GameSpeedMultiplier, true)</CustomCost>
+      <InterpreterPrerequisite Inverted="false" Flags="NotEnoughPopulation,Enqueue">(Property(Context, @ClassColonizedStarSystem, Population) -  Property(Context, @ClassColonizedStarSystem, MajorPopulationCount) - Property(Context, @ClassColonizedStarSystem, OnGoingClone) ) gt 0</InterpreterPrerequisite>
+      <PathPrerequisite Inverted="false"   Flags="Prerequisite,Discard">../ClassEmpire,AffinityGameplayHoratio</PathPrerequisite>
+      <PathPrerequisite Inverted="false"  Flags="Prerequisite,Disable">ColonizedStarSystemStateColony/ClassColonizedPlanet/PopulationNonMajor, !ClassPopulationPlanetAffinityGuardians</PathPrerequisite>
+      <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyCloneMajorPopulation</TechnologyPrerequisite>
+      <SimulationDescriptorReference Name="StarSystemImprovementCloneMajorPopulation" />
+  </StarSystemPopulationTransformImprovementDefinition>
 
   <!-- #################### -->
   <!-- ### VAULTERS     ### -->
@@ -1771,7 +1771,6 @@
     <SupervisorGain Name="Science" Weight="0.25"/>
     <SupervisorGain Name="Dust" Weight="0.25"/>
     <QueuedSimulationDescriptorReference Name="IncreaseArcologyBeingBuiltCount"/>
-
     <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">2000 * (1 + Property(StockLocation,@'../ClassEmpire', ArcologicalAdministrationCount)) * (1 + Property(StockLocation,@ClassColonizedStarSystem, ArcologicalAdministrationCount)) * Property(StockLocation,@'../ClassEmpire', GameSpeedMultiplier)</CustomCost>
     <Cost ResourceName="SystemProduction">1</Cost>
     <PathPrerequisite Flags="Prerequisite,Disable,RequiresSystemLevel4">ColonizedStarSystemStateColony,StarSystemImprovementLevel4</PathPrerequisite>
@@ -1786,7 +1785,9 @@
     <SupervisorGain Name="Industry" Weight="0.25" />
     <SupervisorGain Name="Science" Weight="0.25" />
     <SupervisorGain Name="Dust" Weight="0.25" />
+    <QueuedSimulationDescriptorReference Name="IncreaseArcologyBeingBuiltCount"/>
     <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">2000 * (1 + Property(StockLocation,@'../ClassEmpire', ArcologicalAdministrationCount)) * (1 + Property(StockLocation,@ClassColonizedStarSystem, ArcologicalAdministrationCount))  * Property(StockLocation,@'../ClassEmpire', GameSpeedMultiplier)</CustomCost>
+    <Cost ResourceName="SystemProduction">1</Cost>
     <TechnologyPrerequisite Flags="Prerequisite,Discard,Technology">TechnologyUnlockPropaganda</TechnologyPrerequisite>
     <PathPrerequisite Flags="Prerequisite,Disable,RequiresSystemLevel4">ColonizedStarSystemStateColony,StarSystemImprovementLevel4</PathPrerequisite>
     <PathPrerequisite Flags="Prerequisite,Discard,UnlockAvailability,Faction" Inverted="false">../ClassEmpire,!AffinityGameplayCravers,!AffinityGameplayVenetians,!AffinityGameplayVampirilis,!AffinityGameplayTimeLords,!AffinityGameplayUnfallen,!AffinityGameplaySophons,!AffinityGameplayHoratio,!AffinityGameplayVaulters,!!AffinityGameplayTemplars</PathPrerequisite>
