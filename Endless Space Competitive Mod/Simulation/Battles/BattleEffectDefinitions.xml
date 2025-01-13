@@ -49,10 +49,15 @@
   <BattleEffect_SetPropertyValue Name="Squadron_ComputeDamageToApplyToShipShield" PropertyName="DamageAbsorbedByLastShield" Operation="Set" InterpreterFormula="Min(Property(Initiator, @ClassModuleSquadron, ShieldAbsorptionValue) * (Property(InitiatorTarget, @ClassShip, ShieldAbsorption) / (Property(InitiatorTarget, @ClassShip, ShieldAbsorption) + Property(InitiatorTarget, @ClassShip, HullWeakness)) * Property(InitiatorTarget, @ClassShip, ShieldAbsorptionPercent)), Property(InitiatorTarget, @ClassShip, Shield), Property(Initiator, @ClassModuleSquadron, ShieldAbsorptionValue))"/>
 
   <!-- Coilgun -->
-  <BattleEffect_SetPropertyValue Name="Ship_SetArmorDestructionFromOpponentCoilgun"             PropertyName="CoilgunArmorDescructionPercentFromOpponent"        Operation="Set" InterpreterFormula="Property(Initiator, @ClassSalvo, ArmorDestructionDynamic)" />
+  <BattleEffect_SetPropertyValue Name="Ship_SetArmorDestructionFromOpponentCoilgunPercent"          PropertyName="CoilgunArmorDescructionPercentFromOpponent"     Operation="Set" InterpreterFormula="Property(Initiator, @ClassSalvo, ArmorDestructionDynamic)" />
+  <BattleEffect_SetPropertyValue Name="Ship_SetArmorDestructionFromOpponentCoilgunFlat"             PropertyName="CoilgunArmorDescructionFlatFromOpponent"        Operation="Set" InterpreterFormula="Property(Initiator, @ClassSalvo, ArmorDestructionFlat)" />
 
-  <BattleEffect_ApplyDescriptor Name="Ship_AddBattleArmorDestructionPercent" Duration="120">
+  <BattleEffect_ApplyDescriptor Name="Ship_AddBattleArmorDestructionPercent" Duration="120" StackingBehaviour="Stack">
     <SimulationDescriptorReference Name="EncounterShipTemporaryArmorDestructionAccuracyPercent"/>
+  </BattleEffect_ApplyDescriptor>
+
+  <BattleEffect_ApplyDescriptor Name="Ship_AddBattleArmorDestructionFlat" Duration="120" StackingBehaviour="Stack">
+    <SimulationDescriptorReference Name="EncounterShipTemporaryArmorDestructionAccuracyFlat"/>
   </BattleEffect_ApplyDescriptor>
 
   <BattleEffect_SetPropertyValue Name="AttackingFlotilla_UpdateDamageAppliedByCoilgunFromSalvo"  PropertyName="DamageAppliedByCoilgun"     Operation="Addition"    InterpreterFormula="Property(Initiator, @ClassSalvo, EffectiveDamage)">
