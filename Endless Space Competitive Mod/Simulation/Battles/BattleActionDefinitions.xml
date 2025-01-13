@@ -267,4 +267,73 @@
       <BattleEffectReference Name="Core_HealDynamicPerSecond"/>
     </BattleEffectApplicationContext>
   </BattleAction>
+
+  <!--  Salvo launched event -->
+  <BattleAction Name="Weapon_SalvoLaunched">
+    <EventPrerequisite EventType="Attack_SalvoLaunched">
+      <EventInitiatorFilter EntityType="Salvo" EntityTags="SameModule"/>
+    </EventPrerequisite>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Initiator"/>
+      </TargetFilter>
+      <BattleEffectReference Name="Salvo_InitShieldAbsorptionValue"/>
+      <BattleEffectReference Name="Salvo_InitHullPlatingAbsorptionValue"/>
+      <BattleEffectReference Name="Salvo_InitShipManpowerKillValue"/>
+      <BattleEffectReference Name="Salvo_InitMultiplierValue"/>
+      <BattleEffectReference Name="Salvo_ResetHealth"/>
+    </BattleEffectApplicationContext>
+  </BattleAction>
+
+  <!-- Boarding pod launched event -->
+  <BattleAction Name="BoardingPod_SalvoLaunched">
+    <EventPrerequisite EventType="Attack_SalvoLaunched">
+      <EventInitiatorFilter EntityType="Salvo" EntityTags="SameModule"/>
+    </EventPrerequisite>
+
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Initiator"/>
+      </TargetFilter>
+      <BattleEffectReference Name="Salvo_SetManpowerDamageOverTime"/>
+      <BattleEffectReference Name="Salvo_InitShipManpowerKillValue"/>
+      <BattleEffectReference Name="Salvo_InitMultiplierValue"/>
+      <BattleEffectReference Name="Salvo_ResetHealth"/>
+    </BattleEffectApplicationContext>
+
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Owner">
+        </EntityFilter>
+        <ParentEntityFilter EntityType="Ship">
+        </ParentEntityFilter>
+      </TargetFilter>
+      <BattleEffectReference Name="AttackingEntity_IncreaseTotalShotSent"/>
+    </BattleEffectApplicationContext>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Owner">
+        </EntityFilter>
+        <ParentEntityFilter EntityType="Flotilla">
+        </ParentEntityFilter>
+      </TargetFilter>
+      <BattleEffectReference Name="AttackingEntity_IncreaseTotalShotSent"/>
+    </BattleEffectApplicationContext>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="InitiatorTarget" EntityType="Ship">
+        </EntityFilter>
+      </TargetFilter>
+      <BattleEffectReference Name="TargetedEntity_IncreaseTotalShotReceived"/>
+    </BattleEffectApplicationContext>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="InitiatorTarget" EntityType="Ship">
+        </EntityFilter>
+        <ParentEntityFilter EntityType="Flotilla">
+        </ParentEntityFilter>
+      </TargetFilter>
+      <BattleEffectReference Name="TargetedEntity_IncreaseTotalShotReceived"/>
+    </BattleEffectApplicationContext>
+  </BattleAction>
 </Datatable>

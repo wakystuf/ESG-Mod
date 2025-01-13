@@ -465,10 +465,11 @@
     <Property Name="SystemDefenseRecovery"  BaseValue="0"   />
 
     <!-- Food Management-->
-    <Property Name="PopulationUsingGrowth"          BaseValue="0"   />
-    <Property Name="PopulationNotUsingGrowth"       BaseValue="0"   />
-    <Property Name="PopulationWithDoubleUpkeep"     BaseValue="0"   />
-    <Property Name="SystemGrowthStockForUpkeep"       BaseValue="0"   />
+    <Property Name="PopulationUsingGrowth"          BaseValue="0" MinValue="0"/>
+    <Property Name="PopulationNotUsingGrowth"       BaseValue="0" MinValue="0"/>
+    <Property Name="PopulationWithDoubleUpkeep"     BaseValue="0" MinValue="0"/>
+    <Property Name="PopulationCountedTowardsUpkeep" BaseValue="0" MinValue="0"/>
+    <Property Name="PopulationWithGeneHunter"       BaseValue="0" MinValue="0"/>
     <Property Name="GrowthMalusPopulationCount"  BaseValue="0"/>
     <Property Name="SystemGrowthMalus"  BaseValue="0" MaxValue="0" MinValue="-0.5"/>
 
@@ -1098,21 +1099,22 @@
     <Modifier       TargetProperty="ShouldUseGrowth"                 Operation="Multiplication"       Value="$(PopulationUsingGrowth)"  Priority="2"   />
     <Modifier       TargetProperty="ShouldTakeGrowthForManpower"     Operation="Multiplication"       Value="$(ShouldUseGrowth)"  Priority="2"   />
 
-    <Modifier             TargetProperty="SystemGrowthStockForUpkeep"     Operation="Addition"                  Value="$(Population)"                   Priority="-5"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"   />
-    <Modifier             TargetProperty="SystemGrowthStockForUpkeep"     Operation="Subtraction"               Value="$(PopulationNotUsingGrowth)"     Priority="-5"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"   />
-    <Modifier             TargetProperty="SystemGrowthStockForUpkeep"     Operation="Addition"                  Value="$(PopulationWithDoubleUpkeep)"   Priority="-5"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"   />
-    <BinaryModifier       TargetProperty="SystemGrowthStockForUpkeep"     Operation="Multiplication"            Right="300"            BinaryOperation="Multiplication"  Left="$(GameSpeedMultiplier)"  Priority="-5"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"   />
+    <Modifier TargetProperty="PopulationCountedTowardsUpkeep" Operation="Addition" Value="$(Population)" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
+    <Modifier TargetProperty="PopulationCountedTowardsUpkeep" Operation="Subtraction" Value="$(PopulationNotUsingGrowth)" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
+    <Modifier TargetProperty="PopulationCountedTowardsUpkeep" Operation="Addition" Value="$(PopulationWithDoubleUpkeep)" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
 
-    <Modifier             TargetProperty="PopulationGrowthUpkeep"                   Operation="Addition"            Value="$(SystemGrowthStockForUpkeep)"   Priority="-5"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"   />
-    <Modifier             TargetProperty="PopulationGrowthUpkeep"                   Operation="Power"               Value="1.28"                   Priority="-4"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem" />
-    <BinaryModifier       TargetProperty="PopulationGrowthUpkeep"                   Operation="Division"            Right="300"                     BinaryOperation="Multiplication"  Left="$(GameSpeedMultiplier)"  Priority="-3"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"   />
-    <Modifier             TargetProperty="PopulationGrowthUpkeep"                   Operation="Multiplication"      Value="1.545"     Priority="-2"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem" />
-    <Modifier             TargetProperty="PopulationGrowthUpkeep"                   Operation="Multiplication"      Value="$(ShouldUseGrowth)"     Priority="-2"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem" />
+    <!-- Generic Growth Food Consumption -->
+    <BinaryModifier TargetProperty="PopulationGrowthUpkeep" Operation="Addition" Left="4" BinaryOperation="Multiplication" Right="$(PopulationCountedTowardsUpkeep)" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
+    <Modifier TargetProperty="PopulationGrowthUpkeep" Operation="Power" Value="1.4" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
+    <Modifier TargetProperty="PopulationGrowthUpkeep" Operation="Multiplication" Value="$(ShouldUseGrowth)" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
 
-    <Modifier             TargetProperty="PopulationGrowthUpkeepFromGeneHunter"     Operation="Addition"            Value="$(PopulationGrowthUpkeep)"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
-    <BinaryModifier       TargetProperty="PopulationGrowthUpkeepFromGeneHunter"     Operation="Multiplication"      Left="0.1"          BinaryOperation="Multiplication"          Right="$(PopulationsAssimilated)"    Path="ClassColonizedStarSystem,!ClassExploitedStarSystem" />
-    <Modifier             TargetProperty="PopulationGrowthUpkeepFromGeneHunter"     Operation="Multiplication"      Value="$(HasAffinityGeneHunter)" Path="ClassColonizedStarSystem"  />
+    <!-- Gene Hunter Food Consumption -->
+    <BinaryModifier TargetProperty="PopulationWithGeneHunter" Operation="Addition" Left="$(MajorPopulationCount)" BinaryOperation="Multiplication" Right="$(HasAffinityGeneHunter)" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
+    <BinaryModifier TargetProperty="PopulationGrowthUpkeepFromGeneHunter" Operation="Addition" Left="$(PopulationWithGeneHunter)" BinaryOperation="Multiplication" Right="2" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
+    <BinaryModifier TargetProperty="PopulationGrowthUpkeepFromGeneHunter" Operation="Multiplication" Left="0.1" BinaryOperation="Multiplication" Right="$(PopulationsAssimilated)" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
+    <Modifier TargetProperty="PopulationGrowthUpkeepFromGeneHunter" Operation="Power" Value="1.2" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
 
+    <!-- Manpower Food Conversion -->
     <Modifier       TargetProperty="PassiveEnrollmentRate"              Operation="Addition"             Value="$(PassiveEnrollmentRateHissho)"  />
     <BinaryModifier TargetProperty="GSModifiedGrowth"                   Operation="Addition"             Left="$(SystemGrowth)"                  BinaryOperation="Multiplication" Right="$(GameSpeedTimeMultiplier)"    />
     <BinaryModifier TargetProperty="GrowthForManpower"                  Operation="Addition"             Left="$(GSModifiedGrowth)"              BinaryOperation="Multiplication" Right="$(PassiveEnrollmentRate)"    />
@@ -1132,7 +1134,6 @@
 
     <!-- Building specials -->
     <BinaryModifier TargetProperty="SystemPopulationIsMaxed"    Operation="Addition"       Left="$(MaximumPopulation)"  BinaryOperation="Subtraction" Right="$(Population)" Priority="-1"/>
-    <!--<Modifier       TargetProperty="SystemPopulationIsMaxed"    Operation="Multiplication" Value="$(ShouldUseGrowth)"  Priority="2"   />-->
     <BinaryModifier       TargetProperty="SystemPopulationIsMaxed"    Operation="Multiplication" Left="$(ShouldUseGrowth)" BinaryOperation="Addition" Right="$(DisableFoodConversion)"  Priority="2"   />
 
     <!--I have no clue where tf i put this-->
