@@ -137,6 +137,11 @@
     <Property Name="RepletionPerTurn" BaseValue="0"/>
 
     <Property Name="PlanetHasTemple" BaseValue="0" MaxValue="1"/>
+	
+	<Property Name="PopulationIsBoosted" BaseValue="0" MaxValue="1"/>
+	<Property Name="PopulationAuxValue0" BaseValue="0"/>
+	<Property Name="PopulationAuxValue1" BaseValue="0"/>
+	<Property Name="PopulationAuxValue2" BaseValue="0"/>
 
     <!-- #### ECONOMY PROCESS ##### -->
     <!-- Common trunk -->
@@ -329,6 +334,7 @@
 
   <SimulationDescriptor Name="ClassPopulationEmpire" Type="ClassPopulation">
     <Property Name="PopulationGrowthScoreModifier" BaseValue="1"/>
+	<Property Name="IsBoosted"    BaseValue="0" MinValue="0"/>
     <Property Name="CanBeBoosted" BaseValue="1"/>
     <Property Name="PopulationEmpireDepletedPlanetCount"  BaseValue="0" MinValue="0"/>
 
@@ -339,6 +345,7 @@
     <Modifier TargetProperty="NonVampirilisPopulation"  Operation="Addition" Value="$(PopulationCount)" Path="!ClassPopulationEmpireAffinityVampirilis/./ClassEmpire" TooltipHidden="true"/>
 
     <Modifier TargetProperty="PopulationTypeCount"          Operation="Addition"       Value="1"     Path="./ClassEmpire" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="IsBoosted"				Operation="Force"    Left="$(CanBeBoosted)"		BinaryOperation="Multiplication" Right="1" Path="ClassPopulationEmpire, PopulationGrowthScoreBoosted" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <!--  Parasite affinity  -->
