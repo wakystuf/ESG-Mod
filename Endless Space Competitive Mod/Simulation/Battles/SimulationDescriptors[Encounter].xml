@@ -206,8 +206,8 @@
     <Property Name="BattleActionGain"               BaseValue="0" />
 
     <Property Name="EnergyWeaponAccuracyPercentFromOpponent"    IsSealed="true" MinValue="Negative"/>
-    <Property Name="CoilgunArmorDescructionPercentFromOpponent" IsSealed="true" MinValue="Negative"/>
-    <Property Name="CoilgunArmorDescructionFlatFromOpponent" IsSealed="true" MinValue="Negative"/>
+    <Property Name="ArmorDestructionPercentFromOpponent"        IsSealed="true" MinValue="Negative"/>
+    <Property Name="ArmorDestructionFlatFromOpponent"           IsSealed="true" MinValue="Negative"/>
     <Property Name="CooldownReductionPercentFromOpponent"       IsSealed="true"/>
 
     <Property Name="LastSquadronAttackCriticalDodge" BaseValue="0" IsSealed="true"/>
@@ -289,6 +289,9 @@
 
     <Modifier TargetProperty="HullPlatingAbsorptionPercent" Operation="Multiplication" Value="$(DefenseBonusIfOneShipEncounter)" Path="ClassShip"/>
     <Modifier TargetProperty="ShieldAbsorptionPercent"      Operation="Multiplication" Value="$(DefenseBonusIfOneShipEncounter)" Path="ClassShip"/>
+
+    <Modifier       TargetProperty="HullPlatingAbsorption" Operation="Subtraction" Value="$(HullPlatingAbsorptionDebuffFlat)"/>
+    <BinaryModifier TargetProperty="HullPlatingAbsorption" Operation="Percent"     Left="$(HullPlatingAbsorptionDebuffDynamic)" BinaryOperation="Multiplication" Right="-1"/>
   </SimulationDescriptor>
 
   <!-- Flotilla in Battle -->
