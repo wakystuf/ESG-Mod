@@ -102,7 +102,7 @@
 
     <Property Name="VisionStrength" BaseValue="0" IsSealed="true"/>
     <Property Name="OpponentVisionStrength" BaseValue="0" IsSealed="true"/>
-    
+
     <!--Vanilla Modifiers-->
     <Modifier TargetProperty="OpponentRecyclingDustPerCP"         Operation="Addition"   Value="$(AdditionalOpponentRecyclingDustPerCP)"         Path="ClassGroup"/>
     <Modifier TargetProperty="OpponentRecyclingSciencePerCP"      Operation="Addition"   Value="$(AdditionalOpponentRecyclingSciencePerCP)"      Path="ClassGroup"/>
@@ -207,6 +207,7 @@
 
     <Property Name="EnergyWeaponAccuracyPercentFromOpponent"    IsSealed="true" MinValue="Negative"/>
     <Property Name="CoilgunArmorDescructionPercentFromOpponent" IsSealed="true" MinValue="Negative"/>
+    <Property Name="CoilgunArmorDescructionFlatFromOpponent" IsSealed="true" MinValue="Negative"/>
     <Property Name="CooldownReductionPercentFromOpponent"       IsSealed="true"/>
 
     <Property Name="LastSquadronAttackCriticalDodge" BaseValue="0" IsSealed="true"/>
@@ -419,7 +420,7 @@
     <Modifier TargetProperty="FlakFireRate" Operation="Multiplication" Value="$(FlotillaFlakFireRateModifier)" Path="ClassFlotilla/ClassShip//ClassModuleWeapon,ClassModuleWeaponKinetic"/>
     <Modifier TargetProperty="DamageBonusPerTargetCommandPoints" Operation="Addition" Value="$(DamageBonusPerTargetCommandPointsFlotilla)" Path="ClassFlotilla/ClassShip"/>
     <Modifier TargetProperty="ShieldReloadPerPhase" Operation="Addition" Value="$(FlotillaShieldReloadPerPhase)" Path="ClassFlotilla/ClassShip"/>
-    
+
     <!-- Vanilla -->
     <Modifier TargetProperty="MainRelativeMilitaryPower" Operation="Addition" Value="$(RelativeMilitaryPower)" Path="FlotillaTypeMain/./ClassGroup"/>
     <Modifier TargetProperty="ReinforcementRelativeMilitaryPower" Operation="Addition" Value="$(RelativeMilitaryPower)" Path="FlotillaTypeReinforcement/./ClassGroup"/>
@@ -486,8 +487,9 @@
     <Modifier   TargetProperty="DamageAbsorbedByShieldMultiplier"  Operation="Percent" Value="$(DamageAbsorbedByShieldMultiplier)"      Path="ClassModuleWeaponEncounter/ClassSalvo"/>
 
     <!-- Coilgun -->
-    <Modifier   TargetProperty="ArmorDestructionDynamic"  Operation="Addition" Value="$(ArmorDestructionDynamic)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
-    <Modifier   TargetProperty="IsntImmuneToSpecialNodes"  Operation="Force" Value="$(IsntImmuneToSpecialNodes)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+    <Modifier   TargetProperty="ArmorDestructionDynamic"  Operation="Force"  Value="$(ArmorDestructionDynamic)"    Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+    <Modifier   TargetProperty="ArmorDestructionFlat"     Operation="Force"  Value="$(ArmorDestructionFlat)"       Path="ClassModuleWeaponEncounter/ClassSalvo"/>
+    <Modifier   TargetProperty="IsntImmuneToSpecialNodes" Operation="Force"  Value="$(IsntImmuneToSpecialNodes)"   Path="ClassModuleWeaponEncounter/ClassSalvo"/>
   </SimulationDescriptor>
 
   <!-- Support module in battle -->
@@ -496,16 +498,16 @@
 		<Property Name="MaximumShield"                          BaseValue="0"  MinValue="Negative"/>
 		<Property Name="HullPlatingAbsorption"                  BaseValue="0"    MinValue="Negative"/>
 		<Property Name="ShieldAbsorption"                       BaseValue="0"    MinValue="Negative"/>
-		
+
 		<Property Name="DamageBonusPerTargetCommandPoints"      			BaseValue="0"  MinValue="Negative"/>
 		<Property Name="DamageBonusPerTargetCommandPoints_LockOnBasic"		BaseValue="0"  MinValue="Negative"/>
 		<Property Name="DamageBonusPerTargetCommandPoints_LockOnAdvanced"	BaseValue="0"  MinValue="Negative"/>
-		
+
 		<Property Name="RepairAfterBattle"                      BaseValue="0" MinValue="0"/>
 		<Property Name="RepairAfterPhase"                       BaseValue="0" MinValue="0"/>
 		<Property Name="ShipManpowerKillPerHitPercentEncounter" BaseValue="0"/>
 		<Property Name="MoraleBonus"                            BaseValue="0" MinValue="0"/>
-		
+
 		<Modifier TargetProperty="DamageIncreasePercent"   Operation="Addition"    Value="$(DamageIncreasePercent)"   Path="../ClassFlotilla/ClassShipEncounter"       Priority="1"/>
 
 		<Modifier TargetProperty="MaximumShield"            Operation="Addition" Value="$(FlotillaMaximumShield)"       Path="../ClassFlotilla"     Priority="1"/>

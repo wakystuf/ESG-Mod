@@ -240,11 +240,12 @@
     <Property Name="ShieldRegeneratePerSecondDynamic"   BaseValue="0"/>
     <Property Name="FlotillaShieldReloadPerPhase"       BaseValue="0"/>
 
-    <Property Name="HullPlatingAbsorption"                  BaseValue="0" MinValue="Negative"/>
+    <Property Name="HullPlatingAbsorption"                  BaseValue="0" MinValue="0"/>
     <Property Name="HullPlatingAbsorptionPercent"           BaseValue="1"/>
     <Property Name="HullPlatingAbsorptionEndMultiplier"     BaseValue="0"/>
     <Property Name="HullPlatingAbsorptionEndMultiplierTemp" BaseValue="0"/>
     <Property Name="HullPlatingAbsorptionDebuffDynamic"     BaseValue="0" MinValue="-1"/>
+    <Property Name="HullPlatingAbsorptionDebuffFlat"        BaseValue="0" MinValue="-1"/>
     <Property Name="HullPlatingVulnerability"               BaseValue="1"/>
     <Property Name="HullPlatingAbsorptionEndMultiplier"    BaseValue="0"/>
 
@@ -439,7 +440,8 @@
     <!--<Modifier       TargetProperty="Evasion"        Operation="Multiplication"   Value="2"              Path="ClassShip" Priority="1"/>
     Due accuracy correction algorithm evasion counts as half, this fixes it in the simplest form
     Deprecated since ESG already accounts for accuracy correction elsewhere and this would double-count the bonus -->
-
+    <Modifier       TargetProperty="HullPlatingAbsorption" Operation="Subtraction" Value="$(HullPlatingAbsorptionDebuffFlat)"/>
+    <BinaryModifier TargetProperty="HullPlatingAbsorption" Operation="Percent"     Left="$(HullPlatingAbsorptionDebuffDynamic)" BinaryOperation="Multiplication" Right="-1"/>
   </SimulationDescriptor>
 
   <SimulationDescriptor Name="ShipRoleRootCreator"      Type="ShipRole">
