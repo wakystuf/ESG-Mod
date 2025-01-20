@@ -283,6 +283,72 @@
       <BattleEffectReference Name="Salvo_InitMultiplierValue"/>
       <BattleEffectReference Name="Salvo_ResetHealth"/>
     </BattleEffectApplicationContext>
+
+    <!-- Damage reduction per range -->
+    <BattleEffectApplicationContext>
+      <InterpreterPrerequisite Flags="Prerequisite" Inverted="false">Path(Initiator, @'ClassSalvo,ShortRange')</InterpreterPrerequisite>
+      <TargetFilter>
+        <EntityFilter EntityRole="Initiator"/>
+      </TargetFilter>
+      <BattleEffectReference Name="Salvo_InitEffectiveDamageAtShortRange"/>
+    </BattleEffectApplicationContext>
+    <BattleEffectApplicationContext>
+      <InterpreterPrerequisite Flags="Prerequisite" Inverted="false">Path(Initiator, @'ClassSalvo,MediumRange')</InterpreterPrerequisite>
+      <TargetFilter>
+        <EntityFilter EntityRole="Initiator"/>
+      </TargetFilter>
+      <BattleEffectReference Name="Salvo_InitEffectiveDamageAtMediumRange"/>
+    </BattleEffectApplicationContext>
+    <BattleEffectApplicationContext>
+      <InterpreterPrerequisite Flags="Prerequisite" Inverted="false">Path(Initiator, @'ClassSalvo,LongRange')</InterpreterPrerequisite>
+      <TargetFilter>
+        <EntityFilter EntityRole="Initiator"/>
+      </TargetFilter>
+      <BattleEffectReference Name="Salvo_InitEffectiveDamageAtLongRange"/>
+      <BattleEffectReference Name="Salvo_ApplyDamageBonusPerOpponentShipAtLongRange"/>
+    </BattleEffectApplicationContext>
+
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Initiator"/>
+      </TargetFilter>
+      <BattleEffectReference Name="Salvo_ApplyDamageBonusPerTargetCommandPoints"/>
+    </BattleEffectApplicationContext>
+
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Owner">
+        </EntityFilter>
+        <ParentEntityFilter EntityType="Ship">
+        </ParentEntityFilter>
+      </TargetFilter>
+      <BattleEffectReference Name="AttackingEntity_IncreaseTotalShotSent"/>
+    </BattleEffectApplicationContext>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Owner">
+        </EntityFilter>
+        <ParentEntityFilter EntityType="Flotilla">
+        </ParentEntityFilter>
+      </TargetFilter>
+      <BattleEffectReference Name="AttackingEntity_IncreaseTotalShotSent"/>
+    </BattleEffectApplicationContext>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="InitiatorTarget" EntityType="Ship">
+        </EntityFilter>
+      </TargetFilter>
+      <BattleEffectReference Name="TargetedEntity_IncreaseTotalShotReceived"/>
+    </BattleEffectApplicationContext>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="InitiatorTarget" EntityType="Ship">
+        </EntityFilter>
+        <ParentEntityFilter EntityType="Flotilla">
+        </ParentEntityFilter>
+      </TargetFilter>
+      <BattleEffectReference Name="TargetedEntity_IncreaseTotalShotReceived"/>
+    </BattleEffectApplicationContext>
   </BattleAction>
 
   <!-- Boarding pod launched event -->
