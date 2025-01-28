@@ -1787,15 +1787,15 @@
 	<Modifier       TargetProperty="GrowthForManpowerRatio"		 Operation="Addition"    Value="$(ManpowerFromGrowthRatio)"			Path="ClassEmpire/ClassColonizedStarSystem" Priority="2"/>
 
 	<!-- Records EmpireManpowerFromEnrollment into EnrollmentAppliedToFood when food is updated -->
-	<Modifier TargetProperty="NetEnrollmentApplied"         Operation="Addition"	Value="$(EmpireManpowerFromEnrollment)"	Path="ClassEmpire"/>
-	<Modifier TargetProperty="NetEnrollmentApplied"         Operation="Subtraction"	Value="$(EnrollmentAppliedToFood)"		Path="ClassEmpire"/>
-	<Modifier TargetProperty="MaximumEnrollmentApplied"     Operation="Addition"	Value="$(NetEnrollmentApplied)"			Path="ClassEmpire"/>
-	<Modifier TargetProperty="MaximumEnrollmentApplied"     Operation="Addition"	Value="$(EnrollmentAppliedToFood)"		Path="ClassEmpire"/>
+	<Modifier TargetProperty="NetEnrollmentApplied"         Operation="Addition"	Value="$(EmpireManpowerFromEnrollment)"	Path="ClassEmpire,EmpireTypeMajor"/>
+	<Modifier TargetProperty="NetEnrollmentApplied"         Operation="Subtraction"	Value="$(EnrollmentAppliedToFood)"		Path="ClassEmpire,EmpireTypeMajor"/>
+	<Modifier TargetProperty="MaximumEnrollmentApplied"     Operation="Addition"	Value="$(NetEnrollmentApplied)"			Path="ClassEmpire,EmpireTypeMajor"/>
+	<Modifier TargetProperty="MaximumEnrollmentApplied"     Operation="Addition"	Value="$(EnrollmentAppliedToFood)"		Path="ClassEmpire,EmpireTypeMajor"/>
 	
 	<!-- We remove the EmpireManpowerFromEnrollment and use EnrollmentAppliedToFood instead -->
 	<Modifier TargetProperty="TrueNetEmpireManpower"         Operation="Addition"	 Value="$(NetEmpireManpower)"				Path="ClassEmpire"/>
-	<BinaryModifier TargetProperty="TrueNetEmpireManpower"	 Operation="Subtraction" Left="$(EmpireManpowerFromEnrollment)" BinaryOperation="Multiplication" Right="$(EmpireManpowerPercent)"	Path="ClassEmpire"/>
-	<BinaryModifier TargetProperty="TrueNetEmpireManpower"	 Operation="Addition"	 Left="$(EnrollmentAppliedToFood)"		BinaryOperation="Multiplication" Right="$(EmpireManpowerPercent)"	Path="ClassEmpire"/>
+	<BinaryModifier TargetProperty="TrueNetEmpireManpower"	 Operation="Subtraction" Left="$(EmpireManpowerFromEnrollment)" BinaryOperation="Multiplication" Right="$(EmpireManpowerPercent)"	Path="ClassEmpire,EmpireTypeMajor"/>
+	<BinaryModifier TargetProperty="TrueNetEmpireManpower"	 Operation="Addition"	 Left="$(EnrollmentAppliedToFood)"		BinaryOperation="Multiplication" Right="$(EmpireManpowerPercent)"	Path="ClassEmpire,EmpireTypeMajor"/>
 
   </SimulationDescriptor>
 
