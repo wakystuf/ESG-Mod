@@ -451,14 +451,15 @@
     <Property Name="GroundBattleOwnerShipRatePercentage"	BaseValue="0" />
     <Property Name="GroundBattleManpowerRecoveredAfterLoot"	BaseValue="0" />
 
-    <!-- For final ground battle-->
+    <!-- For food into manpower conversion -->
     <Property Name="PassiveEnrollmentRate"          BaseValue="0" MaxValue="1"/>
     <Property Name="PassiveEnrollmentRateHissho"    BaseValue="0" MaxValue="1"/>
-    <Property Name="ShouldTakeGrowthForManpower"    MaxValue="1"/>
+    <Property Name="GrowthForManpowerRatio"         MinValue="0"  MaxValue="1"/>
     <Property Name="GrowthForManpower"              BaseValue="0"/>
     <Property Name="GSModifiedGrowth"               BaseValue="0"/>
     <Property Name="GrowthForManpowerForUpkeep"     BaseValue="0"/>
     <Property Name="GrowthForOutpost"               BaseValue="0"/>
+	<Property Name="MaximumEnrollmentRate"          BaseValue="0"/>
 
 
     <Property Name="SystemDefense"          BaseValue="0"   />
@@ -1097,7 +1098,7 @@
 
 
     <Modifier       TargetProperty="ShouldUseGrowth"                 Operation="Multiplication"       Value="$(PopulationUsingGrowth)"  Priority="2"   />
-    <Modifier       TargetProperty="ShouldTakeGrowthForManpower"     Operation="Multiplication"       Value="$(ShouldUseGrowth)"  Priority="2"   />
+    <Modifier       TargetProperty="GrowthForManpowerRatio"			 Operation="Multiplication"       Value="$(ShouldUseGrowth)"		Priority="2"   />
 
     <Modifier TargetProperty="PopulationCountedTowardsUpkeep" Operation="Addition" Value="$(Population)" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
     <Modifier TargetProperty="PopulationCountedTowardsUpkeep" Operation="Subtraction" Value="$(PopulationNotUsingGrowth)" Path="ClassColonizedStarSystem,!ClassExploitedStarSystem"/>
@@ -1118,11 +1119,12 @@
     <Modifier       TargetProperty="PassiveEnrollmentRate"              Operation="Addition"             Value="$(PassiveEnrollmentRateHissho)"  />
     <BinaryModifier TargetProperty="GSModifiedGrowth"                   Operation="Addition"             Left="$(SystemGrowth)"                  BinaryOperation="Multiplication" Right="$(GameSpeedTimeMultiplier)"    />
     <BinaryModifier TargetProperty="GrowthForManpower"                  Operation="Addition"             Left="$(GSModifiedGrowth)"              BinaryOperation="Multiplication" Right="$(PassiveEnrollmentRate)"    />
+	<BinaryModifier TargetProperty="MaximumEnrollmentRate"              Operation="Addition"             Left="$(GSModifiedGrowth)"              BinaryOperation="Multiplication" Right="$(PassiveEnrollmentRate)"    />	
     <BinaryModifier TargetProperty="GrowthForManpowerForUpkeep"         Operation="Addition"             Left="$(SystemGrowth)"                  BinaryOperation="Multiplication" Right="$(PassiveEnrollmentRate)"    />
-    <Modifier       TargetProperty="GrowthForManpower"                  Operation="Multiplication"       Value="$(ShouldTakeGrowthForManpower)"  Priority="2"   />
-    <Modifier       TargetProperty="GrowthForManpowerForUpkeep"         Operation="Multiplication"       Value="$(ShouldTakeGrowthForManpower)"  Priority="2"   />
+    <Modifier       TargetProperty="GrowthForManpower"                  Operation="Multiplication"       Value="$(GrowthForManpowerRatio)"		 Priority="2"   />
+    <Modifier       TargetProperty="GrowthForManpowerForUpkeep"         Operation="Multiplication"       Value="$(GrowthForManpowerRatio)"		 Priority="2"   />
 
-    <Modifier       TargetProperty="EmpireManpower"  Operation="Addition"             Value="$(GrowthForManpower)"            Path="../ClassEmpire"/>
+    <Modifier       TargetProperty="EmpireManpowerFromEnrollment"		Operation="Addition"             Value="$(GrowthForManpower)"            Path="../ClassEmpire"/>
 
 
 
@@ -2079,9 +2081,10 @@
 		<BinaryModifier     TargetProperty="SystemProductionUpkeep"             Operation="Addition"        Left="$(BlockadeOrbitingMilitaryPower)" BinaryOperation="Multiplication"    Right="$(NetSystemProductionImpactFactor)" Path="!BesiegedColonizedStarSystem,ColonizedStarSystemStateOutpost" Priority="100000" />
 
 		<!-- Colony defense maluses -->
+		<Modifier TargetProperty="MaximumEnrollmentRate"                    Operation="Force"       Value="0"   Priority="1"	Path="ClassColonizedStarSystem" TooltipHidden="true"/>
 		<Modifier TargetProperty="SystemDefenseRecovery"                    Operation="Force"       Value="0"   Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
 		<Modifier TargetProperty="MaximumSystemManpowerRefillRate"          Operation="Force"       Value="0"   Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
-		<Modifier TargetProperty="ShouldTakeGrowthForManpower"              Operation="Force"       Value="0"   Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
+		<Modifier TargetProperty="GrowthForManpowerRatio"					Operation="Force"       Value="0"   Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
 		<Modifier TargetProperty="NetSystemMigrationGrowth"                 Operation="Force"       Value="0"   Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
 
 		<!-- dust/science/influence & resources loss are calculated with "raw" net. -->
@@ -2225,9 +2228,10 @@
 		<!--  Colony defense maluses  -->
 		<BinaryModifier TargetProperty="SystemManpowerLoss" Operation="Subtraction" Left="$(OrbitingSiegePower)" BinaryOperation="Division" Right="1" Path="!GroundBattleInProgress" Priority="0" />
 		<BinaryModifier TargetProperty="NetSystemManpower" Operation="Force" Left="$(SystemManpowerLoss)" BinaryOperation="Multiplication" Right="1" />
+		<Modifier TargetProperty="MaximumEnrollmentRate" Operation="Force" Value="0" Priority="1" Path="ClassColonizedStarSystem" TooltipHidden="true"/>
 		<Modifier TargetProperty="SystemDefenseRecovery" Operation="Force" Value="0" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
 		<Modifier TargetProperty="MaximumSystemManpowerRefillRate" Operation="Force" Value="0" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
-		<Modifier TargetProperty="ShouldTakeGrowthForManpower" Operation="Force" Value="0" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="GrowthForManpowerRatio" Operation="Force" Value="0" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
 		<Modifier TargetProperty="NetSystemMigrationGrowth" Operation="Force" Value="0" Priority="1000" Path="ClassColonizedStarSystem" TooltipHidden="true" />
 		<Modifier TargetProperty="SystemInfluenceRadius" Operation="Force" Value="0.1" Path="ClassColonizedStarSystem" TooltipHidden="true" Priority="10000"/>
 

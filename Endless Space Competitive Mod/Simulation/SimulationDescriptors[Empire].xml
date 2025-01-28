@@ -345,6 +345,8 @@
     <Property Name="FakeEmpireRelicStock" BaseValue="1" MinValue="1" IsSealed="true"/>
     <Property Name="FakeNetEmpireRelics" BaseValue="0" MinValue="0"/>
     <Property Name="NetRelicsResearch" BaseValue="0"/>
+	<!-- Replaces NetEmpireManpower for EmpireManpower resource calculation -->
+    <Property Name="TrueNetEmpireManpower"      MinValue="Negative"/>
 
 		<Property Name="EmpireLifeforceFromHuntingGrounds" BaseValue="0" MinValue="0" />
 		<Property Name="EmpireMoneyFromHuntingGrounds" BaseValue="0" MinValue="0" />
@@ -368,6 +370,11 @@
 		<Property Name="EmpireTemplePointsStock" IsSealed="true"/>
 		<Property Name="EmpireHonorStock" IsSealed="true"/>
 		<Property Name="LowestEmpireHonorStock" IsSealed="true" BaseValue="100"/>
+
+	<!-- New resource to record the Empire Manpower from Enrollment at the food update pass -->
+    <Property Name="MaximumEnrollmentApplied" BaseValue="0"/>
+    <Property Name="NetEnrollmentApplied"     BaseValue="0" MinValue="Negative"/>
+    <Property Name="EnrollmentAppliedToFood"  IsSealed="true"/>
 
 		<Property Name="FleetsCount" BaseValue="0" MinValue="0"/>
 
@@ -1041,6 +1048,14 @@
     <Property Name="ActualPoliticalRelicEcologistLuxuryBoost"/>
     <Property Name="ActualPoliticalRelicReligiousHeroPointBoost" MinValue="Negative"/>
     <Property Name="ActualPoliticalRelicMilitaristRetrofitBoost" MinValue="Negative"/>
+
+	<!-- Aux properties for all the growth into manpower calculations -->
+	<Property Name="MaximumEnrollmentRate" MinValue="1"  Composition="Sum" />
+	<Property Name="ManpowerFromGrowthRatio" MinValue="0" />
+	<Property Name="EmpireManpowerFromEnrollment" MinValue="0" />
+	<Property Name="EmpireManpowerBalance" MinValue="Negative" />
+	<Property Name="EmpireManpowerPercent" MinValue="0" BaseValue="1" />
+
     <!-- ########################################################## -->
     <!-- ######################## MODIFIER ######################## -->
     <!-- ########################################################## -->
@@ -1117,6 +1132,7 @@
 		<Modifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Percent" Value="$(MaximumEmpireProcessingPowerStockOvercolonizationMultiplier)" Priority="100"/>
 		<BinaryModifier TargetProperty="ProcessingPowerForManpower" Operation="Addition" Left="$(EmpireProcessingPowerStock)" BinaryOperation="Multiplication" Right="$(PassiveProcessingPowerEnrollmentRate)"/>
 		<Modifier TargetProperty="EmpireManpower" Operation="Addition" Value="$(ProcessingPowerForManpower)" Path="../ClassEmpire"/>
+		<Modifier TargetProperty="EmpireManpowerBalance" Operation="Addition" Value="$(ProcessingPowerForManpower)" Path="../ClassEmpire" TooltipHidden="true"/>
 
     <BinaryModifier TargetProperty="EmpireProcessingPowerAllocated" Operation="Addition" Left="$(MaximumEmpireProcessingPowerStock)" BinaryOperation="Subtraction" Right="$(EmpireProcessingPowerStock)" />
     <Modifier TargetProperty="EmpireProcessingPowerAllocated" Operation="Addition" Value="$(EmpireProcessingPowerAllocated)" Path="ClassEmpire/ClassColonizedStarSystem,HomeSystem" />
@@ -1232,9 +1248,6 @@
 		<BinaryModifier TargetProperty="PlanePopulationDestructionCountBonus" Operation="Addition" Left="$(PlanePopulationDestructionProbabilityBonus)" BinaryOperation="Multiplication" Right="50"/>
 
 
-    <!-- Manpower management -->
-		<BinaryModifier TargetProperty="ShouldTakeGrowthForManpower" Operation="Addition" Left="$(MaximumEmpireManpowerStock)" BinaryOperation="Subtraction" Right="$(EmpireManpowerStock)" Path="ClassEmpire/ClassColonizedStarSystem"/>
-
     <Modifier TargetProperty="EmpireInfantryHP" Operation="Addition" Value="$(InfantryMaxHealth)" Path="ClassEmpire//ClassShip" TooltipHidden="true"/>
     <Modifier TargetProperty="EmpireInfantryMinDamage" Operation="Addition" Value="$(InfantryMinDamages)" Path="ClassEmpire//ClassShip" TooltipHidden="true"/>
 
@@ -1269,6 +1282,7 @@
 
 		<BinaryModifier TargetProperty="EmpireLifeforceForManpower" Operation="Addition" Left="$(EmpireLifeforce)" BinaryOperation="Multiplication" Right="$(PassiveLifeforceEnrollmentRate)" Path="ClassEmpire"/>
 		<Modifier TargetProperty="EmpireManpower" Operation="Addition" Value="$(EmpireLifeforceForManpower)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="EmpireManpowerBalance" Operation="Addition" Value="$(EmpireLifeforceForManpower)" Path="ClassEmpire" TooltipHidden="true"/>
 		<BinaryModifier TargetProperty="EmpireLifeforceUpkeep" Operation="Addition" Left="$(EmpireLifeforceForManpower)" BinaryOperation="Multiplication" Right="0.5" Path="ClassEmpire"/>
 
 		<!-- Vodyani Essence GUI Explication -->
@@ -1738,6 +1752,7 @@
     <BinaryModifier TargetProperty="EmpireMoney" Operation="Addition" Left="$(ActualPoliticalRelicScientistRelicDustBoost)" BinaryOperation="Multiplication" Right="$(ResultingResearchRelics)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics02/../ClassEmpire"/>
     <BinaryModifier TargetProperty="EmpireEmpirePoint" Operation="Addition" Left="$(ActualPoliticalRelicScientistRelicInfluenceBoost)" BinaryOperation="Multiplication" Right="$(ResultingResearchRelics)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics02/../ClassEmpire"/>
     <BinaryModifier TargetProperty="EmpireManpower" Operation="Addition" Left="$(ActualPoliticalRelicScientistRelicManpowerBoost)" BinaryOperation="Multiplication" Right="$(ResultingResearchRelics)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics02/../ClassEmpire"/>
+    <BinaryModifier TargetProperty="EmpireManpowerBalance" Operation="Addition" Left="$(ActualPoliticalRelicScientistRelicManpowerBoost)" BinaryOperation="Multiplication" Right="$(ResultingResearchRelics)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics02/../ClassEmpire" TooltipHidden="true"/>
 
     <Modifier TargetProperty="TradingRouteIncomeModifier" Operation="Percent" Value="$(ActualPoliticalRelicPacifistTradeValueBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics03/../ClassEmpire/ClassColonizedStarSystem/ClassColonizedStarSystem,StarSystemImprovementUniqueTemplars/./ClassColonizedStarSystem"/>
     <Modifier TargetProperty="TroopHealthPerTemple" Operation="Addition" Value="$(ActualPoliticalRelicPacifistTroopHealthBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics03/../ClassEmpire/ClassColonizedStarSystem/ClassColonizedStarSystem"/>
@@ -1762,6 +1777,26 @@
     <Modifier TargetProperty="RelicSlotsUsed"  Operation="Addition"    Value="$(HasExpansionRelic)"  />
     <Modifier TargetProperty="RelicSlotsUsed"  Operation="Addition"    Value="$(HasDiplomacyRelic)"  />
     <Modifier TargetProperty="RelicSlotsUsed"  Operation="Addition"    Value="$(HasPoliticalRelic)"  />
+
+    <!-- Manpower growth management -->	
+	<Modifier       TargetProperty="EmpireManpowerBalance"		 Operation="Subtraction" Value="$(EmpireManpowerUpkeep)"    		Path="ClassEmpire" Priority="1"/>
+	<Modifier       TargetProperty="EmpireManpower"				 Operation="Addition"    Value="$(EmpireManpowerFromEnrollment)"    Path="ClassEmpire" Priority="1"/>
+	<BinaryModifier TargetProperty="ManpowerFromGrowthRatio"	 Operation="Addition"    Left="$(MaximumEmpireManpowerStock)"       BinaryOperation="Subtraction" Right="$(EmpireManpowerStock)" Path="ClassEmpire" Priority="2"/>
+	<Modifier       TargetProperty="ManpowerFromGrowthRatio"	 Operation="Subtraction" Value="$(EmpireManpowerBalance)"		    Path="ClassEmpire" Priority="2"/>
+	<BinaryModifier TargetProperty="ManpowerFromGrowthRatio"	 Operation="Division"    Left="$(MaximumEnrollmentRate)"       		BinaryOperation="Multiplication" Right="0.95" Path="ClassEmpire" Priority="2"/>	
+	<Modifier       TargetProperty="GrowthForManpowerRatio"		 Operation="Addition"    Value="$(ManpowerFromGrowthRatio)"			Path="ClassEmpire/ClassColonizedStarSystem" Priority="2"/>
+
+	<!-- Records EmpireManpowerFromEnrollment into EnrollmentAppliedToFood when food is updated -->
+	<Modifier TargetProperty="NetEnrollmentApplied"         Operation="Addition"	Value="$(EmpireManpowerFromEnrollment)"	Path="ClassEmpire"/>
+	<Modifier TargetProperty="NetEnrollmentApplied"         Operation="Subtraction"	Value="$(EnrollmentAppliedToFood)"		Path="ClassEmpire"/>
+	<Modifier TargetProperty="MaximumEnrollmentApplied"     Operation="Addition"	Value="$(NetEnrollmentApplied)"			Path="ClassEmpire"/>
+	<Modifier TargetProperty="MaximumEnrollmentApplied"     Operation="Addition"	Value="$(EnrollmentAppliedToFood)"		Path="ClassEmpire"/>
+	
+	<!-- We remove the EmpireManpowerFromEnrollment and use EnrollmentAppliedToFood instead -->
+	<Modifier TargetProperty="TrueNetEmpireManpower"         Operation="Addition"	 Value="$(NetEmpireManpower)"				Path="ClassEmpire"/>
+	<BinaryModifier TargetProperty="TrueNetEmpireManpower"	 Operation="Subtraction" Left="$(EmpireManpowerFromEnrollment)" BinaryOperation="Multiplication" Right="$(EmpireManpowerPercent)"	Path="ClassEmpire"/>
+	<BinaryModifier TargetProperty="TrueNetEmpireManpower"	 Operation="Addition"	 Left="$(EnrollmentAppliedToFood)"		BinaryOperation="Multiplication" Right="$(EmpireManpowerPercent)"	Path="ClassEmpire"/>
+
   </SimulationDescriptor>
 
   <!--Used for Craver Influence and Science ESG-->
