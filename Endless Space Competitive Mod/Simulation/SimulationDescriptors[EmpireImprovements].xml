@@ -73,7 +73,9 @@
 
   <!-- Combine Vodyani modest MP gen reward with worthless MP cap reward and buff both -->
   <SimulationDescriptor Name="EmpireImprovementQuestVampirilis04" Type="EmpireImprovement">
-    <Modifier TargetProperty="EmpireManpower" Operation="Percent" Value="0.3" Path="ClassEmpire"/>
+    <Modifier TargetProperty="EmpireManpower" Operation="Percent" Value="0.3" Path="ClassEmpire" Priority="1"/>
+    <Modifier TargetProperty="EmpireManpowerBalance" Operation="Percent" Value="0.3" Path="ClassEmpire" TooltipHidden="true"/>
+    <Modifier TargetProperty="EmpireManpowerPercent" Operation="Addition" Value="0.3" Path="ClassEmpire" TooltipHidden="true"/>
     <Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Addition" Value="1000" Path="ClassEmpire"/>
   </SimulationDescriptor>
 
@@ -108,6 +110,7 @@
   <!-- Umbral Choir Quest: BW to MP -->
   <SimulationDescriptor Name="EmpireImprovementMPfromProcessingPower" Type="EmpireImprovement">
     <BinaryModifier TargetProperty="EmpireManpower" Operation="Addition" Left="$(MaximumEmpireProcessingPowerStock)" BinaryOperation="Multiplication" Right="4" Path="ClassEmpire" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="EmpireManpowerBalance" Operation="Addition" Left="$(MaximumEmpireProcessingPowerStock)" BinaryOperation="Multiplication" Right="4" Path="ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <!-- Umbral Choir Quest: Happy Sleepers -->
@@ -639,7 +642,10 @@
 
   <SimulationDescriptor Name="EmpireImprovementQuestVaultersManpowerFromScience" Type="EmpireImprovement">
     <BinaryModifier TargetProperty="EmpireManpower" Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(ScienceBuildingCount)" Path="ClassEmpire" SearchValueFromPath="true"/>
-    <BinaryModifier TargetProperty="EmpireManpower" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(ScienceBuildingCount)" Path="ClassEmpire" SearchValueFromPath="true"/>
+    <BinaryModifier TargetProperty="EmpireManpowerBalance" Operation="Addition" Left="50" BinaryOperation="Multiplication" Right="$(ScienceBuildingCount)" Path="ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="EmpireManpower" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(ScienceBuildingCount)" Path="ClassEmpire" SearchValueFromPath="true" Priority="1"/>
+    <BinaryModifier TargetProperty="EmpireManpowerBalance" Operation="Percent" Left="0.01" BinaryOperation="Multiplication" Right="$(ScienceBuildingCount)" Path="ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="EmpireManpowerPercent" Operation="Addition" Left="0.01" BinaryOperation="Multiplication" Right="$(ScienceBuildingCount)" Path="ClassEmpire" SearchValueFromPath="true" TooltipHidden="true"/>
   </SimulationDescriptor>
 
   <!-- Curio Exploration -->
@@ -721,5 +727,11 @@
     <Modifier TargetProperty="MaximumHealth" Value="500"  Operation="Addition" Path="ClassEmpire//ClassGarrison/ClassShip,!ShipRoleHero,ShipHull02,ShipSizeSmall/ClassSectionCore" TooltipHidden="true"/>
     <Modifier TargetProperty="Multiplier" Value="0.25"  Operation="Addition" Priority="2" Path="ClassEmpire//ClassGarrison/ClassShip,ShipRoleHero//ClassModule" TooltipHidden="true"/>
     <Modifier TargetProperty="MaximumHealth" Value="500"  Operation="Addition" Path="ClassEmpire//ClassGarrison/ClassShip,ShipRoleHero/ClassSectionCore" TooltipHidden="true"/>
+  </SimulationDescriptor>
+  
+  <!--Metaplot Quest Reward-->
+  <SimulationDescriptor Name="EmpireImprovementQuestMetaplot2" Type="EmpireImprovement">
+    <Modifier TargetProperty="CriticalHitChance"	Operation="Addition"	Value="0.1"		Path="ClassEmpire/ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="ShipDamage"			Operation="Addition"	Value="0.1"		Path="ClassEmpire/ClassGarrisonFleet"/>
   </SimulationDescriptor>
 </Datatable>
