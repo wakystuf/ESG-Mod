@@ -1,5 +1,42 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/BattleActionDefinition.xsd">
+
+  <BattleAction Name="Group_SetInitialMoraleBonus">
+    <EventPrerequisite EventType="BattleStart">
+    </EventPrerequisite>
+    <BattleEffectApplicationContext>
+        <TargetFilter>
+            <EntityFilter EntityRole="Owner" EntityType="Group"/>
+        </TargetFilter>
+        <BattleEffectReference Name="Group_ComputeMoraleBonus"/>
+        <BattleEffectReference Name="Group_InitEffectiveFlotillasCount"/>
+        <BattleEffectReference Name="Group_InitOpponentEffectiveFlotillasCount"/>
+    </BattleEffectApplicationContext>
+    <BattleEffectApplicationContext>
+        <TargetFilter>
+            <EntityFilter EntityRole="Owner" EntityType="Group"/>
+            <SubEntityFilter SelectionMethod="All">
+                <EntityFilter EntityType="Flotilla">
+                    <InterpreterPrerequisite>Property(Context, @ClassFlotilla, MaximumShield) gt 0</InterpreterPrerequisite>
+                </EntityFilter>
+            </SubEntityFilter>
+        </TargetFilter>
+        <BattleEffectReference Name="Flotilla_ResetShield"/>
+    </BattleEffectApplicationContext>
+    <BattleEffectApplicationContext>
+        <!--We reset the shield of the ship for the flotilla shield added value-->
+        <TargetFilter>
+            <EntityFilter EntityRole="Owner" EntityType="Group"/>
+            <SubEntityFilter SelectionMethod="All">
+                <EntityFilter EntityType="Ship">
+                    <InterpreterPrerequisite>Property(Context, @ClassShip, MaximumShield) gt 0</InterpreterPrerequisite>
+                </EntityFilter>
+            </SubEntityFilter>
+        </TargetFilter>
+        <BattleEffectReference Name="Ship_ResetShield"/>
+    </BattleEffectApplicationContext>
+  </BattleAction>
+
   <!-- Shield Regenerator -->
   <BattleAction Name="Ship_ShieldRegenerationPerSecond">
     <EventPrerequisite EventType="Spawned"/>
