@@ -1055,6 +1055,8 @@
 	<Property Name="EmpireManpowerFromEnrollment" MinValue="0" />
 	<Property Name="EmpireManpowerBalance" MinValue="Negative" />
 	<Property Name="EmpireManpowerPercent" MinValue="0" BaseValue="1" />
+	<Property Name="HasNetManpower" BaseValue="0" MinValue="0" MaxValue="1"/>
+	<Property Name="ShouldGoFullRate" BaseValue="0" MinValue="0" MaxValue="1"/>
 
     <!-- ########################################################## -->
     <!-- ######################## MODIFIER ######################## -->
@@ -1779,12 +1781,16 @@
     <Modifier TargetProperty="RelicSlotsUsed"  Operation="Addition"    Value="$(HasPoliticalRelic)"  />
 
     <!-- Manpower growth management -->	
+	<Modifier       TargetProperty="ShouldGoFullRate"			 Operation="Addition"	 Value="$(HasNetManpower)"    				Path="ClassEmpire" Priority="-2"/>
+	<Modifier       TargetProperty="ShouldGoFullRate"			 Operation="Subtraction" Value="$(EmpireManpowerUpkeep)"			Path="ClassEmpire" Priority="-1"/>
 	<Modifier       TargetProperty="EmpireManpowerBalance"		 Operation="Subtraction" Value="$(EmpireManpowerUpkeep)"    		Path="ClassEmpire" Priority="1"/>
 	<Modifier       TargetProperty="EmpireManpower"				 Operation="Addition"    Value="$(EmpireManpowerFromEnrollment)"    Path="ClassEmpire" Priority="1"/>
 	<BinaryModifier TargetProperty="ManpowerFromGrowthRatio"	 Operation="Addition"    Left="$(MaximumEmpireManpowerStock)"       BinaryOperation="Subtraction" Right="$(EmpireManpowerStock)" Path="ClassEmpire" Priority="2"/>
 	<Modifier       TargetProperty="ManpowerFromGrowthRatio"	 Operation="Subtraction" Value="$(EmpireManpowerBalance)"		    Path="ClassEmpire" Priority="2"/>
 	<BinaryModifier TargetProperty="ManpowerFromGrowthRatio"	 Operation="Division"    Left="$(MaximumEnrollmentRate)"       		BinaryOperation="Multiplication" Right="0.95" Path="ClassEmpire" Priority="2"/>	
+	<Modifier       TargetProperty="ManpowerFromGrowthRatio"	 Operation="Division"    Value="$(EmpireManpowerPercent)"		    Path="ClassEmpire" Priority="2"/>
 	<Modifier       TargetProperty="GrowthForManpowerRatio"		 Operation="Addition"    Value="$(ManpowerFromGrowthRatio)"			Path="ClassEmpire/ClassColonizedStarSystem" Priority="2"/>
+	<Modifier       TargetProperty="GrowthForManpowerRatio"		 Operation="Addition"    Value="$(ShouldGoFullRate)"				Path="ClassEmpire/ClassColonizedStarSystem" Priority="2"/>
 
 	<!-- Records EmpireManpowerFromEnrollment into EnrollmentAppliedToFood when food is updated -->
 	<Modifier TargetProperty="NetEnrollmentApplied"         Operation="Addition"	Value="$(EmpireManpowerFromEnrollment)"	Path="ClassEmpire,EmpireTypeMajor"/>
