@@ -18,6 +18,7 @@
     <SimulationDescriptorReference Name="ClassModuleDestruction"/>
     <SimulationDescriptorReference Name="ModuleDestruction1"/>
     <SimulationDescriptorReference Name="ClassModuleDestructionEffect"/>
+    <SimulationDescriptorReference Name="ClassModuleCarrierOnly"/>
     <SalvoReference Name="SalvoKinetic1"/>
   </DestructionModule>
 
@@ -155,7 +156,7 @@
       <ScoreModifier Name="TargetingWeightBonus">1</ScoreModifier>
     </TargetSortingCriterion_PropertyMultiplier>
   </WeaponModule>
-  
+
   <WeaponModule Name="ModuleWeaponKinetic2Strategic1" Type="Kinetic" Family="KineticStrategic1" Level="3">
     <Cost ResourceName="SystemProduction">20</Cost>
     <Cost ResourceName="Strategic1" Instant="true">1</Cost>
@@ -879,7 +880,7 @@
       <ScoreModifier Name="TargetingWeightBonus">1</ScoreModifier>
     </TargetSortingCriterion_PropertyMultiplier>
   </WeaponModule>
-  
+
   <WeaponModule Name="ModuleWeaponMissile2Strategic1" Type="Missile" Family="MissileStrategic1" Level="3">
     <Cost ResourceName="SystemProduction">20</Cost>
     <Cost ResourceName="Strategic1" Instant="true">1</Cost>
@@ -2162,7 +2163,7 @@
     <!--#########################
         ######### EMP #########
         #########################-->
-  
+
   <WeaponModule Name="ModuleWeaponMissileEMP1Strategic4" Type="Missile" Family="MissileEMP" Level="4" GuiCategory="CategoryStrategic3">
     <Cost ResourceName="SystemProduction">50</Cost>
     <Cost ResourceName="Strategic3" Instant="true">1</Cost>
@@ -2342,11 +2343,11 @@
     </InterpreterPrerequisite>
     <SimulationDescriptorReference Name="ClassModuleWeapon"/>
     <SimulationDescriptorReference Name="ClassModuleWeaponAOE"/>
+    <SimulationDescriptorReference Name="ClassModuleAOENukeExplication"/>
     <SimulationDescriptorReference Name="ModuleWeaponAOENuke1"/>
     <SimulationDescriptorReference Name="ClassModuleCanOnlyBeFittedOnLargeSlots"/>
     <SimulationDescriptorReference Name="ClassModuleShootsOncePerPhase"/>
     <SimulationDescriptorReference Name="ClassModuleIgnoresDefenses"/>
-    <SimulationDescriptorReference Name="ClassModuleAOETargetsFlotilla"/>
     <SimulationDescriptorReference Name="ClassModuleHasNoType"/>
     <BattleActionReference Name="Weapon_Initialize"/>
     <BattleActionReference Name="AOE_SalvoLaunched"/>
@@ -2366,7 +2367,7 @@
       <ScoreModifier Name="TargetersCount">-2</ScoreModifier>
     </TargetSortingCriterion_PropertyMultiplier>
   </WeaponModule>
-  
+
   <!-- Anti-fighter kinetic weapon system (disabled) -->
   <WeaponModule Name="ModuleWeaponKineticFlackQuest01" Type="Kinetic" Family="KineticSpecial" Level="4" GuiCategory="CategoryStrategic3">
     <Cost ResourceName="SystemProduction">36</Cost>
@@ -2435,4 +2436,167 @@
       <ScoreModifier Name="TargetingWeightBonus">1</ScoreModifier>
     </TargetSortingCriterion_PropertyMultiplier>
   </WeaponModule>
+
+  <!--#####################-->
+  <!--###    RAILGUN    ###-->
+  <!--#####################-->
+  <WeaponModule Name="ModuleWeaponKineticRailgun1" Type="KineticRailgun" Family="KineticRailgun" Level="3" LineOfSightOverridenAngle="360">
+    <Cost ResourceName="SystemProduction">100</Cost>
+    <!-- ** START AI DATA ** -->
+    <!-- Weapons types -->
+    <AIBattleSituations Situation="ProjectileWeapon" Mode="Use" Value="0.5"/>
+    <!-- Armor types -->
+    <AIBattleSituations Situation="EnergyDefense" Mode="Use" Value="0.5"/>
+    <AIBattleSituations Situation="ProjectileDefense" Mode="Use" Value="0.5"/>
+    <!-- Ranges -->
+    <AIBattleSituations Situation="Short" Mode="Use" Value="1"/>
+    <AIBattleSituations Situation="Medium" Mode="Against" Value="0.25"/>
+    <AIBattleSituations Situation="Long" Mode="Against" Value="0.25"/>
+    <!-- Sizes -->
+    <AIBattleSituations Situation="LargeShip" Mode="Use" Value="0.5"/>
+    <AIBattleSituations Situation="MediumShip" Mode="Use" Value="0.25"/>
+    <!-- ** END AI DATA ** -->
+    <DownloadableContentPrerequisite Flags="Prerequisite,Edition,UnlockAvailability">Update5</DownloadableContentPrerequisite>
+    <TechnologyPrerequisite Flags="Edition">TechnologyWeaponModule2</TechnologyPrerequisite>
+    <PathPrerequisite Flags="NoMoreThanOneWeaponKineticRailgun,Edition,Disable" Inverted="true">ClassShip/ClassSection/ClassModule,ClassModuleWeaponKineticRailgun</PathPrerequisite>
+    <PathPrerequisite Flags="Edition" Inverted="true">ClassShip,CannotHaveWeapon</PathPrerequisite>
+    <PathPrerequisite Flags="ShipHasDestructionModule,Edition,Disable" Inverted="true">ClassShip/ClassSection/ClassModuleDestruction</PathPrerequisite>
+    <SimulationDescriptorReference Name="ClassModuleWeapon"/>
+    <SimulationDescriptorReference Name="ClassModuleOnlyOnePerShip"/>
+    <SimulationDescriptorReference Name="ClassModuleWeaponKineticRailgun"/>
+    <SimulationDescriptorReference Name="ClassModuleRailgunExplication"/>
+    <SimulationDescriptorReference Name="ModuleWeaponKineticRailgun1"/>
+    <SimulationDescriptorReference Name="ClassModuleIgnoresDefenses"/>
+    <BattleActionReference Name="Weapon_Initialize"/>
+    <BattleActionReference Name="Weapon_SalvoLaunched"/>
+    <BattleActionReference Name="WeaponRailgun_SalvoPrepareHitTarget"/>
+    <BattleActionReference Name="Weapon_SalvoHitTarget"/>
+    <BattleActionReference Name="Weapon_SalvoPostHitTarget"/>
+    <BattleActionReference Name="Weapon_SalvoPostHitTarget_StatisticsRecording"/>
+    <BattleActionReference Name="WeaponRailgun_SalvoPostHitTarget_StatisticsRecording"/>
+    <BattleActionReference Name="Weapon_UpdateAccuracyAfterMiss"/>
+    <AttackPathPrerequisite Inverted="true">EncounterEntityStatusDisabled</AttackPathPrerequisite>
+    <SalvoReference Name="SalvoKineticRailgun1"/>
+    <AvailableRange RangeName="Short" PenaltyPropertyName="ShortRangePenalty"/>
+    <AvailableRange RangeName="Medium" PenaltyPropertyName="MediumRangePenalty"/>
+    <AvailableRange RangeName="Long" PenaltyPropertyName="LongRangePenalty"/>
+    <TargetSortingCriterion Name="Type">
+      <ScoreModifier Name="Ship">1</ScoreModifier>
+    </TargetSortingCriterion>
+    <TargetSortingCriterion_PropertyMultiplier Name="PropertyMultiplier">
+      <ScoreModifier Name="OffensiveMilitaryPowerIfWeakestTargeting">-1</ScoreModifier>
+    </TargetSortingCriterion_PropertyMultiplier>
+    <TargetSortingCriterion Name="Role" ScoreModifiersDefaultValue="1" IgnoredWhenCheckingTargetValidity="true"/>
+    <TargetSortingCriterion_PropertyMultiplier Name="PropertyMultiplier">
+      <ScoreModifier Name="TargetersCount">-1</ScoreModifier>
+      <ScoreModifier Name="TargetingWeightBonus">1</ScoreModifier>
+    </TargetSortingCriterion_PropertyMultiplier>
+  </WeaponModule>
+
+  <WeaponModule Name="ModuleWeaponKineticRailgun2" Type="KineticRailgun" Family="KineticRailgun" Level="4" LineOfSightOverridenAngle="360">
+    <Cost ResourceName="SystemProduction">180</Cost>
+    <!-- ** START AI DATA ** -->
+    <!-- Weapons types -->
+    <AIBattleSituations Situation="ProjectileWeapon" Mode="Use" Value="0.5"/>
+    <!-- Armor types -->
+    <AIBattleSituations Situation="EnergyDefense" Mode="Use" Value="0.5"/>
+    <AIBattleSituations Situation="ProjectileDefense" Mode="Use" Value="0.5"/>
+    <!-- Ranges -->
+    <AIBattleSituations Situation="Short" Mode="Use" Value="1"/>
+    <AIBattleSituations Situation="Medium" Mode="Against" Value="0.25"/>
+    <AIBattleSituations Situation="Long" Mode="Against" Value="0.25"/>
+    <!-- Sizes -->
+    <AIBattleSituations Situation="LargeShip" Mode="Use" Value="0.5"/>
+    <AIBattleSituations Situation="MediumShip" Mode="Use" Value="0.25"/>
+    <!-- ** END AI DATA ** -->
+    <DownloadableContentPrerequisite Flags="Prerequisite,Edition,UnlockAvailability">Update5</DownloadableContentPrerequisite>
+    <TechnologyPrerequisite Flags="Edition">TechnologyWeaponModule4</TechnologyPrerequisite>
+    <PathPrerequisite Flags="NoMoreThanOneWeaponKineticRailgun,Edition,Disable" Inverted="true">ClassShip/ClassSection/ClassModule,ClassModuleWeaponKineticRailgun</PathPrerequisite>
+    <PathPrerequisite Flags="Edition" Inverted="true">ClassShip,CannotHaveWeapon</PathPrerequisite>
+    <PathPrerequisite Flags="ShipHasDestructionModule,Edition,Disable" Inverted="true">ClassShip/ClassSection/ClassModuleDestruction</PathPrerequisite>
+    <SimulationDescriptorReference Name="ClassModuleWeapon"/>
+    <SimulationDescriptorReference Name="ClassModuleOnlyOnePerShip"/>
+    <SimulationDescriptorReference Name="ClassModuleWeaponKineticRailgun"/>
+    <SimulationDescriptorReference Name="ClassModuleRailgunExplication"/>
+    <SimulationDescriptorReference Name="ModuleWeaponKineticRailgun2"/>
+    <SimulationDescriptorReference Name="ClassModuleIgnoresDefenses"/>
+    <BattleActionReference Name="Weapon_Initialize"/>
+    <BattleActionReference Name="Weapon_SalvoLaunched"/>
+    <BattleActionReference Name="WeaponRailgun_SalvoPrepareHitTarget"/>
+    <BattleActionReference Name="Weapon_SalvoHitTarget"/>
+    <BattleActionReference Name="Weapon_SalvoPostHitTarget"/>
+    <BattleActionReference Name="Weapon_SalvoPostHitTarget_StatisticsRecording"/>
+    <BattleActionReference Name="WeaponRailgun_SalvoPostHitTarget_StatisticsRecording"/>
+    <BattleActionReference Name="Weapon_UpdateAccuracyAfterMiss"/>
+    <AttackPathPrerequisite Inverted="true">EncounterEntityStatusDisabled</AttackPathPrerequisite>
+    <SalvoReference Name="SalvoKineticRailgun2"/>
+    <AvailableRange RangeName="Short" PenaltyPropertyName="ShortRangePenalty"/>
+    <AvailableRange RangeName="Medium" PenaltyPropertyName="MediumRangePenalty"/>
+    <AvailableRange RangeName="Long" PenaltyPropertyName="LongRangePenalty"/>
+    <TargetSortingCriterion Name="Type">
+      <ScoreModifier Name="Ship">1</ScoreModifier>
+    </TargetSortingCriterion>
+    <TargetSortingCriterion_PropertyMultiplier Name="PropertyMultiplier">
+      <ScoreModifier Name="OffensiveMilitaryPowerIfWeakestTargeting">-1</ScoreModifier>
+    </TargetSortingCriterion_PropertyMultiplier>
+    <TargetSortingCriterion Name="Role" ScoreModifiersDefaultValue="1" IgnoredWhenCheckingTargetValidity="true"/>
+    <TargetSortingCriterion_PropertyMultiplier Name="PropertyMultiplier">
+      <ScoreModifier Name="TargetersCount">-1</ScoreModifier>
+      <ScoreModifier Name="TargetingWeightBonus">1</ScoreModifier>
+    </TargetSortingCriterion_PropertyMultiplier>
+  </WeaponModule>
+
+  <WeaponModule Name="ModuleWeaponKineticRailgun3" Type="KineticRailgun" Family="KineticRailgun" Level="5" LineOfSightOverridenAngle="360">
+    <Cost ResourceName="SystemProduction">260</Cost>
+    <!-- ** START AI DATA ** -->
+    <!-- Weapons types -->
+    <AIBattleSituations Situation="ProjectileWeapon" Mode="Use" Value="0.5"/>
+    <!-- Armor types -->
+    <AIBattleSituations Situation="EnergyDefense" Mode="Use" Value="0.5"/>
+    <AIBattleSituations Situation="ProjectileDefense" Mode="Use" Value="0.5"/>
+    <!-- Ranges -->
+    <AIBattleSituations Situation="Short" Mode="Use" Value="1"/>
+    <AIBattleSituations Situation="Medium" Mode="Against" Value="0.25"/>
+    <AIBattleSituations Situation="Long" Mode="Against" Value="0.25"/>
+    <!-- Sizes -->
+    <AIBattleSituations Situation="LargeShip" Mode="Use" Value="0.5"/>
+    <AIBattleSituations Situation="MediumShip" Mode="Use" Value="0.25"/>
+    <!-- ** END AI DATA ** -->
+    <DownloadableContentPrerequisite Flags="Prerequisite,Edition,UnlockAvailability">Update5</DownloadableContentPrerequisite>
+    <TechnologyPrerequisite Flags="Edition">TechnologyWeaponModule5</TechnologyPrerequisite>
+    <PathPrerequisite Flags="NoMoreThanOneWeaponKineticRailgun,Edition,Disable" Inverted="true">ClassShip/ClassSection/ClassModule,ClassModuleWeaponKineticRailgun</PathPrerequisite>
+    <PathPrerequisite Flags="Edition" Inverted="true">ClassShip,CannotHaveWeapon</PathPrerequisite>
+    <PathPrerequisite Flags="ShipHasDestructionModule,Edition,Disable" Inverted="true">ClassShip/ClassSection/ClassModuleDestruction</PathPrerequisite>
+    <SimulationDescriptorReference Name="ClassModuleWeapon"/>
+    <SimulationDescriptorReference Name="ClassModuleOnlyOnePerShip"/>
+    <SimulationDescriptorReference Name="ClassModuleWeaponKineticRailgun"/>
+    <SimulationDescriptorReference Name="ClassModuleRailgunExplication"/>
+    <SimulationDescriptorReference Name="ModuleWeaponKineticRailgun3"/>
+    <SimulationDescriptorReference Name="ClassModuleIgnoresDefenses"/>
+    <BattleActionReference Name="Weapon_Initialize"/>
+    <BattleActionReference Name="Weapon_SalvoLaunched"/>
+    <BattleActionReference Name="WeaponRailgun_SalvoPrepareHitTarget"/>
+    <BattleActionReference Name="Weapon_SalvoHitTarget"/>
+    <BattleActionReference Name="Weapon_SalvoPostHitTarget"/>
+    <BattleActionReference Name="Weapon_SalvoPostHitTarget_StatisticsRecording"/>
+    <BattleActionReference Name="WeaponRailgun_SalvoPostHitTarget_StatisticsRecording"/>
+    <BattleActionReference Name="Weapon_UpdateAccuracyAfterMiss"/>
+    <AttackPathPrerequisite Inverted="true">EncounterEntityStatusDisabled</AttackPathPrerequisite>
+    <SalvoReference Name="SalvoKineticRailgun3"/>
+    <AvailableRange RangeName="Short" PenaltyPropertyName="ShortRangePenalty"/>
+    <AvailableRange RangeName="Medium" PenaltyPropertyName="MediumRangePenalty"/>
+    <AvailableRange RangeName="Long" PenaltyPropertyName="LongRangePenalty"/>
+    <TargetSortingCriterion Name="Type">
+      <ScoreModifier Name="Ship">1</ScoreModifier>
+    </TargetSortingCriterion>
+    <TargetSortingCriterion_PropertyMultiplier Name="PropertyMultiplier">
+      <ScoreModifier Name="OffensiveMilitaryPowerIfWeakestTargeting">-1</ScoreModifier>
+    </TargetSortingCriterion_PropertyMultiplier>
+    <TargetSortingCriterion Name="Role" ScoreModifiersDefaultValue="1" IgnoredWhenCheckingTargetValidity="true"/>
+    <TargetSortingCriterion_PropertyMultiplier Name="PropertyMultiplier">
+      <ScoreModifier Name="TargetersCount">-1</ScoreModifier>
+      <ScoreModifier Name="TargetingWeightBonus">1</ScoreModifier>
+    </TargetSortingCriterion_PropertyMultiplier>
+  </WeaponModule>
+
 </Datatable>

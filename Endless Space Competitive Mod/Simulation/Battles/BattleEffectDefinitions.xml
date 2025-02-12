@@ -1,19 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../../Schemas/BattleEffectDefinition.xsd">
-
-    <BattleEffect_SetPropertyValue
-	Name="Salvo_ApplyDamageBonusPerTargetCommandPoints"
-	PropertyName="EffectiveDamage"
-	Operation="Addition"
-	InterpreterFormula="Property(Initiator, @ClassSalvo, EffectiveDamage) * (Property(Owner, @../ClassShip, DamageBonusPerTargetCommandPoints) + Property(Owner, @../ClassShip, DamageBonusPerTargetCommandPoints_LockOnAdvanced) + Property(Owner, @../ClassShip, DamageBonusPerTargetCommandPoints_LockOnBasic)) * Property(InitiatorTarget, @ClassShip, CommandPoints)"/>
-
-    <BattleEffect_SetPropertyValue
-	Name="SalvoAOE_ApplyDamageBonusPerTargetCommandPoints"
-	PropertyName="EffectiveDamage"
-	Operation="Addition"
-	InterpreterFormula="Property(Initiator, @ClassSalvo, EffectiveDamage) * (Property(Owner, @../ClassShip, DamageBonusPerTargetCommandPoints) + Property(Owner, @../ClassShip, DamageBonusPerTargetCommandPoints_LockOnAdvanced) + Property(Owner, @../ClassShip, DamageBonusPerTargetCommandPoints_LockOnBasic)) * Property(InitiatorTarget, @ClassFlotilla, CommandPoints)"/>
-
-
+  <BattleEffect_SetPropertyValue Name="Salvo_ApplyDamageBonusPerTargetCommandPoints"        PropertyName="EffectiveDamage"      Operation="Addition" InterpreterFormula="Property(Initiator, @ClassSalvo, EffectiveDamage) * (Property(Owner, @../ClassShip, DamageBonusPerTargetCommandPoints) + Property(Owner, @../ClassShip, DamageBonusPerTargetCommandPoints_LockOnAdvanced) + Property(Owner, @../ClassShip, DamageBonusPerTargetCommandPoints_LockOnBasic)) * Property(InitiatorTarget, @ClassShip, CommandPoints)"/>
+  <BattleEffect_SetPropertyValue Name="SalvoAOE_ApplyDamageBonusPerTargetCommandPoints"     PropertyName="EffectiveDamage"      Operation="Addition" InterpreterFormula="Property(Initiator, @ClassSalvo, EffectiveDamage) * (Property(Owner, @../ClassShip, DamageBonusPerTargetCommandPoints) + Property(Owner, @../ClassShip, DamageBonusPerTargetCommandPoints_LockOnAdvanced) + Property(Owner, @../ClassShip, DamageBonusPerTargetCommandPoints_LockOnBasic)) * Property(InitiatorTarget, @ClassFlotilla, CommandPoints)"/>
+  <!--<BattleEffect_SetPropertyValue Name="Salvo_InitEffectiveFlatHullDestructionAtShortRange"  PropertyName="ArmorDestructionFlat" Operation="Set"      InterpreterFormula="Property(Owner, @ClassModuleWeapon, Damage) * Property(Owner, @ClassModuleWeapon, DamageMultiplierShortRange) * (1 - (Property(InitiatorTarget, @ClassShip, DefenseBonusAtShortRange) + Property(InitiatorTarget, @ClassShip, DefenseBonusOverall)))"/>
+  <BattleEffect_SetPropertyValue Name="Salvo_InitEffectiveFlatHullDestructionAtMediumRange" PropertyName="ArmorDestructionFlat" Operation="Set"      InterpreterFormula="Property(Owner, @ClassModuleWeapon, Damage) * Property(Owner, @ClassModuleWeapon, DamageMultiplierMediumRange) * (1 - (Property(InitiatorTarget, @ClassShip, DefenseBonusAtMediumRange) + Property(InitiatorTarget, @ClassShip, DefenseBonusOverall)))"/>
+  <BattleEffect_SetPropertyValue Name="Salvo_InitEffectiveFlatHullDestructionAtLongRange"   PropertyName="ArmorDestructionFlat" Operation="Set"      InterpreterFormula="Property(Owner, @ClassModuleWeapon, Damage) * Property(Owner, @ClassModuleWeapon, DamageMultiplierLongRange) * (1 - (Property(InitiatorTarget, @ClassShip, DefenseBonusAtLongRange) + Property(InitiatorTarget, @ClassShip, DefenseBonusOverall)))"/>-->
 
   <!-- Shield Regeneration -->
   <!-- Flat -->
@@ -49,15 +40,23 @@
   <BattleEffect_SetPropertyValue Name="Squadron_ComputeDamageToApplyToShipShield" PropertyName="DamageAbsorbedByLastShield" Operation="Set" InterpreterFormula="Min(Property(Initiator, @ClassModuleSquadron, ShieldAbsorptionValue) * (Property(InitiatorTarget, @ClassShip, ShieldAbsorption) / (Property(InitiatorTarget, @ClassShip, ShieldAbsorption) + Property(InitiatorTarget, @ClassShip, HullWeakness)) * Property(InitiatorTarget, @ClassShip, ShieldAbsorptionPercent)), Property(InitiatorTarget, @ClassShip, Shield), Property(Initiator, @ClassModuleSquadron, ShieldAbsorptionValue))"/>
 
   <!-- Coilgun -->
-  <BattleEffect_SetPropertyValue Name="Ship_SetArmorDestructionFromOpponentCoilgun"             PropertyName="CoilgunArmorDescructionPercentFromOpponent"        Operation="Set" InterpreterFormula="Property(Initiator, @ClassSalvo, ArmorDestructionDynamic)" />
+  <BattleEffect_SetPropertyValue Name="Ship_SetArmorDestructionFromOpponentPercent"          PropertyName="ArmorDestructionPercentFromOpponent"     Operation="Addition" InterpreterFormula="Property(Initiator, @ClassSalvo, ArmorDestructionDynamic)" />
+  <BattleEffect_SetPropertyValue Name="Ship_SetArmorDestructionFromOpponentFlat"             PropertyName="ArmorDestructionFlatFromOpponent"        Operation="Addition" InterpreterFormula="Property(Initiator, @ClassSalvo, ArmorDestructionFlat)" />
+
 
   <BattleEffect_ApplyDescriptor Name="Ship_AddBattleArmorDestructionPercent" Duration="120">
     <SimulationDescriptorReference Name="EncounterShipTemporaryArmorDestructionAccuracyPercent"/>
+  </BattleEffect_ApplyDescriptor>
+
+  <BattleEffect_ApplyDescriptor Name="Ship_AddBattleArmorDestructionFlat" Duration="120">
+    <SimulationDescriptorReference Name="EncounterShipTemporaryArmorDestructionAccuracyFlat"/>
   </BattleEffect_ApplyDescriptor>
 
   <BattleEffect_SetPropertyValue Name="AttackingFlotilla_UpdateDamageAppliedByCoilgunFromSalvo"  PropertyName="DamageAppliedByCoilgun"     Operation="Addition"    InterpreterFormula="Property(Initiator, @ClassSalvo, EffectiveDamage)">
     <CancellationEventPrerequisite EventType="LastPhaseStart"/>
   </BattleEffect_SetPropertyValue>
 
-  <BattleEffect_SetPropertyValue Name="Salvo_ResetHealth"                           PropertyName="Health"                  Operation="Set"             InterpreterFormula="Property(Initiator, @ClassSalvo, MaximumHealth)"/>
+  <BattleEffect_SetPropertyValue Name="Salvo_ResetHealth"                        PropertyName="Health"                  Operation="Set"             InterpreterFormula="Property(Initiator, @ClassSalvo, MaximumHealth)"/>
+  <BattleEffect_SetPropertyValue Name="Salvo_InitArmorDestructionFlat"           PropertyName="ArmorDestructionFlat"    Operation="Set"             InterpreterFormula="Property(Owner, @ClassModuleWeapon, ArmorDestructionFlat)"/>
+  <BattleEffect_SetPropertyValue Name="Salvo_InitArmorDestructionDynamic"        PropertyName="ArmorDestructionDynamic" Operation="Set"             InterpreterFormula="Property(Owner, @ClassModuleWeapon, ArmorDestructionDynamic)"/>
 </Datatable>

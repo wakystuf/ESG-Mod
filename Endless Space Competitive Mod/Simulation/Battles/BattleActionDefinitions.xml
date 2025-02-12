@@ -218,14 +218,24 @@
       <BattleEffectReference Name="Ship_AddTemporaryCooldownReductionPercent"/>
     </BattleEffectApplicationContext>
     <BattleEffectApplicationContext>
-      <InterpreterPrerequisite Flags="Prerequisite" Inverted="false">Property(Initiator, @ClassSalvo, ArmorDestructionDynamic) lt 0</InterpreterPrerequisite>
+      <InterpreterPrerequisite Flags="Prerequisite" Inverted="false">Property(Initiator, @ClassSalvo, ArmorDestructionDynamic) gt 0</InterpreterPrerequisite>
       <TargetFilter>
         <EntityFilter EntityRole="InitiatorTarget" EntityType="ShipSection" EntityTags="OtherGroup">
         </EntityFilter>
         <ParentEntityFilter EntityType="Ship" EntityTags="OtherGroup Alive"/>
       </TargetFilter>
-      <BattleEffectReference Name="Ship_SetArmorDestructionFromOpponentCoilgun"/>
+      <BattleEffectReference Name="Ship_SetArmorDestructionFromOpponentPercent"/>
       <BattleEffectReference Name="Ship_AddBattleArmorDestructionPercent"/>
+    </BattleEffectApplicationContext>
+    <BattleEffectApplicationContext>
+      <InterpreterPrerequisite Flags="Prerequisite" Inverted="false">Property(Initiator, @ClassSalvo, ArmorDestructionFlat) gt 0</InterpreterPrerequisite>
+      <TargetFilter>
+        <EntityFilter EntityRole="InitiatorTarget" EntityType="ShipSection" EntityTags="OtherGroup">
+        </EntityFilter>
+        <ParentEntityFilter EntityType="Ship" EntityTags="OtherGroup Alive"/>
+      </TargetFilter>
+      <BattleEffectReference Name="Ship_SetArmorDestructionFromOpponentFlat"/>
+      <BattleEffectReference Name="Ship_AddBattleArmorDestructionFlat"/>
     </BattleEffectApplicationContext>
   </BattleAction>
 
@@ -317,6 +327,8 @@
       <BattleEffectReference Name="Salvo_InitShieldAbsorptionValue"/>
       <BattleEffectReference Name="Salvo_InitHullPlatingAbsorptionValue"/>
       <BattleEffectReference Name="Salvo_InitShipManpowerKillValue"/>
+      <BattleEffectReference Name="Salvo_InitArmorDestructionFlat"/>
+      <BattleEffectReference Name="Salvo_InitArmorDestructionDynamic"/>
       <BattleEffectReference Name="Salvo_InitMultiplierValue"/>
       <BattleEffectReference Name="Salvo_ResetHealth"/>
     </BattleEffectApplicationContext>
