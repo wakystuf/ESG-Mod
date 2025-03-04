@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8"?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/Amplitude.Unity.Simulation.SimulationDescriptor.xsd">
 	<SimulationDescriptor Name="EndlessMoonsEnabled" Type="FactionTrait"/>
@@ -202,6 +202,7 @@
 		<!--ESG-->
 		<Property Name="MajorPopulationCount" BaseValue="0" Composition="Sum"/>
 		<Property Name="EmpireMajorPopulationCount" BaseValue="0"/>
+
 		<Property Name="PopulationsAssimilated" BaseValue="0"/>
 		<Property Name="AcademyOwned"/>
 		<Property Name="VampirilisPopulation"/>
@@ -288,6 +289,7 @@
 		<Property Name="NetSystemResearch" MinValue="Negative"/>
 		<Property Name="NetSystemEmpirePoint" MinValue="Negative"/>
 
+
 		<Property Name="Population" BaseValue="0"/>
 		<Property Name="PopulationBoostCostMultiplier" BaseValue="1"/>
 
@@ -342,6 +344,8 @@
 		<Property Name="FakeEmpireRelicStock" BaseValue="1" MinValue="1" IsSealed="true"/>
 		<Property Name="FakeNetEmpireRelics" BaseValue="0" MinValue="0"/>
 		<Property Name="NetRelicsResearch" BaseValue="0"/>
+		<!-- Replaces NetEmpireManpower for EmpireManpower resource calculation -->
+		<Property Name="TrueNetEmpireManpower" MinValue="Negative"/>
 
 		<Property Name="EmpireLifeforceFromHuntingGrounds" BaseValue="0" MinValue="0"/>
 		<Property Name="EmpireMoneyFromHuntingGrounds" BaseValue="0" MinValue="0"/>
@@ -365,6 +369,11 @@
 		<Property Name="EmpireTemplePointsStock" IsSealed="true"/>
 		<Property Name="EmpireHonorStock" IsSealed="true"/>
 		<Property Name="LowestEmpireHonorStock" IsSealed="true" BaseValue="100"/>
+
+		<!-- New resource to record the Empire Manpower from Enrollment at the food update pass -->
+		<Property Name="MaximumEnrollmentApplied" BaseValue="0"/>
+		<Property Name="NetEnrollmentApplied" BaseValue="0" MinValue="Negative"/>
+		<Property Name="EnrollmentAppliedToFood" IsSealed="true"/>
 
 		<Property Name="FleetsCount" BaseValue="0" MinValue="0"/>
 
@@ -1036,6 +1045,16 @@
 		<Property Name="ActualPoliticalRelicEcologistLuxuryBoost"/>
 		<Property Name="ActualPoliticalRelicReligiousHeroPointBoost" MinValue="Negative"/>
 		<Property Name="ActualPoliticalRelicMilitaristRetrofitBoost" MinValue="Negative"/>
+
+		<!-- Aux properties for all the growth into manpower calculations -->
+		<Property Name="MaximumEnrollmentRate" MinValue="1" Composition="Sum"/>
+		<Property Name="ManpowerFromGrowthRatio" MinValue="0"/>
+		<Property Name="EmpireManpowerFromEnrollment" MinValue="0"/>
+		<Property Name="EmpireManpowerBalance" MinValue="Negative"/>
+		<Property Name="EmpireManpowerPercent" MinValue="0" BaseValue="1"/>
+		<Property Name="HasNetManpower" BaseValue="0" MinValue="0" MaxValue="1"/>
+		<Property Name="ShouldGoFullRate" BaseValue="0" MinValue="0" MaxValue="1"/>
+
 		<!-- ########################################################## -->
 		<!-- ######################## MODIFIER ######################## -->
 		<!-- ########################################################## -->
@@ -1074,23 +1093,23 @@
 		<BinaryModifier TargetProperty="SpecialNodesLaw" Operation="Addition" Left="$(FleetsBlockadingSpecialNodes)" BinaryOperation="Multiplication" Right="$(SpecialNodesLaw_Boolean3)"/>
 
 		<!-- 2023 PATCH -->
-    <Modifier TargetProperty="MaxChargeTime" Operation="Multiplication" Value="$(HackingBeaconChargeupTimeMultiplier)" Path="ClassEmpire//ClassHackingBeacon"/>
-    <Modifier TargetProperty="OpponentRecyclingSciencePerCP" Operation="Multiplication" Value="$(ScienceScrappingBonus)" Path="ClassEmpire//ClassGroup" Priority="100"/>
-    <Modifier TargetProperty="ResultingResearchRelics"       Operation="Force"          Value="$(ResearchRelics)"                                       Priority="-10"/>
-    <Modifier TargetProperty="TotalResearchRelics"           Operation="Force"          Value="$(ResultingResearchRelics)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="SlumberingRuinsBonusDuration"  Operation="Force"          Value="10" />
-    <Modifier TargetProperty="SlumberingRuinsBonusDuration"  Operation="Multiplication" Value="$(GameSpeedMultiplier)" />
-    <Modifier TargetProperty="ResearchRelics"                Operation="Addition"       Value="$(ResearchRelics)" Path="ClassEmpire/ClassColonizedStarSystem"/>
-    <BinaryModifier TargetProperty="AllowedCathedrals"       Operation="Addition"       Left="$(NumberOfTemples)" BinaryOperation="Division" Right="4"/>
-    <Modifier TargetProperty="HeroPointMultiplier"           Operation="Addition"       Value="$(HeroPointMultiplier)" Path="ClassEmpire/ClassEducation"/>
+		<Modifier TargetProperty="MaxChargeTime" Operation="Multiplication" Value="$(HackingBeaconChargeupTimeMultiplier)" Path="ClassEmpire//ClassHackingBeacon"/>
+		<Modifier TargetProperty="OpponentRecyclingSciencePerCP" Operation="Multiplication" Value="$(ScienceScrappingBonus)" Path="ClassEmpire//ClassGroup" Priority="100"/>
+		<Modifier TargetProperty="ResultingResearchRelics" Operation="Force" Value="$(ResearchRelics)" Priority="-10"/>
+		<Modifier TargetProperty="TotalResearchRelics" Operation="Force" Value="$(ResultingResearchRelics)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="SlumberingRuinsBonusDuration" Operation="Force" Value="10"/>
+		<Modifier TargetProperty="SlumberingRuinsBonusDuration" Operation="Multiplication" Value="$(GameSpeedMultiplier)"/>
+		<Modifier TargetProperty="ResearchRelics" Operation="Addition" Value="$(ResearchRelics)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<BinaryModifier TargetProperty="AllowedCathedrals" Operation="Addition" Left="$(NumberOfTemples)" BinaryOperation="Division" Right="4"/>
+		<Modifier TargetProperty="HeroPointMultiplier" Operation="Addition" Value="$(HeroPointMultiplier)" Path="ClassEmpire/ClassEducation"/>
 
-    <BinaryModifier TargetProperty="ExplorationRelicTurnsInEffect"     Operation="Addition" Left="$(CurrentTurn)" BinaryOperation="Subtraction" Right="$(ExplorationRelicTurnActivated)"/>
-    <BinaryModifier TargetProperty="ExpansionRelicTurnsInEffect"       Operation="Addition" Left="$(CurrentTurn)" BinaryOperation="Subtraction" Right="$(ExpansionRelicTurnActivated)"/>
-    <BinaryModifier TargetProperty="DiplomacyRelicTurnsInEffect"       Operation="Addition" Left="$(CurrentTurn)" BinaryOperation="Subtraction" Right="$(DiplomacyRelicTurnActivated)"/>
-    <BinaryModifier TargetProperty="PoliticalRelicTurnsInEffect"       Operation="Addition" Left="$(CurrentTurn)" BinaryOperation="Subtraction" Right="$(PoliticalRelicTurnActivated)"/>
+		<BinaryModifier TargetProperty="ExplorationRelicTurnsInEffect" Operation="Addition" Left="$(CurrentTurn)" BinaryOperation="Subtraction" Right="$(ExplorationRelicTurnActivated)"/>
+		<BinaryModifier TargetProperty="ExpansionRelicTurnsInEffect" Operation="Addition" Left="$(CurrentTurn)" BinaryOperation="Subtraction" Right="$(ExpansionRelicTurnActivated)"/>
+		<BinaryModifier TargetProperty="DiplomacyRelicTurnsInEffect" Operation="Addition" Left="$(CurrentTurn)" BinaryOperation="Subtraction" Right="$(DiplomacyRelicTurnActivated)"/>
+		<BinaryModifier TargetProperty="PoliticalRelicTurnsInEffect" Operation="Addition" Left="$(CurrentTurn)" BinaryOperation="Subtraction" Right="$(PoliticalRelicTurnActivated)"/>
 
 		<!-- OBLITERATOR -->
-    <Modifier TargetProperty="ObliteratorShotCost"           Operation="Multiplication" Value="$(ObliteratorShotCostMultiplier)" Path="ClassEmpire/ClassGarrisonFleet/ClassShip,ShipRoleObliterator"/>
+		<Modifier TargetProperty="ObliteratorShotCost" Operation="Multiplication" Value="$(ObliteratorShotCostMultiplier)" Path="ClassEmpire/ClassGarrisonFleet/ClassShip,ShipRoleObliterator"/>
 
 		<!-- HACKING -->
 		<BinaryModifier TargetProperty="ProcessingPowerStockHackingSpeedMultiplier" Operation="Addition" Left="$(EmpireProcessingPowerStock)" BinaryOperation="Division" Right="10"/>
@@ -1104,20 +1123,21 @@
 		<Modifier TargetProperty="HackingNonWarpSpeed" Operation="Percent" Value="$(HackingSpeedPercentMultiplier)" Priority="0"/>
 		<Modifier TargetProperty="HackingNodeSpeed" Operation="Percent" Value="$(HackingSpeedPercentMultiplier)" Priority="0"/>
 
-		<Modifier TargetProperty="TraitorsCount" Operation="Addition" Value="$(TraitorsCount)" Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true" />
+		<Modifier TargetProperty="TraitorsCount" Operation="Addition" Value="$(TraitorsCount)" Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
 		<Modifier TargetProperty="BackdoorCount" Operation="Addition" Value="$(BackdoorCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
-		<BinaryModifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Addition" Left="$(TraitorsCount)" BinaryOperation="Multiplication" Right="1" />
-		<BinaryModifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Addition" Left="$(UnlockedProgramCount)" BinaryOperation="Multiplication" Right="5" />
+		<BinaryModifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Addition" Left="$(TraitorsCount)" BinaryOperation="Multiplication" Right="1"/>
+		<BinaryModifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Addition" Left="$(UnlockedProgramCount)" BinaryOperation="Multiplication" Right="5"/>
 		<Modifier TargetProperty="MaximumEmpireProcessingPowerStock" Operation="Percent" Value="$(MaximumEmpireProcessingPowerStockOvercolonizationMultiplier)" Priority="100"/>
 		<BinaryModifier TargetProperty="ProcessingPowerForManpower" Operation="Addition" Left="$(EmpireProcessingPowerStock)" BinaryOperation="Multiplication" Right="$(PassiveProcessingPowerEnrollmentRate)"/>
 		<Modifier TargetProperty="EmpireManpower" Operation="Addition" Value="$(ProcessingPowerForManpower)" Path="../ClassEmpire"/>
+		<Modifier TargetProperty="EmpireManpowerBalance" Operation="Addition" Value="$(ProcessingPowerForManpower)" Path="../ClassEmpire" TooltipHidden="true"/>
 
-    <BinaryModifier TargetProperty="EmpireProcessingPowerAllocated" Operation="Addition" Left="$(MaximumEmpireProcessingPowerStock)" BinaryOperation="Subtraction" Right="$(EmpireProcessingPowerStock)" />
-    <Modifier TargetProperty="EmpireProcessingPowerAllocated" Operation="Addition" Value="$(EmpireProcessingPowerAllocated)" Path="ClassEmpire/ClassColonizedStarSystem,HomeSystem" />
-    <Modifier TargetProperty="EmpireProcessingPowerAllocated" Operation="Addition" Value="$(EmpireProcessingPowerAllocated)" Path="ClassEmpire/ClassPopulationEmpire" />
+		<BinaryModifier TargetProperty="EmpireProcessingPowerAllocated" Operation="Addition" Left="$(MaximumEmpireProcessingPowerStock)" BinaryOperation="Subtraction" Right="$(EmpireProcessingPowerStock)"/>
+		<Modifier TargetProperty="EmpireProcessingPowerAllocated" Operation="Addition" Value="$(EmpireProcessingPowerAllocated)" Path="ClassEmpire/ClassColonizedStarSystem,HomeSystem"/>
+		<Modifier TargetProperty="EmpireProcessingPowerAllocated" Operation="Addition" Value="$(EmpireProcessingPowerAllocated)" Path="ClassEmpire/ClassPopulationEmpire"/>
 
-    <Modifier TargetProperty="BackdoorProcessingPowerMultiplier" Operation="Addition" Value="$(BackdoorProcessingPowerMultiplier)" Path="ClassEmpire/ClassHackingOperationBackdoor" />
+		<Modifier TargetProperty="BackdoorProcessingPowerMultiplier" Operation="Addition" Value="$(BackdoorProcessingPowerMultiplier)" Path="ClassEmpire/ClassHackingOperationBackdoor"/>
 
 		<!-- Scaling of Hacking Beacons with GameSpeed is removed since ship movement does not scale with GameSpeed
 		<Modifier TargetProperty="MaxChargeTime" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Path="ClassEmpire/ClassHacking/ClassHackingBeacon"/>-->
@@ -1139,7 +1159,7 @@
 
 
 		<!--Depleted Planet counts-->
-    <Modifier TargetProperty="PopulationEmpireDepletedPlanetCount" Operation="Addition" Value="$(DepletedPlanetCount)" Path="ClassEmpire/ClassPopulationEmpire,PopulationCollectionBonusCravers3" TooltipHidden="true"/>
+		<Modifier TargetProperty="PopulationEmpireDepletedPlanetCount" Operation="Addition" Value="$(DepletedPlanetCount)" Path="ClassEmpire/ClassPopulationEmpire,PopulationCollectionBonusCravers3" TooltipHidden="true"/>
 
 		<!--Empire-wide counts -->
 
@@ -1148,21 +1168,21 @@
 
 		<!--Exploration Ratio-->
 		<Modifier TargetProperty="ExplorationRatio" Operation="Addition" Value="$(KnownSystemCount)" Priority="1" Path="ClassEmpire"/>
-    <Modifier TargetProperty="ExplorationRatio" Operation="Division" Value="$(NumberOfGalaxyNodes)" Priority="2" Path="ClassEmpire"/>
+		<Modifier TargetProperty="ExplorationRatio" Operation="Division" Value="$(NumberOfGalaxyNodes)" Priority="2" Path="ClassEmpire"/>
 		<Modifier TargetProperty="ExplorationRatio" Operation="Addition" Value="$(ExplorationRatio)" Priority="3" Path="ClassEmpire/ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="ExplorationScoreForOverColonizationThreshold" Operation="Addition" Value="$(ExplorationRatio)" Priority="3" Path="ClassEmpire"/>
-    <BinaryModifier TargetProperty="ExplorationScoreForOverColonizationThreshold" Operation="Multiplication" Left="1" BinaryOperation="Division" Right="$(DesiredExplorationRatioForOverColonizationThreshold)" Priority="4" Path="ClassEmpire" />
+		<Modifier TargetProperty="ExplorationScoreForOverColonizationThreshold" Operation="Addition" Value="$(ExplorationRatio)" Priority="3" Path="ClassEmpire"/>
+		<BinaryModifier TargetProperty="ExplorationScoreForOverColonizationThreshold" Operation="Multiplication" Left="1" BinaryOperation="Division" Right="$(DesiredExplorationRatioForOverColonizationThreshold)" Priority="4" Path="ClassEmpire"/>
 
 		<!--Update8 Laws-->
 		<Modifier TargetProperty="MaximumMovement" Operation="Addition" Value="$(MovementBonusFromKalTikMasLaw)" Path="ClassEmpire/ClassGarrison/ClassShip"/>
 		<Modifier TargetProperty="TechnologyCostModifier" Operation="Addition" Value="$(TechnologyCostModifierFromGalvransLaw)" Path="ClassEmpire/ClassResearch"/>
 
 		<!-- Hissho law -->
-    <Modifier TargetProperty="SystemCountForHisshoLaw" Operation="Addition" Value="$(SystemCount)" Path="ClassEmpire" Priority="10"/>
+		<Modifier TargetProperty="SystemCountForHisshoLaw" Operation="Addition" Value="$(SystemCount)" Path="ClassEmpire" Priority="10"/>
 
 		<!-- Game Speed -->
-    <BinaryModifier TargetProperty="GameSpeedTimeMultiplier" Operation="Force" Left="1" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="GameSpeedTimeMultiplier" Operation="Force" Left="1" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" TooltipHidden="true" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<BinaryModifier TargetProperty="GameSpeedTimeMultiplier" Operation="Force" Left="1" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="GameSpeedTimeMultiplier" Operation="Force" Left="1" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" TooltipHidden="true" Path="ClassEmpire/ClassColonizedStarSystem"/>
 		<BinaryModifier TargetProperty="GameSpeedTimeMultiplier" Operation="Force" Left="1" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" TooltipHidden="true" Path="ClassEmpire//ClassLaw"/>
 		<BinaryModifier TargetProperty="GameSpeedTimeMultiplier" Operation="Force" Left="1" BinaryOperation="Division" Right="$(GameSpeedMultiplier)" TooltipHidden="true" Path="ClassEmpire//ClassDiplomaticEmpire"/>
 
@@ -1176,21 +1196,21 @@
 		<Modifier TargetProperty="MaximumEmpireLifeforceStock" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Path="ClassEmpire"/>
 		<Modifier TargetProperty="TechnologyCostModifier" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassResearch"/>
 
-		<Modifier TargetProperty="ExperiencePerTurn" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassGarrison/ClassShip" />
+		<Modifier TargetProperty="ExperiencePerTurn" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassGarrison/ClassShip"/>
 
-		<Modifier TargetProperty="HealthPerTurn" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassHero" />
-		<Modifier TargetProperty="ExperienceMultiplier" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassGarrison/ClassHero" />
-		<Modifier TargetProperty="ExperienceMultiplier" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassColonizedStarSystem/ClassHero" />
-		<Modifier TargetProperty="AssignmentCooldownBaseDuration" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassHero" />
-		<Modifier TargetProperty="AssignmentCooldownBaseDuration" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassGarrison/ClassHero" />
-		<Modifier TargetProperty="AssignmentCooldownBaseDuration" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassColonizedStarSystem/ClassHero" />
-		<Modifier TargetProperty="RootingIncreasePerTurn" Operation="Division" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire,AffinityGameplayUnfallen/ClassGarrisonFleet" />
+		<Modifier TargetProperty="HealthPerTurn" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassHero"/>
+		<Modifier TargetProperty="ExperienceMultiplier" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassGarrison/ClassHero"/>
+		<Modifier TargetProperty="ExperienceMultiplier" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="200" Path="ClassEmpire/ClassColonizedStarSystem/ClassHero"/>
+		<Modifier TargetProperty="AssignmentCooldownBaseDuration" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassHero"/>
+		<Modifier TargetProperty="AssignmentCooldownBaseDuration" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassGarrison/ClassHero"/>
+		<Modifier TargetProperty="AssignmentCooldownBaseDuration" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire/ClassColonizedStarSystem/ClassHero"/>
+		<Modifier TargetProperty="RootingIncreasePerTurn" Operation="Division" Value="$(GameSpeedMultiplier)" Priority="200" Path="ClassEmpire,AffinityGameplayUnfallen/ClassGarrisonFleet"/>
 
 		<Modifier TargetProperty="NetDustOverTime" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Path="ClassEmpire/ClassColonizedStarSystem/StarSystemImprovementUniqueTimeLords"/>
 		<Modifier TargetProperty="GameSpeedMultiplier" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="GameSpeedMultiplier" Operation="Force" Value="$(GameSpeedMultiplier)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ModuleSupportJuggernautMiningProbe"/>
 		<Modifier TargetProperty="GameSpeedMultiplier" Operation="Force" Value="$(GameSpeedMultiplier)" Path="ClassEmpire//ClassShip"/>
-		<Modifier TargetProperty="NumberOfMajorEmpires" Operation="Addition" Value="$(NumberOfMajorEmpires)" Path="ClassEmpire/ClassColonizedStarSystem" />
+		<Modifier TargetProperty="NumberOfMajorEmpires" Operation="Addition" Value="$(NumberOfMajorEmpires)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 		<BinaryModifier TargetProperty="InfantryManpowerWeight" Operation="Addition" Left="$(InfantryManpowerUnlocked)" BinaryOperation="Multiplication" Right="$(InfantryManpowerCustomWeight)" Path="ClassEmpire"/>
 		<BinaryModifier TargetProperty="TankManpowerWeight" Operation="Addition" Left="$(TankManpowerUnlocked)" BinaryOperation="Multiplication" Right="$(TankManpowerCustomWeight)" Path="ClassEmpire"/>
@@ -1227,27 +1247,24 @@
 		<BinaryModifier TargetProperty="PlanePopulationDestructionCountBonus" Operation="Addition" Left="$(PlanePopulationDestructionProbabilityBonus)" BinaryOperation="Multiplication" Right="50"/>
 
 
-		<!-- Manpower management -->
-		<BinaryModifier TargetProperty="ShouldTakeGrowthForManpower" Operation="Addition" Left="$(MaximumEmpireManpowerStock)" BinaryOperation="Subtraction" Right="$(EmpireManpowerStock)" Path="ClassEmpire/ClassColonizedStarSystem"/>
-
-    <Modifier TargetProperty="EmpireInfantryHP" Operation="Addition" Value="$(InfantryMaxHealth)" Path="ClassEmpire//ClassShip" TooltipHidden="true"/>
-    <Modifier TargetProperty="EmpireInfantryMinDamage" Operation="Addition" Value="$(InfantryMinDamages)" Path="ClassEmpire//ClassShip" TooltipHidden="true"/>
+		<Modifier TargetProperty="EmpireInfantryHP" Operation="Addition" Value="$(InfantryMaxHealth)" Path="ClassEmpire//ClassShip" TooltipHidden="true"/>
+		<Modifier TargetProperty="EmpireInfantryMinDamage" Operation="Addition" Value="$(InfantryMinDamages)" Path="ClassEmpire//ClassShip" TooltipHidden="true"/>
 
 		<!-- Politics & Senate -->
 
-		<Modifier TargetProperty="PeacefulRelationshipCount" Operation="Addition" Value="$(PeaceCount)" Path="ClassEmpire" />
-		<Modifier TargetProperty="PeacefulRelationshipCount" Operation="Addition" Value="$(AllianceCount)" Path="ClassEmpire" />
-		<Modifier TargetProperty="PeacefulRelationshipCount" Operation="Addition" Value="$(TeamCount)" Path="ClassEmpire" />
+		<Modifier TargetProperty="PeacefulRelationshipCount" Operation="Addition" Value="$(PeaceCount)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="PeacefulRelationshipCount" Operation="Addition" Value="$(AllianceCount)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="PeacefulRelationshipCount" Operation="Addition" Value="$(TeamCount)" Path="ClassEmpire"/>
 		<Modifier TargetProperty="PeacefulRelationshipCount" Operation="Addition" Value="$(PeacefulRelationshipCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
-		<Modifier TargetProperty="WarCount" Operation="Addition" Value="$(WarCount)" Path="ClassEmpire/ClassSenate" />
-		<Modifier TargetProperty="WarCount" Operation="Addition" Value="$(WarCount)" Path="ClassEmpire/ClassColonizedStarSystem" />
-		<Modifier TargetProperty="MajorWarCount" Operation="Addition" Value="$(MajorWarCount)" Path="ClassEmpire/ClassColonizedStarSystem" />
-		<BinaryModifier TargetProperty="MinorWarCount" Operation="Addition" Left="$(WarCount)" BinaryOperation="Subtraction" Right="$(MajorWarCount)" Path="ClassEmpire/ClassColonizedStarSystem" />
-		<Modifier TargetProperty="PeaceCount" Operation="Addition" Value="$(PeaceCount)" Path="ClassEmpire/ClassSenate" />
-		<Modifier TargetProperty="PeaceCount" Operation="Addition" Value="$(PeaceCount)" Path="ClassEmpire/ClassColonizedStarSystem" />
-		<Modifier TargetProperty="AllianceCount" Operation="Addition" Value="$(AllianceCount)" Path="ClassEmpire/ClassSenate" />
-		<Modifier TargetProperty="AllianceCount" Operation="Addition" Value="$(AllianceCount)" Path="ClassEmpire/ClassColonizedStarSystem" />
+		<Modifier TargetProperty="WarCount" Operation="Addition" Value="$(WarCount)" Path="ClassEmpire/ClassSenate"/>
+		<Modifier TargetProperty="WarCount" Operation="Addition" Value="$(WarCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="MajorWarCount" Operation="Addition" Value="$(MajorWarCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<BinaryModifier TargetProperty="MinorWarCount" Operation="Addition" Left="$(WarCount)" BinaryOperation="Subtraction" Right="$(MajorWarCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="PeaceCount" Operation="Addition" Value="$(PeaceCount)" Path="ClassEmpire/ClassSenate"/>
+		<Modifier TargetProperty="PeaceCount" Operation="Addition" Value="$(PeaceCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="AllianceCount" Operation="Addition" Value="$(AllianceCount)" Path="ClassEmpire/ClassSenate"/>
+		<Modifier TargetProperty="AllianceCount" Operation="Addition" Value="$(AllianceCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 		<!-- Probes stats modifiers -->
 		<Modifier TargetProperty="Speed" Operation="Addition" Value="$(ProbeSpeed)" Path="ClassEmpire/ClassProbe"/>
@@ -1264,6 +1281,7 @@
 
 		<BinaryModifier TargetProperty="EmpireLifeforceForManpower" Operation="Addition" Left="$(EmpireLifeforce)" BinaryOperation="Multiplication" Right="$(PassiveLifeforceEnrollmentRate)" Path="ClassEmpire"/>
 		<Modifier TargetProperty="EmpireManpower" Operation="Addition" Value="$(EmpireLifeforceForManpower)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="EmpireManpowerBalance" Operation="Addition" Value="$(EmpireLifeforceForManpower)" Path="ClassEmpire" TooltipHidden="true"/>
 		<BinaryModifier TargetProperty="EmpireLifeforceUpkeep" Operation="Addition" Left="$(EmpireLifeforceForManpower)" BinaryOperation="Multiplication" Right="0.5" Path="ClassEmpire"/>
 
 		<!-- Vodyani Essence GUI Explication -->
@@ -1313,15 +1331,15 @@
 
 
 		<!-- Happiness -->
-		<Modifier TargetProperty="OverColonizationConstant" Operation="Addition" Value="15" />
+		<Modifier TargetProperty="OverColonizationConstant" Operation="Addition" Value="15"/>
 		<BinaryModifier TargetProperty="OverColonizationMalus" Operation="Addition" Left="$(OverColonizationThreshold)" BinaryOperation="Subtraction" Right="$(SystemsForOvercolonization)"/>
-		<Modifier TargetProperty="OverColonizationMalus" Operation="Percent" Value="$(OverColonizationPenaltiesReduction)" />
-		<BinaryModifier TargetProperty="OverColonizationPenalties" Operation="Addition" Left="$(OverColonizationMalus)" BinaryOperation="Multiplication" Right="$(OverColonizationConstant)" Path="ClassEmpire/ClassColonizedStarSystem" />
+		<Modifier TargetProperty="OverColonizationMalus" Operation="Percent" Value="$(OverColonizationPenaltiesReduction)"/>
+		<BinaryModifier TargetProperty="OverColonizationPenalties" Operation="Addition" Left="$(OverColonizationMalus)" BinaryOperation="Multiplication" Right="$(OverColonizationConstant)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 		<BinaryModifier TargetProperty="HonorOvercolonizationPenalty" Operation="Addition" Left="$(OverColonizationMalus)" BinaryOperation="Multiplication" Right="$(OverColonizationConstant)"/>
 
-		<BinaryModifier TargetProperty="ColonizedStarSystemStateColonyCountWithOffset" Operation="Addition" Left="$(ColonizedStarSystemStateColonyCount)" BinaryOperation="Subtraction" Right="1" />
-		<BinaryModifier TargetProperty="IsUnderColonizationThreshold" Operation="Addition" Left="$(OverColonizationThreshold)" BinaryOperation="Subtraction" Right="$(ColonizedStarSystemStateColonyCountWithOffset)" />
+		<BinaryModifier TargetProperty="ColonizedStarSystemStateColonyCountWithOffset" Operation="Addition" Left="$(ColonizedStarSystemStateColonyCount)" BinaryOperation="Subtraction" Right="1"/>
+		<BinaryModifier TargetProperty="IsUnderColonizationThreshold" Operation="Addition" Left="$(OverColonizationThreshold)" BinaryOperation="Subtraction" Right="$(ColonizedStarSystemStateColonyCountWithOffset)"/>
 		<BinaryModifier TargetProperty="ColonizationThresholdHappinessBonus" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(IsUnderColonizationThreshold)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="ColonizationThresholdHappinessBonus" Operation="Multiplication" Value="$(IsUsingColonizationThresholdHappinessBonus)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 		<Modifier TargetProperty="Happiness" Operation="Addition" Value="$(ColonizationThresholdHappinessBonus)" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true" Priority="500"/>
@@ -1350,12 +1368,12 @@
 		<!-- Curiosity -->
 		<Modifier TargetProperty="DetectionLevel" Operation="Force" Value="$(DetectionLevel)" Path="ClassEmpire/ClassGarrison,ClassGarrisonFleet" TooltipHidden="true"/>
 		<Modifier TargetProperty="ExpeditionPower" Operation="Force" Value="$(ExpeditionPower)" Path="ClassEmpire/ClassGarrison,ClassGarrisonFleet" TooltipHidden="true"/>
-    <Modifier TargetProperty="CuriositiesDiscovered" Operation="Force" Value="$(CuriositiesDiscovered)" Path="ClassEmpire/ClassGarrison/ClassShip" TooltipHidden="true"/>
-    <Modifier TargetProperty="CuriositiesDiscovered" Operation="Force" Value="$(CuriositiesDiscovered)" Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
+		<Modifier TargetProperty="CuriositiesDiscovered" Operation="Force" Value="$(CuriositiesDiscovered)" Path="ClassEmpire/ClassGarrison/ClassShip" TooltipHidden="true"/>
+		<Modifier TargetProperty="CuriositiesDiscovered" Operation="Force" Value="$(CuriositiesDiscovered)" Path="ClassEmpire/ClassColonizedStarSystem" TooltipHidden="true"/>
 
 
-		<Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Addition" Value="100" />
-		<BinaryModifier TargetProperty="MaximumEmpireManpowerStock" Operation="Addition" Left="$(SystemLevelSum)" BinaryOperation="Multiplication" Right="50" Path="ClassEmpire,!AffinityGameplayVampirilis" />
+		<Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Addition" Value="100"/>
+		<BinaryModifier TargetProperty="MaximumEmpireManpowerStock" Operation="Addition" Left="$(SystemLevelSum)" BinaryOperation="Multiplication" Right="50" Path="ClassEmpire,!AffinityGameplayVampirilis"/>
 
 		<Modifier TargetProperty="EmpireFIDSIAccumulator" Operation="Addition" Value="$(EmpireGrowthAccumulator)"/>
 		<Modifier TargetProperty="EmpireFIDSIAccumulator" Operation="Addition" Value="$(EmpireProductionAccumulator)"/>
@@ -1367,7 +1385,7 @@
 		<Modifier TargetProperty="SystemCount" Operation="Force" Value="$(OwnedSystems)" TooltipHidden="true"/>
 
 		<!-- Outpost growth leech management -->
-		<BinaryModifier TargetProperty="GrowthForOutpost" Operation="Addition" Left="$(OutpostGrowthLeech)" BinaryOperation="Division" Right="$(SystemCount)" Path="ClassEmpire/ColonizedStarSystemStateColony" />
+		<BinaryModifier TargetProperty="GrowthForOutpost" Operation="Addition" Left="$(OutpostGrowthLeech)" BinaryOperation="Division" Right="$(SystemCount)" Path="ClassEmpire/ColonizedStarSystemStateColony"/>
 
 		<Modifier TargetProperty="EmpireLifeforce" Operation="Addition" Value="$(EmpireLifeforceFromHuntingGrounds)" Path="ClassEmpire"/>
 		<Modifier TargetProperty="EmpireMoney" Operation="Addition" Value="$(EmpireMoneyFromHuntingGrounds)" Path="ClassEmpire"/>
@@ -1383,7 +1401,7 @@
 		<Modifier TargetProperty="NetSystemOutpostMigrationGrowthMultiplier" Operation="Division" Value="2" Path="ClassEmpire,AffinityGameplayMajorHisshos/ClassColonizedStarSystem/ClassOutpostMigrationFlux"/>
 
 		<!-- Play deck modification cost -->
-    <Modifier TargetProperty="PlayDeckChangeCostRemainingTurnsFactor" Operation="Force" Value="$(PlayDeckChangeCostRemainingTurns)" Path="ClassEmpire" TooltipHidden="true"/>
+		<Modifier TargetProperty="PlayDeckChangeCostRemainingTurnsFactor" Operation="Force" Value="$(PlayDeckChangeCostRemainingTurns)" Path="ClassEmpire" TooltipHidden="true"/>
 
 		<!-- Dust inflation -->
 		<Modifier TargetProperty="DustInflationFactor" Operation="Division" Value="$(NumberOfMajorEmpires)" Path="ClassEmpire"/>
@@ -1404,32 +1422,32 @@
 
 		<!-- VAULTERS -->
 		<!-- Vaulters Argosy parameters -->
-    <Modifier TargetProperty="SuperColonizationSystemCount" Operation="Force" Value="$(SystemCount)" />
+		<Modifier TargetProperty="SuperColonizationSystemCount" Operation="Force" Value="$(SystemCount)"/>
 		<!-- Golden Age duration -->
 		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationMax" Operation="Multiplication" Value="$(GameSpeedMultiplier)"/>
 
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Addition" Value="2" Priority="1" />
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Division" Value="$(SuperColonizationSystemCount)" Priority="2" />
+		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Addition" Value="2" Priority="1"/>
+		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationIncrement" Operation="Division" Value="$(SuperColonizationSystemCount)" Priority="2"/>
 
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationMaxed" Operation="Addition" Value="$(SuperColonizationGoldenAgeDurationIncrement)" Priority="1" />
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationMaxed" Operation="Division" Value="$(GameSpeedMultiplier)" Priority="2" />
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationMaxed" Operation="Multiplication" Value="$(TurnsSinceSuperColonization)" Priority="3" />
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDuration" Operation="Addition" Value="$(SuperColonizationGoldenAgeDurationMaxed)" Priority="1" />
-		<Modifier TargetProperty="SuperColonizationGoldenAgeDuration" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="2" />
+		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationMaxed" Operation="Addition" Value="$(SuperColonizationGoldenAgeDurationIncrement)" Priority="1"/>
+		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationMaxed" Operation="Division" Value="$(GameSpeedMultiplier)" Priority="2"/>
+		<Modifier TargetProperty="SuperColonizationGoldenAgeDurationMaxed" Operation="Multiplication" Value="$(TurnsSinceSuperColonization)" Priority="3"/>
+		<Modifier TargetProperty="SuperColonizationGoldenAgeDuration" Operation="Addition" Value="$(SuperColonizationGoldenAgeDurationMaxed)" Priority="1"/>
+		<Modifier TargetProperty="SuperColonizationGoldenAgeDuration" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="2"/>
 		<!-- Next super colo cost -->
 		<Modifier TargetProperty="BaseTurnsBeforeNextFreeSuperColonization" Operation="Multiplication" Value="$(GameSpeedMultiplier)"/>
-		<Modifier TargetProperty="TurnsBeforeNextFreeSuperColonization" Operation="Addition" Value="$(BaseTurnsBeforeNextFreeSuperColonization)" Priority="1" />
-		<Modifier TargetProperty="TurnsBeforeNextFreeSuperColonization" Operation="Subtraction" Value="$(TurnsSinceSuperColonization)" Priority="2" />
-		<Modifier TargetProperty="SuperColonizationSystemCountGameStart" Operation="Addition" Value="$(SystemCount)" />
-		<Modifier TargetProperty="TurnsBeforeNextFreeSuperColonization" Operation="Multiplication" Value="$(SuperColonizationSystemCountGameStart)" Priority="4" />
+		<Modifier TargetProperty="TurnsBeforeNextFreeSuperColonization" Operation="Addition" Value="$(BaseTurnsBeforeNextFreeSuperColonization)" Priority="1"/>
+		<Modifier TargetProperty="TurnsBeforeNextFreeSuperColonization" Operation="Subtraction" Value="$(TurnsSinceSuperColonization)" Priority="2"/>
+		<Modifier TargetProperty="SuperColonizationSystemCountGameStart" Operation="Addition" Value="$(SystemCount)"/>
+		<Modifier TargetProperty="TurnsBeforeNextFreeSuperColonization" Operation="Multiplication" Value="$(SuperColonizationSystemCountGameStart)" Priority="4"/>
 
 		<BinaryModifier TargetProperty="SuperColonizationCostFromBase" Operation="Multiplication" Left="$(DustInflation)" BinaryOperation="Power" Right="0.33"/>
 		<Modifier TargetProperty="SuperColonizationCostFromTurns" Operation="Addition" Value="$(TurnsBeforeNextFreeSuperColonization)"/>
-		<BinaryModifier TargetProperty="SuperColonizationCostFromSystems" Operation="Addition" Left="$(SystemCount)" BinaryOperation="Division" Right="4" />
+		<BinaryModifier TargetProperty="SuperColonizationCostFromSystems" Operation="Addition" Left="$(SystemCount)" BinaryOperation="Division" Right="4"/>
 
-		<Modifier TargetProperty="SuperColonizationCost" Operation="Addition" Value="$(SuperColonizationCostFromBase)" />
-		<Modifier TargetProperty="SuperColonizationCost" Operation="Multiplication" Value="$(SuperColonizationCostFromTurns)" />
-		<Modifier TargetProperty="SuperColonizationCost" Operation="Multiplication" Value="$(SuperColonizationCostFromSystems)" />
+		<Modifier TargetProperty="SuperColonizationCost" Operation="Addition" Value="$(SuperColonizationCostFromBase)"/>
+		<Modifier TargetProperty="SuperColonizationCost" Operation="Multiplication" Value="$(SuperColonizationCostFromTurns)"/>
+		<Modifier TargetProperty="SuperColonizationCost" Operation="Multiplication" Value="$(SuperColonizationCostFromSystems)"/>
 
 		<!-- HISSHOS -->
 		<!--<Modifier TargetProperty="$(HonorOvercolonizationPenalty)" Operation="Multiplication" Value="-1" Priority="1000000000"/>-->
@@ -1446,17 +1464,17 @@
 
 		<Modifier TargetProperty="CanUseHonorZone" Operation="Addition" Value="$(CanUseHonor)" Path="ClassEmpire/ClassGarrisonFleet"/>
 
-		<BinaryModifier TargetProperty="BoostToHonorInShipBattle" Operation="Addition" BinaryOperation="Multiplication" Left="$(HonorBoostShipBattlePerHomeSystem)" Right="$(ColonizedMajorHomeSystemCount)" />
-		<BinaryModifier TargetProperty="BoostToHonorInGroundBattle" Operation="Addition" BinaryOperation="Multiplication" Left="$(HonorBoostGroundBattlePerHomeSystem)" Right="$(ColonizedMajorHomeSystemCount)" />
+		<BinaryModifier TargetProperty="BoostToHonorInShipBattle" Operation="Addition" BinaryOperation="Multiplication" Left="$(HonorBoostShipBattlePerHomeSystem)" Right="$(ColonizedMajorHomeSystemCount)"/>
+		<BinaryModifier TargetProperty="BoostToHonorInGroundBattle" Operation="Addition" BinaryOperation="Multiplication" Left="$(HonorBoostGroundBattlePerHomeSystem)" Right="$(ColonizedMajorHomeSystemCount)"/>
 
 		<!-- JUGGERNAUTS -->
 		<!-- Juggernaut max threshold-->
 		<Modifier TargetProperty="JuggernautCountIncludingQueuedOnes" Operation="Addition" Value="$(JuggernautCount)"/>
 		<Modifier TargetProperty="MaximumJuggernautsTotal" Operation="Addition" Value="$(MaximumJuggernautsBonusFromGalaxySize)"/>
-		<BinaryModifier TargetProperty="MaximumJuggernautsBonusFromGalaxySize" Operation="Addition" Left="$(GalaxySize)" BinaryOperation="Subtraction" Right="3" />
+		<BinaryModifier TargetProperty="MaximumJuggernautsBonusFromGalaxySize" Operation="Addition" Left="$(GalaxySize)" BinaryOperation="Subtraction" Right="3"/>
 		<!-- /!\ 16 is the total number of Juggernaut tech - 1 (unlock tech) /!\ -->
-		<BinaryModifier TargetProperty="MaximumJuggernautsTechnologyIncrement" Operation="Addition" Left="$(MaximumJuggernautsTotal)" BinaryOperation="Division" Right="16" />
-		<BinaryModifier TargetProperty="MaximumJuggernautsFromTechnologies" Operation="Addition" Left="$(JuggernautTechnologiesResearched)" BinaryOperation="Multiplication" Right="$(MaximumJuggernautsTechnologyIncrement)" />
+		<BinaryModifier TargetProperty="MaximumJuggernautsTechnologyIncrement" Operation="Addition" Left="$(MaximumJuggernautsTotal)" BinaryOperation="Division" Right="16"/>
+		<BinaryModifier TargetProperty="MaximumJuggernautsFromTechnologies" Operation="Addition" Left="$(JuggernautTechnologiesResearched)" BinaryOperation="Multiplication" Right="$(MaximumJuggernautsTechnologyIncrement)"/>
 		<Modifier TargetProperty="MaximumJuggernauts" Operation="Addition" Value="$(MaximumJuggernautsFromTechnologies)"/>
 
 		<!-- Obliterator charge speed to fire -->
@@ -1473,20 +1491,20 @@
 		<Modifier TargetProperty="NetHackingOperationProgress" Operation="Addition" Value="$(InitialMaximumEmpireProcessingPowerStock)"/>
 		<Modifier TargetProperty="NetHackingOperationProgress" Operation="Multiplication" Value="0.1"/>
 
-    <Modifier TargetProperty="NetTraceOperationProgress" Operation="Addition" Value="$(NetHackingOperationProgress)"/>
-    <Modifier TargetProperty="NetTraceOperationProgress" Operation="Multiplication" Value="2.0"/>
+		<Modifier TargetProperty="NetTraceOperationProgress" Operation="Addition" Value="$(NetHackingOperationProgress)"/>
+		<Modifier TargetProperty="NetTraceOperationProgress" Operation="Multiplication" Value="2.0"/>
 
 		<Modifier TargetProperty="EmpireProcessingPowerStock" Operation="Addition" Value="$(MaximumEmpireProcessingPowerStock)" TooltipHidden="true"/>
-    <Modifier TargetProperty="TurnsBeforeDestruction" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Path="ClassEmpire/ClassHacking/ClassHackingOperationBackdoor"/>
+		<Modifier TargetProperty="TurnsBeforeDestruction" Operation="Multiplication" Value="$(GameSpeedMultiplier)" Path="ClassEmpire/ClassHacking/ClassHackingOperationBackdoor"/>
 
-    <Modifier TargetProperty="EmpirePopulationTypeCount" Operation="Addition" Value="$(PopulationTypeCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="EmpirePopulationTypeCount" Operation="Addition" Value="$(PopulationTypeCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
-    <Modifier TargetProperty="VisionRange" Operation="Addition" Value="$(DetectionProbeVisionRange)" Path="ClassEmpire/ClassDetectionProbe"/>
-    <Modifier TargetProperty="VisionStrength" Operation="Addition" Value="$(DetectionProbeVisionStrength)" Path="ClassEmpire/ClassDetectionProbe"/>
+		<Modifier TargetProperty="VisionRange" Operation="Addition" Value="$(DetectionProbeVisionRange)" Path="ClassEmpire/ClassDetectionProbe"/>
+		<Modifier TargetProperty="VisionStrength" Operation="Addition" Value="$(DetectionProbeVisionStrength)" Path="ClassEmpire/ClassDetectionProbe"/>
 
-    <Modifier TargetProperty="HackingWarpSpeed" Operation="Addition" Value="$(HackingWarpSpeed)" Path="ClassEmpire/ClassHacking/ClassHackingOperation"/>
-    <Modifier TargetProperty="HackingNonWarpSpeed" Operation="Addition" Value="$(HackingNonWarpSpeed)" Path="ClassEmpire/ClassHacking/ClassHackingOperation"/>
-    <Modifier TargetProperty="HackingNodeSpeed" Operation="Addition" Value="$(HackingNodeSpeed)" Path="ClassEmpire/ClassHacking/ClassHackingOperation"/>
+		<Modifier TargetProperty="HackingWarpSpeed" Operation="Addition" Value="$(HackingWarpSpeed)" Path="ClassEmpire/ClassHacking/ClassHackingOperation"/>
+		<Modifier TargetProperty="HackingNonWarpSpeed" Operation="Addition" Value="$(HackingNonWarpSpeed)" Path="ClassEmpire/ClassHacking/ClassHackingOperation"/>
+		<Modifier TargetProperty="HackingNodeSpeed" Operation="Addition" Value="$(HackingNodeSpeed)" Path="ClassEmpire/ClassHacking/ClassHackingOperation"/>
 
 
 		<Modifier TargetProperty="AllNetStrategicSum" Operation="Addition" Value="$(NetStrategic1)" Path="../ClassEmpire"/>
@@ -1497,18 +1515,18 @@
 		<Modifier TargetProperty="AllNetStrategicSum" Operation="Addition" Value="$(NetStrategic6)" Path="../ClassEmpire"/>
 
 		<!--RELICS-->
-    <Modifier TargetProperty="NetEmpireRelics"  Operation="Addition"    Value="$(ResultingResearchRelics)" Path="ClassEmpire" TooltipHidden="true"/>
-    <Modifier TargetProperty="NetEmpireRelics"  Operation="Addition"    Value="$(HeroRelics)"              Path="ClassEmpire" TooltipHidden="true"/>
-    <Modifier TargetProperty="NetEmpireRelics"  Operation="Addition"    Value="$(FIDIRelics)"              Path="ClassEmpire" TooltipHidden="true"/>
-    <Modifier TargetProperty="NetEmpireRelics"  Operation="Addition"    Value="$(TempleRelics)"            Path="ClassEmpire" TooltipHidden="true"/>
-    <Modifier TargetProperty="EmpireResearch"   Operation="Addition"    Value="$(NetRelicsResearch)"       Path="ClassEmpire" Priority="20" />
+		<Modifier TargetProperty="NetEmpireRelics" Operation="Addition" Value="$(ResultingResearchRelics)" Path="ClassEmpire" TooltipHidden="true"/>
+		<Modifier TargetProperty="NetEmpireRelics" Operation="Addition" Value="$(HeroRelics)" Path="ClassEmpire" TooltipHidden="true"/>
+		<Modifier TargetProperty="NetEmpireRelics" Operation="Addition" Value="$(FIDIRelics)" Path="ClassEmpire" TooltipHidden="true"/>
+		<Modifier TargetProperty="NetEmpireRelics" Operation="Addition" Value="$(TempleRelics)" Path="ClassEmpire" TooltipHidden="true"/>
+		<Modifier TargetProperty="EmpireResearch" Operation="Addition" Value="$(NetRelicsResearch)" Path="ClassEmpire" Priority="20"/>
 
 		<!--TEMPLES-->
-    <Modifier TargetProperty="ColonizedStarSystemStateColonyCount" Operation="Addition" Value="$(SystemsGivenToAcademy)"/>
+		<Modifier TargetProperty="ColonizedStarSystemStateColonyCount" Operation="Addition" Value="$(SystemsGivenToAcademy)"/>
 
 		<!-- Overcolonization compensation from temples. -->
-    <Modifier TargetProperty="SystemsForOvercolonization" Operation="Addition" Value="$(ColonizedStarSystemStateColonyCount)" Priority="-2"/>
-    <Modifier TargetProperty="SystemsForOvercolonization" Operation="Subtraction" Value="$(SystemsGivenToAcademy)" Priority="-1"/>
+		<Modifier TargetProperty="SystemsForOvercolonization" Operation="Addition" Value="$(ColonizedStarSystemStateColonyCount)" Priority="-2"/>
+		<Modifier TargetProperty="SystemsForOvercolonization" Operation="Subtraction" Value="$(SystemsGivenToAcademy)" Priority="-1"/>
 
 		<Modifier TargetProperty="EmpireMoney" Operation="Addition" Value="$(AcademySystemsDust)" Path="ClassEmpire"/>
 		<Modifier TargetProperty="EmpireResearch" Operation="Addition" Value="$(AcademySystemsScience)" Path="ClassEmpire"/>
@@ -1521,243 +1539,268 @@
 		<Modifier TargetProperty="NetStrategic5" Operation="Addition" Value="$(AcademyNetStrategic5)" Path="ClassEmpire"/>
 		<Modifier TargetProperty="NetStrategic6" Operation="Addition" Value="$(AcademyNetStrategic6)" Path="ClassEmpire"/>
 
-    <Modifier TargetProperty="NetLuxury1" Operation="Addition" Value="$(AcademyNetLuxury1)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury2" Operation="Addition" Value="$(AcademyNetLuxury2)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury3" Operation="Addition" Value="$(AcademyNetLuxury3)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury4" Operation="Addition" Value="$(AcademyNetLuxury4)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury5" Operation="Addition" Value="$(AcademyNetLuxury5)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury6" Operation="Addition" Value="$(AcademyNetLuxury6)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury7" Operation="Addition" Value="$(AcademyNetLuxury7)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury8" Operation="Addition" Value="$(AcademyNetLuxury8)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury9" Operation="Addition" Value="$(AcademyNetLuxury9)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury10" Operation="Addition" Value="$(AcademyNetLuxury10)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury11" Operation="Addition" Value="$(AcademyNetLuxury11)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury12" Operation="Addition" Value="$(AcademyNetLuxury12)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury13" Operation="Addition" Value="$(AcademyNetLuxury13)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury14" Operation="Addition" Value="$(AcademyNetLuxury14)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury15" Operation="Addition" Value="$(AcademyNetLuxury15)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury16" Operation="Addition" Value="$(AcademyNetLuxury16)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury17" Operation="Addition" Value="$(AcademyNetLuxury17)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury18" Operation="Addition" Value="$(AcademyNetLuxury18)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury19" Operation="Addition" Value="$(AcademyNetLuxury19)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury20" Operation="Addition" Value="$(AcademyNetLuxury20)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury21" Operation="Addition" Value="$(AcademyNetLuxury21)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury22" Operation="Addition" Value="$(AcademyNetLuxury22)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury23" Operation="Addition" Value="$(AcademyNetLuxury23)" Path="ClassEmpire"/>
-    <Modifier TargetProperty="NetLuxury24" Operation="Addition" Value="$(AcademyNetLuxury24)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury1" Operation="Addition" Value="$(AcademyNetLuxury1)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury2" Operation="Addition" Value="$(AcademyNetLuxury2)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury3" Operation="Addition" Value="$(AcademyNetLuxury3)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury4" Operation="Addition" Value="$(AcademyNetLuxury4)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury5" Operation="Addition" Value="$(AcademyNetLuxury5)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury6" Operation="Addition" Value="$(AcademyNetLuxury6)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury7" Operation="Addition" Value="$(AcademyNetLuxury7)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury8" Operation="Addition" Value="$(AcademyNetLuxury8)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury9" Operation="Addition" Value="$(AcademyNetLuxury9)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury10" Operation="Addition" Value="$(AcademyNetLuxury10)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury11" Operation="Addition" Value="$(AcademyNetLuxury11)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury12" Operation="Addition" Value="$(AcademyNetLuxury12)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury13" Operation="Addition" Value="$(AcademyNetLuxury13)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury14" Operation="Addition" Value="$(AcademyNetLuxury14)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury15" Operation="Addition" Value="$(AcademyNetLuxury15)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury16" Operation="Addition" Value="$(AcademyNetLuxury16)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury17" Operation="Addition" Value="$(AcademyNetLuxury17)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury18" Operation="Addition" Value="$(AcademyNetLuxury18)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury19" Operation="Addition" Value="$(AcademyNetLuxury19)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury20" Operation="Addition" Value="$(AcademyNetLuxury20)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury21" Operation="Addition" Value="$(AcademyNetLuxury21)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury22" Operation="Addition" Value="$(AcademyNetLuxury22)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury23" Operation="Addition" Value="$(AcademyNetLuxury23)" Path="ClassEmpire"/>
+		<Modifier TargetProperty="NetLuxury24" Operation="Addition" Value="$(AcademyNetLuxury24)" Path="ClassEmpire"/>
 		<!-- ESG Changes -->
 		<!-- PercentageOfPlayersInYourAlliance = Alliance Size / Empire Count -->
-    <BinaryModifier TargetProperty="PercentageOfPlayersInYourAlliance" Operation="Force" Left="$(AllianceCount)" BinaryOperation="Division" Right="$(NumberOfMajorEmpires)"/>
-    <Modifier TargetProperty="PercentageOfPlayersInYourAlliance" Operation="Force" Value="$(PercentageOfPlayersInYourAlliance)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<BinaryModifier TargetProperty="PercentageOfPlayersInYourAlliance" Operation="Force" Left="$(AllianceCount)" BinaryOperation="Division" Right="$(NumberOfMajorEmpires)"/>
+		<Modifier TargetProperty="PercentageOfPlayersInYourAlliance" Operation="Force" Value="$(PercentageOfPlayersInYourAlliance)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
-    <Modifier TargetProperty="TradeAgreementCost" Operation="Addition" Value="1"/>
-    <Modifier TargetProperty="ModuleEmpireDevelopmentStage" Operation="Force" Value="$(EmpireEmpireDevelopmentStage)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
-    <Modifier TargetProperty="ModuleScienceStage" Operation="Force" Value="$(EmpireScienceStage)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
-    <Modifier TargetProperty="ModuleEconomyStage" Operation="Force" Value="$(EmpireEconomyStage)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
-    <Modifier TargetProperty="ModuleMilitaryStage" Operation="Force" Value="$(EmpireMilitaryStage)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon" />
-    <Modifier TargetProperty="SystemResearchRelics" Operation="Addition" Value="$(ResultingResearchRelics)" Path="ClassEmpire/ClassColonizedStarSystem" />
+		<Modifier TargetProperty="TradeAgreementCost" Operation="Addition" Value="1"/>
+		<Modifier TargetProperty="ModuleEmpireDevelopmentStage" Operation="Force" Value="$(EmpireEmpireDevelopmentStage)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
+		<Modifier TargetProperty="ModuleScienceStage" Operation="Force" Value="$(EmpireScienceStage)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
+		<Modifier TargetProperty="ModuleEconomyStage" Operation="Force" Value="$(EmpireEconomyStage)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
+		<Modifier TargetProperty="ModuleMilitaryStage" Operation="Force" Value="$(EmpireMilitaryStage)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
+		<Modifier TargetProperty="SystemResearchRelics" Operation="Addition" Value="$(ResultingResearchRelics)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
-    <Modifier TargetProperty="IsntImmuneToSpecialNodes" Operation="Addition" Value="$(IsntImmuneToSpecialNodes)" Path="ClassEmpire//ClassShip"/>
-    <Modifier TargetProperty="IsntImmuneToSpecialNodes" Operation="Addition" Value="$(IsntImmuneToSpecialNodes)" Path="ClassEmpire//ClassGarrison"/>
-    <Modifier TargetProperty="JuggernautCount" Operation="Addition" Value="$(JuggernautCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="IsntImmuneToSpecialNodes" Operation="Addition" Value="$(IsntImmuneToSpecialNodes)" Path="ClassEmpire//ClassShip"/>
+		<Modifier TargetProperty="IsntImmuneToSpecialNodes" Operation="Addition" Value="$(IsntImmuneToSpecialNodes)" Path="ClassEmpire//ClassGarrison"/>
+		<Modifier TargetProperty="JuggernautCount" Operation="Addition" Value="$(JuggernautCount)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 		<!--  -->
-    <Modifier TargetProperty="ColonizeableCount" Operation="Addition" Value="$(OutpostCount)"/>
-    <Modifier TargetProperty="ColonizeableCount" Operation="Addition" Value="$(SystemCount)"/>
-    <Modifier TargetProperty="ColonizeableCount" Operation="Addition" Value="$(ColonizerCount)"/>
-    <BinaryModifier TargetProperty="PotentiallyOverColonizationThreshold" Operation="Addition" Left="$(OverColonizationThreshold)" BinaryOperation="Division" Right="$(ColonizeableCount)" Priority="0" Path="ClassEmpire"/>
+		<Modifier TargetProperty="ColonizeableCount" Operation="Addition" Value="$(OutpostCount)"/>
+		<Modifier TargetProperty="ColonizeableCount" Operation="Addition" Value="$(SystemCount)"/>
+		<Modifier TargetProperty="ColonizeableCount" Operation="Addition" Value="$(ColonizerCount)"/>
+		<BinaryModifier TargetProperty="PotentiallyOverColonizationThreshold" Operation="Addition" Left="$(OverColonizationThreshold)" BinaryOperation="Division" Right="$(ColonizeableCount)" Priority="0" Path="ClassEmpire"/>
 
 		<!-- Ship Costs -->
 		<!-- Civilian -->
-    <Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(CivilianBaseIndustry)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
-    <Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(CivilianBaseStrategic1)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
-    <Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(CivilianBaseStrategic2)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
-    <Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(CivilianBaseStrategic3)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
-    <Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(CivilianBaseStrategic4)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
-    <Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(CivilianBaseStrategic5)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
-    <Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(CivilianBaseStrategic6)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
+		<Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(CivilianBaseIndustry)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
+		<Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(CivilianBaseStrategic1)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
+		<Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(CivilianBaseStrategic2)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
+		<Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(CivilianBaseStrategic3)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
+		<Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(CivilianBaseStrategic4)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
+		<Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(CivilianBaseStrategic5)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
+		<Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(CivilianBaseStrategic6)" Path="ClassEmpire//ClassShip,ClassHullSmallCivilian"/>
 
 		<!-- Explorer -->
-    <Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(ExplorerBaseIndustry)" Path="ClassEmpire//ClassShip,ClassHullSmallExplorer"/>
-    <Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(ExplorerBaseStrategic1)" Path="ClassEmpire//ClassShip,ShipRoleExploration"/>
-    <Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(ExplorerBaseStrategic2)" Path="ClassEmpire//ClassShip,ShipRoleExploration"/>
-    <Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(ExplorerBaseStrategic3)" Path="ClassEmpire//ClassShip,ShipRoleExploration"/>
-    <Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(ExplorerBaseStrategic4)" Path="ClassEmpire//ClassShip,ShipRoleExploration"/>
-    <Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(ExplorerBaseStrategic5)" Path="ClassEmpire//ClassShip,ShipRoleExploration"/>
-    <Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(ExplorerBaseStrategic6)" Path="ClassEmpire//ClassShip,ShipRoleExploration"/>
+		<Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(ExplorerBaseIndustry)" Path="ClassEmpire//ClassShip,ClassHullSmallExplorer"/>
+		<Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(ExplorerBaseStrategic1)" Path="ClassEmpire//ClassShip,ShipRoleExploration"/>
+		<Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(ExplorerBaseStrategic2)" Path="ClassEmpire//ClassShip,ShipRoleExploration"/>
+		<Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(ExplorerBaseStrategic3)" Path="ClassEmpire//ClassShip,ShipRoleExploration"/>
+		<Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(ExplorerBaseStrategic4)" Path="ClassEmpire//ClassShip,ShipRoleExploration"/>
+		<Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(ExplorerBaseStrategic5)" Path="ClassEmpire//ClassShip,ShipRoleExploration"/>
+		<Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(ExplorerBaseStrategic6)" Path="ClassEmpire//ClassShip,ShipRoleExploration"/>
 
 		<!-- Attacker -->
-    <Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(AttackerBaseIndustry)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
-    <Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(AttackerBaseStrategic1)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
-    <Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(AttackerBaseStrategic2)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
-    <Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(AttackerBaseStrategic3)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
-    <Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(AttackerBaseStrategic4)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
-    <Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(AttackerBaseStrategic5)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
-    <Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(AttackerBaseStrategic6)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
+		<Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(AttackerBaseIndustry)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
+		<Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(AttackerBaseStrategic1)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
+		<Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(AttackerBaseStrategic2)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
+		<Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(AttackerBaseStrategic3)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
+		<Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(AttackerBaseStrategic4)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
+		<Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(AttackerBaseStrategic5)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
+		<Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(AttackerBaseStrategic6)" Path="ClassEmpire//ClassShip,ShipRoleSmallAttacker"/>
 
 		<!-- Defender -->
-    <Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(DefenderBaseIndustry)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
-    <Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(DefenderBaseStrategic1)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
-    <Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(DefenderBaseStrategic2)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
-    <Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(DefenderBaseStrategic3)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
-    <Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(DefenderBaseStrategic4)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
-    <Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(DefenderBaseStrategic5)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
-    <Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(DefenderBaseStrategic6)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
+		<Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(DefenderBaseIndustry)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
+		<Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(DefenderBaseStrategic1)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
+		<Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(DefenderBaseStrategic2)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
+		<Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(DefenderBaseStrategic3)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
+		<Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(DefenderBaseStrategic4)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
+		<Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(DefenderBaseStrategic5)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
+		<Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(DefenderBaseStrategic6)" Path="ClassEmpire//ClassShip,ShipRoleSmallSupport"/>
 
 		<!-- Hunter -->
-    <Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(HunterBaseIndustry)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
-    <Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(HunterBaseStrategic1)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
-    <Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(HunterBaseStrategic2)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
-    <Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(HunterBaseStrategic3)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
-    <Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(HunterBaseStrategic4)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
-    <Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(HunterBaseStrategic5)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
-    <Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(HunterBaseStrategic6)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
+		<Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(HunterBaseIndustry)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
+		<Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(HunterBaseStrategic1)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
+		<Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(HunterBaseStrategic2)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
+		<Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(HunterBaseStrategic3)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
+		<Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(HunterBaseStrategic4)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
+		<Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(HunterBaseStrategic5)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
+		<Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(HunterBaseStrategic6)" Path="ClassEmpire//ClassShip,ShipRoleMediumAttacker"/>
 
 		<!-- Coordinator -->
-    <Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(CoordinatorBaseIndustry)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
-    <Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(CoordinatorBaseStrategic1)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
-    <Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(CoordinatorBaseStrategic2)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
-    <Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(CoordinatorBaseStrategic3)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
-    <Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(CoordinatorBaseStrategic4)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
-    <Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(CoordinatorBaseStrategic5)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
-    <Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(CoordinatorBaseStrategic6)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
+		<Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(CoordinatorBaseIndustry)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
+		<Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(CoordinatorBaseStrategic1)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
+		<Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(CoordinatorBaseStrategic2)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
+		<Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(CoordinatorBaseStrategic3)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
+		<Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(CoordinatorBaseStrategic4)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
+		<Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(CoordinatorBaseStrategic5)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
+		<Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(CoordinatorBaseStrategic6)" Path="ClassEmpire//ClassShip,ShipRoleMediumSupport"/>
 
 		<!-- Carrier -->
-    <Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(CarrierBaseIndustry)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
-    <Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(CarrierBaseStrategic1)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
-    <Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(CarrierBaseStrategic2)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
-    <Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(CarrierBaseStrategic3)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
-    <Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(CarrierBaseStrategic4)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
-    <Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(CarrierBaseStrategic5)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
-    <Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(CarrierBaseStrategic6)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
+		<Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(CarrierBaseIndustry)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
+		<Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(CarrierBaseStrategic1)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
+		<Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(CarrierBaseStrategic2)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
+		<Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(CarrierBaseStrategic3)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
+		<Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(CarrierBaseStrategic4)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
+		<Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(CarrierBaseStrategic5)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
+		<Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(CarrierBaseStrategic6)" Path="ClassEmpire//ClassShip,ClassHullLargeCarrier"/>
 
 		<!-- Behemoth -->
-    <Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(BehemothBaseIndustry)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
-    <Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(BehemothBaseStrategic1)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
-    <Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(BehemothBaseStrategic2)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
-    <Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(BehemothBaseStrategic3)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
-    <Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(BehemothBaseStrategic4)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
-    <Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(BehemothBaseStrategic5)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
-    <Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(BehemothBaseStrategic6)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
+		<Modifier TargetProperty="TotalIndustryCost" Operation="Addition" Value="$(BehemothBaseIndustry)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
+		<Modifier TargetProperty="TotalStrategic1Cost" Operation="Addition" Value="$(BehemothBaseStrategic1)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
+		<Modifier TargetProperty="TotalStrategic2Cost" Operation="Addition" Value="$(BehemothBaseStrategic2)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
+		<Modifier TargetProperty="TotalStrategic3Cost" Operation="Addition" Value="$(BehemothBaseStrategic3)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
+		<Modifier TargetProperty="TotalStrategic4Cost" Operation="Addition" Value="$(BehemothBaseStrategic4)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
+		<Modifier TargetProperty="TotalStrategic5Cost" Operation="Addition" Value="$(BehemothBaseStrategic5)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
+		<Modifier TargetProperty="TotalStrategic6Cost" Operation="Addition" Value="$(BehemothBaseStrategic6)" Path="ClassEmpire//ClassShip,ShipRoleJuggernaut"/>
 
 		<!-- Module Industry Costs -->
-    <Modifier TargetProperty="WeaponIndustryTier1" Operation="Force" Value="$(WeaponIndustryTier1)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
-    <Modifier TargetProperty="WeaponIndustryTier2" Operation="Force" Value="$(WeaponIndustryTier2)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
-    <Modifier TargetProperty="WeaponIndustryTier3" Operation="Force" Value="$(WeaponIndustryTier3)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
-    <Modifier TargetProperty="WeaponIndustryTier4" Operation="Force" Value="$(WeaponIndustryTier4)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
-    <Modifier TargetProperty="WeaponIndustryTier5" Operation="Force" Value="$(WeaponIndustryTier5)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
-    <Modifier TargetProperty="DefenseIndustryTier1" Operation="Force" Value="$(DefenseIndustryTier1)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleDefense"/>
-    <Modifier TargetProperty="DefenseIndustryTier2" Operation="Force" Value="$(DefenseIndustryTier2)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleDefense"/>
-    <Modifier TargetProperty="DefenseIndustryTier3" Operation="Force" Value="$(DefenseIndustryTier3)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleDefense"/>
-    <Modifier TargetProperty="DefenseIndustryTier4" Operation="Force" Value="$(DefenseIndustryTier4)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleDefense"/>
-    <Modifier TargetProperty="DefenseIndustryTier5" Operation="Force" Value="$(DefenseIndustryTier5)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleDefense"/>
-    <Modifier TargetProperty="BomberIndustryTier1" Operation="Force" Value="$(BomberIndustryTier1)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleSquadron"/>
-    <Modifier TargetProperty="BomberIndustryTier2" Operation="Force" Value="$(BomberIndustryTier2)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleSquadron"/>
+		<Modifier TargetProperty="WeaponIndustryTier1" Operation="Force" Value="$(WeaponIndustryTier1)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
+		<Modifier TargetProperty="WeaponIndustryTier2" Operation="Force" Value="$(WeaponIndustryTier2)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
+		<Modifier TargetProperty="WeaponIndustryTier3" Operation="Force" Value="$(WeaponIndustryTier3)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
+		<Modifier TargetProperty="WeaponIndustryTier4" Operation="Force" Value="$(WeaponIndustryTier4)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
+		<Modifier TargetProperty="WeaponIndustryTier5" Operation="Force" Value="$(WeaponIndustryTier5)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleWeapon"/>
+		<Modifier TargetProperty="DefenseIndustryTier1" Operation="Force" Value="$(DefenseIndustryTier1)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleDefense"/>
+		<Modifier TargetProperty="DefenseIndustryTier2" Operation="Force" Value="$(DefenseIndustryTier2)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleDefense"/>
+		<Modifier TargetProperty="DefenseIndustryTier3" Operation="Force" Value="$(DefenseIndustryTier3)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleDefense"/>
+		<Modifier TargetProperty="DefenseIndustryTier4" Operation="Force" Value="$(DefenseIndustryTier4)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleDefense"/>
+		<Modifier TargetProperty="DefenseIndustryTier5" Operation="Force" Value="$(DefenseIndustryTier5)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleDefense"/>
+		<Modifier TargetProperty="BomberIndustryTier1" Operation="Force" Value="$(BomberIndustryTier1)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleSquadron"/>
+		<Modifier TargetProperty="BomberIndustryTier2" Operation="Force" Value="$(BomberIndustryTier2)" Path="ClassEmpire//ClassShip/ClassSection/ClassModule,ClassModuleSquadron"/>
 
 		<!-- Mavros -->
-    <Modifier TargetProperty="NetEmpireScrap" Operation="Subtraction" Value="$(EmpireScrapUpkeep)"/>
-    <Modifier TargetProperty="NetEmpireScrap" Operation="Addition" Value="$(EmpireScrap)"/>
+		<Modifier TargetProperty="NetEmpireScrap" Operation="Subtraction" Value="$(EmpireScrapUpkeep)"/>
+		<Modifier TargetProperty="NetEmpireScrap" Operation="Addition" Value="$(EmpireScrap)"/>
 
-    <Modifier TargetProperty="OwnedTeemingPlanetsEmpire"		Operation="Force" Value="$(OwnedTeemingPlanets)" />
-    <Modifier TargetProperty="OwnedTeemingPlanetsEmpire"		Operation="Force" Value="$(OwnedTeemingPlanetsEmpire)" Path="ClassEmpire/ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="AdmiralsInFriendlyTerritory"	Operation="Force" Value="$(AdmiralsInFriendlyTerritory)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="OwnedTeemingPlanetsEmpire" Operation="Force" Value="$(OwnedTeemingPlanets)"/>
+		<Modifier TargetProperty="OwnedTeemingPlanetsEmpire" Operation="Force" Value="$(OwnedTeemingPlanetsEmpire)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="AdmiralsInFriendlyTerritory" Operation="Force" Value="$(AdmiralsInFriendlyTerritory)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
-    <Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="$(MinorTraitsAssimilated)" Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet/ClassPopulation"/>
+		<Modifier TargetProperty="MinorTraitsAssimilated" Operation="Addition" Value="$(MinorTraitsAssimilated)" Path="ClassEmpire/ClassColonizedStarSystem/ClassPlanet/ClassPopulation"/>
 
 		<!--Automatons teleport-->
-    <Modifier TargetProperty="NumberOfGalaxyNodesTemp" Operation="Addition" Value="$(NumberOfGalaxyNodes)" />
-    <Modifier TargetProperty="OverColonizationThresholdTemp" Operation="Addition" Value="$(OverColonizationThreshold)" />
-    <Modifier TargetProperty="SystemCountTemp" Operation="Addition" Value="$(SystemCount)" />
+		<Modifier TargetProperty="NumberOfGalaxyNodesTemp" Operation="Addition" Value="$(NumberOfGalaxyNodes)"/>
+		<Modifier TargetProperty="OverColonizationThresholdTemp" Operation="Addition" Value="$(OverColonizationThreshold)"/>
+		<Modifier TargetProperty="SystemCountTemp" Operation="Addition" Value="$(SystemCount)"/>
 
-    <Modifier TargetProperty="OverColonizationThresholdTemp" Operation="Multiplication" Value="0.5"/>
-    <Modifier TargetProperty="SystemCountTemp" Operation="Subtraction" Value="$(OverColonizationThresholdTemp)" />
-    <Modifier TargetProperty="NumberOfGalaxyNodesTemp" Operation="Multiplication" Value="0.33"/>
+		<Modifier TargetProperty="OverColonizationThresholdTemp" Operation="Multiplication" Value="0.5"/>
+		<Modifier TargetProperty="SystemCountTemp" Operation="Subtraction" Value="$(OverColonizationThresholdTemp)"/>
+		<Modifier TargetProperty="NumberOfGalaxyNodesTemp" Operation="Multiplication" Value="0.33"/>
 
-    <BinaryModifier TargetProperty="TempCalcProperty" Operation="Addition" Left="$(SystemCountTemp)" BinaryOperation="Division" Right="$(NumberOfGalaxyNodesTemp)" />
+		<BinaryModifier TargetProperty="TempCalcProperty" Operation="Addition" Left="$(SystemCountTemp)" BinaryOperation="Division" Right="$(NumberOfGalaxyNodesTemp)"/>
 
-    <Modifier TargetProperty="FinalBonus" Operation="Subtraction" Value="$(TempCalcProperty)" />
+		<Modifier TargetProperty="FinalBonus" Operation="Subtraction" Value="$(TempCalcProperty)"/>
 
-    <BinaryModifier TargetProperty="SystemFIDSIPercent"   Operation="Addition"   Left="$(FinalBonus)"  BinaryOperation="Multiplication" Right="$(EnableTeleportation)" Path="ClassEmpire/ClassColonizedStarSystem" />
-    <Modifier TargetProperty="GovernorsInEmpire"   Operation="Addition"   Value="$(GovernorAssigned)" Path="ClassEmpire/ClassColonizedStarSystem" />
+		<BinaryModifier TargetProperty="SystemFIDSIPercent" Operation="Addition" Left="$(FinalBonus)" BinaryOperation="Multiplication" Right="$(EnableTeleportation)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="GovernorsInEmpire" Operation="Addition" Value="$(GovernorAssigned)" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 		<!-- 2023 PATCH -->
-    <Modifier TargetProperty="HasExplorationRelic" Operation="Addition" Value="$(EmpireExplorationRelics)" TooltipHidden="true"/>
-    <Modifier TargetProperty="HasExpansionRelic"   Operation="Addition" Value="$(EmpireExpansionRelics)" TooltipHidden="true"/>
-    <Modifier TargetProperty="HasDiplomacyRelic"   Operation="Addition" Value="$(EmpireDiplomacyRelics)" TooltipHidden="true"/>
-    <Modifier TargetProperty="HasPoliticalRelic"   Operation="Addition" Value="$(EmpirePoliticalRelics)" TooltipHidden="true"/>
+		<Modifier TargetProperty="HasExplorationRelic" Operation="Addition" Value="$(EmpireExplorationRelics)" TooltipHidden="true"/>
+		<Modifier TargetProperty="HasExpansionRelic" Operation="Addition" Value="$(EmpireExpansionRelics)" TooltipHidden="true"/>
+		<Modifier TargetProperty="HasDiplomacyRelic" Operation="Addition" Value="$(EmpireDiplomacyRelics)" TooltipHidden="true"/>
+		<Modifier TargetProperty="HasPoliticalRelic" Operation="Addition" Value="$(EmpirePoliticalRelics)" TooltipHidden="true"/>
 
-    <BinaryModifier TargetProperty="GovernmentTypeBonusIntermediaryValue" Operation="Addition" Left="2" BinaryOperation="Subtraction" Right="$(TotalSenators)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="GovernmentTypeBonus" Operation="Addition" Left="$(GovernmentTypeBonusIntermediaryValue)" BinaryOperation="Division" Right="2" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="GovernmentTypeBonusIntermediaryValue" Operation="Addition" Left="2" BinaryOperation="Subtraction" Right="$(TotalSenators)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="GovernmentTypeBonus" Operation="Addition" Left="$(GovernmentTypeBonusIntermediaryValue)" BinaryOperation="Division" Right="2" TooltipHidden="true"/>
 
 		<!-- Exploration Relics -->
-    <BinaryModifier TargetProperty="VisionRange"                  Operation="Addition" Left="$(HasExplorationRelic)" BinaryOperation="Multiplication" Right="5"    Path="ClassEmpire//ClassColonizedSystem"/>
-    <BinaryModifier TargetProperty="VisionRange"                  Operation="Addition" Left="$(HasExplorationRelic)" BinaryOperation="Multiplication" Right="5"    Path="ClassEmpire//ClassGarrisonFleet"/>
-    <BinaryModifier TargetProperty="GlobalSpeed"                  Operation="Percent"  Left="$(HasExplorationRelic)" BinaryOperation="Multiplication" Right="0.25" Path="ClassEmpire//ClassShip"/>
+		<BinaryModifier TargetProperty="VisionRange" Operation="Addition" Left="$(HasExplorationRelic)" BinaryOperation="Multiplication" Right="5" Path="ClassEmpire//ClassColonizedSystem"/>
+		<BinaryModifier TargetProperty="VisionRange" Operation="Addition" Left="$(HasExplorationRelic)" BinaryOperation="Multiplication" Right="5" Path="ClassEmpire//ClassGarrisonFleet"/>
+		<BinaryModifier TargetProperty="GlobalSpeed" Operation="Percent" Left="$(HasExplorationRelic)" BinaryOperation="Multiplication" Right="0.25" Path="ClassEmpire//ClassShip"/>
 
 		<!-- Expansion Relics -->
-    <BinaryModifier TargetProperty="OverColonizationThreshold"    Operation="Addition" Left="$(HasExpansionRelic)" BinaryOperation="Multiplication" Right="$(TotalCathedrals)" Path="ClassEmpire"/>
-    <BinaryModifier TargetProperty="HappinessMalusReduction"      Operation="Addition" Left="$(HasExpansionRelic)" BinaryOperation="Multiplication" Right="-1" Path="ClassEmpire//ClassColonizedStarSystem"/>
+		<BinaryModifier TargetProperty="OverColonizationThreshold" Operation="Addition" Left="$(HasExpansionRelic)" BinaryOperation="Multiplication" Right="$(TotalCathedrals)" Path="ClassEmpire"/>
+		<BinaryModifier TargetProperty="HappinessMalusReduction" Operation="Addition" Left="$(HasExpansionRelic)" BinaryOperation="Multiplication" Right="-1" Path="ClassEmpire//ClassColonizedStarSystem"/>
 
 		<!-- Diplomacy Relics -->
-    <BinaryModifier TargetProperty="InfluenceRadiusRelicBonus"    Operation="Addition" Left="0.05" BinaryOperation="Multiplication" Right="$(DiplomacyRelicTurnsInEffect)" Path="ClassEmpire"/>
-    <BinaryModifier TargetProperty="InfluenceRadiusModifier"    Operation="Addition" Left="$(HasDiplomacyRelic)" BinaryOperation="Multiplication" Right="$(InfluenceRadiusRelicBonus)" Path="ClassEmpire//ClassColonizedStarSystem"/>
-    <BinaryModifier TargetProperty="RelationPointsTrend"        Operation="Addition" Left="$(HasDiplomacyRelic)" BinaryOperation="Multiplication" Right="1" Path="ClassEmpire"/>
+		<BinaryModifier TargetProperty="InfluenceRadiusRelicBonus" Operation="Addition" Left="0.05" BinaryOperation="Multiplication" Right="$(DiplomacyRelicTurnsInEffect)" Path="ClassEmpire"/>
+		<BinaryModifier TargetProperty="InfluenceRadiusModifier" Operation="Addition" Left="$(HasDiplomacyRelic)" BinaryOperation="Multiplication" Right="$(InfluenceRadiusRelicBonus)" Path="ClassEmpire//ClassColonizedStarSystem"/>
+		<BinaryModifier TargetProperty="RelationPointsTrend" Operation="Addition" Left="$(HasDiplomacyRelic)" BinaryOperation="Multiplication" Right="1" Path="ClassEmpire"/>
 
 		<!-- Political Relics -->
-    <BinaryModifier TargetProperty="PoliticalRelicIndustrialStrategicBoost" Operation="Addition" Left="0.5" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PoliticalRelicScientistRelicDustBoost" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PoliticalRelicScientistRelicInfluenceBoost" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PoliticalRelicScientistRelicManpowerBoost" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PoliticalRelicPacifistTroopHealthBoost" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PoliticalRelicPacifistFleetRegenBoost" Operation="Addition" Left="0.2" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PoliticalRelicPacifistTradeValueBoost" Operation="Addition" Left="0.5" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PoliticalRelicEcologistLuxuryBoost" Operation="Addition" Left="0.5" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PoliticalRelicReligiousHeroPointBoost" Operation="Addition" Left="-0.1" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="PoliticalRelicMilitaristRetrofitBoost" Operation="Addition" Left="-0.1" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="PoliticalRelicIndustrialStrategicBoost" Operation="Addition" Left="0.5" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="PoliticalRelicScientistRelicDustBoost" Operation="Addition" Left="20" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="PoliticalRelicScientistRelicInfluenceBoost" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="PoliticalRelicScientistRelicManpowerBoost" Operation="Addition" Left="10" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="PoliticalRelicPacifistTroopHealthBoost" Operation="Addition" Left="0.1" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="PoliticalRelicPacifistFleetRegenBoost" Operation="Addition" Left="0.2" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="PoliticalRelicPacifistTradeValueBoost" Operation="Addition" Left="0.5" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="PoliticalRelicEcologistLuxuryBoost" Operation="Addition" Left="0.5" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="PoliticalRelicReligiousHeroPointBoost" Operation="Addition" Left="-0.1" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="PoliticalRelicMilitaristRetrofitBoost" Operation="Addition" Left="-0.1" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
 
 		<!-- Apply Conditional -->
-    <BinaryModifier TargetProperty="ActualPoliticalRelicIndustrialStrategicBoost" Operation="Addition" Left="$(PoliticalRelicIndustrialStrategicBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="ActualPoliticalRelicScientistRelicDustBoost" Operation="Addition" Left="$(PoliticalRelicScientistRelicDustBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="ActualPoliticalRelicScientistRelicInfluenceBoost" Operation="Addition" Left="$(PoliticalRelicScientistRelicInfluenceBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="ActualPoliticalRelicScientistRelicManpowerBoost" Operation="Addition" Left="$(PoliticalRelicScientistRelicManpowerBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="ActualPoliticalRelicPacifistTroopHealthBoost" Operation="Addition" Left="$(PoliticalRelicPacifistTroopHealthBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="ActualPoliticalRelicPacifistFleetRegenBoost" Operation="Addition" Left="$(PoliticalRelicPacifistFleetRegenBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="ActualPoliticalRelicPacifistTradeValueBoost" Operation="Addition" Left="$(PoliticalRelicPacifistTradeValueBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="ActualPoliticalRelicEcologistLuxuryBoost" Operation="Addition" Left="$(PoliticalRelicEcologistLuxuryBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="ActualPoliticalRelicReligiousHeroPointBoost" Operation="Addition" Left="$(PoliticalRelicReligiousHeroPointBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="ActualPoliticalRelicMilitaristRetrofitBoost" Operation="Addition" Left="$(PoliticalRelicMilitaristRetrofitBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="ActualPoliticalRelicIndustrialStrategicBoost" Operation="Addition" Left="$(PoliticalRelicIndustrialStrategicBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="ActualPoliticalRelicScientistRelicDustBoost" Operation="Addition" Left="$(PoliticalRelicScientistRelicDustBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="ActualPoliticalRelicScientistRelicInfluenceBoost" Operation="Addition" Left="$(PoliticalRelicScientistRelicInfluenceBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="ActualPoliticalRelicScientistRelicManpowerBoost" Operation="Addition" Left="$(PoliticalRelicScientistRelicManpowerBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="ActualPoliticalRelicPacifistTroopHealthBoost" Operation="Addition" Left="$(PoliticalRelicPacifistTroopHealthBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="ActualPoliticalRelicPacifistFleetRegenBoost" Operation="Addition" Left="$(PoliticalRelicPacifistFleetRegenBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="ActualPoliticalRelicPacifistTradeValueBoost" Operation="Addition" Left="$(PoliticalRelicPacifistTradeValueBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="ActualPoliticalRelicEcologistLuxuryBoost" Operation="Addition" Left="$(PoliticalRelicEcologistLuxuryBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="ActualPoliticalRelicReligiousHeroPointBoost" Operation="Addition" Left="$(PoliticalRelicReligiousHeroPointBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
+		<BinaryModifier TargetProperty="ActualPoliticalRelicMilitaristRetrofitBoost" Operation="Addition" Left="$(PoliticalRelicMilitaristRetrofitBoost)" BinaryOperation="Multiplication" Right="$(HasPoliticalRelic)" TooltipHidden="true"/>
 
 		<!-- Apply Value -->
-    <Modifier TargetProperty="DepositValue" Operation="Percent" Value="$(ActualPoliticalRelicIndustrialStrategicBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics01/../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeStrategic"/>
+		<Modifier TargetProperty="DepositValue" Operation="Percent" Value="$(ActualPoliticalRelicIndustrialStrategicBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics01/../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeStrategic"/>
 
-    <BinaryModifier TargetProperty="EmpireMoney" Operation="Addition" Left="$(ActualPoliticalRelicScientistRelicDustBoost)" BinaryOperation="Multiplication" Right="$(ResultingResearchRelics)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics02/../ClassEmpire"/>
-    <BinaryModifier TargetProperty="EmpireEmpirePoint" Operation="Addition" Left="$(ActualPoliticalRelicScientistRelicInfluenceBoost)" BinaryOperation="Multiplication" Right="$(ResultingResearchRelics)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics02/../ClassEmpire"/>
-    <BinaryModifier TargetProperty="EmpireManpower" Operation="Addition" Left="$(ActualPoliticalRelicScientistRelicManpowerBoost)" BinaryOperation="Multiplication" Right="$(ResultingResearchRelics)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics02/../ClassEmpire"/>
+		<BinaryModifier TargetProperty="EmpireMoney" Operation="Addition" Left="$(ActualPoliticalRelicScientistRelicDustBoost)" BinaryOperation="Multiplication" Right="$(ResultingResearchRelics)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics02/../ClassEmpire"/>
+		<BinaryModifier TargetProperty="EmpireEmpirePoint" Operation="Addition" Left="$(ActualPoliticalRelicScientistRelicInfluenceBoost)" BinaryOperation="Multiplication" Right="$(ResultingResearchRelics)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics02/../ClassEmpire"/>
+		<BinaryModifier TargetProperty="EmpireManpower" Operation="Addition" Left="$(ActualPoliticalRelicScientistRelicManpowerBoost)" BinaryOperation="Multiplication" Right="$(ResultingResearchRelics)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics02/../ClassEmpire"/>
+		<BinaryModifier TargetProperty="EmpireManpowerBalance" Operation="Addition" Left="$(ActualPoliticalRelicScientistRelicManpowerBoost)" BinaryOperation="Multiplication" Right="$(ResultingResearchRelics)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics02/../ClassEmpire" TooltipHidden="true"/>
 
-    <Modifier TargetProperty="TradingRouteIncomeModifier" Operation="Percent" Value="$(ActualPoliticalRelicPacifistTradeValueBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics03/../ClassEmpire/ClassColonizedStarSystem/ClassColonizedStarSystem,StarSystemImprovementUniqueTemplars/./ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="TroopHealthPerTemple" Operation="Addition" Value="$(ActualPoliticalRelicPacifistTroopHealthBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics03/../ClassEmpire/ClassColonizedStarSystem/ClassColonizedStarSystem"/>
-    <Modifier TargetProperty="HealthRegenerationRatio" Operation="Addition" Value="$(ActualPoliticalRelicPacifistFleetRegenBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics03/../ClassEmpire//ClassGarrisonFleet,FleetInfluenceStateFriendly"/>
-    <Modifier TargetProperty="HealthRegenerationRatio" Operation="Addition" Value="$(ActualPoliticalRelicPacifistFleetRegenBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics03/../ClassEmpire//ClassGarrisonFleet,FleetInfluenceStateOwner"/>
+		<Modifier TargetProperty="TradingRouteIncomeModifier" Operation="Percent" Value="$(ActualPoliticalRelicPacifistTradeValueBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics03/../ClassEmpire/ClassColonizedStarSystem/ClassColonizedStarSystem,StarSystemImprovementUniqueTemplars/./ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="TroopHealthPerTemple" Operation="Addition" Value="$(ActualPoliticalRelicPacifistTroopHealthBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics03/../ClassEmpire/ClassColonizedStarSystem/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="HealthRegenerationRatio" Operation="Addition" Value="$(ActualPoliticalRelicPacifistFleetRegenBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics03/../ClassEmpire//ClassGarrisonFleet,FleetInfluenceStateFriendly"/>
+		<Modifier TargetProperty="HealthRegenerationRatio" Operation="Addition" Value="$(ActualPoliticalRelicPacifistFleetRegenBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics03/../ClassEmpire//ClassGarrisonFleet,FleetInfluenceStateOwner"/>
 
-    <Modifier TargetProperty="DepositValue" Operation="Percent" Value="$(ActualPoliticalRelicEcologistLuxuryBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics04/../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeLuxury"/>
+		<Modifier TargetProperty="DepositValue" Operation="Percent" Value="$(ActualPoliticalRelicEcologistLuxuryBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics04/../ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeLuxury"/>
 
-    <Modifier TargetProperty="CanBeAssignedOutOfTerritory" Operation="Addition" Value="$(HasPoliticalRelic)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics05/../ClassEmpire//ClassHero"/>
-    <Modifier TargetProperty="HeroUnlockThresholdModifier" Operation="Addition" Value="$(ActualPoliticalRelicReligiousHeroPointBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics05/../ClassEmpire"/>
+		<Modifier TargetProperty="CanBeAssignedOutOfTerritory" Operation="Addition" Value="$(HasPoliticalRelic)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics05/../ClassEmpire//ClassHero"/>
+		<Modifier TargetProperty="HeroUnlockThresholdModifier" Operation="Addition" Value="$(ActualPoliticalRelicReligiousHeroPointBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics05/../ClassEmpire"/>
 
-    <Modifier TargetProperty="CanRetrofitAnywhere" Operation="Addition" Value="$(HasPoliticalRelic)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics06/../ClassEmpire//ClassGarrisonFleet"/>
-    <Modifier TargetProperty="RetrofitCostMultiplier" Operation="Addition" Value="$(ActualPoliticalRelicMilitaristRetrofitBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics06/../ClassEmpire"/>
+		<Modifier TargetProperty="CanRetrofitAnywhere" Operation="Addition" Value="$(HasPoliticalRelic)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics06/../ClassEmpire//ClassGarrisonFleet"/>
+		<Modifier TargetProperty="RetrofitCostMultiplier" Operation="Addition" Value="$(ActualPoliticalRelicMilitaristRetrofitBoost)" Path="ClassEmpire/ClassSenate/ClassSenator,Politics06/../ClassEmpire"/>
 
 		<!-- Total Counter -->
-    <Modifier TargetProperty="FIDIRelics"  Operation="Addition"    Value="$(EmpireExplorationRelics)"/>
-    <Modifier TargetProperty="FIDIRelics"  Operation="Addition"    Value="$(EmpireExpansionRelics)"  />
-    <Modifier TargetProperty="FIDIRelics"  Operation="Addition"    Value="$(EmpireDiplomacyRelics)"  />
-    <Modifier TargetProperty="FIDIRelics"  Operation="Addition"    Value="$(EmpirePoliticalRelics)"  />
+		<Modifier TargetProperty="FIDIRelics" Operation="Addition" Value="$(EmpireExplorationRelics)"/>
+		<Modifier TargetProperty="FIDIRelics" Operation="Addition" Value="$(EmpireExpansionRelics)"/>
+		<Modifier TargetProperty="FIDIRelics" Operation="Addition" Value="$(EmpireDiplomacyRelics)"/>
+		<Modifier TargetProperty="FIDIRelics" Operation="Addition" Value="$(EmpirePoliticalRelics)"/>
 
-    <Modifier TargetProperty="RelicSlotsUsed"  Operation="Addition"    Value="$(HasExplorationRelic)"/>
-    <Modifier TargetProperty="RelicSlotsUsed"  Operation="Addition"    Value="$(HasExpansionRelic)"  />
-    <Modifier TargetProperty="RelicSlotsUsed"  Operation="Addition"    Value="$(HasDiplomacyRelic)"  />
-    <Modifier TargetProperty="RelicSlotsUsed"  Operation="Addition"    Value="$(HasPoliticalRelic)"  />
-  </SimulationDescriptor>
+		<Modifier TargetProperty="RelicSlotsUsed" Operation="Addition" Value="$(HasExplorationRelic)"/>
+		<Modifier TargetProperty="RelicSlotsUsed" Operation="Addition" Value="$(HasExpansionRelic)"/>
+		<Modifier TargetProperty="RelicSlotsUsed" Operation="Addition" Value="$(HasDiplomacyRelic)"/>
+		<Modifier TargetProperty="RelicSlotsUsed" Operation="Addition" Value="$(HasPoliticalRelic)"/>
+
+		<!-- Manpower growth management -->
+		<Modifier TargetProperty="ShouldGoFullRate" Operation="Addition" Value="$(HasNetManpower)" Path="ClassEmpire" Priority="-2"/>
+		<Modifier TargetProperty="ShouldGoFullRate" Operation="Subtraction" Value="$(EmpireManpowerUpkeep)" Path="ClassEmpire" Priority="-1"/>
+		<Modifier TargetProperty="EmpireManpowerBalance" Operation="Subtraction" Value="$(EmpireManpowerUpkeep)" Path="ClassEmpire" Priority="1"/>
+		<Modifier TargetProperty="EmpireManpower" Operation="Addition" Value="$(EmpireManpowerFromEnrollment)" Path="ClassEmpire" Priority="1"/>
+		<BinaryModifier TargetProperty="ManpowerFromGrowthRatio" Operation="Addition" Left="$(MaximumEmpireManpowerStock)" BinaryOperation="Subtraction" Right="$(EmpireManpowerStock)" Path="ClassEmpire" Priority="2"/>
+		<Modifier TargetProperty="ManpowerFromGrowthRatio" Operation="Subtraction" Value="$(EmpireManpowerBalance)" Path="ClassEmpire" Priority="2"/>
+		<BinaryModifier TargetProperty="ManpowerFromGrowthRatio" Operation="Division" Left="$(MaximumEnrollmentRate)" BinaryOperation="Multiplication" Right="0.95" Path="ClassEmpire" Priority="2"/>
+		<Modifier TargetProperty="ManpowerFromGrowthRatio" Operation="Division" Value="$(EmpireManpowerPercent)" Path="ClassEmpire" Priority="2"/>
+		<Modifier TargetProperty="GrowthForManpowerRatio" Operation="Addition" Value="$(ManpowerFromGrowthRatio)" Path="ClassEmpire/ClassColonizedStarSystem" Priority="2"/>
+		<Modifier TargetProperty="GrowthForManpowerRatio" Operation="Addition" Value="$(ShouldGoFullRate)" Path="ClassEmpire/ClassColonizedStarSystem" Priority="2"/>
+
+		<!-- Records EmpireManpowerFromEnrollment into EnrollmentAppliedToFood when food is updated -->
+		<Modifier TargetProperty="NetEnrollmentApplied" Operation="Addition" Value="$(EmpireManpowerFromEnrollment)" Path="ClassEmpire,EmpireTypeMajor"/>
+		<Modifier TargetProperty="NetEnrollmentApplied" Operation="Subtraction" Value="$(EnrollmentAppliedToFood)" Path="ClassEmpire,EmpireTypeMajor"/>
+		<Modifier TargetProperty="MaximumEnrollmentApplied" Operation="Addition" Value="$(NetEnrollmentApplied)" Path="ClassEmpire,EmpireTypeMajor"/>
+		<Modifier TargetProperty="MaximumEnrollmentApplied" Operation="Addition" Value="$(EnrollmentAppliedToFood)" Path="ClassEmpire,EmpireTypeMajor"/>
+
+		<!-- We remove the EmpireManpowerFromEnrollment and use EnrollmentAppliedToFood instead -->
+		<Modifier TargetProperty="TrueNetEmpireManpower" Operation="Addition" Value="$(NetEmpireManpower)" Path="ClassEmpire"/>
+		<BinaryModifier TargetProperty="TrueNetEmpireManpower" Operation="Subtraction" Left="$(EmpireManpowerFromEnrollment)" BinaryOperation="Multiplication" Right="$(EmpireManpowerPercent)" Path="ClassEmpire,EmpireTypeMajor"/>
+		<BinaryModifier TargetProperty="TrueNetEmpireManpower" Operation="Addition" Left="$(EnrollmentAppliedToFood)" BinaryOperation="Multiplication" Right="$(EmpireManpowerPercent)" Path="ClassEmpire,EmpireTypeMajor"/>
+
+	</SimulationDescriptor>
 
 	<!--Used for Craver Influence and Science ESG-->
 	<SimulationDescriptor Name="EmpireHasHuntingGround" Type="EmpireHasHuntingGround" IsSerializable="false">
@@ -1768,7 +1811,7 @@
 	</SimulationDescriptor>
 
 	<SimulationDescriptor Name="RelicScience" Type="RelicScience">
-    <BinaryModifier TargetProperty="NetRelicsResearch" Operation="Addition" Left="$(SciencePerUnassignedRelic)" BinaryOperation="Multiplication" Right="$(ResultingResearchRelics)" Path="ClassEmpire" Priority="10" TooltipHidden="true" SearchValueFromPath="true"/>
+		<BinaryModifier TargetProperty="NetRelicsResearch" Operation="Addition" Left="$(SciencePerUnassignedRelic)" BinaryOperation="Multiplication" Right="$(ResultingResearchRelics)" Path="ClassEmpire" Priority="10" TooltipHidden="true" SearchValueFromPath="true"/>
 	</SimulationDescriptor>
 
 	<!--United Empire influence buyout without circularity ESG-->
@@ -1821,128 +1864,128 @@
 
 		<Modifier TargetProperty="MaximumCommandPoints" Operation="Addition" Value="$(AdditionalMaximumCommandPoints)"/>
 		<Modifier TargetProperty="Happiness" Operation="Force" Value="50" Priority="1000"/>
-		<Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Addition" Value="5000" />
-		<Modifier TargetProperty="EmpireManpower" Operation="Addition" Value="200" />
+		<Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Addition" Value="5000"/>
+		<Modifier TargetProperty="EmpireManpower" Operation="Addition" Value="200"/>
 		<!--Pirate Trend Formula: x+((x^c)*Speed)-->
 		<BinaryModifier TargetProperty="NetPowerPoints" Operation="Addition" Left="$(PowerPointsStock)" BinaryOperation="Power" Right="$(PirateDifficultyMultiplier)" Priority="3"/>
 		<Modifier TargetProperty="NetPowerPoints" Operation="Multiplication" Value="$(GameSpeedPirateTrendMultiplier)" Priority="4"/>
 
 
-		<Modifier TargetProperty="CannotUsePortals" Operation="Addition" Value="0" Path="ClassEmpire" />
-		<Modifier TargetProperty="HasPortal" Operation="Addition" Value="1" Path="ClassEmpire/ClassColonizedStarSystem" />
+		<Modifier TargetProperty="CannotUsePortals" Operation="Addition" Value="0" Path="ClassEmpire"/>
+		<Modifier TargetProperty="HasPortal" Operation="Addition" Value="1" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 		<Modifier TargetProperty="MaximumHackingOperationsCount" Operation="Force" Value="0" Priority="1000"/>
 	</SimulationDescriptor>
 
 	<SimulationDescriptor Name="EmpireTypeMinor" Type="EmpireType">
-        <Property Name="Stress"                 BaseValue="0" IsSealed="true"/>
-        <Property Name="NetMinorStress"         BaseValue="0" MinValue="Negative"/>
+		<Property Name="Stress" BaseValue="0" IsSealed="true"/>
+		<Property Name="NetMinorStress" BaseValue="0" MinValue="Negative"/>
 
-        <Property Name="NetMinorEmpireMoney" BaseValue="0"/>
+		<Property Name="NetMinorEmpireMoney" BaseValue="0"/>
 
-        <Property Name="NetMinorEmpireShipMoney"            BaseValue="0"/>
-        <Property Name="MinorEmpireShipMoneyStock"          IsSealed="true"/>
-        <Property Name="MinimumMinorEmpireShipMoneyStock"   BaseValue="0"/>
+		<Property Name="NetMinorEmpireShipMoney" BaseValue="0"/>
+		<Property Name="MinorEmpireShipMoneyStock" IsSealed="true"/>
+		<Property Name="MinimumMinorEmpireShipMoneyStock" BaseValue="0"/>
 
-        <Property Name="NetMinorEmpireImprovementMoney"            BaseValue="0"/>
-        <Property Name="MinorEmpireImprovementMoneyStock"          IsSealed="true"/>
-        <Property Name="MinimumMinorEmpireImprovementMoneyStock"   BaseValue="0"/>
+		<Property Name="NetMinorEmpireImprovementMoney" BaseValue="0"/>
+		<Property Name="MinorEmpireImprovementMoneyStock" IsSealed="true"/>
+		<Property Name="MinimumMinorEmpireImprovementMoneyStock" BaseValue="0"/>
 
-        <Property Name="MinorFleetUpkeep"/>
+		<Property Name="MinorFleetUpkeep"/>
 
-        <Property Name="MaximumFleetCount"                  BaseValue="3"/>
-        <Property Name="NeighbouringMajorEmpiresCount"      BaseValue="0" MinValue="1"/>
-        <Property Name="NeighbouringMinorEmpiresCount"      BaseValue="0" MinValue="1"/>
+		<Property Name="MaximumFleetCount" BaseValue="3"/>
+		<Property Name="NeighbouringMajorEmpiresCount" BaseValue="0" MinValue="1"/>
+		<Property Name="NeighbouringMinorEmpiresCount" BaseValue="0" MinValue="1"/>
 
-        <Property Name="BaseMinorFleetSpawnCooldown"        BaseValue="2"/>
-        <Property Name="MinorFleetSpawnCooldownStock"       BaseValue="0"       IsSealed="true"/>
-        <Property Name="NetMinorFleetSpawnCooldown"         BaseValue="-1"      MinValue="Negative"/>
+		<Property Name="BaseMinorFleetSpawnCooldown" BaseValue="2"/>
+		<Property Name="MinorFleetSpawnCooldownStock" BaseValue="0" IsSealed="true"/>
+		<Property Name="NetMinorFleetSpawnCooldown" BaseValue="-1" MinValue="Negative"/>
 
-        <Modifier       TargetProperty="MaximumEmpireManpowerStock"     Operation="Addition"    Value="10000" />
-        <Modifier       TargetProperty="EmpireManpower"                 Operation="Addition"    Value="$(EmpireManpower)" Path="EmpireTypeMinor/ClassMinorRelationWithMajor"    Priority="0"/>
+		<Modifier TargetProperty="MaximumEmpireManpowerStock" Operation="Addition" Value="10000"/>
+		<Modifier TargetProperty="EmpireManpower" Operation="Addition" Value="$(EmpireManpower)" Path="EmpireTypeMinor/ClassMinorRelationWithMajor" Priority="0"/>
 
-        <Modifier TargetProperty="Trend" Operation="Multiplication" Value="$(GameSpeedTrendMultiplier)" Priority="1"  Path="ClassEmpire/ClassMinorRelationWithMajor"/>
+		<Modifier TargetProperty="Trend" Operation="Multiplication" Value="$(GameSpeedTrendMultiplier)" Priority="1" Path="ClassEmpire/ClassMinorRelationWithMajor"/>
 		<Modifier TargetProperty="MaximumHackingOperationsCount" Operation="Force" Value="0" Priority="1000"/>
 
-		<Modifier TargetProperty="NetMinorStress"       Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="0" />
-        <Modifier TargetProperty="Happiness"            Operation="Force" Value="50" Priority="1000"  Path="ClassEmpire/ClassColonizedStarSystem"/>
-        <Modifier TargetProperty="NetEmpireMoney"       Operation="Force" Value="50" Priority="1000"/>
-        <Modifier TargetProperty="BuyoutActivated"      Operation="Force" Value="1"/>
-        <Modifier TargetProperty="NetMinorEmpireMoney"  Operation="Addition" Value="$(Stress)" Priority="1"/>
-        <Modifier TargetProperty="NetMinorEmpireMoney"  Operation="Subtraction" Value="$(MinorFleetUpkeep)" Priority="1"/>
-        <Modifier TargetProperty="NetSystemGrowth"      Operation="Addition" Value="30" Priority="1" Path="ClassEmpire/ClassColonizedStarSystem"  />
-		<BinaryModifier TargetProperty="NetSystemGrowth"      Operation="Addition" Left="$(Population)" BinaryOperation="Multiplication" Right="3" Priority="1" Path="ClassEmpire/ClassColonizedStarSystem"  SearchValueFromPath="true"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="0"/>
+		<Modifier TargetProperty="Happiness" Operation="Force" Value="50" Priority="1000" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="NetEmpireMoney" Operation="Force" Value="50" Priority="1000"/>
+		<Modifier TargetProperty="BuyoutActivated" Operation="Force" Value="1"/>
+		<Modifier TargetProperty="NetMinorEmpireMoney" Operation="Addition" Value="$(Stress)" Priority="1"/>
+		<Modifier TargetProperty="NetMinorEmpireMoney" Operation="Subtraction" Value="$(MinorFleetUpkeep)" Priority="1"/>
+		<Modifier TargetProperty="NetSystemGrowth" Operation="Addition" Value="30" Priority="1" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<BinaryModifier TargetProperty="NetSystemGrowth" Operation="Addition" Left="$(Population)" BinaryOperation="Multiplication" Right="3" Priority="1" Path="ClassEmpire/ClassColonizedStarSystem" SearchValueFromPath="true"/>
 
-        <Modifier TargetProperty="MigrationScore"       Operation="Force" Value="51" Priority="100"  Path="ClassEmpire/ClassColonizedStarSystem"/>
-        <Modifier TargetProperty="VisionRange"          Operation="Force" Value="0.001" Priority="100"  Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="MigrationScore" Operation="Force" Value="51" Priority="100" Path="ClassEmpire/ClassColonizedStarSystem"/>
+		<Modifier TargetProperty="VisionRange" Operation="Force" Value="0.001" Priority="100" Path="ClassEmpire/ClassColonizedStarSystem"/>
 
 		<!-- 3 x MAJ / (1 + (MIN / 2)) = MAJ x 6 / (MIN + 2) -->
 		<!--<Modifier TargetProperty="MaximumFleetCount"            Operation="Addition" Value="$(NeighbouringMajorEmpiresCount)"/>-->
 		<!--<Modifier TargetProperty="MaximumFleetCount"            Operation="Multiplication" Value="3"/>-->
 		<!--<BinaryModifier TargetProperty="MaximumFleetCount"      Operation="Division" Left="$(NeighbouringMinorEmpiresCount)" BinaryOperation="Addition" Right="0"/>-->
-    </SimulationDescriptor>
+	</SimulationDescriptor>
 
 	<!-- Resource distribution -->
 
     <SimulationDescriptor Name="MinorResourceDistributionInactive" Type="MinorResourceDistribution">
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="1"    Path="MinorFactionDifficultyEasy"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2"      Path="MinorFactionDifficultyNormal"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2.5"      Path="MinorFactionDifficultyHard"  />
-        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="35"/>
-    </SimulationDescriptor>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="1" Path="MinorFactionDifficultyEasy"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="2" Path="MinorFactionDifficultyNormal"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="2.5" Path="MinorFactionDifficultyHard"/>
+		<Modifier TargetProperty="NetMinorEmpireMoney" Operation="Addition" Value="35"/>
+	</SimulationDescriptor>
 
 
     <SimulationDescriptor Name="MinorResourceDistributionPassive" Type="MinorResourceDistribution">
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="1"    Path="MinorFactionDifficultyEasy"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2"      Path="MinorFactionDifficultyNormal"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2.5"      Path="MinorFactionDifficultyHard"  />
-        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="60"/>
-        <BinaryModifier TargetProperty="NetMinorEmpireShipMoney"        Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="5"/>
-        <BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.5"/>
-    </SimulationDescriptor>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="1" Path="MinorFactionDifficultyEasy"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="2" Path="MinorFactionDifficultyNormal"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="2.5" Path="MinorFactionDifficultyHard"/>
+		<Modifier TargetProperty="NetMinorEmpireMoney" Operation="Addition" Value="60"/>
+		<BinaryModifier TargetProperty="NetMinorEmpireShipMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="5"/>
+		<BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.5"/>
+	</SimulationDescriptor>
 
     <SimulationDescriptor Name="MinorResourceDistributionEarlyAggression" Type="MinorResourceDistribution">
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="1"    Path="MinorFactionDifficultyEasy"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2"      Path="MinorFactionDifficultyNormal"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="3"      Path="MinorFactionDifficultyHard"  />
-        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="60"/>
-        <BinaryModifier TargetProperty="NetMinorEmpireShipMoney"        Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="5"/>
-        <BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.5"/>
-    </SimulationDescriptor>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="1" Path="MinorFactionDifficultyEasy"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="2" Path="MinorFactionDifficultyNormal"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="3" Path="MinorFactionDifficultyHard"/>
+		<Modifier TargetProperty="NetMinorEmpireMoney" Operation="Addition" Value="60"/>
+		<BinaryModifier TargetProperty="NetMinorEmpireShipMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="5"/>
+		<BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.5"/>
+	</SimulationDescriptor>
 
     <SimulationDescriptor Name="MinorResourceDistributionEarlyPirating" Type="MinorResourceDistribution">
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="1.5"    Path="MinorFactionDifficultyEasy"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2.5"      Path="MinorFactionDifficultyNormal"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2.5"      Path="MinorFactionDifficultyHard"  />
-        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="60"/>
-        <BinaryModifier TargetProperty="NetMinorEmpireShipMoney"        Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="5"/>
-        <BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.6"/>
-    </SimulationDescriptor>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="1.5" Path="MinorFactionDifficultyEasy"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="2.5" Path="MinorFactionDifficultyNormal"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="2.5" Path="MinorFactionDifficultyHard"/>
+		<Modifier TargetProperty="NetMinorEmpireMoney" Operation="Addition" Value="60"/>
+		<BinaryModifier TargetProperty="NetMinorEmpireShipMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="5"/>
+		<BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.6"/>
+	</SimulationDescriptor>
 
     <SimulationDescriptor Name="MinorResourceDistributionEarlyDevelopment" Type="MinorResourceDistribution">
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2"    Path="MinorFactionDifficultyEasy"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="3"      Path="MinorFactionDifficultyNormal"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="3"      Path="MinorFactionDifficultyHard"  />
-        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="140"/>
-        <BinaryModifier TargetProperty="NetMinorEmpireShipMoney"        Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="5"/>
-        <BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.7"/>
-    </SimulationDescriptor>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="2" Path="MinorFactionDifficultyEasy"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="3" Path="MinorFactionDifficultyNormal"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="3" Path="MinorFactionDifficultyHard"/>
+		<Modifier TargetProperty="NetMinorEmpireMoney" Operation="Addition" Value="140"/>
+		<BinaryModifier TargetProperty="NetMinorEmpireShipMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="5"/>
+		<BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.7"/>
+	</SimulationDescriptor>
 
     <SimulationDescriptor Name="MinorResourceDistributionMidGame" Type="MinorResourceDistribution">
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2"    Path="MinorFactionDifficultyEasy"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="3"      Path="MinorFactionDifficultyNormal"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="3"      Path="MinorFactionDifficultyHard"  />
-        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="250"/>
-        <BinaryModifier TargetProperty="NetMinorEmpireShipMoney"        Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="5"/>
-        <BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.7"/>
-    </SimulationDescriptor>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="2" Path="MinorFactionDifficultyEasy"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="3" Path="MinorFactionDifficultyNormal"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="3" Path="MinorFactionDifficultyHard"/>
+		<Modifier TargetProperty="NetMinorEmpireMoney" Operation="Addition" Value="250"/>
+		<BinaryModifier TargetProperty="NetMinorEmpireShipMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="5"/>
+		<BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.7"/>
+	</SimulationDescriptor>
 
     <SimulationDescriptor Name="MinorResourceDistributionLateGame" Type="MinorResourceDistribution">
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="2"    Path="MinorFactionDifficultyEasy"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="3"      Path="MinorFactionDifficultyNormal"/>
-        <Modifier       TargetProperty="NetMinorStress"                 Operation="Addition" Value="3"      Path="MinorFactionDifficultyHard"  />
-        <Modifier       TargetProperty="NetMinorEmpireMoney"            Operation="Addition" Value="300"/>
-        <BinaryModifier TargetProperty="NetMinorEmpireShipMoney"        Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="5"/>
-        <BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.8"/>
-    </SimulationDescriptor>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="2" Path="MinorFactionDifficultyEasy"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="3" Path="MinorFactionDifficultyNormal"/>
+		<Modifier TargetProperty="NetMinorStress" Operation="Addition" Value="3" Path="MinorFactionDifficultyHard"/>
+		<Modifier TargetProperty="NetMinorEmpireMoney" Operation="Addition" Value="300"/>
+		<BinaryModifier TargetProperty="NetMinorEmpireShipMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="5"/>
+		<BinaryModifier TargetProperty="NetMinorEmpireImprovementMoney" Operation="Force" Left="$(NetMinorEmpireMoney)" BinaryOperation="Multiplication" Right="0.8"/>
+	</SimulationDescriptor>
 </Datatable>
