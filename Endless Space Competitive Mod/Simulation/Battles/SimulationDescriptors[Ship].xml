@@ -307,6 +307,9 @@
     <Property Name="DefenseModuleCount"                       BaseValue="0"/>
     <Property Name="FlotillaManpowerDamageOverTimeIncrease"   BaseValue="0"/>
 
+	<Property Name="ShieldDefensivePower"                     BaseValue="0"/>
+	<Property Name="HullPlatingDefensivePower"                BaseValue="0"/>
+
     <!--Automatons-->
     <Property Name="AutomatonsSkillBonus" BaseValue="0"/>
 
@@ -385,13 +388,19 @@
     <BinaryModifier TargetProperty="HullPlatingAbsorptionEndMultiplier" Operation="Division" Left="$(HullPlatingAbsorption)" BinaryOperation="Addition" Right="$(HullWeakness)"/>
     <Modifier TargetProperty="HullPlatingAbsorptionEndMultiplier" Operation="Multiplication" Value="$(HullPlatingAbsorptionPercent)"/>
 
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(MaximumShield)"                   BinaryOperation="Division" Right="60"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(ShieldReloadPerPhase)"            BinaryOperation="Division" Right="60"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(ShieldRegeneratePerSecondDynamic)"      BinaryOperation="Division" Right="60"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(ShieldRegeneratePerSecond)"       BinaryOperation="Division" Right="10"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(HullPlatingAbsorptionEndMultiplier)"        BinaryOperation="Multiplication" Right="100"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(ShieldAbsorptionEndMultiplier)"             BinaryOperation="Multiplication" Right="50"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Addition"       Left="$(Evasion)"        BinaryOperation="Multiplication" Right="100"/>
+	
+	<BinaryModifier TargetProperty="HullPlatingDefensivePower"  Operation="Addition"  Left="$(MaximumHealth)"                      BinaryOperation="Division" Right="20"/>
+    <BinaryModifier TargetProperty="HullPlatingDefensivePower"  Operation="Percent"   Left="$(HullPlatingAbsorptionEndMultiplier)" BinaryOperation="Multiplication" Right="0.78"/>
+
+    <BinaryModifier TargetProperty="ShieldDefensivePower"  Operation="Addition"       Left="$(MaximumShield)"                 BinaryOperation="Division" Right="30"/>
+    <BinaryModifier TargetProperty="ShieldDefensivePower"  Operation="Addition"       Left="$(ShieldReloadPerPhase)"          BinaryOperation="Division" Right="60"/>
+    <BinaryModifier TargetProperty="ShieldDefensivePower"  Operation="Addition"       Left="$(ShieldRegeneratePerSecondDynamic)" BinaryOperation="Division" Right="60"/>
+    <BinaryModifier TargetProperty="ShieldDefensivePower"  Operation="Addition"       Left="$(ShieldRegeneratePerSecond)"     BinaryOperation="Division" Right="30"/>
+    <BinaryModifier TargetProperty="ShieldDefensivePower"  Operation="Percent"        Left="$(ShieldAbsorptionEndMultiplier)" BinaryOperation="Multiplication" Right="0.85"/>	
+
+	<Modifier       TargetProperty="DefensiveMilitaryPower" Operation="Addition"       Value="$(HullPlatingDefensivePower)"/>
+	<Modifier       TargetProperty="DefensiveMilitaryPower" Operation="Addition"       Value="$(ShieldDefensivePower)"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"  Operation="Percent"       Left="$(Evasion)"        BinaryOperation="Division" Right="2"/>
 
     <!-- Honor Intimidation effect -->
     <BinaryModifier TargetProperty="ShownOffensiveMilitaryPower" Operation="Addition" Left="$(OffensiveMilitaryPower)" BinaryOperation="Multiplication"  Right="$(ShownMilitaryPowerMultiplier)" Priority="1"/>
