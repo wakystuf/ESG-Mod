@@ -35,8 +35,6 @@
     <Property Name="GameSpeedMultiplier"  BaseValue="1"/>
 
     <!-- Multiplying module variables by the multiplier (for ship size)-->
-    <Modifier TargetProperty="OffensiveMilitaryPower" Operation="Multiplication" Value="$(Multiplier)" />
-    <Modifier TargetProperty="DefensiveMilitaryPower" Operation="Multiplication" Value="$(Multiplier)" />
     <Modifier TargetProperty="MaximumHealth"          Operation="Multiplication" Value="$(Multiplier)" />
     <Modifier TargetProperty="UpkeepFromModules"      Operation="Multiplication" Value="$(Multiplier)" />
 
@@ -160,6 +158,7 @@
     <Modifier TargetProperty="ShipManpowerKillPerHit"  Operation="Multiplication" Value="$(Multiplier)" TooltipHidden="true"/>
 
     <!-- Used to set the offensive power of the module -->
+    <BinaryModifier TargetProperty="OffensiveMilitaryPower"  Operation="Addition"       Left="$(ShieldPenetrationFactor)"    BinaryOperation="Addition" Right="$(HullPlatingPenetrationFactor)"  Path="ClassModuleWeapon,!ClassModuleWeaponFlack" TooltipHidden="true" Priority="0"/>
     <BinaryModifier TargetProperty="OffensiveMilitaryPower"  Operation="Addition"       Left="1"    BinaryOperation="Subtraction" Right="$(LongRangePenalty)"   Path="ClassModuleWeapon,!ClassModuleWeaponFlack" TooltipHidden="true" Priority="0"/>
     <BinaryModifier TargetProperty="OffensiveMilitaryPower"  Operation="Addition"       Left="1"    BinaryOperation="Subtraction" Right="$(MediumRangePenalty)" Path="ClassModuleWeapon,!ClassModuleWeaponFlack" TooltipHidden="true" Priority="0"/>
     <BinaryModifier TargetProperty="OffensiveMilitaryPower"  Operation="Addition"       Left="1"    BinaryOperation="Subtraction" Right="$(ShortRangePenalty)"  Path="ClassModuleWeapon,!ClassModuleWeaponFlack" TooltipHidden="true" Priority="0"/>
@@ -196,11 +195,12 @@
   <!-- Large Weapon Tag -->
   <SimulationDescriptor Name="LargeWeapon"    Type="LargeWeapon">
     <Modifier TargetProperty="MaximumHealth"            Operation="Percent"         Value="3"   Path="ClassModule" />
-    <Modifier TargetProperty="OffensiveMilitaryPower"   Operation="Percent"         Value="1"   Path="ClassModule" />
+    <Modifier TargetProperty="OffensiveMilitaryPower"   Operation="Percent"         Value="1"   Path="ClassModule,ClassModuleWeaponAOE" />
     <Modifier TargetProperty="Cooldown"                 Operation="Percent"         Value="1"   Path="ClassModuleWeapon,!ClassModuleWeaponAOE" />
     <Modifier TargetProperty="CooldownVariation"        Operation="Percent"         Value="1"   Path="ClassModuleWeapon,ClassModuleWeaponMissileSwarm" />
-    <Modifier TargetProperty="Damage"                   Operation="Percent"         Value="3"   Path="ClassModuleWeapon,!ClassModuleWeaponAOE" />
+    <Modifier TargetProperty="Damage"                   Operation="Multiplication"  Value="4"   Path="ClassModuleWeapon,!ClassModuleWeaponAOE" />
     <Modifier TargetProperty="Damage"                   Operation="Multiplication"  Value="2"   Path="ClassModuleWeapon,ClassModuleWeaponAOE"/>
+	<Modifier TargetProperty="FlakDamage"               Operation="Multiplication"  Value="2"   Path="ClassModuleWeapon,ClassModuleWeaponKinetic" />
     <Modifier TargetProperty="ArmorDestructionFlat"     Operation="Multiplication"  Value="2"   Path="ClassModuleWeapon"/>
 
     <Modifier TargetProperty="TotalIndustryCost"                   Operation="Multiplication"  Value="2"   Path="ClassModuleWeapon"/>
@@ -268,7 +268,7 @@
   <!-- ERA 1 -->
   <SimulationDescriptor Name="ModuleWeaponKinetic1"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                    Operation="Addition"  Value="42"    TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="3"      Path="ClassModule" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier1)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
@@ -280,7 +280,7 @@
   <!-- ERA 2-->
   <SimulationDescriptor Name="ModuleWeaponKinetic2"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                    Operation="Addition" Value="67"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="3"      Path="ClassModule" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
@@ -296,7 +296,7 @@
     <Modifier TargetProperty="EfficiencyAgainstSquadronModifier"    Operation="Addition" Value="0.33" Path="ClassModule"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier1)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalStrategic1Cost"       Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="3"      Path="ClassModule" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
     <Modifier TargetProperty="FlakDamage"                Operation="Addition" Value="180" Path="ClassModule" TooltipHidden="true"/>
@@ -307,7 +307,7 @@
   <!-- ERA 3-->
   <SimulationDescriptor Name="ModuleWeaponKinetic3"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                    Operation="Addition" Value="91"      TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="3"      Path="ClassModule" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
@@ -323,7 +323,7 @@
     <Modifier TargetProperty="EfficiencyAgainstSquadronModifier"    Operation="Addition" Value="0.5" Path="ClassModule"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalStrategic1Cost"       Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="3"      Path="ClassModule" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
     <Modifier TargetProperty="FlakDamage"                Operation="Addition" Value="180" Path="ClassModule" TooltipHidden="true"/>
@@ -337,7 +337,7 @@
     <Modifier TargetProperty="Cooldown"                  Operation="Addition"  Value="-0.1"  TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier2)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalStrategic3Cost"       Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="3"      Path="ClassModule" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
     <Modifier TargetProperty="FlakDamage"                Operation="Addition" Value="165" Path="ClassModule" TooltipHidden="true"/>
@@ -348,7 +348,7 @@
   <!-- ERA 4-->
   <SimulationDescriptor Name="ModuleWeaponKinetic4"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                    Operation="Addition" Value="115"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="3"      Path="ClassModule" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
@@ -359,7 +359,7 @@
 
   <SimulationDescriptor Name="ModuleWeaponKinetic4Terrans"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                    Operation="Addition" Value="130"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="3"      Path="ClassModule" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier4)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
@@ -374,7 +374,7 @@
     <Modifier TargetProperty="Cooldown"                  Operation="Addition"  Value="-0.1"  TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalStrategic3Cost"       Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="3"      Path="ClassModule" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
     <Modifier TargetProperty="FlakDamage"                Operation="Addition" Value="165" Path="ClassModule" TooltipHidden="true"/>
@@ -390,7 +390,7 @@
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier3)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
     <Modifier TargetProperty="OpponentCooldownReductionPercent" Operation="Addition" Value="0.2"  TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalStrategic5Cost"        Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"     Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"     Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="3"      Path="ClassModule" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
     <Modifier TargetProperty="FlakDamage"                Operation="Addition" Value="210" Path="ClassModule" TooltipHidden="true"/>
@@ -400,7 +400,7 @@
 
   <SimulationDescriptor Name="ModuleWeaponKinetic5"  Type="ModuleWeapon">
     <Modifier TargetProperty="Damage"                    Operation="Addition" Value="140"     TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"    Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="3"      Path="ClassModule" TooltipHidden="true"/>
     <BinaryModifier TargetProperty="TotalIndustryCost"    Operation="Addition" Left="$(WeaponIndustryTier5)" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
@@ -417,7 +417,7 @@
     <BinaryModifier TargetProperty="TotalStrategic5Cost"        Operation="Addition" Left="1" BinaryOperation="Multiplication" Right="$(Multiplier)" Path="ClassModuleWeapon" TooltipHidden="true"/>
     <Modifier TargetProperty="SpecialEffectDuration"            Operation="Addition" Value="10"  TooltipHidden="true"/>
     <Modifier TargetProperty="OpponentCooldownReductionPercent" Operation="Addition" Value="0.2"  TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="DefensiveMilitaryPower"     Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="2"      Path="ClassModule" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="DefensiveMilitaryPower"     Operation="Addition" Left="$(FlakDPSMissile)" BinaryOperation="Division" Right="3"      Path="ClassModule" TooltipHidden="true"/>
 
     <!--DPS against Missile / Squadrons-->
     <Modifier TargetProperty="FlakDamage"                Operation="Addition" Value="210" Path="ClassModule" TooltipHidden="true"/>
