@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+
+
+    <!--           POPULATION QUEST 10       -->
+    <!--          An Excess of Devotion      -->
+   <QuestDefinition Name="PopulationQuest10" Category="PopulationQuest" SubCategory="Population" MinimumTurn="1" TriggeringProbability="1">
+
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules NumberOfOccurrencesPerGame="0"
+            NumberOfOccurrencesPerEmpire="1"
+            NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$MyColonizedStarSystem">
+                <Any>
+                    <From Source="$CurrentEmpire.$ColonizedStarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassColonizedStarSystem, HomeSystem</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+
+            <Var VarName="$MyStarSystemLocation">
+                <From Source="$MyColonizedStarSystem.$StarSystem"/>
+            </Var>
+
+            <Var VarName="$MyPlanet">
+                <Any>
+                    <From Source="$MyStarSystemLocation.$Planets"/>
+                </Any>
+            </Var>
+            <Var VarName="$MyPlanetGUID"/>
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Curiosity01" StringValue="Curiosity_Quest_Population01"/>
+
+            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire/ClassPopulationEmpire,ClassPopulationEmpireAffinityVampirilisCount', PopulationCount, true) lt 1"/>
+
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire/ClassResearch', TechnologyQuadrantGlobalProgress) * 450</Expression>
+            </InterpretedVar>
+
+            <LocalizationVar Source="$Amount01" LocalizationKey="$Amount01Name"/>
+            <LocalizationVar Source="$MyPlanet" LocalizationKey="$MyPlanetName"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+        <Prerequisites Target="$(Empire)">
+            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityVampirilisCount', PopulationCount, true) ge 5 </InterpreterPrerequisite>
+            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @ClassEmpire/ClassResearch, TechnologyQuadrantGlobalProgress) ge 2</InterpreterPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step01">
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_SpawnCuriosity>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Input_Planets VarName="$MyPlanet"/>
+                            <Input_CuriosityDefinition VarName="$Curiosity01"/>
+                            <Output_CuriosityGUIDs VarName="$MyPlanetGUID"/>
+                        </Action_SpawnCuriosity>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$MyPlanet"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Step01_Objective01">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="17" MaxAutoResolutionTurn="25" AutoResolutionProbability="0.75"/>
+                        <Parallel CompletionPolicy="First">
+                            <Sequence>
+                                <Decorator_CuriosityDiscovered Initiator="Empire">
+                                    <Input_CuriosityGUIDs VarName="$MyPlanetGUID"/>
+                                </Decorator_CuriosityDiscovered>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression01"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+                        </Parallel>
+                    </Objective>
+                </ObjectiveSet>
+                <Reward Droplist="DroplistPrestigeEra4" Picks="1"/>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+</Datatable>
