@@ -4,18 +4,20 @@
     <!-- Parameters: EncounterGroup, EnemyEncounterGroup. -->
     <WarPointsRewardDefinition Name="BattleWon">
         <Formula>
-            (1.5 * Property(EncounterGroup, @ClassGroup, VictoryLevel)) 
-            + Clamp01(Property(EncounterGroup, @ClassGroup, MyHeroesCount)) 
+            Property(EncounterGroup, @ClassGroup, VictoryLevel) * 
+            ( Clamp01(Property(EncounterGroup, @ClassGroup, DestroyedCP)) 
             + Clamp01(Property(EncounterGroup, @ClassGroup, EnemyHeroesKilledCount))
+            - Clamp01(Property(EncounterGroup, @ClassGroup, LostCP)))
         </Formula>
     </WarPointsRewardDefinition>
 
     <!-- Parameters: EncounterGroup, EnemyEncounterGroup. -->
     <WarPointsRewardDefinition Name="BattleLost">
         <Formula>
-            ((1.5 * Property(EnemyEncounterGroup, @ClassGroup, VictoryLevel)) 
-            + Clamp01(Property(EnemyEncounterGroup, @ClassGroup, MyHeroesCount)) 
-            + Clamp01(Property(EnemyEncounterGroup, @ClassGroup, EnemyHeroesKilledCount)) - 1.5) 
+            Property(EnemyEncounterGroup, @ClassGroup, VictoryLevel) * 
+            ( Clamp01(Property(EnemyEncounterGroup, @ClassGroup, DestroyedCP)) 
+            + Clamp01(Property(EnemyEncounterGroup, @ClassGroup, EnemyHeroesKilledCount))
+            - Clamp01(Property(EnemyEncounterGroup, @ClassGroup, LostCP)))
             * -0.1
         </Formula>
     </WarPointsRewardDefinition>
