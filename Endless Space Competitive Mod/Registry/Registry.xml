@@ -36,6 +36,24 @@
         </DepartmentOfEducation>
       </Agencies>
     </Empire>
+    <Diplomacy>
+      <Alliance>
+        <MaxEmpires>Floor($(MajorEmpiresCount) * 0.5)</MaxEmpires>
+        <RenouncementTurnDuration>1</RenouncementTurnDuration>
+      </Alliance>
+      <WarInstance>
+        <WarExhaustTrend>Max(-$(WarExhaustTrendCap), Min($(WarExhaustTrendCap), (((1 + $(GroupFromWarPoints)) / (1 + $(GroupOnWarPoints)) - ((1 + $(GroupOnWarPoints)) / (1 + $(GroupFromWarPoints)))) * Min(2, $(Duration) * 0.1)))) / Max($(GameSpeed), 1)</WarExhaustTrend>
+        <!--  If you modify the cap, don't forget to update it in the AI (WarGroupSnapshot.cs WarExhaustTrendCap property).  -->
+        <WarExhaustTrendCap>10</WarExhaustTrendCap>
+        <ForcedTruce>
+          <!--  "*1" => DustInflation -->
+          <DustTributeAmount>Min((Max($(WarExhaustToPayBack) - $(WarExhaustCompensation), 0) * $(CurrentTurn) / 5 / $(GameSpeed) + $(NumberOfEmpiresInWinningWarGroup) * (100 + ($(CurrentTurn) / 5 / $(GameSpeed)) * 10)) * $(DustInflation), 30000)</DustTributeAmount>
+          <DustTributeDuration>Clamp((15 / ((Max($(LosingWarGroupDustIncome), 0) / $(DustAmountFlat)) * 0.5 + 1)), 5, 15) * $(GameSpeed)</DustTributeDuration>
+          <StarSystemWarExhaustCompensation>5 + Property(ColonizedStarSystem, @ClassColonizedStarSystem, SystemLevel) + Property(ColonizedStarSystem, @ClassColonizedStarSystem, Population) + Clamp01(Count(ColonizedStarSystem, @'ClassColonizedStarSystem,MajorHomeSystem')) * 10 + Clamp01(Count(ColonizedStarSystem, @'ClassColonizedStarSystem/StarSystemImprovementTradingCompanyHeadquarters')) * 5</StarSystemWarExhaustCompensation>
+          <RefusalCost>100 * Property(Empire, @ClassEmpire, ColonizedStarSystemStateColonyCount) * Clamp(1 - Property(Empire, @ClassEmpire, ForceTruceRefusalCostReduction), 0, 1)</RefusalCost>
+        </ForcedTruce>
+      </WarInstance>
+    </Diplomacy>
     <Academy>
       <RelicBonusOnSystemConversion>Floor(3 / Property(Empire, @ClassEmpire, GameSpeedMultiplier))</RelicBonusOnSystemConversion>
     </Academy>
