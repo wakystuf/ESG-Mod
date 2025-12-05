@@ -36,6 +36,24 @@
         </DepartmentOfEducation>
       </Agencies>
     </Empire>
+    <Diplomacy>
+      <Alliance>
+        <MaxEmpires>Floor($(MajorEmpiresCount) * 0.5)</MaxEmpires>
+        <RenouncementTurnDuration>1</RenouncementTurnDuration>
+      </Alliance>
+      <WarInstance>
+        <WarExhaustTrend>Max(-$(WarExhaustTrendCap), Min($(WarExhaustTrendCap), (((1 + $(GroupFromWarPoints)) / (1 + $(GroupOnWarPoints)) - ((1 + $(GroupOnWarPoints)) / (1 + $(GroupFromWarPoints)))) * Min(2, $(Duration) * 0.1)))) / Max($(GameSpeed), 1)</WarExhaustTrend>
+        <!--  If you modify the cap, don't forget to update it in the AI (WarGroupSnapshot.cs WarExhaustTrendCap property).  -->
+        <WarExhaustTrendCap>10</WarExhaustTrendCap>
+        <ForcedTruce>
+          <!--  "*1" => DustInflation -->
+          <DustTributeAmount>100 * $(CurrentTurn) / $(GameSpeed)</DustTributeAmount>
+          <DustTributeDuration>10 * $(GameSpeed)</DustTributeDuration>
+          <StarSystemWarExhaustCompensation>5 + Property(ColonizedStarSystem, @ClassColonizedStarSystem, SystemLevel) + Property(ColonizedStarSystem, @ClassColonizedStarSystem, Population) + Clamp01(Count(ColonizedStarSystem, @'ClassColonizedStarSystem,MajorHomeSystem')) * 10 + Clamp01(Count(ColonizedStarSystem, @'ClassColonizedStarSystem/StarSystemImprovementTradingCompanyHeadquarters')) * 5</StarSystemWarExhaustCompensation>
+          <RefusalCost>Max(200 * Clamp(1 - Property(Empire, @ClassEmpire, ForceTruceRefusalCostReduction), 0, 1) - 10* Property(Context,@ClassDiplomaticEmpire,WarningProgressionStock),0)</RefusalCost>
+        </ForcedTruce>
+      </WarInstance>
+    </Diplomacy>
     <Academy>
       <RelicBonusOnSystemConversion>Floor(3 / Property(Empire, @ClassEmpire, GameSpeedMultiplier))</RelicBonusOnSystemConversion>
     </Academy>

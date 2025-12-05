@@ -451,4 +451,90 @@
       <BattleEffectReference Name="TargetedEntity_IncreaseTotalShotReceived"/>
     </BattleEffectApplicationContext>
   </BattleAction>
+  
+  <BattleAction Name="Group_MainFlotilla_OnOwnShipDestruction">
+    <EventPrerequisite EventType="Destruction">
+      <EventInitiatorFilter EntityType="Ship" EntityTags="SameGroup">
+        <PathPrerequisite>../FlotillaTypeMain</PathPrerequisite>
+      </EventInitiatorFilter>
+    </EventPrerequisite>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Owner" EntityType="Group"/>
+      </TargetFilter>
+      <BattleEffectReference Name="Group_RemoveShipMilitaryPowerFromMain"/>
+      <BattleEffectReference Name="Group_IncreaseLostCP"/>
+      <BattleEffectReference Name="Group_IncreaseLostMilitaryPower"/>
+      <BattleEffectReference Name="Group_IncreaseLostShip"/>
+    </BattleEffectApplicationContext>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Owner" EntityType="Group"/>
+        <SubEntityFilter SelectionMethod="All">
+          <EntityFilter EntityType="Ship" EntityTags="SameGroup"/>
+        </SubEntityFilter>
+      </TargetFilter>
+      <BattleEffectReference Name="Ship_AddTemporaryDamageIncreaseIfLostShip"/>
+      <BattleEffectReference Name="Ship_AddTemporaryDefenseIncreaseIfLostShip"/>
+    </BattleEffectApplicationContext>
+  </BattleAction>
+
+  <BattleAction Name="Group_MainFlotilla_OnOwnShipDeactivation">
+    <EventPrerequisite EventType="Deactivation">
+      <EventInitiatorFilter EntityType="Ship" EntityTags="SameGroup">
+        <PathPrerequisite>../FlotillaTypeMain</PathPrerequisite>
+      </EventInitiatorFilter>
+    </EventPrerequisite>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Owner" EntityType="Group"/>
+      </TargetFilter>
+      <BattleEffectReference Name="Group_RemoveShipMilitaryPowerFromMain"/>
+      <BattleEffectReference Name="Group_IncreaseLostCP"/>
+      <BattleEffectReference Name="Group_IncreaseLostMilitaryPower"/>
+      <BattleEffectReference Name="Group_IncreaseLostShip"/>
+    </BattleEffectApplicationContext>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Owner" EntityType="Group"/>
+        <SubEntityFilter SelectionMethod="All">
+          <EntityFilter EntityType="Ship" EntityTags="SameGroup"/>
+        </SubEntityFilter>
+      </TargetFilter>
+      <BattleEffectReference Name="Ship_AddTemporaryDamageIncreaseIfLostShip"/>
+      <BattleEffectReference Name="Ship_AddTemporaryDefenseIncreaseIfLostShip"/>
+    </BattleEffectApplicationContext>
+  </BattleAction>
+
+  <BattleAction Name="Group_OnEnemyShipDestruction">
+    <EventPrerequisite EventType="Destruction">
+      <EventInitiatorFilter EntityType="Ship" EntityTags="OtherGroup"/>
+    </EventPrerequisite>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Owner" EntityType="Group"/>
+      </TargetFilter>
+      <BattleEffectReference Name="Group_IncreaseEarnedExperience"/>
+      <BattleEffectReference Name="Group_IncreaseDestroyedCP"/>
+      <BattleEffectReference Name="Group_IncreaseDestroyedMilitaryPower"/>
+      <BattleEffectReference Name="Group_IncreaseDestroyedShip"/>
+      <BattleEffectReference Name="Group_IncreaseDestroyedManpowerForEssenceRecyclingOnShipDestruction"/>
+    </BattleEffectApplicationContext>
+  </BattleAction>
+
+  <BattleAction Name="Group_OnEnemyShipDeactivation">
+    <EventPrerequisite EventType="Deactivation">
+      <EventInitiatorFilter EntityType="Ship" EntityTags="OtherGroup"/>
+    </EventPrerequisite>
+    <BattleEffectApplicationContext>
+      <TargetFilter>
+        <EntityFilter EntityRole="Owner" EntityType="Group"/>
+      </TargetFilter>
+      <BattleEffectReference Name="Group_IncreaseEarnedExperience"/>
+      <BattleEffectReference Name="Group_IncreaseDestroyedCP"/>
+      <BattleEffectReference Name="Group_IncreaseDestroyedMilitaryPower"/>
+      <BattleEffectReference Name="Group_IncreaseDestroyedShip"/>
+      <BattleEffectReference Name="Group_IncreaseDestroyedManpowerForEssenceRecyclingOnShipDestruction"/>
+    </BattleEffectApplicationContext>
+  </BattleAction>
 </Datatable>

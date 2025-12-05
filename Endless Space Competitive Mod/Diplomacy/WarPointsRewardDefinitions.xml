@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/WarPointsRewardDefinition.xsd">
+
+  <!-- Parameters: EncounterGroup, EnemyEncounterGroup. -->
+  <WarPointsRewardDefinition Name="BattleWon">
+    <Formula>
+      Property(EncounterGroup, @ClassGroup, VictoryLevel) *
+      ( Property(EncounterGroup, @ClassGroup, DestroyedMilitaryPower) / 1000
+      + Clamp01(Property(EncounterGroup, @ClassGroup, EnemyHeroesKilledCount))
+      - Property(EncounterGroup, @ClassGroup, LostMilitaryPower) / 1000)
+    </Formula>
+  </WarPointsRewardDefinition>
+
+  <!-- Parameters: EncounterGroup, EnemyEncounterGroup. -->
+  <WarPointsRewardDefinition Name="BattleLost">
+    <Formula>
+      Property(EnemyEncounterGroup, @ClassGroup, VictoryLevel) *
+      ( Property(EnemyEncounterGroup, @ClassGroup, DestroyedMilitaryPower) / 1000
+      + Clamp01(Property(EnemyEncounterGroup, @ClassGroup, EnemyHeroesKilledCount))
+      - Property(EnemyEncounterGroup, @ClassGroup, LostMilitaryPower) / 1000)
+      * -0.1
+    </Formula>
+  </WarPointsRewardDefinition>
+</Datatable>
