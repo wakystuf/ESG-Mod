@@ -944,8 +944,9 @@
     <Modifier TargetProperty="SystemsAboveOverColonizationCount" Operation="Addition" Value="$(SystemsAboveOverColonizationCount)" Path="../ClassEmpire"/>
 
     <Modifier TargetProperty="MaximumSystemProductionStock" Operation="Addition"  Value="$(NetSystemProduction)"  Priority="-1"/>
-
     <Modifier TargetProperty="MaximumSystemProductionStock" Operation="Multiplication"  Value="$(TotalMult)" Priority="-1"/>
+	<Modifier TargetProperty="MaximumSystemProductionStock" Operation="Subtraction" Value="$(SystemProductionFromProductionConversion)" Priority="1" />
+
     <BinaryModifier TargetProperty="IndustryInterest" Operation="Addition" Left="$(SystemProductionStock)" BinaryOperation="Multiplication" Right="$(InterestRate)"/>
     <BinaryModifier TargetProperty="SystemLevelCutBy4" Operation="Addition" Left="$(SystemLevel)" BinaryOperation="Multiplication" Right="0.25"/>
     <BinaryModifier TargetProperty="IndustryInterestRatioToIndustryNet" Operation="Addition" Left="$(IndustryInterest)" BinaryOperation="Division" Right="$(SystemProduction)"/> <!--This is used to limit the industry bonus with MaxValue of the property-->
@@ -956,7 +957,6 @@
 
     <Modifier       TargetProperty="OwnerShipDecayRate"    Operation="Division" Value="$(GameSpeedMultiplier)" />
     <Modifier       TargetProperty="OwnerShipRecoveryRate" Operation="Division" Value="$(GameSpeedMultiplier)" />
-    <BinaryModifier TargetProperty="OwnerShipRecoveryRate" Operation="Addition" Left="$(OwnerShipRecoveryRateBoostFromFleetPresence)" BinaryOperation="Multiplication" Right="$(HasOwnedDockedFleets)" />
     <BinaryModifier TargetProperty="OwnerShipRecoveryRate" Operation="Addition" Left="$(OwnerShipRecoveryRateBoostFromFleetPresence)" BinaryOperation="Multiplication" Right="$(HasOwnedDockedFleets)" />
 
     <Modifier TargetProperty="NetSystemGrowth"          Operation="Addition"    Value="$(SystemGrowthFromGrowthConversion)"          TooltipHidden="false" />
@@ -2005,11 +2005,11 @@
 		<Modifier TargetProperty="VisionRange" Operation="Addition" Value="$(AdditionalVisionRange)" Path="ClassExploitedStarSystem"/>
 
 		<!-- Calculate upkeep from mothership -->
-		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Addition"       Value="$(SystemGrowthStock)" Priority="-5"   Path="ClassColonizedStarSystem,ClassExploitedStarSystem"/>
-		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Power"          Value="1.25"          Priority="-3"  Path="ClassColonizedStarSystem,ClassExploitedStarSystem"/>
-		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Division"       Value="1200"        Priority="-2"  Path="ClassColonizedStarSystem,ClassExploitedStarSystem"/>
-		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Division"       Value="$(GameSpeedMultiplier)"        Priority="-2"  Path="ClassColonizedStarSystem,ClassExploitedStarSystem"/>
-		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Multiplication" Value="2"        Priority="-1"  Path="ClassColonizedStarSystem,ClassExploitedStarSystem"/>
+		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Addition"       Value="$(SystemGrowthStock)" Priority="-4" Path="ClassColonizedStarSystem,ClassExploitedStarSystem" />
+		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Multiplication" Value="$(GameSpeedTimeMultiplier)" Priority="-3" Path="ClassColonizedStarSystem,ClassExploitedStarSystem" />
+		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Power"          Value="1.25" Priority="-2" Path="ClassColonizedStarSystem,ClassExploitedStarSystem" />
+		<Modifier TargetProperty="PopulationGrowthUpkeepFromMothership" Operation="Division"       Value="600" Priority="-1" Path="ClassColonizedStarSystem,ClassExploitedStarSystem" />
+
 
 		<!-- Apply it on system -->
 		<Modifier TargetProperty="ShouldApplyOverPopulationPenalties" Operation="Force" Value="0"/>

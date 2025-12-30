@@ -984,7 +984,7 @@
     <Property Name="SlumberingRuinsBonusDuration"       BaseValue="0"  MinValue="0"/>
     <Property Name="CanSuperColonizeSlumberingRuins"    BaseValue="0"  MinValue="0"/>
     <Property Name="CanSeeSlumberingRuins"              BaseValue="0"  MinValue="0"/>
-    <Property Name="InfluenceRadiusRelicBonus"          BaseValue="0"  MinValue="Negative"/>
+    <Property Name="InfluenceRadiusRelicBonus"          BaseValue="0"  MinValue="Negative" MaxValue="1"/>
     <Property Name="FakeNetResearchRelics"              BaseValue="0"/>
     <Property Name="TotalResearchRelics" MinValue="0"/>
     <Property Name="TotalCathedrals"                     MinValue="0"/>
@@ -1107,8 +1107,8 @@
     <Modifier TargetProperty="ResultingResearchRelics"       Operation="Force"          Value="$(ResearchRelics)"                                       Priority="-10"/>
     <Modifier TargetProperty="TotalResearchRelics"           Operation="Force"          Value="$(ResultingResearchRelics)" Path="ClassEmpire"/>
     <Modifier TargetProperty="SlumberingRuinsBonusDuration"  Operation="Force"          Value="10" />
-    <Modifier TargetProperty="SlumberingRuinsBonusDuration"  Operation="Multiplication" Value="$(GameSpeedMultiplier)" />
-    <Modifier TargetProperty="ResearchRelics"                Operation="Addition"       Value="$(ResearchRelics)" Path="ClassEmpire/ClassColonizedStarSystem"/>
+    <Modifier TargetProperty="SlumberingRuinsBonusDuration"  Operation="Multiplication" Value="$(GameSpeedMultiplier)" Priority="1" />
+    <Modifier TargetProperty="ResearchRelics"                Operation="Addition"       Value="$(ResultingResearchRelics)" Path="ClassEmpire/ClassColonizedStarSystem"/>
     <BinaryModifier TargetProperty="AllowedCathedrals"       Operation="Addition"       Left="$(NumberOfTemples)" BinaryOperation="Division" Right="4"/>
     <Modifier TargetProperty="HeroPointMultiplier"           Operation="Addition"       Value="$(HeroPointMultiplier)" Path="ClassEmpire/ClassEducation"/>
 
@@ -1735,7 +1735,7 @@
     <!-- Diplomacy Relics -->
     <BinaryModifier TargetProperty="InfluenceRadiusRelicBonus"    Operation="Addition" Left="0.05" BinaryOperation="Multiplication" Right="$(DiplomacyRelicTurnsInEffect)" Path="ClassEmpire"/>
     <BinaryModifier TargetProperty="InfluenceRadiusModifier"    Operation="Addition" Left="$(HasDiplomacyRelic)" BinaryOperation="Multiplication" Right="$(InfluenceRadiusRelicBonus)" Path="ClassEmpire//ClassColonizedStarSystem"/>
-    <BinaryModifier TargetProperty="RelationPointsTrend"        Operation="Addition" Left="$(HasDiplomacyRelic)" BinaryOperation="Multiplication" Right="1" Path="ClassEmpire"/>
+    <BinaryModifier TargetProperty="Trend"                       Operation="Addition" Left="$(HasDiplomacyRelic)" BinaryOperation="Multiplication" Right="1" Path="ClassEmpire/ClassMajorRelationWithMinor"/>
 
     <!-- Political Relics -->
     <BinaryModifier TargetProperty="PoliticalRelicIndustrialStrategicBoost" Operation="Addition" Left="0.5" BinaryOperation="Multiplication" Right="$(GovernmentTypeBonus)" TooltipHidden="true"/>
