@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/VictoryConditionDefinition.xsd">
+
+    <VictoryConditionDefinition Name="VictoryConquest" SettingName="Conquest">
+        <!-- PERFORMANCE TRACKERS -->
+        <PerformanceTracker Name="PerformanceSystemCount" Type="SingleValue">
+            <Variable>ColonizedStarSystemStateColonyCount</Variable>
+        </PerformanceTracker>
+        <PerformanceTracker Name="PerformancePlanetCount" Type="SingleValue">
+            <Variable>OwnedPlanets</Variable>
+        </PerformanceTracker>
+        <PerformanceTracker Name="PerformanceMinorTraitsAssimilated" Type="SingleValue">
+            <Variable>MinorTraitsAssimilated</Variable>
+        </PerformanceTracker>
+        <PerformanceTracker Name="PerformanceColonizedStarSystemStateColonyCount" Type="SingleValue" Hidden="true">
+            <Variable>ColonizedStarSystemStateColonyCount</Variable>
+        </PerformanceTracker>
+        <PerformanceTracker Name="PerformanceNumberOfInitialAvailableStarSystemNode" Type="SingleValue" Hidden="true">
+            <Variable>VictoryConquestThreshold</Variable>
+        </PerformanceTracker>
+        <SoloEvaluator>
+            <!--A Player has reached 50% of the needed ratio-->
+            <Alert Repeat="false">(Property(Empire, ColonizedStarSystemStateColonyCount) ge (Property(VictoryManager, VictoryConquestThresholdAlert50))) or (Property(Empire, ColonizedStarSystemStateGhostCount) ge (Property(VictoryManager, VictoryConquestThresholdAlert50)))</Alert>
+            <!--A Player has reached 75% of the needed ratio-->
+            <Alert Repeat="false">(Property(Empire, ColonizedStarSystemStateColonyCount) ge (Property(VictoryManager, VictoryConquestThresholdAlert75))) or (Property(Empire, ColonizedStarSystemStateGhostCount) ge (Property(VictoryManager, VictoryConquestThresholdAlert75)))</Alert>
+            <!-- EXPRESSION -->
+            <ScoreFormula>Property(Empire, ColonizedStarSystemStateColonyCount)</ScoreFormula>
+            <ProgressFormula>Property(Empire, ColonizedStarSystemStateColonyCount) / Property(VictoryManager, VictoryConquestThreshold)</ProgressFormula>
+            <DiscreteProgressFormula>Property(Empire, ColonizedStarSystemStateColonyCount)</DiscreteProgressFormula>
+            <DiscreteObjectiveFormula>Property(VictoryManager, VictoryConquestThreshold)</DiscreteObjectiveFormula>
+            <VictoryExpression>(Property(Empire, ColonizedStarSystemStateColonyCount) ge Property(VictoryManager, VictoryConquestThreshold)) or (Property(Empire, ColonizedStarSystemStateGhostCount) ge Property(VictoryManager, VictoryConquestThreshold))</VictoryExpression>
+        </SoloEvaluator>
+        <AllianceEvaluator>
+            <!--ALERTS-->
+          <Alert Repeat="false">$(SummedMajorEmpiresScore) ge (Property(VictoryManager, VictoryConquestThresholdAlert50) * (1.1 +(0.3 * $(NumberOfMajorEmpiresInAlliance))))</Alert>
+          <Alert Repeat="false">$(SummedMajorEmpiresScore) ge (Property(VictoryManager, VictoryConquestThresholdAlert75) * (1.1 +(0.3 * $(NumberOfMajorEmpiresInAlliance))))</Alert>
+            <!-- EXPRESSION -->
+            <ScoreFormula>$(SummedMajorEmpiresScore)</ScoreFormula>
+            <ProgressFormula>$(SummedMajorEmpiresScore) / Property(VictoryManager, VictoryConquestThreshold) * (1.1 +(0.3 * $(NumberOfMajorEmpiresInAlliance)))</ProgressFormula>
+            <DiscreteProgressFormula>$(SummedMajorEmpiresScore)</DiscreteProgressFormula>
+            <DiscreteObjectiveFormula>Property(VictoryManager, VictoryConquestThreshold) * (1.1 +(0.3 * $(NumberOfMajorEmpiresInAlliance)))</DiscreteObjectiveFormula>
+            <VictoryExpression>$(SummedMajorEmpiresScore) ge Property(VictoryManager, VictoryConquestThreshold) * (1.1 +(0.3 * $(NumberOfMajorEmpiresInAlliance)))</VictoryExpression>
+        </AllianceEvaluator>
+    </VictoryConditionDefinition>
+    
+</Datatable>
