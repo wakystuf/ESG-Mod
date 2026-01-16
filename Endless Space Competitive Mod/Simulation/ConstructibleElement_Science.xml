@@ -1044,4 +1044,59 @@
     <SimulationDescriptorReference Name="TechnologyCounter"/>
     <PopulationEvent Name="PopulationPoliticalEventPacifistTechnology"/>
   </TechnologyDefinition>
+  
+  <!-- Citadel Extensions -->
+  <TechnologyDefinition Name="TechnologyDefinitionEmpireDevelopmentJuggernaut5" TechnologyStage="TechnologyStageDefinitionEmpireDevelopment5" Category="CategoryTechnologyEmpireDevelopment" ScoreProvider="TechnologyUnlocked">
+    <CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage5Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostJuggernautMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEmpireDevelopmentMultiplier)</CustomCost>
+    <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCHisshos</DownloadableContentPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,Disable,JuggernautsNotDiscovered">../JuggernautsCanBeResearched</PathPrerequisite>
+    <PathPrerequisite Flags="DiplomaticTradable,IgnoreOnCommand">false</PathPrerequisite>
+    <TechnologyPrerequisite Flags="Prerequisite,Link,Disable">TechnologyLinkDefinitionDependencyEmpireDevelopmentJuggernaut3To5</TechnologyPrerequisite>
+    <SimulationDescriptorReference Name="TechnologyJuggernautCitadelSupportImprovements"/>
+    <SimulationDescriptorReference Name="TechnologyCountEmpireDevelopmentJuggernautIncreaseStage5"/>
+    <SimulationDescriptorReference Name="TechnologyCounter"/>
+    <PopulationEvent Name="PopulationPoliticalEventIndustrialistTechnology"/>
+
+    <HelperVariable Name="IndustryVariable"/>
+    <HelperVariable Name="FoodVariable"/>
+    <HelperVariable Name="DustVariable"/>
+    <HelperVariable Name="CitadelCount"/>
+    <HelperFormula>$(IndustryVariable) - 0.5 * $(FoodVariable) - 0.5 * $(DustVariable) + 5 * $(CitadelCount)</HelperFormula>
+  </TechnologyDefinition>
+  
+  <!-- Compact Fusion Methods -->
+  <TechnologyDefinition Name="TechnologyDefinitionScienceAndExploration8" TechnologyStage="TechnologyStageDefinitionScienceAndExploration3" Category="CategoryTechnologyScienceAndExploration" ScoreProvider="TechnologyUnlocked">
+    <CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage3Multiplier)   * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantScienceAndExplorationMultiplier)</CustomCost>
+    <PathPrerequisite Flags="Prerequisite,DiplomaticTradable,Discard" Inverted="true">ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,DiplomaticTradable,Discard" Inverted="true">ClassEmpire,AffinityMappingHoratio</PathPrerequisite>
+    <SimulationDescriptorReference Name="TechnologyMoonExploration"/>
+    <SimulationDescriptorReference Name="TechnologyAnomalyReduction1"/>
+    <SimulationDescriptorReference Name="TechnologyPopulation1"/>
+    <SimulationDescriptorReference Name="TechnologyCountScienceAndExplorationIncreaseStage3"/>
+    <SimulationDescriptorReference Name="TechnologyCounter"/>
+    <PopulationEvent Name="PopulationPoliticalEventEcologistTechnology"/>
+
+    <HelperVariable Name="PopulationVariable"/>
+    <HelperVariable Name="AvailableMeagerPlanets"/>
+    <HelperVariable Name="AvailableMoonAnomaly"/>
+    <HelperFormula>$(PopulationVariable) * $(AvailableMeagerPlanets) + $(AvailableMoonAnomaly) * 20</HelperFormula>
+  </TechnologyDefinition>
+
+  <TechnologyDefinition Name="TechnologyDefinitionScienceAndExploration8Horatio" TechnologyStage="TechnologyStageDefinitionScienceAndExploration3" Category="CategoryTechnologyScienceAndExploration" ScoreProvider="TechnologyUnlocked">
+    <CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage3Multiplier)  * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantScienceAndExplorationMultiplier)</CustomCost>
+    <PathPrerequisite Flags="Prerequisite,DiplomaticTradable,Discard" Inverted="true">ClassEmpire,AffinityGameplayVampirilis</PathPrerequisite>
+    <PathPrerequisite Flags="Prerequisite,DiplomaticTradable,Discard,Faction,AffinityHoratio" Inverted="false">ClassEmpire,AffinityMappingHoratio</PathPrerequisite>
+    <SimulationDescriptorReference Name="TechnologyMoonExploration"/>
+    <SimulationDescriptorReference Name="TechnologyAnomalyReduction1"/>
+    <SimulationDescriptorReference Name="TechnologyPopulation1Horatio"/>
+    <SimulationDescriptorReference Name="TechnologyCountScienceAndExplorationIncreaseStage3"/>
+    <SimulationDescriptorReference Name="TechnologyCounter"/>
+    <PopulationEvent Name="PopulationPoliticalEventEcologistTechnology"/>
+
+
+    <HelperVariable Name="PopulationVariable"/>
+    <HelperVariable Name="AvailableMeagerPlanets"/>
+    <HelperVariable Name="AvailableMoonAnomaly"/>
+    <HelperFormula>$(PopulationVariable) * $(AvailableMeagerPlanets) * 1.5+ $(AvailableMoonAnomaly) * 20</HelperFormula>
+  </TechnologyDefinition>
 </Datatable>
