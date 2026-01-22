@@ -183,7 +183,43 @@
 		<Property Name ="CannotBeModified" BaseValue="0" MaxValue="1"/> <!-- Prevents the fleet from having ships added/removed -->
 		<Property Name ="CannotContributeManpower" BaseValue="0" MaxValue="1"/> <!-- Prevents the fleet from having its manpower contribute to other ground battles -->
 
-		<Modifier TargetProperty="NetEmpireEmpirePoint"		Operation="Addition"	Value="$(InfluenceBonusFromFleet)"		    Path="../ClassEmpire"  />
+    <!-- ESG - 2026 Juggernaut Bonuses -->
+    <Property Name="JuggernautActionPointStockBonus"/>
+    <Property Name="JuggernautNetActionPointBonus"/>
+    <Property Name="JuggernautMaximumHealthBonus"/>
+    <Property Name="JuggernautMaximumShieldBonus"/>
+    <Property Name="JuggernautShieldAbsorptionBonus"/>
+    <Property Name="JuggernautShieldRegenBonus"/>
+    <Property Name="JuggernautDamageBonusPerTargetCommandPoints"/>
+    <Property Name="JuggernautDamageBonus"/>
+    <Property Name="JuggernautShipManpowerDamageBonus"/>
+    <Property Name="JuggernautManpowerDOTBonus"/>
+    <Property Name="JuggernautRepairAfterBattleBonus"/>
+    <Property Name="JuggernautRepairAfterPhaseBonus"/>
+    <Property Name="JuggernautBattleMovementGain"/>
+    <Property Name="JuggernautEvasionBonus"/>
+    <Property Name="JuggernautAccuracyBonus"/>
+    <Property Name="JuggernautEMPDefenseAbsorptionBonus"/>
+    
+    <Modifier TargetProperty="NetActionPoint"											Operation="Addition" Value="$(JuggernautNetActionPointBonus)"								Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="MaximumActionPointStock"						Operation="Addition" Value="$(JuggernautActionPointStockBonus)"							Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="MaximumHealth"											Operation="Percent"  Value="$(JuggernautMaximumHealthBonus)"								Path="ClassGarrisonFleet/ClassShip/ClassSectionCore"/>
+    <Modifier TargetProperty="MaximumShield"											Operation="Percent"  Value="$(JuggernautMaximumShieldBonus)"								Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="ShieldAbsorption"										Operation="Addition" Value="$(JuggernautShieldAbsorptionBonus)"							Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="ShieldRegeneratePerSecondDynamic"		Operation="Addition" Value="$(JuggernautShieldRegenBonus)"									Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="DamageBonusPerTargetCommandPoints"	Operation="Maximum"  Value="$(JuggernautDamageBonusPerTargetCommandPoints)"	Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="Damage"															Operation="Addition" Value="$(JuggernautDamageBonus)"												Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="ShipManpowerKillPerHit"							Operation="Percent"  Value="$(JuggernautShipManpowerDamageBonus)"						Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="ManpowerDamageOverTime"							Operation="Percent"  Value="$(JuggernautManpowerDOTBonus)"									Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="RepairAfterBattle"									Operation="Addition" Value="$(JuggernautRepairAfterBattleBonus)"						Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="RepairAfterPhase"										Operation="Addition" Value="$(JuggernautRepairAfterPhaseBonus)"							Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="BattleMovementGain"									Operation="Addition" Value="$(JuggernautBattleMovementGain)"					  		Path="ClassGarrisonFleet/ClassShipEncounter"/>
+    <Modifier TargetProperty="Evasion"														Operation="Addition" Value="$(JuggernautEvasionBonus)"											Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="Accuracy"														Operation="Addition" Value="$(JuggernautAccuracyBonus)"											Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="EMPShieldDefense"										Operation="Addition" Value="$(JuggernautEMPDefenseAbsorptionBonus)"					Path="ClassGarrisonFleet/ClassShip"/>
+    <Modifier TargetProperty="EMPWeaponDefense"										Operation="Addition" Value="$(JuggernautEMPDefenseAbsorptionBonus)"					Path="ClassGarrisonFleet/ClassShip"/>
+    
+    <Modifier TargetProperty="NetEmpireEmpirePoint"		Operation="Addition"	Value="$(InfluenceBonusFromFleet)"		    Path="../ClassEmpire"  />
 		<Modifier TargetProperty="NetEmpireResearch"		Operation="Addition"	Value="$(ScienceBonusFromFleet)"		    Path="../ClassEmpire"  />
 
 		<BinaryModifier TargetProperty="SiegePower"    Operation="Addition" Left="$(CommandPoints)" BinaryOperation="Multiplication" Right="2"/>
