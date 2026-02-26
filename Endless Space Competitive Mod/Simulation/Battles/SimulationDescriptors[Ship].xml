@@ -4,6 +4,7 @@
     <!-- ESG Properties -->
     <Property Name="OpponentRecyclingManpowerPerCP" 	          BaseValue="0"/>
     <Property Name="OpponentRecyclingManpowerPerCPFlotilla"     BaseValue="0"/>
+    <Property Name="FlotillaShieldRegeneratePerSecondDynamic"     BaseValue="0"/>
     <Property Name="TotalIndustryCost"   BaseValue="0"/>
     <Property Name="TotalStrategic1Cost" BaseValue="0"/>
     <Property Name="TotalStrategic2Cost" BaseValue="0"/>
@@ -191,9 +192,10 @@
 
     <Property Name="Damage"                         BaseValue="0" MinValue="-0.95"/>
 
-    <Property Name="DamageProjectile"			    BaseValue="0" MinValue="-0.95"/>
+    <Property Name="DamageProjectile"			          BaseValue="0" MinValue="-0.95"/>
     <Property Name="DamageKinetic"                  BaseValue="0" MinValue="-0.95"/>
-    <Property Name="DamageEnergy"				    BaseValue="0" MinValue="-0.95"/>
+    <Property Name="DamageCoilgun"                  BaseValue="0" MinValue="-0.95"/>
+    <Property Name="DamageEnergy"				            BaseValue="0" MinValue="-0.95"/>
     <Property Name="DamageMissile"                  BaseValue="0" MinValue="-0.95"/>
     <Property Name="DamageLaser"                    BaseValue="0" MinValue="-0.95"/>
     <Property Name="DamageBeam"                     BaseValue="0" MinValue="-0.95"/>
@@ -203,7 +205,7 @@
     <Property Name="CriticalHitChance"              BaseValue="0" MinValue="-0.95"/>
     <Property Name="CriticalHitChanceProjectile"    BaseValue="0" MinValue="-0.95"/>
     <Property Name="CriticalHitChanceEnergy"        BaseValue="0" MinValue="-0.95"/>
-    <Property Name="ShieldPenetrationFactor"	    BaseValue="0" MinValue="-0.95"/>
+    <Property Name="ShieldPenetrationFactor"	      BaseValue="0" MinValue="-0.95"/>
     <Property Name="HullPlatingPenetrationFactor"   BaseValue="0" MinValue="-0.95"/>
     <Property Name="DamageShield"                   BaseValue="0" MinValue="-0.95"/>
     <Property Name="DamageSection"                  BaseValue="0" MinValue="-0.95"/>
@@ -211,9 +213,10 @@
     <Property Name="DamageCore"                     BaseValue="0" MinValue="-0.95"/>
     <Property Name="Accuracy"                       BaseValue="0" MinValue="-0.95"/>
 
-    <Property Name="DamageBonusPerTargetCommandPoints"          				BaseValue="0"  MinValue="Negative"/>
+    <Property Name="DamageBonusPerTargetCommandPoints"          BaseValue="0"  MinValue="Negative"/>
     <Property Name="DamageBonusPerOpponentShipAtLongRange"      BaseValue="0"  MinValue="Negative"/>
-    <Property Name="DamageBonusPerTargetCommandPointsFlotilla"      BaseValue="0" MaxValue="0.12" MinValue="Negative"/>
+    <Property Name="DamageBonusPerTargetCommandPointsFlotilla"  BaseValue="0" MinValue="Negative"/>
+    <Property Name="DamageBonusPerOpponentShipAtLongRange"      BaseValue="0"  MinValue="Negative"/>
 
     <!--!-Sums for GUI -->
     <Property Name="DamagePerSecondKinetic"             BaseValue="0"/>
@@ -302,10 +305,9 @@
     <Property Name="MaximumShieldCapForFlotilla"              BaseValue="0"/>
     <Property Name="ShieldAbsorptionForFlotilla"              BaseValue="0"/>
     <Property Name="DefenseModuleCount"                       BaseValue="0"/>
-    <Property Name="FlotillaManpowerDamageOverTimeIncrease"   BaseValue="0"/>
 
-	<Property Name="ShieldDefensivePower"                     BaseValue="0"/>
-	<Property Name="HullPlatingDefensivePower"                BaseValue="0"/>
+	  <Property Name="ShieldDefensivePower"                     BaseValue="0"/>
+	  <Property Name="HullPlatingDefensivePower"                BaseValue="0"/>
 
     <!--Automatons-->
     <Property Name="AutomatonsSkillBonus" BaseValue="0"/>
@@ -334,26 +336,23 @@
 
     <Modifier TargetProperty="MaximumHealth"            Operation="Addition" Value="$(ShipHealth)"                  Path="ClassShip/ClassSection,ClassSectionCore" />
 
-    <Modifier TargetProperty="DamageKinetic"			Operation="Addition" Value="$(DamageProjectile)"			Path="ClassShip"/>
-    <Modifier TargetProperty="DamageMissile"			Operation="Addition" Value="$(DamageProjectile)"			Path="ClassShip"/>
-    <Modifier TargetProperty="DamageLaser"				Operation="Addition" Value="$(DamageEnergy)"				Path="ClassShip"/>
-    <Modifier TargetProperty="DamageBeam"				Operation="Addition" Value="$(DamageEnergy)"				Path="ClassShip"/>
+    <Modifier TargetProperty="DamageKinetic"			      Operation="Addition" Value="$(DamageProjectile)"			      Path="ClassShip"/>
+    <Modifier TargetProperty="DamageMissile"			      Operation="Addition" Value="$(DamageProjectile)"			      Path="ClassShip"/>
+    <Modifier TargetProperty="DamageCoilgun"			      Operation="Addition" Value="$(DamageProjectile)"			      Path="ClassShip"/>
+    <Modifier TargetProperty="DamageLaser"				      Operation="Addition" Value="$(DamageEnergy)"				        Path="ClassShip"/>
+    <Modifier TargetProperty="DamageBeam"				        Operation="Addition" Value="$(DamageEnergy)"				        Path="ClassShip"/>
 
     <Modifier TargetProperty="Damage"                   Operation="Percent" Value="$(Damage)"                       Path="ClassShip/ClassSection/ClassModuleWeapon" Priority="1" />
-    <Modifier TargetProperty="Damage"					Operation="Percent" Value="$(DamageKinetic)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponKinetic" Priority="1" />
-    <Modifier TargetProperty="Damage"					Operation="Percent" Value="$(DamageKinetic)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponKineticRailgun" Priority="1" />
-    <Modifier TargetProperty="Damage"					Operation="Percent" Value="$(DamageMissile)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponMissile" Priority="1" />
-    <Modifier TargetProperty="Damage"					Operation="Percent" Value="$(DamageMissile)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponMissileSwarm" Priority="1" />
-    <Modifier TargetProperty="Damage"					Operation="Percent" Value="$(DamageLaser)"                  Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponLaser" Priority="1" />
-    <Modifier TargetProperty="Damage"					Operation="Percent" Value="$(DamageBeam)"                   Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponBeam" Priority="1" />
-    <Modifier TargetProperty="Damage"					Operation="Percent" Value="$(DamageLaser)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponEnergyCoilgun" Priority="1" />
+    <Modifier TargetProperty="Damage"					          Operation="Percent" Value="$(DamageKinetic)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponKinetic" Priority="1" />
+    <Modifier TargetProperty="Damage"					          Operation="Percent" Value="$(DamageKinetic)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponKineticRailgun" Priority="1" />
+    <Modifier TargetProperty="Damage"					          Operation="Percent" Value="$(DamageMissile)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponMissile" Priority="1" />
+    <Modifier TargetProperty="Damage"					          Operation="Percent" Value="$(DamageMissile)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponMissileSwarm" Priority="1" />
+    <Modifier TargetProperty="Damage"					          Operation="Percent" Value="$(DamageLaser)"                  Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponLaser" Priority="1" />
+    <Modifier TargetProperty="Damage"					          Operation="Percent" Value="$(DamageBeam)"                   Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponBeam" Priority="1" />
+    <Modifier TargetProperty="Damage"					          Operation="Percent" Value="$(DamageCoilgun)"                Path="ClassShip/ClassSection/ClassModuleWeapon,ClassModuleWeaponEnergyCoilgun" Priority="1" />
     <Modifier TargetProperty="DamageShort"              Operation="Percent" Value="$(DamageShort)"                  Path="ClassShip/ClassSection/ClassModuleWeapon" />
     <Modifier TargetProperty="DamageMedium"             Operation="Percent" Value="$(DamageMedium)"                 Path="ClassShip/ClassSection/ClassModuleWeapon" />
     <Modifier TargetProperty="DamageLong"               Operation="Percent" Value="$(DamageLong)"                   Path="ClassShip/ClassSection/ClassModuleWeapon" />
-
-    <!-- Workaround for having all these different properties that are separately capped. Turned out not to work. -->
-	<!-- <Modifier TargetProperty="DamageBonusPerTargetCommandPoints" Operation="Addition" Value="$(DamageBonusPerTargetCommandPoints_LockOnBasic)"/> -->
-    <!-- <Modifier TargetProperty="DamageBonusPerTargetCommandPoints" Operation="Addition" Value="$(DamageBonusPerTargetCommandPoints_LockOnAdvanced)"/> -->
 
     <Modifier TargetProperty="ShipManpowerKillPerHit"   Operation="Percent" Value="$(ShipManpowerKillPerHitPercent)"  Path="ClassShip/ClassSection/ClassModuleWeapon" />
 

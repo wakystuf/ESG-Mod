@@ -75,7 +75,7 @@
     <Property Name="PlanetOutpostPrestige" MinValue="Negative"/>
 
 
-    <Property Name="OverPopulationThreshold"                BaseValue="0" />
+    <Property Name="OverPopulationThreshold"                BaseValue="0" RoundingFunction="Floor"/>
     <Property Name="PopulationPercentForOverPopulation"     BaseValue="0.7" />
     <Property Name="OverPopulationMalus"                    BaseValue="0"  MinValue="Negative" MaxValue="0"/>
     <Property Name="ParasitedPopulation"                    BaseValue="0"   />
@@ -136,7 +136,10 @@
 	
     <!-- 2025 Patch -->
     <Property Name="NetEmpireManpower" MinValue="0" />	
-
+    <Property Name="NetSystemManpower" MinValue="0" />
+    <Property Name="IsOverpopulated" MaxValue="1" MinValue="0" RoundingFunction="Ceil"/>
+    <Property Name="PopulationInOverpopulation" MinValue="0"/>
+    
     <!-- ########################################################## -->
     <!-- ######################## MODIFIER ######################## -->
     <!-- ########################################################## -->
@@ -239,10 +242,17 @@
 
     <Modifier TargetProperty="MaximumPopulation"      Operation="Addition" Value="$(MaximumPopulation)" Path="ClassColonizedPlanet/../ClassStarSystem" TooltipHidden="true"/>
 
-    <BinaryModifier TargetProperty="OverPopulationThreshold"    Operation="Addition"             Left="$(MaximumPopulation)"       BinaryOperation="Multiplication" Right="$(PopulationPercentForOverPopulation)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="OverPopulationMalus"        Operation="Addition"             Left="$(OverPopulationThreshold)" BinaryOperation="Subtraction"    Right="$(Population)" TooltipHidden="true"/>
-    <BinaryModifier TargetProperty="OverPopulationPenalties"    Operation="Addition"             Left="$(OverPopulationMalus)"     BinaryOperation="Multiplication" Right="5" Path="../ClassColonizedStarSystem" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="OverPopulationThreshold"    Operation="Addition" Left="$(MaximumPopulation)"       BinaryOperation="Multiplication" Right="$(PopulationPercentForOverPopulation)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="OverPopulationMalus"        Operation="Addition" Left="$(OverPopulationThreshold)" BinaryOperation="Subtraction"    Right="$(Population)" TooltipHidden="true"/>
+    <BinaryModifier TargetProperty="OverPopulationPenalties"    Operation="Addition" Left="$(OverPopulationMalus)"     BinaryOperation="Multiplication" Right="5" Path="../ClassColonizedStarSystem" TooltipHidden="true"/>
 
+    <!-- IsOverpopulated = (Population + 1) - OverPopulationThreshold
+         NOTE: The +1 is necessary to make IsOverpopulated be true if Population is equal to OverpopulationThreshold -->
+    <BinaryModifier TargetProperty="IsOverpopulated" Operation="Addition" Left="$(Population)" BinaryOperation="Addition" Right="1" TooltipHidden="true"/>
+    <Modifier TargetProperty="IsOverpopulated" Operation="Subtraction" Value="$(OverPopulationThreshold)" TooltipHidden="true"/>
+
+    <BinaryModifier TargetProperty="PopulationInOverpopulation" Operation="Addition" Left="$(IsOverpopulated)" BinaryOperation="Multiplication" Right="$(Population)" TooltipHidden="true"/>
+    
     <Modifier TargetProperty="PlanetHasTemple" Operation="Force" Value="$(HasTemple)" Path="ClassPlanet/ClassPopulationPlanet" TooltipHidden="true"/>
 
     <!-- For mothership -->
@@ -297,7 +307,8 @@
     <BinaryModifier TargetProperty="PlanetFIDS"     Operation="Addition" Left="$(PlanetFIDSFromDevelopment)" BinaryOperation="Multiplication" Right="$(Population)"/>
     <BinaryModifier TargetProperty="PlanetFIDSI"    Operation="Addition" Left="$(PlanetFIDSIFromDevelopment)" BinaryOperation="Multiplication" Right="$(Population)"/>
 	
-	<Modifier TargetProperty="NetEmpireManpower" Operation="Addition" Value="$(NetEmpireManpower)" Path="../ClassColonizedStarSystem" />
+	  <Modifier TargetProperty="NetEmpireManpower" Operation="Addition" Value="$(NetEmpireManpower)" Path="../ClassEmpire" />
+	  <Modifier TargetProperty="NetSystemManpower" Operation="Addition" Value="$(NetSystemManpower)" Path="../ClassColonizedStarSystem" />
 
     <!-- ESG -->
     <Modifier TargetProperty="PlanetFood"                         Operation="Percent" Value="$(PlanetFoodDynamic)"           TooltipHidden="true" />
