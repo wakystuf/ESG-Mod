@@ -2419,6 +2419,93 @@
     <!--      VAMPIRILIS QUEST Chapter 4 REBELLIOUS    -->
     <!-- #############################################-->
 
+    <QuestDefinition Name="VampirilisQuest-Chapter4-Rebellious-Step2" Category="MajorQuest" SubCategory="Vampirilis" AlternateVersion="VampirilisQuest-Chapter4-Rebellious-Step2Bis">
+
+        <!--============ TAGS ============-->
+        <Tags>VampirilisQuest-Chapter4-Rebellious-Step2, FactionFinalQuest,FactionQuestVampirilis</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$MyAcademySystem">
+                <Any>
+                    <From Source="$CurrentEmpire.$ColonizedStarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassColonizedStarSystem,WorldAcademy</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$MyAcademySystemLocation">
+                <From Source="$MyAcademySystem.$StarSystem"/>
+            </Var>
+            <Var VarName="$MinimumAmount" IntValue="1"/>
+            <Var VarName="$MinimumLevel"  IntValue="20"/>
+
+            <LocalizationVar LocalizationKey="$MinimumLevelName" Source="$MinimumLevel"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <Objective Name="Step2_Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+
+                        <Parallel CompletionPolicy="First">
+                            <!--Should Detroy Planet-->
+                            <Sequence>
+                                <Decorator_HeroAssigned>
+                                    <Condition_HasHeroes HeroAssignationFilter="System">
+                                        <Input_Empire VarName="$CurrentEmpire"/>
+                                        <Input_MinimumAmount VarName="$MinimumAmount"/>
+                                        <Input_MinimumLevel VarName="$MinimumLevel"/>
+                                        <Input_Locations VarName="$MyAcademySystemLocation"/>
+                                    </Condition_HasHeroes>
+                                    <Input_Locations VarName="$MyAcademySystem"/>
+                                </Decorator_HeroAssigned>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_SystemDestroyed>
+                                    <Input_Nodes VarName="$MyAcademySystemLocation"/>
+                                    <Input_Victim VarName="$CurrentEmpire"/>
+                                </Decorator_SystemDestroyed>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                                <Action_Fail/>
+                            </Sequence>
+                        </Parallel>
+
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>VampirilisQuest-Chapter4-Rebellious-Step2Ter</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistVampirilisReward11" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #############################################-->
+    <!--      VAMPIRILIS QUEST Chapter 4 REBELLIOUS    -->
+    <!-- #############################################-->
+
     <QuestDefinition Name="VampirilisQuest-Chapter4-Rebellious-Step2Ter" Category="MajorQuest" SubCategory="Vampirilis">
 
         <!--============ TAGS ============-->

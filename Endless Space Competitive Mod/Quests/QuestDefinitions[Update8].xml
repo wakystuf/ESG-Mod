@@ -1,0 +1,266 @@
+<Datatable>
+    <!--    MINOR POPULATION QUEST 06     -->
+    <!--              PILGRIMS            -->
+    <QuestDefinition Name="MinorPopulationQuest06Bis" Category="PopulationQuest" SubCategory="Population" MinimumTurn="1" TriggeringProbability="0.8">
+
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn</Tags>
+
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$AllStarSystems">
+                <From Source="$Constellations.$StarSystems"/>
+            </Var>
+
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', SystemProduction)+50</Expression>
+            </InterpretedVar>
+
+            <Var VarName="$Amount04" IntValue="5"/>
+            <Var VarName="$Amount05" IntValue="4"/>
+            <Var VarName="$Amount06" IntValue="5"/>
+            <Var VarName="$RuinsType" StringValue="CuriosityTypeRuins"/>
+            <Var VarName="$ApprovalType" StringValue="SubCategoryApproval"/>
+            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassPopulationStarSystemAffinityPilgrims/./ClassColonizedStarSystem', SystemProduction, true) ge $(Amount02)"/>
+            <Var VarName="$Expression02" StringValue="Property(Context, @'ClassEmpire/ClassPopulationEmpire,ClassPopulationEmpireAffinityPilgrimsCount', PopulationCount, true) lt 1"/>
+
+            <Var VarName="$CuriosityGUID"/>
+            <Var VarName="$Marker01"/>
+
+            <LocalizationVar  Source="$Amount02" LocalizationKey="$Amount02Name"/>
+            <LocalizationVar  Source="$Amount04" LocalizationKey="$Amount04Name"/>
+            <LocalizationVar  Source="$Amount05" LocalizationKey="$Amount05Name"/>
+            <LocalizationVar  Source="$Amount06" LocalizationKey="$Amount06Name"/>
+
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <Prerequisites Target="$(Empire)">
+            <DownloadableContentPrerequisite>MinorDLCQuests</DownloadableContentPrerequisite>
+            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire/ClassPopulationEmpire,ClassPopulationEmpireAffinityPilgrims', PopulationCount, true) ge 12 </InterpreterPrerequisite>
+            <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="MinorPopulationQuest06"  QuestState="NotStarted" />
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--Let's choose-->
+            <Step Name="Step1">
+                <!--============ STEP 1 - Choose ============-->
+
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulationPlanetAffinityTerransCount</PathPrerequisite>
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="2">
+                        <Prerequisites Target="$(Empire)">
+                            <InterpreterPrerequisite Flags="Prerequisite">
+                                Path(Context,@'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulationPlanetAffinityTerransCount')
+                                or Path(Context,@'ClassEmpire,EmpireTypeMajor,AffinityGameplayMajorHisshos')
+                            </InterpreterPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="3">
+                        <Prerequisites Target="$(Empire)">
+                            <InterpreterPrerequisite Flags="Prerequisite">
+                                Path(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulationPlanetAffinityEydersCount')
+                                or  Path(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassPopulationPlanetAffinitySowersCount')
+                            </InterpreterPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+
+                <!--============ Build a Science Building ============-->
+                <ObjectiveSet ObjectiveComposition="All">
+                    <Objective Name="Objective4" StartValue="0" EndValue="$Amount06">
+                        <AIHint Category="MaximizeResource" Motivation="0.3">
+                            <Resource>Approval</Resource>
+                        </AIHint>
+                        <Parallel CompletionPolicy="First">
+
+                            <Sequence>
+                                <Loop>
+                                    <Decorator_ConstructionCompleted Initiator="Empire" ProgressionIncrement="1">
+                                        <Input_ConstructionSubCategory VarName="$ApprovalType"/>
+                                    </Decorator_ConstructionCompleted>
+                                    <Input_Count VarName="$Amount06"/>
+                                </Loop>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression02"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_Fail/>
+                            </Sequence>
+
+                        </Parallel>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MinorPopulationQuest06-Event01Bis</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward LocalizationKey="%MinorPopulationQuest06Reward1Bis"/>
+                </ObjectiveSet>
+
+                <!--============ STEP 2 - Call the Police ============-->
+                <ObjectiveSet ObjectiveComposition="All">
+                    <Objective Name="Objective2">
+                        <Parallel CompletionPolicy="First">
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression01"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression02"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+
+                        </Parallel>
+
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MinorPopulationQuest06-Event02</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward LocalizationKey="%MinorPopulationQuest06Reward2"/>
+
+                </ObjectiveSet>
+
+                <!--============ STEP 2 - Call the Police ============-->
+                <ObjectiveSet ObjectiveComposition="All">
+                    <Objective Name="Objective2">
+                        <Parallel CompletionPolicy="First">
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression01"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression02"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+
+                        </Parallel>
+
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MinorPopulationQuest06-Event02</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward LocalizationKey="%MinorPopulationQuest06Reward2Bis"/>
+
+                </ObjectiveSet>
+
+                <ObjectiveSet ObjectiveComposition="All">
+                    <Objective Name="Objective3" StartValue="0" EndValue="$Amount04">
+                        <Parallel CompletionPolicy="First">
+
+                            <Sequence>
+                                <Loop Count="5">
+                                    <Decorator_CuriosityDiscovered Initiator="Empire" ProgressionIncrement="1">
+                                        <Input_DisplayedType VarName="$RuinsType"/>
+                                    </Decorator_CuriosityDiscovered>
+                                </Loop>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression02"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+
+                        </Parallel>
+
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MinorPopulationQuest06-Event03</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward LocalizationKey="%MinorPopulationQuest06Reward3"/>
+
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+</Datatable>

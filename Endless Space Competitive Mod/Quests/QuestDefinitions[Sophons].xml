@@ -1377,6 +1377,214 @@
     </Steps>
   </QuestDefinition>
 
+  <!-- ####################################### -->
+  <!--           Chapter 3 - Military          -->
+  <!-- ####################################### -->
+
+  <QuestDefinition Name="SophonsQuest-Chapter3-Military" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false" AlternateVersion="SophonsQuest-Chapter3-Military-Alt">
+
+    <!--============ TAGS ============-->
+    <Tags>Chapter3-Military</Tags>
+
+    <QuestContextSolo/>
+
+
+    <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                      NumberOfOccurrencesPerEmpire="1"
+                      NumberOfConcurrentInstances="0"/>
+
+    <!--============ VARIABLES ============-->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+      <Var VarName="$AllEmpires">
+        <From Source="$Empires"/>
+      </Var>
+      <Var VarName="$IAEmpire">
+        <From Source="$LesserEmpire"/>
+      </Var>
+
+      <Var VarName="$Amount01" IntValue="2"/>
+      <Var VarName="$PopAffinity" StringValue="AffinityMavros"/>
+
+      <Var VarName="$MySystems">
+        <From Source="$CurrentEmpire.$ColonizedStarSystems"/>
+      </Var>
+      <Var VarName="$AvailableSystem">
+        <Any>
+          <From Source="$MySystems">
+            <Where>
+              <InterpreterPrerequisite Flags="Prerequisite">((Property(Context, @'ClassColonizedStarSystem', MaximumPopulation))-(Property(Context, @'ClassColonizedStarSystem', Population))) ge 2</InterpreterPrerequisite>
+            </Where>
+          </From>
+        </Any>
+      </Var>
+      <Var VarName="$AvailableStarSystem">
+        <From Source="$AvailableSystem.$StarSystem"/>
+      </Var>
+
+      <InterpretedVar VarName="$MinimumAmout01" Target="$(Empire)">
+        <Expression>Property(Context, @'ClassEmpire', EmpireManpowerStock) + 500</Expression>
+      </InterpretedVar>
+      <Var VarName="$MinimumAmout02" IntValue="75"/>
+      <Var VarName="$PoliticalEffectMilitarist" StringValue="PopulationEventSophons03.1Military"/>
+      <Var VarName="$PoliticalEffectScientist"  StringValue="PopulationEventSophons03.1Scientist"/>
+      <Var VarName="$PoliticalEffectPacifist"   StringValue="PopulationEventSophons03.1Pacifist"/>
+      <InterpretedVar VarName="$MinimumAmount03" Target="$(Empire)">
+        <Expression>Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityMavros', PopulationCount, true) + 5</Expression>
+      </InterpretedVar>
+      <LocalizationVar LocalizationKey="$MinimumAmout01Name" Source="$MinimumAmout01"/>
+      <LocalizationVar LocalizationKey="$MinimumAmout02Name" Source="$MinimumAmout02"/>
+      <LocalizationVar LocalizationKey="$MinimumAmount03Name" Source="$MinimumAmount03"/>
+      <LocalizationVar LocalizationKey="$AvailableSystemName" Source="$AvailableSystem"/>
+    </Vars>
+
+    <!--============ PREREQUISITES ============-->
+
+    <Prerequisites Target="$(Empire)">
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,AffinityGameplayVampirilis</PathPrerequisite>
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+    </Prerequisites>
+
+    <!--============ STEPS ============-->
+    <Steps>
+
+      <!--============ STEP 1 ============-->
+      <Step Name="Step1">
+        <Choice DefaultChoiceIndex="0">
+          <ChoiceItem ObjectiveSetIndex="0"/>
+          <ChoiceItem ObjectiveSetIndex="1"/>
+          <ChoiceItem ObjectiveSetIndex="2"/>
+        </Choice>
+
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire"/>
+              <Input_Target VarName="$CurrentEmpire"/>
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+          <Objective Name="Step1_Objective1">
+            <!-- TODO -->
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <Sequence>
+              <Action_SpawnPopulation>
+                <Input_Empire VarName="$CurrentEmpire"/>
+                <Input_System VarName="$AvailableStarSystem"/>
+                <Input_Amount VarName="$Amount01"/>
+                <Input_PopulationAffinity VarName="$PopAffinity"/>
+              </Action_SpawnPopulation>
+              <Decorator_BeginTurn>
+                <Condition_HasManpower>
+                  <Input_Location VarName="$CurrentEmpire"/>
+                  <Input_MinimumAmount VarName="$MinimumAmout01"/>
+                </Condition_HasManpower>
+              </Decorator_BeginTurn>
+              <Action_ChooseOutcome Name="Outcome1"/>
+            </Sequence>
+            <Outcome Name="Outcome1">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>SophonsQuest-Chapter4-Military</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+          <Reward Droplist="DroplistRewardQuestSophons08" Picks="1"/>
+        </ObjectiveSet>
+
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire"/>
+              <Input_Target VarName="$CurrentEmpire"/>
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+          <Objective Name="Step2_Objective1">
+            <!-- TODO -->
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <Sequence>
+              <Action_SpawnPopulation>
+                <Input_Empire VarName="$CurrentEmpire"/>
+                <Input_System VarName="$AvailableStarSystem"/>
+                <Input_Amount VarName="$Amount01"/>
+                <Input_PopulationAffinity VarName="$PopAffinity"/>
+              </Action_SpawnPopulation>
+              <Parallel CompletionPolicy="Any">
+                <Sequence>
+                  <Decorator_BeginTurn>
+                    <Condition_ExplorationProgress MinimumState="Revealed">
+                      <Input_Empire VarName="$CurrentEmpire"/>
+                      <Input_Percentage VarName="$MinimumAmout02"/>
+                    </Condition_ExplorationProgress>
+                  </Decorator_BeginTurn>
+                </Sequence>
+                <Sequence>
+                  <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
+                    <Input_MinimumPercentage VarName="$MinimumAmout02"/>
+                  </Decorator_ExploredNode>
+                </Sequence>
+              </Parallel>
+              <Action_ChooseOutcome Name="Outcome1"/>
+            </Sequence>
+            <Outcome Name="Outcome1">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>SophonsQuest-Chapter4-Science</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+          <Reward Droplist="DroplistRewardQuestSophons09" Picks="1"/>
+        </ObjectiveSet>
+
+        <ObjectiveSet>
+          <StartActions>
+            <Action_TriggerPopulationEvent>
+              <Input_Empire VarName="$CurrentEmpire"/>
+              <Input_Target VarName="$CurrentEmpire"/>
+              <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+            </Action_TriggerPopulationEvent>
+          </StartActions>
+          <Objective Name="Step3_Objective1">
+            <!-- TODO -->
+            <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+            <Sequence>
+              <Action_SpawnPopulation>
+                <Input_Empire VarName="$CurrentEmpire"/>
+                <Input_System VarName="$AvailableStarSystem"/>
+                <Input_Amount VarName="$Amount01"/>
+                <Input_PopulationAffinity VarName="$PopAffinity"/>
+              </Action_SpawnPopulation>
+              <Decorator_BeginTurn/>
+              <Decorator_BeginTurn>
+                <Condition_HasPopulationAmount>
+                  <Input_Empire VarName="$CurrentEmpire"/>
+                  <Input_MinimumAmount VarName="$MinimumAmount03"/>
+                  <Input_PopulationAffinity VarName="$PopAffinity"/>
+                </Condition_HasPopulationAmount>
+              </Decorator_BeginTurn>
+              <Action_ChooseOutcome Name="Outcome1"/>
+            </Sequence>
+            <Outcome Name="Outcome1">
+              <Triggers Weight="1">
+                <QuestTrigger>
+                  <Tags>SophonsQuest-Chapter4-Diplomacy</Tags>
+                  <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                </QuestTrigger>
+              </Triggers>
+            </Outcome>
+          </Objective>
+          <Reward Droplist="DroplistRewardQuestSophons10" Picks="1"/>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+  </QuestDefinition>
 
   <!--  #######################################  -->
   <!--            Chapter 4 - SCIENCE           -->
@@ -1886,7 +2094,7 @@
       <Var VarName="$Marker01" />
       <Var VarName="$Amount01" IntValue="3" />
       <Var VarName="$PopAffinity" StringValue="AffinityMavros" />
-      <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventSophons04Militarist" />
+      <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventSophons04Pacifist" />
       <Var VarName="$FleetSpawnTimer" IntValue="3" />
       <Var VarName="$FleetMissionDefinitionName01" StringValue="DefendSystem" />
       <Var VarName="$FleetGUID" />
