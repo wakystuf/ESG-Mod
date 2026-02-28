@@ -312,11 +312,13 @@
             <InterpretedVar VarName="$Amount02" Target="$(Empire)">
                 <Expression>Property(Context, @ClassEmpire, GameSpeedMultiplier, true)*14</Expression>
             </InterpretedVar>
-            <Var VarName="$Expression1" StringValue="MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem',NetSystemResearch) ge $(Amount01)"/>
-            
             <LocalizationVar LocalizationKey="$MinorFactionName" Source="$MinorEmpire"/>
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+            <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', NetSystemResearch)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective1Expr" StringValue="MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', NetSystemResearch)"/>
         </Vars>
 
         <!--============ PREREQUISITES ============-->
@@ -334,16 +336,16 @@
                             <Output_Timer VarName="$Timer"/>
                         </Action_StartTimer>
                     </StartActions>
-                    <Objective Name="Step1_Objective1">
+                    <Objective StartValue="$Step1_Objective1Val" EndValue="$Amount01" Name="Step1_Objective1">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="17" MaxAutoResolutionTurn="25" AutoResolutionProbability="0.5" />
                         <Parallel CompletionPolicy="First">
                             <Sequence>
                                 <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
+                                    <Condition_IsProgressionComplete>
                                         <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression1"/>
-                                    </Condition_CheckInterpreter>
+                                        <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_BeginTurn>
                                 <Action_AssimilateMinorEmpire>
                                     <Input_Empire VarName="$CurrentEmpire"/>
@@ -951,7 +953,10 @@
             
             <LocalizationVar LocalizationKey="$MinorFactionName" Source="$MinorEmpire"/>
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
-
+            <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassSenate/ClassLaw')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassSenate/ClassLaw')"/>
         </Vars>
 
         <!--============ PREREQUISITES ============-->
@@ -968,29 +973,25 @@
         <Steps>
             <Step Name="Step1">
                 <ObjectiveSet>
-                    <Objective Name="Step1_Objective1">
+                    <Objective StartValue="$Step1_Objective1Val" EndValue="$Amount01" Name="Step1_Objective1">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="17" MaxAutoResolutionTurn="25" AutoResolutionProbability="0.5" />
                         <Parallel CompletionPolicy="First">
                             <Sequence>
-                            <Parallel CompletionPolicy="Any">
-                                <Sequence>
+                                <Parallel CompletionPolicy="Any">
                                     <Decorator_LawActivated>
-                                        <Condition_HasLaws>
-                                            <Input_Empire VarName="$CurrentEmpire"/>
-                                            <Input_MinimumAmount VarName="$Amount01"/>
-                                        </Condition_HasLaws>
+                                        <Condition_IsProgressionComplete>
+                                            <Input_Context VarName="$CurrentEmpire"/>
+                                            <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                        </Condition_IsProgressionComplete>
                                     </Decorator_LawActivated>
-                                </Sequence>
-                                <Sequence>
                                     <Decorator_BeginTurn>
-                                        <Condition_HasLaws>
-                                            <Input_Empire VarName="$CurrentEmpire"/>
-                                            <Input_MinimumAmount VarName="$Amount01"/>
-                                        </Condition_HasLaws>
+                                        <Condition_IsProgressionComplete>
+                                            <Input_Context VarName="$CurrentEmpire"/>
+                                            <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                        </Condition_IsProgressionComplete>
                                     </Decorator_BeginTurn>
-                                </Sequence>
-                            </Parallel>
+                                </Parallel>
                                 <Action_AssimilateMinorEmpire>
                                     <Input_Empire VarName="$CurrentEmpire"/>
                                     <Input_MinorEmpire VarName="$MinorEmpire"/>

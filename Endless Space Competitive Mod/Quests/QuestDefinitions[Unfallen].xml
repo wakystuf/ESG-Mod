@@ -260,7 +260,6 @@
             <InterpretedVar VarName="$Amount01" Target="$(Empire)">
                 <Expression>Property(Context, @'ClassEmpire', NetEmpireResearch) + 200</Expression>
             </InterpretedVar>
-            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire', NetEmpireResearch) ge $(Amount01)" />
             <Var VarName="$PoliticalEffectScience" StringValue="PopulationEventUnfallen04-Science" />
             <Var VarName="$PoliticalEffectEcologist" StringValue="PopulationEventUnfallen04-Ecologist" />
             <Var VarName="$Amount02" IntValue="95" />
@@ -272,6 +271,11 @@
             <!-- EcologistObjective -->
             <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02" />
             <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03" />
+
+            <InterpretedVar VarName="$Objective_ScientistVal" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire', NetEmpireResearch)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective_ScientistExpr" StringValue="Property(Context, @'ClassEmpire', NetEmpireResearch)"/>
         </Vars>
         <!-- ============ STEPS ============ -->
         <Steps>
@@ -294,17 +298,17 @@
                             <Input_PopulationEventDefinition VarName="$PoliticalEffectScience" />
                         </Action_TriggerPopulationEvent>
                     </StartActions>
-                    <Objective Name="Objective_Scientist">
+                    <Objective StartValue="$Objective_ScientistVal" EndValue="$Amount01" Name="Objective_Scientist">
                         <!--  TODO  -->
                         <AIHint Category="MaximizeResource" Motivation="0.5">
                             <Resource>Science</Resource>
                         </AIHint>
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_CheckInterpreter>
-                                    <Input_Context VarName="$CurrentEmpire" />
-                                    <Input_Expression VarName="$Expression01" />
-                                </Condition_CheckInterpreter>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Objective_ScientistExpr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1" />
                         </Sequence>
