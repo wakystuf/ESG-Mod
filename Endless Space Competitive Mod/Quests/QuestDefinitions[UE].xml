@@ -171,8 +171,8 @@
 
 		<!--============ OCCURENCES ============-->
 		<RepetitionRules  NumberOfOccurrencesPerGame="0"
-                      NumberOfOccurrencesPerEmpire="1"
-                      NumberOfConcurrentInstances="0"/>
+						  NumberOfOccurrencesPerEmpire="1"
+						  NumberOfConcurrentInstances="0"/>
 
 		<!--============ VARIABLES ============-->
 		<Vars>
@@ -203,6 +203,18 @@
 			<LocalizationVar LocalizationKey="$ManpowerAmountName" Source="$ManpowerAmount"/>
 			<LocalizationVar LocalizationKey="$DustAmoutName" Source="$DustAmout"/>
 			<LocalizationVar LocalizationKey="$LoopCountName" Source="$LoopCount"/>
+			<InterpretedVar VarName="$Step2_2_Objective1Val" Target="$(Empire)">
+				<Expression>Property(Context, @'ClassEmpire', BankAccount)</Expression>
+			</InterpretedVar>
+			<Var VarName="$Step2_2_Objective1Expr" StringValue="Property(Context, @'ClassEmpire', BankAccount)"/>
+			<InterpretedVar VarName="$Step2_2Bis_Objective1Val" Target="$(Empire)">
+				<Expression>Property(Context, @'ClassEmpire', BankAccount)</Expression>
+			</InterpretedVar>
+			<Var VarName="$Step2_2Bis_Objective1Expr" StringValue="Property(Context, @'ClassEmpire', BankAccount)"/>
+			<InterpretedVar VarName="$Step2_2Ter_Objective1Val" Target="$(Empire)">
+				<Expression>Property(Context, @'ClassEmpire', BankAccount)</Expression>
+			</InterpretedVar>
+			<Var VarName="$Step2_2Ter_Objective1Expr" StringValue="Property(Context, @'ClassEmpire', BankAccount)"/>
 		</Vars>
 
 		<!--============ PREREQUISITES ============-->
@@ -294,17 +306,16 @@
 							<Input_PopulationEventDefinition VarName="$PoliticalEffectIndustry"/>
 						</Action_TriggerPopulationEvent>
 					</StartActions>
-					<Objective Name="Step2_2_Objective1">
+					<Objective StartValue="$Step2_2_Objective1Val" EndValue="$DustAmout" Name="Step2_2_Objective1">
 						<!-- TODO -->
 						<AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
 						<!--Spawn the good fleet-->
 						<Sequence>
 							<Decorator_PostEndTurn>
-								<Condition_HasResource>
-									<Input_Location VarName="$CurrentEmpire"/>
-									<Input_ResourceName VarName="$DustResources"/>
-									<Input_Minimum VarName="$DustAmout"/>
-								</Condition_HasResource>
+								<Condition_IsProgressionComplete>
+									<Input_Context VarName="$CurrentEmpire"/>
+									<Input_Expression VarName="$Step2_2_Objective1Expr"/>
+								</Condition_IsProgressionComplete>
 							</Decorator_PostEndTurn>
 							<Action_SetInvisibility Invisible="false">
 								<Input_Empires VarName="$AllEmpires"/>
@@ -344,17 +355,16 @@
 							<Input_PopulationEventDefinition VarName="$PoliticalEffectIndustry"/>
 						</Action_TriggerPopulationEvent>
 					</StartActions>
-					<Objective Name="Step2_2Bis_Objective1">
+					<Objective StartValue="$Step2_2Bis_Objective1Val" EndValue="$DustAmout" Name="Step2_2Bis_Objective1">
 						<!-- TODO -->
 						<AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
 						<!--Spawn the good fleet-->
 						<Sequence>
 							<Decorator_PostEndTurn>
-								<Condition_HasResource>
-									<Input_Location VarName="$CurrentEmpire"/>
-									<Input_ResourceName VarName="$DustResources"/>
-									<Input_Minimum VarName="$DustAmout"/>
-								</Condition_HasResource>
+								<Condition_IsProgressionComplete>
+									<Input_Context VarName="$CurrentEmpire"/>
+									<Input_Expression VarName="$Step2_2Bis_Objective1Expr"/>
+								</Condition_IsProgressionComplete>
 							</Decorator_PostEndTurn>
 							<Action_ChooseOutcome Name="Outcome1"/>
 						</Sequence>
@@ -382,18 +392,16 @@
 							<Input_PopulationEventDefinition VarName="$PoliticalEffectIndustry"/>
 						</Action_TriggerPopulationEvent>
 					</StartActions>
-					<Objective Name="Step2_2Ter_Objective1">
+					<Objective StartValue="$Step2_2Ter_Objective1Val" EndValue="$DustAmout" Name="Step2_2Ter_Objective1">
 						<!-- TODO -->
 						<AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
 						<!--Spawn the good fleet-->
 						<Sequence>
 							<Decorator_PostEndTurn>
-								<Condition_HasResource>
-									<Input_Location VarName="$CurrentEmpire"/>
-									<Input_ResourceName VarName="$DustResources"/>
-									<Input_Minimum VarName="$DustAmout"/>
-								</Condition_HasResource>
-							</Decorator_PostEndTurn>
+								<Condition_IsProgressionComplete>
+									<Input_Context VarName="$CurrentEmpire"/>
+									<Input_Expression VarName="$Step2_2Ter_Objective1Expr"/>
+								</Condition_IsProgressionComplete>							</Decorator_PostEndTurn>
 							<Action_ChooseOutcome Name="Outcome1"/>
 						</Sequence>
 						<Outcome Name="Outcome1">
@@ -460,8 +468,8 @@
 
 
 		<RepetitionRules  NumberOfOccurrencesPerGame="0"
-                      NumberOfOccurrencesPerEmpire="1"
-                      NumberOfConcurrentInstances="0"/>
+						  NumberOfOccurrencesPerEmpire="1"
+						  NumberOfConcurrentInstances="0"/>
 
 		<!--============ VARIABLES ============-->
 		<Vars>
@@ -508,6 +516,14 @@
 			<LocalizationVar LocalizationKey="$DustAmount" Source="$DustObjective"/>
 			<LocalizationVar LocalizationKey="$ScienceAmount" Source="$ScienceObjective"/>
 
+			<InterpretedVar VarName="$Step2_2_Objective1Val" Target="$(Empire)">
+				<Expression>Property(Context, NetEmpireMoney)</Expression>
+			</InterpretedVar>
+			<Var VarName="$Step2_2_Objective1Expr" StringValue="Property(Context, NetEmpireMoney)"/>
+			<InterpretedVar VarName="$Step2_3_Objective1Val" Target="$(Empire)">
+				<Expression>Property(Context, NetEmpireResearch)</Expression>
+			</InterpretedVar>
+			<Var VarName="$Step2_3_Objective1Expr" StringValue="Property(Context, NetEmpireResearch)"/>
 		</Vars>
 
 		<!--============ PREREQUISITES ============-->
@@ -585,7 +601,7 @@
 							<Input_PopulationEventDefinition VarName="$PoliticalEffectIndustry"/>
 						</Action_TriggerPopulationEvent>
 					</StartActions>
-					<Objective Name="Step2_2_Objective1">
+					<Objective StartValue="$Step2_2_Objective1Val" EndValue="$DustObjective" Name="Step2_2_Objective1">
 						<!-- Produce a minimum amount of dust per turn -->
 						<AIHint Category="MaximizeResource" Motivation="0.7">
 							<Resource>Dust</Resource>
@@ -593,10 +609,10 @@
 						<!--Spawn the good fleet-->
 						<Sequence>
 							<Decorator_BeginTurn>
-								<Condition_CheckInterpreter>
+								<Condition_IsProgressionComplete>
 									<Input_Context VarName="$CurrentEmpire"/>
-									<Input_Expression VarName="$Expression1"/>
-								</Condition_CheckInterpreter>
+									<Input_Expression VarName="$Step2_2_Objective1Expr"/>
+								</Condition_IsProgressionComplete>
 							</Decorator_BeginTurn>
 							<Action_SpawnHero>
 								<Input_Empire VarName="$CurrentEmpire"/>
@@ -639,17 +655,17 @@
 							<Input_PopulationEventDefinition VarName="$PoliticalEffectScience"/>
 						</Action_TriggerPopulationEvent>
 					</StartActions>
-					<Objective Name="Step2_3_Objective1">
+					<Objective StartValue="$Step2_3_Objective1Val" EndValue="$ScienceObjective" Name="Step2_3_Objective1">
 						<!-- Produce a minimum amount of science per turn -->
 						<AIHint Category="MaximizeResource" Motivation="0.7">
 							<Resource>Science</Resource>
 						</AIHint>
 						<Sequence>
 							<Decorator_BeginTurn>
-								<Condition_CheckInterpreter>
+								<Condition_IsProgressionComplete>
 									<Input_Context VarName="$CurrentEmpire"/>
-									<Input_Expression VarName="$Expression2"/>
-								</Condition_CheckInterpreter>
+									<Input_Expression VarName="$Step2_3_Objective1Expr"/>
+								</Condition_IsProgressionComplete>
 							</Decorator_BeginTurn>
 							<Action_SpawnHero>
 								<Input_Empire VarName="$CurrentEmpire"/>
@@ -686,7 +702,6 @@
 		</Steps>
 	</QuestDefinition>
 
-
 	<!-- ####################################### -->
 	<!--    UNITED EMPIRE QUEST Chapter2.1       -->
 	<!-- ####################################### -->
@@ -700,8 +715,8 @@
 
 
 		<RepetitionRules  NumberOfOccurrencesPerGame="0"
-											NumberOfOccurrencesPerEmpire="1"
-											NumberOfConcurrentInstances="0"/>
+						  NumberOfOccurrencesPerEmpire="1"
+						  NumberOfConcurrentInstances="0"/>
 
 		<!--============ VARIABLES ============-->
 		<Vars>
@@ -730,6 +745,13 @@
 
 			<Var VarName="$MinSystemAmountAlt" IntValue="1"/>
 			<LocalizationVar Source="$MinSystemAmountAlt"       LocalizationKey="$MinSystemAmountAltName"/>
+
+			<Var VarName="$Step2_2_Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem', SystemLevel, ge, $(MinLevelAmount))"/>
+			<Var VarName="$Three" IntValue="3"/>
+			<InterpretedVar VarName="$Step2_3_Objective1Val" Target="$(Empire)">
+				<Expression>Min(1, Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeHot')) + Min(1, Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeTemperate')) + Min(1, Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeCold'))</Expression>
+			</InterpretedVar>
+			<Var VarName="$Step2_3_Objective1Expr" StringValue="Min(1, Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeHot')) + Min(1, Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeTemperate')) + Min(1, Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetGameplayTypeCold'))"/>
 		</Vars>
 
 		<!--============ PREREQUISITES ============-->
@@ -797,27 +819,25 @@
 							<Input_PopulationEventDefinition VarName="$PoliticalEffectIndustry"/>
 						</Action_TriggerPopulationEvent>
 					</StartActions>
-					<Objective Name="Step2_2_Objective1">
+					<Objective StartValue="$Step2_2_Objective1Val" EndValue="$MinSystemAmount" Name="Step2_2_Objective1">
 						<!-- TODO -->
 						<AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
 						<Sequence>
 							<Parallel CompletionPolicy="First">
 								<Sequence>
 									<Decorator_SystemLevelChanged Initiator="Empire">
-										<Condition_HasSystems>
-											<Input_Empires VarName="$CurrentEmpire"/>
-											<Input_MinimumAmount VarName="$MinSystemAmount"/>
-											<Input_MinimumLevel VarName="$MinLevelAmount"/>
-										</Condition_HasSystems>
+										<Condition_IsProgressionComplete>
+											<Input_Context VarName="$CurrentEmpire"/>
+											<Input_Expression VarName="$Step2_2_Objective1Expr"/>
+										</Condition_IsProgressionComplete>
 									</Decorator_SystemLevelChanged>
 								</Sequence>
 								<Sequence>
 									<Decorator_BeginTurn>
-										<Condition_HasSystems>
-											<Input_Empires VarName="$CurrentEmpire"/>
-											<Input_MinimumAmount VarName="$MinSystemAmount"/>
-											<Input_MinimumLevel VarName="$MinLevelAmount"/>
-										</Condition_HasSystems>
+										<Condition_IsProgressionComplete>
+											<Input_Context VarName="$CurrentEmpire"/>
+											<Input_Expression VarName="$Step2_2_Objective1Expr"/>
+										</Condition_IsProgressionComplete>
 									</Decorator_BeginTurn>
 								</Sequence>
 							</Parallel>
@@ -895,26 +915,15 @@
 							<Input_PopulationEventDefinition VarName="$PoliticalEffectScience"/>
 						</Action_TriggerPopulationEvent>
 					</StartActions>
-					<Objective Name="Step2_3_Objective1">
+					<Objective StartValue="$Step2_3_Objective1Val" EndValue="$Three" Name="Step2_3_Objective1">
 						<!-- TODO -->
 						<AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
 						<Sequence>
 							<Decorator_BeginTurn>
-								<Condition_HasPlanets>
-									<Input_EmpireOrSystem VarName="$CurrentEmpire"/>
-									<Input_MinimumAmount VarName="$PlanetAmount" />
-									<Input_PlanetGameplayType VarName="$TemperatePlanet"/>
-								</Condition_HasPlanets>
-								<Condition_HasPlanets>
-									<Input_EmpireOrSystem VarName="$CurrentEmpire"/>
-									<Input_MinimumAmount VarName="$PlanetAmount" />
-									<Input_PlanetGameplayType VarName="$ColdPlanet"/>
-								</Condition_HasPlanets>
-								<Condition_HasPlanets>
-									<Input_EmpireOrSystem VarName="$CurrentEmpire"/>
-									<Input_MinimumAmount VarName="$PlanetAmount" />
-									<Input_PlanetGameplayType VarName="$HotPlanet"/>
-								</Condition_HasPlanets>
+								<Condition_IsProgressionComplete>
+									<Input_Context VarName="$CurrentEmpire"/>
+									<Input_Expression VarName="$Step2_3_Objective1Expr"/>
+								</Condition_IsProgressionComplete>
 							</Decorator_BeginTurn>
 							<Action_ChooseOutcome Name="Outcome1"/>
 						</Sequence>
@@ -1865,8 +1874,8 @@
 		<QuestContextSolo/>
 
 		<RepetitionRules  NumberOfOccurrencesPerGame="0"
-                      NumberOfOccurrencesPerEmpire="1"
-                      NumberOfConcurrentInstances="0"/>
+						  NumberOfOccurrencesPerEmpire="1"
+						  NumberOfConcurrentInstances="0"/>
 
 		<!--============ VARIABLES ============-->
 		<Vars>
@@ -1927,6 +1936,11 @@
 			<LocalizationVar LocalizationKey="$MinAmountName" Source="$MinAmount"/>
 			<LocalizationVar Source="$MySystem" LocalizationKey="$MySystemName"/>
 			<LocalizationVar Source="$Amount03" LocalizationKey="$Amount03Name"/>
+
+			<InterpretedVar VarName="$Step2_2_Objective1Val" Target="$(Empire)">
+				<Expression>Property(Context, @'ClassEmpire', Population)</Expression>
+			</InterpretedVar>
+			<Var VarName="$Step2_2_Objective1Expr" StringValue="Property(Context, @'ClassEmpire', Population)"/>
 		</Vars>
 
 		<!--============ PREREQUISITES ============-->
@@ -2001,15 +2015,15 @@
 							<Input_PopulationEventDefinition VarName="$PoliticalEffectScience"/>
 						</Action_TriggerPopulationEvent>
 					</StartActions>
-					<Objective Name="Step2_2_Objective1">
+					<Objective StartValue="$Step2_2_Objective1Val" EndValue="$Amount01" Name="Step2_2_Objective1">
 						<!-- TODO -->
 						<AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
 						<Sequence>
 							<Decorator_BeginTurn>
-								<Condition_HasPopulationAmount>
-									<Input_Empire VarName="$CurrentEmpire"/>
-									<Input_MinimumAmount VarName="$Amount01" />
-								</Condition_HasPopulationAmount>
+								<Condition_IsProgressionComplete>
+									<Input_Context VarName="$CurrentEmpire"/>
+									<Input_Expression VarName="$Step2_2_Objective1Expr"/>
+								</Condition_IsProgressionComplete>
 							</Decorator_BeginTurn>
 							<Action_ChooseOutcome Name="Outcome1"/>
 							<Action_ApplyDescriptor>
@@ -2032,7 +2046,6 @@
 			</Step>
 		</Steps>
 	</QuestDefinition>
-
 
 	<!-- ####################################### -->
 	<!--  UNITED EMPIRE QUEST Chapter4 MEZARI    -->

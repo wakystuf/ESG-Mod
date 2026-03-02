@@ -784,17 +784,20 @@
             <Var VarName="$AllStarSystems">
                 <From Source="$Constellations.$StarSystems"/>
             </Var>
-         
+
             <Var VarName="$Amount01" IntValue="13"/>
             <Var VarName="$Amount02" IntValue="35"/>
-            <Var VarName="$FleetGUID"/>          
-          
+            <Var VarName="$FleetGUID"/>
+
             <Var VarName="$PoliticalEffectMilitarist"      StringValue="PopulationEventVaulters04-Militarist"/>
             <Var VarName="$PoliticalEffectScientist"       StringValue="PopulationEventVaulters04-Scientist"/>
 
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
-        
+            <Var VarName="$Objective_ScientistVal">
+                <From Source="$CurrentEmpire.$RevealedNodePercentage"/>
+            </Var>
+            <Var VarName="$Objective_ScientistExpr" StringValue="$(Objective_ScientistVal)"/>
         </Vars>
 
         <!--============ PREREQUISITES ============-->
@@ -823,12 +826,12 @@
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
                         <Sequence>
                             <Loop>
-                            <Decorator_CuriosityDiscovered Initiator="Empire" ProgressionIncrement="1" StopAtFirstFailedCondition="true">
-                                <Condition_IsVariableNotEmpty>
-                                    <Input_Variable VarName="$FleetGUID"/>                                    
-                                </Condition_IsVariableNotEmpty>
-                                <Output_FleetGUID VarName="$FleetGUID"/>
-                            </Decorator_CuriosityDiscovered>
+                                <Decorator_CuriosityDiscovered Initiator="Empire" ProgressionIncrement="1" StopAtFirstFailedCondition="true">
+                                    <Condition_IsVariableNotEmpty>
+                                        <Input_Variable VarName="$FleetGUID"/>
+                                    </Condition_IsVariableNotEmpty>
+                                    <Output_FleetGUID VarName="$FleetGUID"/>
+                                </Decorator_CuriosityDiscovered>
                                 <Input_Count VarName="$Amount01"/>
                             </Loop>
                             <Action_ChooseOutcome Name="Outcome1"/>
@@ -857,10 +860,10 @@
                         </Action_TriggerPopulationEvent>
                     </StartActions>
 
-                    <Objective Name="Objective_Scientist">
+                    <Objective StartValue="$Objective_ScientistVal" EndValue="$Amount02" Name="Objective_Scientist">
                         <!-- TODO -->
-                        <AIHint Category="MaximizeExploration" Motivation="0.5"/>                          
-                    
+                        <AIHint Category="MaximizeExploration" Motivation="0.5"/>
+
                         <Sequence>
                             <Parallel CompletionPolicy="First">
                                 <Sequence>
@@ -873,7 +876,9 @@
                                 </Sequence>
                                 <Sequence>
                                     <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
-                                        <Input_MinimumPercentage VarName="$Amount02"/>
+                                        <Condition_IsProgressionComplete>
+                                            <Input_Expression VarName="$Objective_ScientistExpr"/>
+                                        </Condition_IsProgressionComplete>
                                     </Decorator_ExploredNode>
                                 </Sequence>
                             </Parallel>
@@ -918,7 +923,7 @@
             <Var VarName="$CurrentEmpire">
                 <From Source="$Empire"/>
             </Var>
-       
+
 
             <Var VarName="$PoliticalEffectMilitarist"      StringValue="PopulationEventVaulters05-Militarist"/>
             <Var VarName="$PoliticalEffectScientist"       StringValue="PopulationEventVaulters05-Scientist"/>
@@ -927,7 +932,7 @@
 
             <InterpretedVar VarName="$Amount02" Target="$(Empire)">
                 <Expression>Min(500, (MaxProperty(Context, @'../ClassEmpire/ClassGarrisonFleet/ClassShip', DefensiveMilitaryPower)+150))</Expression>
-            </InterpretedVar>       
+            </InterpretedVar>
 
             <InterpretedVar VarName="$Amount03" Target="$(Empire)">
                 <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/PlanetGameplayTypeTemperate,ClassColonizedPlanet')</Expression>
@@ -940,7 +945,10 @@
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
             <LocalizationVar LocalizationKey="$Amount04Name" Source="$Amount04"/>
-
+            <InterpretedVar VarName="$Objective_MilitaristVal" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip', DefensiveMilitaryPower, gt, $(Amount02))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective_MilitaristExpr" StringValue="Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip', DefensiveMilitaryPower, gt, $(Amount02))"/>
         </Vars>
 
         <!--============ PREREQUISITES ============-->
@@ -965,15 +973,14 @@
                         </Action_TriggerPopulationEvent>
                     </StartActions>
 
-                    <Objective Name="Objective_Militarist">
+                    <Objective StartValue="$Objective_MilitaristVal" EndValue="$Amount01" Name="Objective_Militarist">
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_ShipStats>
-                                    <Input_Empire VarName="$CurrentEmpire"/>
-                                    <Input_MinimumAmount VarName="$Amount01"/>
-                                    <Input_MinimumDefensiveMilitaryPower VarName="$Amount02"/>                                                                
-                                </Condition_ShipStats>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Objective_MilitaristExpr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
