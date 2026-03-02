@@ -319,7 +319,7 @@
         <Tags>VenetiansQuest-Chapter1.2-Industry</Tags>
 
         <QuestContextSolo/>
-        
+
 
         <RepetitionRules  NumberOfOccurrencesPerGame="0"
                           NumberOfOccurrencesPerEmpire="1"
@@ -334,6 +334,11 @@
             <Var VarName="$MinAmount" IntValue="1"/>
             <Var VarName="$MinLevel" IntValue="6"/>
             <LocalizationVar Source="$MinLevel" LocalizationKey="$MinLevelName"/>
+
+            <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero', Level)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective1Expr" StringValue="MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero', Level)"/>
         </Vars>
 
         <!--============ PREREQUISITES ============-->
@@ -347,16 +352,15 @@
             <!--============ STEP 1 ============-->
             <Step Name="Step1">
                 <ObjectiveSet>
-                    <Objective Name="Step1_Objective1">
+                    <Objective StartValue="$Step1_Objective1Val" EndValue="$MinLevel" Name="Step1_Objective1">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_HasHeroes HeroAssignationFilter="System">
-                                    <Input_Empire VarName="$CurrentEmpire"/>
-                                    <Input_MinimumAmount VarName="$MinAmount"/>
-                                    <Input_MinimumLevel VarName="$MinLevel"/>
-                                </Condition_HasHeroes>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
@@ -387,7 +391,7 @@
         <Tags>VenetiansQuest-Chapter1.2-Pacifism</Tags>
 
         <QuestContextSolo/>
-        
+
 
         <RepetitionRules  NumberOfOccurrencesPerGame="0"
                           NumberOfOccurrencesPerEmpire="1"
@@ -401,31 +405,33 @@
             </Var>
             <Var VarName="$SystemAmount" IntValue="1"/>
             <Var VarName="$DustAmount" IntValue="150"/>
-            
-            <LocalizationVar LocalizationKey="$DustAmountLoc" Source="$DustAmount"/>
 
-        </Vars> 
+            <LocalizationVar LocalizationKey="$DustAmountLoc" Source="$DustAmount"/>
+            <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', NetSystemMoney)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective1Expr" StringValue="MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', NetSystemMoney)"/>
+        </Vars>
 
         <!--============ PREREQUISITES ============-->
-       
+
         <!--============ STEPS ============-->
 
         <Steps>
             <!--============ STEP 1 ============-->
             <Step Name="Step1">
                 <ObjectiveSet>
-                    <Objective Name="Step1_Objective1">
-                       <!-- TODO -->
+                    <Objective StartValue="$Step1_Objective1Val" EndValue="$DustAmount" Name="Step1_Objective1">
+                        <!-- TODO -->
                         <AIHint Category="MaximizeResource" Motivation="0.5">
                             <Resource>Dust</Resource>
                         </AIHint>
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_SystemsHaveFidsi>
-                                    <Input_Empire VarName="$CurrentEmpire"/>
-                                    <Input_SystemCount VarName="$SystemAmount"/>
-                                    <Input_NetMoney VarName="$DustAmount"/>
-                                </Condition_SystemsHaveFidsi>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
@@ -938,27 +944,30 @@
             <Var VarName="$MinLevel" IntValue="5"/>
             <Var VarName="$PlanetSize" StringValue="PlanetSizeHuge"/>
             <LocalizationVar LocalizationKey="$MinAmountName" Source="$MinAmount"/>
+            <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetSizeHuge')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetSizeHuge')"/>
         </Vars>
 
         <!--============ PREREQUISITES ============-->
-   
+
         <!--============ STEPS ============-->
 
         <Steps>
             <!--============ STEP 1 ============-->
-            <Step Name="Step1">              
-                
+            <Step Name="Step1">
+
                 <ObjectiveSet>
-                    <Objective Name="Step1_Objective1">
+                    <Objective StartValue="$Step1_Objective1Val" EndValue="$MinAmount" Name="Step1_Objective1">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_HasPlanets>                                    
-                                    <Input_EmpireOrSystem VarName="$CurrentEmpire"/>
-                                    <Input_MinimumAmount VarName="$MinAmount"/>
-                                    <Input_PlanetSize VarName="$PlanetSize"/>                              
-                                </Condition_HasPlanets>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
@@ -973,11 +982,10 @@
                     </Objective>
                     <Reward Droplist="DroplistVenetians08" Picks="1"/>
                 </ObjectiveSet>
-                
+
             </Step>
         </Steps>
     </QuestDefinition>
-
 
     <!-- ############################################## -->
     <!-- Venetians QUEST Chapter 3 Step 2 OMOKOR AND ARRAKYO  -->
@@ -1001,12 +1009,20 @@
                 <From Source="$Empire"/>
             </Var>
             <Var VarName="$MinAmount" IntValue="3"/>
-            <Var VarName="$MinLevel" IntValue="3"/>  
-        <LocalizationVar Source="$MinLevel" LocalizationKey="$MinLevelName"/>
+            <Var VarName="$MinLevel" IntValue="3"/>
+            <LocalizationVar Source="$MinLevel" LocalizationKey="$MinLevelName"/>
+            <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', SystemLevel)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective1Expr" StringValue="MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', SystemLevel)"/>
+            <InterpretedVar VarName="$Step1_Objective2Val" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', SystemLevel)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective2Expr" StringValue="MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', SystemLevel)"/>
         </Vars>
 
         <!--============ PREREQUISITES ============-->
-  
+
         <!--============ STEPS ============-->
 
         <Steps>
@@ -1024,15 +1040,26 @@
                         </Prerequisites>
                     </ChoiceItem>
                 </Choice>
-                
-                <ObjectiveSet>                   
-                    <Objective Name="Step1_Objective1">
+
+                <ObjectiveSet>
+                    <Objective StartValue="$Step1_Objective1Val" EndValue="$MinLevel" Name="Step1_Objective1">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
-                        <Sequence>                           
-                            <Decorator_SystemLevelChanged Initiator="Empire">
-                                <Input_MinimumLevel VarName="$MinLevel"/>
-                            </Decorator_SystemLevelChanged>
+                        <Sequence>
+                            <Parallel CompletionPolicy="Any">
+                                <Decorator_SystemLevelChanged Initiator="Empire">
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                    </Condition_IsProgressionComplete>
+                                </Decorator_SystemLevelChanged>
+                                <Decorator_BeginTurn>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                    </Condition_IsProgressionComplete>
+                                </Decorator_BeginTurn>
+                            </Parallel>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
                         <Outcome Name="Outcome1">
@@ -1047,13 +1074,24 @@
                     <Reward Droplist="DroplistVenetians09" Picks="1"/>
                 </ObjectiveSet>
                 <ObjectiveSet>
-                    <Objective Name="Step1_Objective2">
+                    <Objective StartValue="$Step1_Objective2Val" EndValue="$MinLevel" Name="Step1_Objective2">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
                         <Sequence>
-                            <Decorator_SystemLevelChanged Initiator="Empire">
-                                <Input_MinimumLevel VarName="$MinLevel"/>
-                            </Decorator_SystemLevelChanged>
+                            <Parallel CompletionPolicy="Any">
+                                <Decorator_SystemLevelChanged Initiator="Empire">
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                    </Condition_IsProgressionComplete>
+                                </Decorator_SystemLevelChanged>
+                                <Decorator_BeginTurn>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                    </Condition_IsProgressionComplete>
+                                </Decorator_BeginTurn>
+                            </Parallel>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
                         <Outcome Name="Outcome1">
@@ -1096,33 +1134,36 @@
             <Var VarName="$MinAmount" IntValue="3"/>
             <Var VarName="$HomeSystems">
                 <From Source="$Constellations.$StarSystems">
-                    <Where>                        
+                    <Where>
                         <PathPrerequisite Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
                     </Where>
                 </From>
             </Var>
             <LocalizationVar Source="$MinAmount" LocalizationKey="$MinAmountName"/>
+            <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HomeSystem')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HomeSystem')"/>
         </Vars>
 
         <!--============ PREREQUISITES ============-->
-       
+
         <!--============ STEPS ============-->
 
         <Steps>
             <!--============ STEP 1 ============-->
             <Step Name="Step1">
                 <ObjectiveSet>
-                    <Objective Name="Step1_Objective1">
+                    <Objective StartValue="$Step1_Objective1Val" EndValue="$MinAmount" Name="Step1_Objective1">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
                         <Sequence>
                             <Decorator_BeginTurn>
                                 <!--SHOULD BE: SYSTEM WITH WONDERS-->
-                                <Condition_HasSystems>                                    
-                                    <Input_Empires VarName="$CurrentEmpire"/>
-                                    <Input_MinimumAmount VarName="$MinAmount"/>
-                                    <Input_Systems VarName="$HomeSystems"/>
-                                </Condition_HasSystems>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
@@ -1136,7 +1177,7 @@
                         </Outcome>
                     </Objective>
                     <Reward Droplist="DroplistVenetians08" Picks="1"/>
-                </ObjectiveSet>                
+                </ObjectiveSet>
             </Step>
         </Steps>
     </QuestDefinition>
@@ -1298,7 +1339,7 @@
             </Var>
             <Var VarName="$IncomeAmount" IntValue="250"/>
             <Var VarName="$ResourceName00" StringValue="EmpireResearch"/>
-            <Var VarName="$ResourceName01" StringValue="EmpireMoney"/>           
+            <Var VarName="$ResourceName01" StringValue="EmpireMoney"/>
             <InterpretedVar VarName="$MinAmount" Target="$(Empire)">
                 <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystems/ClassColonizedPlanet,PlanetTypeDesert') + 2</Expression>
             </InterpretedVar>
@@ -1309,14 +1350,29 @@
             <LocalizationVar LocalizationKey="$MinAmountName" Source="$MinAmount"/>
             <LocalizationVar LocalizationKey="$IncomeAmountName" Source="$IncomeAmount"/>
             <LocalizationVar LocalizationKey="$SixName" Source="$Six"/>
-        </Vars>
+            <InterpretedVar VarName="$Step2_1_Objective1Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetTypeDesert')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step2_1_Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetTypeDesert')"/>
+            <InterpretedVar VarName="$Step2_2_Objective1Val" Target="$(Empire)">
+                <Expression>SumProperty(Context, @'ClassEmpire/DepartmentOfCommerce/ClassTradingCompany', EmpireResearch)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step2_2_Objective1Expr" StringValue="SumProperty(Context, @'ClassEmpire/DepartmentOfCommerce/ClassTradingCompany', EmpireResearch)"/>
+            <InterpretedVar VarName="$Step2_3_Objective1Val" Target="$(Empire)">
+                <Expression>SumProperty(Context, @'ClassEmpire/DepartmentOfCommerce/ClassTradingCompany', EmpireMoney)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step2_3_Objective1Expr" StringValue="SumProperty(Context, @'ClassEmpire/DepartmentOfCommerce/ClassTradingCompany', EmpireMoney)"/>
+            <InterpretedVar VarName="$Step2_4_Objective1Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeLuxury')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step2_4_Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeLuxury')"/>        </Vars>
 
         <!--============ PREREQUISITE ============-->
-    
-      <!--============ STEPS ============-->
+
+        <!--============ STEPS ============-->
         <Steps>
             <Step Name="Step1">
-          <!--============ STEP 0 - Choose ============-->
+                <!--============ STEP 0 - Choose ============-->
                 <Choice DefaultChoiceIndex="0">
                     <ChoiceItem ObjectiveSetIndex="0"/>
                     <ChoiceItem ObjectiveSetIndex="1"/>
@@ -1324,71 +1380,68 @@
                     <ChoiceItem ObjectiveSetIndex="3"/>
                 </Choice>
                 <ObjectiveSet>
-                    <Objective Name="Step2_1_Objective1">
+                    <Objective StartValue="$Step2_1_Objective1Val" EndValue="$MinAmount" Name="Step2_1_Objective1">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
-                    <!--OMOKOR-->
+                        <!--OMOKOR-->
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_HasPlanets>
-                                    <Input_EmpireOrSystem VarName="$CurrentEmpire"/>
-                                    <Input_MinimumAmount VarName="$MinAmount"/>
-                                    <Input_PlanetType VarName="$PlanetType"/>
-                                </Condition_HasPlanets>
-                            </Decorator_BeginTurn>                     
-                        </Sequence>                        
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step2_1_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                        </Sequence>
                     </Objective>
                     <Reward Droplist="DroplistVenetians10" Picks="1"/>
                 </ObjectiveSet>
                 <ObjectiveSet>
-                    <Objective Name="Step2_2_Objective1">
+                    <Objective StartValue="$Step2_2_Objective1Val" EndValue="$IncomeAmount" Name="Step2_2_Objective1">
                         <!-- TODO -->
                         <AIHint Category="MaximizeTradeCompagny" Motivation="0.5">
                             <Resource>Science</Resource>
                         </AIHint>
-                    <!--ARRAKYO-->
+                        <!--ARRAKYO-->
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_HasTradeIncome SummedAmount="true">
-                                    <Input_Empire VarName="$CurrentEmpire"/>
-                                    <Input_ResourceName VarName="$ResourceName00"/>
-                                    <Input_MinimumAmount VarName="$IncomeAmount"/>
-                                </Condition_HasTradeIncome>
-                            </Decorator_BeginTurn>                           
-                        </Sequence>                        
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step2_2_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                        </Sequence>
                     </Objective>
                     <Reward Droplist="DroplistVenetians11" Picks="1"/>
                 </ObjectiveSet>
                 <ObjectiveSet>
-                    <Objective Name="Step2_3_Objective1">
+                    <Objective StartValue="$Step2_3_Objective1Val" EndValue="$IncomeAmount" Name="Step2_3_Objective1">
                         <!-- TODO -->
                         <AIHint Category="MaximizeTradeCompagny" Motivation="0.5">
                             <Resource>Dust</Resource>
                         </AIHint>
-                      <!--LANCELLUM-->                       
+                        <!--LANCELLUM-->
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_HasTradeIncome SummedAmount="true">
-                                    <Input_Empire VarName="$CurrentEmpire"/>
-                                    <Input_ResourceName VarName="$ResourceName01"/>
-                                    <Input_MinimumAmount VarName="$IncomeAmount"/>
-                                </Condition_HasTradeIncome>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step2_3_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                         </Sequence>
                     </Objective>
                     <Reward Droplist="DroplistVenetians12" Picks="1"/>
                 </ObjectiveSet>
                 <ObjectiveSet>
-                    <Objective Name="Step2_4_Objective1">
+                    <Objective StartValue="$Step2_4_Objective1Val" EndValue="$Six" Name="Step2_4_Objective1">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
                         <!--MEOS-->
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_HasDeposits Input_ResourceType="Luxury">
-                                    <Input_Empire VarName="$CurrentEmpire"/>
-                                    <Input_MinimumAmount VarName="$Six"/>
-                                </Condition_HasDeposits>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step2_4_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                         </Sequence>
                     </Objective>
@@ -1433,16 +1486,28 @@
             <Var VarName="$ResourceName07" StringValue="EmpireMoney"/>
             <Var VarName="$IncomeAmount01" IntValue="250"/>
             <Var VarName="$Ship"/>
-            <Var VarName="$PlanetType" StringValue="PlanetTypeDesert"/>     
+            <Var VarName="$PlanetType" StringValue="PlanetTypeDesert"/>
             <LocalizationVar LocalizationKey="$MinAmountName" Source="$MinAmountPlanet"/>
-            <Var VarName="$Six" IntValue="6"/>           
+            <Var VarName="$Six" IntValue="6"/>
             <LocalizationVar LocalizationKey="$IncomeAmountName" Source="$IncomeAmount"/>
             <LocalizationVar LocalizationKey="$SixName" Source="$Six"/>
             <LocalizationVar LocalizationKey="$FiveName" Source="$MinAmount"/>
+            <InterpretedVar VarName="$Step2_1_Objective1Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetTypeDesert')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step2_1_Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetTypeDesert')"/>
+            <InterpretedVar VarName="$Step2_2_Objective1Val" Target="$(Empire)">
+                <Expression>SumProperty(Context, @'ClassEmpire/DepartmentOfCommerce/ClassTradingCompany', EmpireResearch)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step2_2_Objective1Expr" StringValue="SumProperty(Context, @'ClassEmpire/DepartmentOfCommerce/ClassTradingCompany', EmpireResearch)"/>
+            <InterpretedVar VarName="$Step2_4_Objective1Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeLuxury')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step2_4_Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceTypeLuxury')"/>
         </Vars>
 
         <!--============ PREREQUISITE ============-->
-     
+
         <!--============ STEPS ============-->
         <Steps>
             <Step Name="Step1">
@@ -1454,24 +1519,23 @@
                     <ChoiceItem ObjectiveSetIndex="3"/>
                 </Choice>
                 <ObjectiveSet>
-                    <Objective Name="Step2_1_Objective1">
+                    <Objective StartValue="$Step2_1_Objective1Val" EndValue="$MinAmountPlanet" Name="Step2_1_Objective1">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
                         <!--OMOKOR-->
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_HasPlanets>
-                                    <Input_EmpireOrSystem VarName="$CurrentEmpire"/>
-                                    <Input_MinimumAmount VarName="$MinAmountPlanet"/>
-                                    <Input_PlanetType VarName="$PlanetType"/>                                    
-                                </Condition_HasPlanets>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step2_1_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                         </Sequence>
                     </Objective>
                     <Reward Droplist="DroplistVenetians10" Picks="1"/>
                 </ObjectiveSet>
                 <ObjectiveSet>
-                    <Objective Name="Step2_2_Objective1">
+                    <Objective StartValue="$Step2_2_Objective1Val" EndValue="$IncomeAmount" Name="Step2_2_Objective1">
                         <!-- TODO -->
                         <AIHint Category="MaximizeTradeCompagny" Motivation="0.5">
                             <Resource>Science</Resource>
@@ -1479,11 +1543,10 @@
                         <!--ARRAKYO-->
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_HasTradeIncome SummedAmount="true">
-                                    <Input_Empire VarName="$CurrentEmpire"/>
-                                    <Input_ResourceName VarName="$ResourceName00"/>
-                                    <Input_MinimumAmount VarName="$IncomeAmount"/>
-                                </Condition_HasTradeIncome>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step2_2_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                         </Sequence>
                     </Objective>
@@ -1533,18 +1596,18 @@
                     <Reward Droplist="DroplistVenetians12" Picks="1"/>
                 </ObjectiveSet>
                 <ObjectiveSet>
-                    <Objective Name="Step2_4_Objective1">
+                    <Objective StartValue="$Step2_4_Objective1Val" EndValue="$Six" Name="Step2_4_Objective1">
                         <!--MEOS LANCELLUM-->
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_HasDeposits Input_ResourceType="Luxury">
-                                    <Input_Empire VarName="$CurrentEmpire"/>
-                                    <Input_MinimumAmount VarName="$Six"/>
-                                </Condition_HasDeposits>
-                            </Decorator_BeginTurn>                  
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step2_4_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
                         </Sequence>
                     </Objective>
-                    <Reward Droplist="DroplistVenetians13" Picks="1"/>              
+                    <Reward Droplist="DroplistVenetians13" Picks="1"/>
                 </ObjectiveSet>
             </Step>
         </Steps>

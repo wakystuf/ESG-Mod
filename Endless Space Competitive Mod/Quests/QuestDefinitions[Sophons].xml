@@ -466,6 +466,11 @@
       <Var VarName="$PoliticalEffectMilitary" StringValue="PopulationEventSophons01Military"/>
       <Var VarName="$PoliticalEffectScience" StringValue="PopulationEventSophons01Science"/>
       <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventSophons01Pacifist"/>
+
+      <Var VarName="$Step2_2_Objective1Val">
+        <From Source="$CurrentEmpire.$RevealedNodePercentage"/>
+      </Var>
+      <Var VarName="$Step2_2_Objective1Expr" StringValue="$(Step2_2_Objective1Val)"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -539,23 +544,24 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectScience"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step2_2_Objective1">
-            <!--Reveal 3 Star Systems-->
+          <Objective StartValue="$Step2_2_Objective1Val" EndValue="$GalaxyExplorationRequirement" Name="Step2_2_Objective1">
+            <!--Reveal 25% of nodes-->
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1"/>
             <Sequence>
               <Parallel CompletionPolicy="First">
                 <Sequence>
                   <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
-                    <Input_MinimumPercentage VarName="$GalaxyExplorationRequirement"/>
+                    <Condition_IsProgressionComplete>
+                      <Input_Expression VarName="$Step2_2_Objective1Expr"/>
+                    </Condition_IsProgressionComplete>
                   </Decorator_ExploredNode>
                   <Action_ChooseOutcome Name="Outcome1"/>
                 </Sequence>
                 <Sequence>
                   <Decorator_BeginTurn>
-                    <Condition_ExplorationProgress MinimumState="Revealed">
-                      <Input_Empire VarName="$CurrentEmpire"/>
-                      <Input_Percentage VarName="$GalaxyExplorationRequirement"/>
-                    </Condition_ExplorationProgress>
+                    <Condition_IsProgressionComplete>
+                      <Input_Expression VarName="$Step2_2_Objective1Expr"/>
+                    </Condition_IsProgressionComplete>
                   </Decorator_BeginTurn>
                   <Action_ChooseOutcome Name="Outcome1"/>
                 </Sequence>
@@ -1151,6 +1157,11 @@
       <LocalizationVar LocalizationKey="$SystemName01" Source="$ColonizedSystemLocation" />
       <LocalizationVar LocalizationKey="$Amount" Source="$MinimumAmount" />
       <LocalizationVar LocalizationKey="$MinObedience02Name" Source="$Amount02" />
+
+      <InterpretedVar VarName="$Step1_Objective1Val">
+        <Expression>Property(ColonizedSystem01, @'ClassColonizedStarSystem', Happiness)</Expression>
+      </InterpretedVar>
+      <Var VarName="$Step1_Objective1Expr" StringValue="Property(ColonizedSystem01, @'ClassColonizedStarSystem', Happiness)"/>
     </Vars>
     <!-- ============ PREREQUISITES ============ -->
     <!-- ============ STEPS ============ -->
@@ -1182,7 +1193,7 @@
               <Output_Markers VarName="$Marker01" />
             </Action_AddQuestMarkers>
           </StartActions>
-          <Objective Name="Step1_Objective1">
+          <Objective StartValue="$Step1_Objective1Val" EndValue="$MinimumAmount" Name="Step1_Objective1">
             <!--  Reach an approval threshold on a specific system  -->
             <AIHint Category="MaximizeResourceOnSystem" Motivation="0.5">
               <Resource>Approval</Resource>
@@ -1190,12 +1201,10 @@
             </AIHint>
             <Sequence>
               <Decorator_BeginTurn>
-                <Condition_HasHappiness>
-                  <!-- Reach XX Approval on SystemName -->
-                  <Input_Empire VarName="$CurrentEmpire" />
-                  <Input_System VarName="$ColonizedSystemLocation" />
-                  <Input_MinimumAmount VarName="$MinimumAmount" />
-                </Condition_HasHappiness>
+                <!-- Reach XX Approval on SystemName -->
+                <Condition_IsProgressionComplete>
+                  <Input_Expression VarName="$Step1_Objective1Expr"/>
+                </Condition_IsProgressionComplete>
               </Decorator_BeginTurn>
               <Action_RemoveQuestMarkers>
                 <Input_Markers VarName="$Marker01" />
@@ -1288,6 +1297,14 @@
       <LocalizationVar LocalizationKey="$SystemName01" Source="$ColonizedSystemLocation" />
       <!-- POLITICAL EFFECT  -->
       <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventSophons02.3Pacifist" />
+      <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+        <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem', NetSystemEmpirePoint, gt, $(Amount))</Expression>
+      </InterpretedVar>
+      <Var VarName="$Step1_Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem', NetSystemEmpirePoint, gt, $(Amount))"/>
+      <InterpretedVar VarName="$Step1_Objective1AltVal" Target="$(Empire)">
+        <Expression>MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', NetSystemEmpirePoint)</Expression>
+      </InterpretedVar>
+      <Var VarName="$Step1_Objective1AltExpr" StringValue="MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', NetSystemEmpirePoint)"/>
     </Vars>
     <!-- ============ PREREQUISITES ============ -->
     <!-- ============ STEPS ============ -->
@@ -1314,18 +1331,17 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist" />
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step1_Objective1">
+          <Objective StartValue="$Step1_Objective1Val" EndValue="$SystemCount" Name="Step1_Objective1">
             <!--  Generate 20 Influence per turn in at least 2 Systems  -->
             <AIHint Category="MaximizeResource" Motivation="0.5">
               <Resource>EmpirePoint</Resource>
             </AIHint>
             <Sequence>
               <Decorator_BeginTurn>
-                <Condition_SystemsHaveFidsi>
-                  <Input_Empire VarName="$CurrentEmpire" />
-                  <Input_SystemCount VarName="$SystemCount" />
-                  <Input_NetEmpirePoint VarName="$Amount" />
-                </Condition_SystemsHaveFidsi>
+                <Condition_IsProgressionComplete>
+                  <Input_Context VarName="$CurrentEmpire"/>
+                  <Input_Expression VarName="$Step1_Objective1Expr"/>
+                </Condition_IsProgressionComplete>
               </Decorator_BeginTurn>
               <Action_ChooseOutcome Name="Outcome1" />
             </Sequence>
@@ -1347,18 +1363,17 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist" />
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step1_Objective1Alt">
+          <Objective StartValue="$Step1_Objective1AltVal" EndValue="$AmountAlt" Name="Step1_Objective1Alt">
             <!--  Generate X Influence per turn in 1 System  -->
             <AIHint Category="MaximizeResource" Motivation="0.5">
               <Resource>EmpirePoint</Resource>
             </AIHint>
             <Sequence>
               <Decorator_BeginTurn>
-                <Condition_SystemsHaveFidsi>
-                  <Input_Empire VarName="$CurrentEmpire" />
-                  <Input_SystemCount VarName="$SystemCountAlt" />
-                  <Input_NetEmpirePoint VarName="$AmountAlt" />
-                </Condition_SystemsHaveFidsi>
+                <Condition_IsProgressionComplete>
+                  <Input_Context VarName="$CurrentEmpire"/>
+                  <Input_Expression VarName="$Step1_Objective1AltExpr"/>
+                </Condition_IsProgressionComplete>
               </Decorator_BeginTurn>
               <Action_ChooseOutcome Name="Outcome2" />
             </Sequence>
