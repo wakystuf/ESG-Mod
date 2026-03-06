@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+
+    <!-- ###########  STATISTICS ###########-->
+
+    <QuestDefinition Name="ExplorationQuest24" Category="ExplorationQuest" SubCategory="Exploration" MinimumTurn="30" TriggeringProbability="0.2">
+
+
+        <!--============ TAGS ============-->
+
+        <Tags>BeginTurn</Tags>
+
+        <QuestContextSolo/>
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+
+        <!--============ VARIABLES ============-->
+
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <!--TIMER-->
+            <Var VarName="$Timer"/>
+            <InterpretedVar VarName="$Duration" Target="$(Empire)">
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*20</Expression>
+            </InterpretedVar>
+
+            <InterpretedVar VarName="$Amount03" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire/ClassGarrison/ClassShip',OffensiveMilitaryPower)+30</Expression>
+            </InterpretedVar>
+
+            <InterpretedVar VarName="$Amount04" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'../ClassEmpire/ClassColonizedStarSystem', SystemProduction) + 30 </Expression>
+            </InterpretedVar>
+
+            <InterpretedVar VarName="$Amount05" Target="$(Empire)">
+                <Expression>Max(1, Property(Context, @'../ClassEmpire', BankAccount, true)) + Max(1, Property(Context, @'../ClassEmpire', NetEmpireMoney, true)) + 100 </Expression>
+            </InterpretedVar>
+
+            <Var VarName="$Expression3" StringValue="MaxProperty(Context, @'../ClassEmpire/ClassColonizedStarSystem', SystemProduction) ge $(Amount04)"/>
+
+            <Var VarName="$Expression4" StringValue="Property(Context, @'../ClassEmpire', BankAccount, true) ge $(Amount05)"/>
+            <Var VarName="$Ship"/>
+            <Var VarName="$Amount06" IntValue="2"/>
+
+            <Var VarName="$PoliticalEffect1"   StringValue="PopulationPoliticalEventNarrative63"/>
+            <Var VarName="$PoliticalEffect2"   StringValue="PopulationPoliticalEventNarrative64"/>
+            <Var VarName="$PoliticalEffect3"   StringValue="PopulationPoliticalEventNarrative65"/>
+
+            <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03"/>
+            <LocalizationVar LocalizationKey="$Amount04Name" Source="$Amount04"/>
+            <LocalizationVar LocalizationKey="$Amount05Name" Source="$Amount05"/>
+            <LocalizationVar LocalizationKey="$Amount06Name" Source="$Amount06"/>
+            <LocalizationVar LocalizationKey="$DurationName" Source="$Duration"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <Prerequisites Target="$(Empire)">
+            <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCVaulters</DownloadableContentPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+
+        <Steps>
+            <Step Name="Step1">
+
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                    <ChoiceItem ObjectiveSetIndex="2"/>
+                </Choice>
+
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_StartTimer>
+                            <Input_Duration VarName="$Duration"/>
+                            <Output_Timer VarName="$Timer"/>
+                        </Action_StartTimer>
+
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffect1"/>
+                        </Action_TriggerPopulationEvent>
+
+                    </StartActions>
+                    <Objective Name="Step1_Objective1">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="30" AutoResolutionProbability="1" />
+                        <Parallel CompletionPolicy="First">
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_ShipStats>
+                                        <Input_Empire VarName="$CurrentEmpire"/>
+                                        <Input_MinimumAmount VarName="$Amount06"/>
+                                        <Input_MinimumOffensiveMilitaryPower VarName="$Amount03"/>
+                                    </Condition_ShipStats>
+                                </Decorator_BeginTurn>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_TimerEnded>
+                                        <Input_Timer VarName="$Timer"/>
+                                    </Condition_TimerEnded>
+                                </Decorator_BeginTurn>
+                                <Action_Fail/>
+                            </Sequence>
+                        </Parallel>
+                    </Objective>
+                    <Reward Droplist="DroplistStrategics" Picks="1"/>
+                </ObjectiveSet>
+
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_StartTimer>
+                            <Input_Duration VarName="$Duration"/>
+                            <Output_Timer VarName="$Timer"/>
+                        </Action_StartTimer>
+
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffect2"/>
+                        </Action_TriggerPopulationEvent>
+
+                    </StartActions>
+                    <Objective Name="Step1_Objective2">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="30" AutoResolutionProbability="1" />
+                        <Parallel CompletionPolicy="First">
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression3"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_TimerEnded>
+                                        <Input_Timer VarName="$Timer"/>
+                                    </Condition_TimerEnded>
+                                </Decorator_BeginTurn>
+                                <Action_Fail/>
+                            </Sequence>
+                        </Parallel>
+                    </Objective>
+                    <Reward Droplist="DroplistMoney" Picks="1"/>
+                </ObjectiveSet>
+
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_StartTimer>
+                            <Input_Duration VarName="$Duration"/>
+                            <Output_Timer VarName="$Timer"/>
+                        </Action_StartTimer>
+
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffect3"/>
+                        </Action_TriggerPopulationEvent>
+
+                    </StartActions>
+                    <Objective Name="Step1_Objective3">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="30" AutoResolutionProbability="1" />
+                        <Parallel CompletionPolicy="First">
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression4"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_TimerEnded>
+                                        <Input_Timer VarName="$Timer"/>
+                                    </Condition_TimerEnded>
+                                </Decorator_BeginTurn>
+                                <Action_Fail/>
+                            </Sequence>
+                        </Parallel>
+                    </Objective>
+                    <Reward Droplist="DroplistMinorRewards" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+
+    </QuestDefinition>
+</Datatable>
