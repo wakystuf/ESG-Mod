@@ -28,7 +28,10 @@
             <Var VarName="$Amount01" IntValue="7"/>
             <Var VarName="$HeroDefinitionName" IsGlobal="true"/>
 
-            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero,HeroUpdate12',Level, true) ge $(Amount01)"/>
+            <InterpretedVar VarName="$Objective1Val" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero,HeroUpdate12', Level, true)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective1Expr" StringValue="Property(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero,HeroUpdate12', Level, true)"/>
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <LocalizationVar LocalizationKey="$HeroDefinitionNameName" Source="$HeroDefinitionName"/>
         </Vars>
@@ -41,14 +44,13 @@
             <Step Name="Step1">
 
                 <ObjectiveSet>
-                    <Objective Name="Objective1">
-
+                    <Objective StartValue="$Objective1Val" EndValue="$Amount01" Name="Objective1">
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_CheckInterpreter>
+                                <Condition_IsProgressionComplete>
                                     <Input_Context VarName="$CurrentEmpire"/>
-                                    <Input_Expression VarName="$Expression01"/>
-                                </Condition_CheckInterpreter>
+                                    <Input_Expression VarName="$Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
@@ -114,7 +116,10 @@
             <Var VarName="$Amount01" IntValue="7"/>
             <Var VarName="$Amount02" IntValue="1"/>
             <Var VarName="$Marker01"/>
-            <Var VarName="$Expression01" StringValue="Property(MySpecialSystem, @'ClassColonizedStarSystem/ClassHero,HeroUpdate12',Level, true) ge $(Amount01)"/>
+            <InterpretedVar VarName="$Objective1Val" Target="$(Empire)">
+                <Expression>Property(MySpecialSystem, @'ClassColonizedStarSystem/ClassHero,HeroUpdate12', Level, true)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective1Expr" StringValue="Property(MySpecialSystem, @'ClassColonizedStarSystem/ClassHero,HeroUpdate12', Level, true)"/>
 
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <LocalizationVar LocalizationKey="$MySpecialSystemName" Source="$MySpecialSystem"/>
@@ -137,7 +142,7 @@
                             <Output_Markers VarName="$Marker01"/>
                         </Action_AddQuestMarkers>
                     </StartActions>
-                    <Objective Name="Objective1">
+                    <Objective StartValue="$Objective1Val" EndValue="$Amount01" Name="Objective1">
                         <Sequence>
                             <Parallel CompletionPolicy="First">
 
@@ -158,10 +163,10 @@
 
                                 <Sequence>
                                     <Decorator_BeginTurn>
-                                        <Condition_CheckInterpreter>
+                                        <Condition_IsProgressionComplete>
                                             <Input_Context VarName="$CurrentEmpire"/>
-                                            <Input_Expression VarName="$Expression01"/>
-                                        </Condition_CheckInterpreter>
+                                            <Input_Expression VarName="$Objective1Expr"/>
+                                        </Condition_IsProgressionComplete>
                                     </Decorator_BeginTurn>
                                     <Action_RemoveQuestMarkers>
                                         <Input_Markers VarName="$Marker01"/>
@@ -235,7 +240,10 @@
             <Var VarName="$Amount01" IntValue="7"/>
             <Var VarName="$Amount02" IntValue="1"/>
             <Var VarName="$Marker01"/>
-            <Var VarName="$Expression01" StringValue="Property(MyNewSpecialSystem, @'ClassColonizedStarSystem/ClassHero,HeroUpdate12',Level, true) ge $(Amount01)"/>
+            <InterpretedVar VarName="$Objective1Val" Target="$(Empire)">
+                <Expression>Property(MyNewSpecialSystem, @'ClassColonizedStarSystem/ClassHero,HeroUpdate12', Level, true)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective1Expr" StringValue="Property(MyNewSpecialSystem, @'ClassColonizedStarSystem/ClassHero,HeroUpdate12', Level, true)"/>
 
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <LocalizationVar LocalizationKey="$MySpecialSystemName" Source="$MyNewSpecialSystem"/>
@@ -258,7 +266,7 @@
                             <Output_Markers VarName="$Marker01"/>
                         </Action_AddQuestMarkers>
                     </StartActions>
-                    <Objective Name="Objective1">
+                    <Objective StartValue="$Objective1Val" EndValue="$Amount01" Name="Objective1">
                         <Sequence>
                             <Parallel CompletionPolicy="First">
 
@@ -279,10 +287,10 @@
 
                                 <Sequence>
                                     <Decorator_BeginTurn>
-                                        <Condition_CheckInterpreter>
+                                        <Condition_IsProgressionComplete>
                                             <Input_Context VarName="$CurrentEmpire"/>
-                                            <Input_Expression VarName="$Expression01"/>
-                                        </Condition_CheckInterpreter>
+                                            <Input_Expression VarName="$Objective1Expr"/>
+                                        </Condition_IsProgressionComplete>
                                     </Decorator_BeginTurn>
 
                                     <Action_RemoveQuestMarkers>
@@ -345,6 +353,10 @@
             <InterpretedVar VarName="$Amount01">
                 <Expression>$(MaxHeroLevel) + 2</Expression>
             </InterpretedVar>
+            <InterpretedVar VarName="$Objective1Val" Target="$(Empire)">
+                <Expression>Max(MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero', Level), MaxProperty(Context, @'ClassEmpire/ClassGarrison/ClassHero', Level), MaxProperty(Context, @'ClassEmpire/ClassHero', Level))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective1Expr" StringValue="Max(MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero', Level), MaxProperty(Context, @'ClassEmpire/ClassGarrison/ClassHero', Level), MaxProperty(Context, @'ClassEmpire/ClassHero', Level))"/>
 
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
         </Vars>
@@ -357,10 +369,13 @@
             <Step Name="Step1">
 
                 <ObjectiveSet>
-                    <Objective Name="Objective1">
+                    <Objective StartValue="$Objective1Val" EndValue="$Amount01" Name="Objective1">
                         <Sequence>
-                            <Decorator_HeroLevelUp Initiator ="Empire">
-                                <Input_MinimumLevel VarName ="$Amount01"/>
+                            <Decorator_HeroLevelUp Initiator="Empire">
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_HeroLevelUp>
                             <Action_ChooseOutcome Name ="Outcome1"/>
                         </Sequence>

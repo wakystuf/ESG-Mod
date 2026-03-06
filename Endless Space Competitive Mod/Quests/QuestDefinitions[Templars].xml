@@ -49,7 +49,10 @@
                 <Expression>SumProperty(Context, @'ClassEmpire/ClassPopulation,PopulationNonMajor', PopulationCount) + 10</Expression>
             </InterpretedVar>
             <Var VarName="$Expression01" StringValue="SumProperty(Context, @'ClassEmpire/ClassPopulation,PopulationNonMajor', PopulationCount)"/>
-
+            <InterpretedVar VarName="$Objective1Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics05')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics05')"/>
 
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
@@ -135,29 +138,23 @@
                         </Action_TriggerPopulationEvent>
                     </StartActions>
 
-                    <Objective Name="Objective1">
+                    <Objective StartValue="$Objective1Val" EndValue="$Amount01" Name="Objective1">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
                         <Sequence>
                             <Parallel CompletionPolicy="Any">
-                                <Sequence>
-                                    <Decorator_BeginTurn>
-                                        <Condition_HasLaws>
-                                            <Input_Empire VarName="$CurrentEmpire"/>
-                                            <Input_Politics VarName="$Politics"/>
-                                            <Input_MinimumAmount VarName="$Amount01"/>
-                                        </Condition_HasLaws>
-                                    </Decorator_BeginTurn>
-                                </Sequence>
-                                <Sequence>
-                                    <Decorator_LawActivated>
-                                        <Condition_HasLaws>
-                                            <Input_Empire VarName="$CurrentEmpire"/>
-                                            <Input_Politics VarName="$Politics"/>
-                                            <Input_MinimumAmount VarName="$Amount01"/>
-                                        </Condition_HasLaws>
-                                    </Decorator_LawActivated>
-                                </Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Objective1Expr"/>
+                                    </Condition_IsProgressionComplete>
+                                </Decorator_BeginTurn>
+                                <Decorator_LawActivated>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Objective1Expr"/>
+                                    </Condition_IsProgressionComplete>
+                                </Decorator_LawActivated>
                             </Parallel>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>

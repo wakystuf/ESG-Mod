@@ -276,6 +276,10 @@
 
             <Var VarName="$PoliticalEffectScience"       StringValue="PopulationEventUnfallen01-Science"/>
             <Var VarName="$PoliticalEffectEcologist"     StringValue="PopulationEventUnfallen01-Ecologist"/>
+            <InterpretedVar VarName="$Objective_EcologistVal" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective_EcologistExpr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem')"/>
 
             <!--ScienceObjective-->
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
@@ -348,15 +352,15 @@
                         </Action_TriggerPopulationEvent>
                     </StartActions>
 
-                    <Objective Name="Objective_Ecologist">
+                    <Objective StartValue="$Objective_EcologistVal" EndValue="$Amount02" Name="Objective_Ecologist">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_HasSystems>
-                                    <Input_Empires VarName="$CurrentEmpire"/>
-                                    <Input_MinimumAmount VarName="$Amount02"/>
-                                </Condition_HasSystems>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Objective_EcologistExpr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
@@ -461,11 +465,12 @@
             <InterpretedVar VarName="$Amount01" Target="$(Empire)">
                 <Expression>Property(Context, @'ClassEmpire', EmpireEmpirePointStock) + 150 </Expression>
             </InterpretedVar>
-            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire', EmpireEmpirePointStock) ge $(Amount01)"/>
-
             <Var VarName="$PoliticalEffectPacifist"       StringValue="PopulationEventUnfallen02-Pacifist"/>
             <Var VarName="$PoliticalEffectMilitarist"     StringValue="PopulationEventUnfallen02-Militarist"/>
-
+            <InterpretedVar VarName="$Objective_PacifistVal" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire', EmpireEmpirePointStock)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective_PacifistExpr" StringValue="Property(Context, @'ClassEmpire', EmpireEmpirePointStock)"/>
 
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
@@ -495,17 +500,17 @@
                         </Action_TriggerPopulationEvent>
                     </StartActions>
 
-                    <Objective Name="Objective_Pacifist">
+                    <Objective StartValue="$Objective_PacifistVal" EndValue="$Amount01" Name="Objective_Pacifist">
                         <!-- TODO -->
                         <AIHint Category="MaximizeResource" Motivation="0.5">
                             <Resource>EmpirePoint</Resource>
                         </AIHint>
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_CheckInterpreter>
+                                <Condition_IsProgressionComplete>
                                     <Input_Context VarName="$CurrentEmpire"/>
-                                    <Input_Expression VarName="$Expression01"/>
-                                </Condition_CheckInterpreter>
+                                    <Input_Expression VarName="$Objective_PacifistExpr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
@@ -620,7 +625,6 @@
         </Steps>
     </QuestDefinition>
 
-
     <!-- ############################################# -->
     <!-- ######### UNFALLEN QUEST - CHAPTER 2 ######## -->
     <!-- ############################################# -->
@@ -659,6 +663,19 @@
             <InterpretedVar VarName="$Amount03" Target="$(Empire)">
                 <Expression>Floor((Count(Context, @'ClassEmpire/ClassColonizedStarSystem')/2)+2)</Expression>
             </InterpretedVar>
+            <InterpretedVar VarName="$Objective_EcologistVal" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem', SystemLevel, ge, $(Amount02))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective_EcologistExpr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem', SystemLevel, ge, $(Amount02))"/>
+            <InterpretedVar VarName="$Objective_EcologistAltVal" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem', SystemLevel, ge, $(Amount02))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective_EcologistAltExpr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem', SystemLevel, ge, $(Amount02))"/>
+            <InterpretedVar VarName="$Objective_Ecologist2Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem', SystemLevel, ge, $(Amount02))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective_Ecologist2Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem', SystemLevel, ge, $(Amount02))"/>
+
             <!--ScienceObjective-->
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <!--EcologistObjective-->
@@ -754,16 +771,15 @@
                         </Action_TriggerPopulationEvent>
                     </StartActions>
 
-                    <Objective Name="Objective_Ecologist">
+                    <Objective StartValue="$Objective_EcologistVal" EndValue="$Amount03" Name="Objective_Ecologist">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_HasSystems>
-                                    <Input_Empires VarName="$CurrentEmpire"/>
-                                    <Input_MinimumAmount VarName="$Amount03"/>
-                                    <Input_MinimumLevel VarName="$Amount02"/>
-                                </Condition_HasSystems>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Objective_EcologistExpr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
@@ -794,16 +810,15 @@
                         </Action_TriggerPopulationEvent>
                     </StartActions>
 
-                    <Objective Name="Objective_EcologistAlt">
+                    <Objective StartValue="$Objective_EcologistAltVal" EndValue="$Amount03" Name="Objective_EcologistAlt">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_HasSystems>
-                                    <Input_Empires VarName="$CurrentEmpire"/>
-                                    <Input_MinimumAmount VarName="$Amount03"/>
-                                    <Input_MinimumLevel VarName="$Amount02"/>
-                                </Condition_HasSystems>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Objective_EcologistAltExpr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
@@ -833,16 +848,15 @@
                         </Action_TriggerPopulationEvent>
                     </StartActions>
 
-                    <Objective Name="Objective_Ecologist2">
+                    <Objective StartValue="$Objective_Ecologist2Val" EndValue="$Amount03" Name="Objective_Ecologist2">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_HasSystems>
-                                    <Input_Empires VarName="$CurrentEmpire"/>
-                                    <Input_MinimumAmount VarName="$Amount03"/>
-                                    <Input_MinimumLevel VarName="$Amount02"/>
-                                </Condition_HasSystems>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Objective_Ecologist2Expr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
@@ -1061,13 +1075,15 @@
             <InterpretedVar VarName="$Amount02" Target="$(Empire)">
                 <Expression>Property(Context, @'ClassEmpire', MaximumEmpireManpowerStock) + 400</Expression>
             </InterpretedVar>
-            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire', MaximumEmpireManpowerStock) ge $(Amount02)"/>
-
             <Var VarName="$PoliticalEffectPacifist"       StringValue="PopulationEventUnfallen05-Pacifist"/>
             <Var VarName="$PoliticalEffectMilitarist"     StringValue="PopulationEventUnfallen05-Militarist"/>
 
             <Var VarName="$Amount03"   IntValue="1"/>
             <Var VarName="$Amount04" IntValue="40"/>
+            <InterpretedVar VarName="$Objective_MilitaristVal" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire', MaximumEmpireManpowerStock)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective_MilitaristExpr" StringValue="Property(Context, @'ClassEmpire', MaximumEmpireManpowerStock)"/>
 
             <!--EcologistObjective-->
             <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
@@ -1133,15 +1149,15 @@
                         </Action_TriggerPopulationEvent>
                     </StartActions>
 
-                    <Objective Name="Objective_Militarist" StartValue="0" EndValue="$Amount03">
+                    <Objective StartValue="$Objective_MilitaristVal" EndValue="$Amount02" Name="Objective_Militarist">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_CheckInterpreter>
+                                <Condition_IsProgressionComplete>
                                     <Input_Context VarName="$CurrentEmpire"/>
-                                    <Input_Expression VarName="$Expression01"/>
-                                </Condition_CheckInterpreter>
+                                    <Input_Expression VarName="$Objective_MilitaristExpr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>

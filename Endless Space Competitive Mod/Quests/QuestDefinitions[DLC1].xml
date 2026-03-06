@@ -41,15 +41,23 @@
                 <Expression>Max(1, Property(Context, @'../ClassEmpire', BankAccount, true)) + Max(1, Property(Context, @'../ClassEmpire', NetEmpireMoney, true)) + 100 </Expression>
             </InterpretedVar>
 
-            <Var VarName="$Expression3" StringValue="MaxProperty(Context, @'../ClassEmpire/ClassColonizedStarSystem', SystemProduction) ge $(Amount04)"/>
-
-            <Var VarName="$Expression4" StringValue="Property(Context, @'../ClassEmpire', BankAccount, true) ge $(Amount05)"/>
-            <Var VarName="$Ship"/>
             <Var VarName="$Amount06" IntValue="2"/>
 
             <Var VarName="$PoliticalEffect1"   StringValue="PopulationPoliticalEventNarrative63"/>
             <Var VarName="$PoliticalEffect2"   StringValue="PopulationPoliticalEventNarrative64"/>
             <Var VarName="$PoliticalEffect3"   StringValue="PopulationPoliticalEventNarrative65"/>
+            <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip', OffensiveMilitaryPower, gt, $(Amount03))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip', OffensiveMilitaryPower, gt, $(Amount03))"/>
+            <InterpretedVar VarName="$Step1_Objective2Val" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'../ClassEmpire/ClassColonizedStarSystem', SystemProduction)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective2Expr" StringValue="MaxProperty(Context, @'../ClassEmpire/ClassColonizedStarSystem', SystemProduction)"/>
+            <InterpretedVar VarName="$Step1_Objective3Val" Target="$(Empire)">
+                <Expression>Property(Context, @'../ClassEmpire', BankAccount, true)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective3Expr" StringValue="Property(Context, @'../ClassEmpire', BankAccount, true)"/>
 
             <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03"/>
             <LocalizationVar LocalizationKey="$Amount04Name" Source="$Amount04"/>
@@ -89,18 +97,15 @@
                         </Action_TriggerPopulationEvent>
 
                     </StartActions>
-                    <Objective Name="Step1_Objective1">
+                    <Objective StartValue="$Step1_Objective1Val" EndValue="$Amount06" Name="Step1_Objective1">
                         <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="30" AutoResolutionProbability="1" />
                         <Parallel CompletionPolicy="First">
-                            <Sequence>
-                                <Decorator_BeginTurn>
-                                    <Condition_ShipStats>
-                                        <Input_Empire VarName="$CurrentEmpire"/>
-                                        <Input_MinimumAmount VarName="$Amount06"/>
-                                        <Input_MinimumOffensiveMilitaryPower VarName="$Amount03"/>
-                                    </Condition_ShipStats>
-                                </Decorator_BeginTurn>
-                            </Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
                             <Sequence>
                                 <Decorator_BeginTurn>
                                     <Condition_TimerEnded>
@@ -128,17 +133,15 @@
                         </Action_TriggerPopulationEvent>
 
                     </StartActions>
-                    <Objective Name="Step1_Objective2">
+                    <Objective StartValue="$Step1_Objective2Val" EndValue="$Amount04" Name="Step1_Objective2">
                         <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="30" AutoResolutionProbability="1" />
                         <Parallel CompletionPolicy="First">
-                            <Sequence>
-                                <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
-                                        <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression3"/>
-                                    </Condition_CheckInterpreter>
-                                </Decorator_BeginTurn>
-                            </Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step1_Objective2Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
                             <Sequence>
                                 <Decorator_BeginTurn>
                                     <Condition_TimerEnded>
@@ -166,17 +169,15 @@
                         </Action_TriggerPopulationEvent>
 
                     </StartActions>
-                    <Objective Name="Step1_Objective3">
+                    <Objective StartValue="$Step1_Objective3Val" EndValue="$Amount05" Name="Step1_Objective3">
                         <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="30" AutoResolutionProbability="1" />
                         <Parallel CompletionPolicy="First">
-                            <Sequence>
-                                <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
-                                        <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression4"/>
-                                    </Condition_CheckInterpreter>
-                                </Decorator_BeginTurn>
-                            </Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step1_Objective3Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
                             <Sequence>
                                 <Decorator_BeginTurn>
                                     <Condition_TimerEnded>

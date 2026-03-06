@@ -25,7 +25,10 @@
             <InterpretedVar VarName="$TargetedNumberOfFaction" Target="$(Empire)">
                 <Expression>Property(Context, @'ClassEmpire', PopulationTypeCount) + 1</Expression>
             </InterpretedVar>
-
+            <InterpretedVar VarName="$Step01_Objective1Val" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire', PopulationTypeCount)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step01_Objective1Expr" StringValue="Property(Context, @'ClassEmpire', PopulationTypeCount)"/>
         </Vars>
 
 
@@ -42,16 +45,16 @@
         <Steps>
             <Step Name="Step01">
                 <ObjectiveSet>
-                    <Objective Name="Step01_Objective1">
+                    <Objective StartValue="$Step01_Objective1Val" EndValue="$TargetedNumberOfFaction" Name="Step01_Objective1">
                         <!-- TODO -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="17" MaxAutoResolutionTurn="25" AutoResolutionProbability="0.75" />
                         <Sequence>
                             <!--Check if the Player obtains +1 Faction (compare to the initial one)-->
                             <Decorator_BeginTurn>
-                                <Condition_HasPopulationDiversity>
-                                    <Input_Empire VarName="$CurrentEmpire"/>
-                                    <Input_MinimumAmount VarName="$TargetedNumberOfFaction"/>
-                                </Condition_HasPopulationDiversity>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step01_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                         </Sequence>
                     </Objective>

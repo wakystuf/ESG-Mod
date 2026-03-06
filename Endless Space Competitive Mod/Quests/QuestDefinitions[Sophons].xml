@@ -1424,6 +1424,18 @@
       <Var VarName="$PoliticalEffectMilitarist" StringValue="PopulationEventSophons03.2Military"/>
       <Var VarName="$PoliticalEffectScientist"  StringValue="PopulationEventSophons03.2Scientist"/>
       <Var VarName="$PoliticalEffectPacifist"   StringValue="PopulationEventSophons03.2Pacifist"/>
+      <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+        <Expression>Property(Context, @'ClassEmpire', EmpireManpowerStock)</Expression>
+      </InterpretedVar>
+      <Var VarName="$Step1_Objective1Expr" StringValue="Property(Context, @'ClassEmpire', EmpireManpowerStock)"/>
+      <Var VarName="$Step2_Objective1Val">
+        <From Source="$CurrentEmpire.$RevealedNodePercentage"/>
+      </Var>
+      <Var VarName="$Step2_Objective1Expr" StringValue="$(Step2_Objective1Val)"/>
+      <InterpretedVar VarName="$Step3_Objective1Val" Target="$(Empire)">
+        <Expression>Property(Context, @'ClassEmpire', Population)</Expression>
+      </InterpretedVar>
+      <Var VarName="$Step3_Objective1Expr" StringValue="Property(Context, @'ClassEmpire', Population)"/>
       <LocalizationVar LocalizationKey="$MinimumAmout01Name" Source="$MinimumAmout01"/>
       <LocalizationVar LocalizationKey="$MinimumAmout02Name" Source="$MinimumAmout02"/>
       <LocalizationVar LocalizationKey="$MinimumAmount03Name" Source="$MinimumAmount03"/>
@@ -1450,15 +1462,15 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step1_Objective1">
+          <Objective StartValue="$Step1_Objective1Val" EndValue="$MinimumAmout01" Name="Step1_Objective1">
             <!-- TODO -->
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
             <Sequence>
               <Decorator_BeginTurn>
-                <Condition_HasManpower>
-                  <Input_Location VarName="$CurrentEmpire"/>
-                  <Input_MinimumAmount VarName="$MinimumAmout01"/>
-                </Condition_HasManpower>
+                <Condition_IsProgressionComplete>
+                  <Input_Context VarName="$CurrentEmpire"/>
+                  <Input_Expression VarName="$Step1_Objective1Expr"/>
+                </Condition_IsProgressionComplete>
               </Decorator_BeginTurn>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1482,7 +1494,7 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step2_Objective1">
+          <Objective StartValue="$Step2_Objective1Val" EndValue="$MinimumAmout02" Name="Step2_Objective1">
             <!-- TODO -->
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
             <Sequence>
@@ -1497,7 +1509,9 @@
                 </Sequence>
                 <Sequence>
                   <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
-                    <Input_MinimumPercentage VarName="$MinimumAmout02"/>
+                    <Condition_IsProgressionComplete>
+                      <Input_Expression VarName="$Step2_Objective1Expr"/>
+                    </Condition_IsProgressionComplete>
                   </Decorator_ExploredNode>
                 </Sequence>
               </Parallel>
@@ -1523,15 +1537,15 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step3_Objective1">
+          <Objective StartValue="$Step3_Objective1Val" EndValue="$MinimumAmount03" Name="Step3_Objective1">
             <!-- TODO -->
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
             <Sequence>
               <Decorator_BeginTurn>
-                <Condition_HasPopulationAmount>
-                  <Input_Empire VarName="$CurrentEmpire"/>
-                  <Input_MinimumAmount VarName="$MinimumAmount03"/>
-                </Condition_HasPopulationAmount>
+                <Condition_IsProgressionComplete>
+                  <Input_Context VarName="$CurrentEmpire"/>
+                  <Input_Expression VarName="$Step3_Objective1Expr"/>
+                </Condition_IsProgressionComplete>
               </Decorator_BeginTurn>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1588,6 +1602,19 @@
       <Var VarName="$PoliticalEffectMilitarist" StringValue="PopulationEventSophons03.3Military"/>
       <Var VarName="$PoliticalEffectScientist"  StringValue="PopulationEventSophons03.3Scientist"/>
       <Var VarName="$PoliticalEffectPacifist"   StringValue="PopulationEventSophons03.3Pacifist"/>
+      <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+        <Expression>Property(Context, @'ClassEmpire', EmpireManpowerStock)</Expression>
+      </InterpretedVar>
+      <Var VarName="$Step1_Objective1Expr" StringValue="Property(Context, @'ClassEmpire', EmpireManpowerStock)"/>
+      <Var VarName="$Step2_Objective1Val">
+        <From Source="$CurrentEmpire.$RevealedNodePercentage"/>
+      </Var>
+      <Var VarName="$Step2_Objective1Expr" StringValue="$(Step2_Objective1Val)"/>
+      <InterpretedVar VarName="$Step3_Objective1Val" Target="$(Empire)">
+        <Expression>Property(Context, @'ClassEmpire', Population)</Expression>
+      </InterpretedVar>
+      <Var VarName="$Step3_Objective1Expr" StringValue="Property(Context, @'ClassEmpire', Population)"/>
+
       <LocalizationVar LocalizationKey="$MinimumAmout01Name" Source="$MinimumAmout01"/>
       <LocalizationVar LocalizationKey="$MinimumAmout02Name" Source="$MinimumAmout02"/>
       <LocalizationVar LocalizationKey="$MinimumAmount03Name" Source="$MinimumAmount03"/>
@@ -1614,15 +1641,15 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step1_Objective1">
+          <Objective StartValue="$Step1_Objective1Val" EndValue="$MinimumAmout01" Name="Step1_Objective1">
             <!-- TODO -->
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
             <Sequence>
               <Decorator_BeginTurn>
-                <Condition_HasManpower>
-                  <Input_Location VarName="$CurrentEmpire"/>
-                  <Input_MinimumAmount VarName="$MinimumAmout01"/>
-                </Condition_HasManpower>
+                <Condition_IsProgressionComplete>
+                  <Input_Context VarName="$CurrentEmpire"/>
+                  <Input_Expression VarName="$Step1_Objective1Expr"/>
+                </Condition_IsProgressionComplete>
               </Decorator_BeginTurn>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1646,7 +1673,7 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step2_Objective1">
+          <Objective StartValue="$Step2_Objective1Val" EndValue="$MinimumAmout02" Name="Step2_Objective1">
             <!-- TODO -->
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
             <Sequence>
@@ -1661,7 +1688,9 @@
                 </Sequence>
                 <Sequence>
                   <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
-                    <Input_MinimumPercentage VarName="$MinimumAmout02"/>
+                    <Condition_IsProgressionComplete>
+                      <Input_Expression VarName="$Step2_Objective1Expr"/>
+                    </Condition_IsProgressionComplete>
                   </Decorator_ExploredNode>
                 </Sequence>
               </Parallel>
@@ -1688,15 +1717,15 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step3_Objective1">
+          <Objective StartValue="$Step3_Objective1Val" EndValue="$MinimumAmount03" Name="Step3_Objective1">
             <!-- TODO -->
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
             <Sequence>
               <Decorator_BeginTurn>
-                <Condition_HasPopulationAmount>
-                  <Input_Empire VarName="$CurrentEmpire"/>
-                  <Input_MinimumAmount VarName="$MinimumAmount03"/>
-                </Condition_HasPopulationAmount>
+                <Condition_IsProgressionComplete>
+                  <Input_Context VarName="$CurrentEmpire"/>
+                  <Input_Expression VarName="$Step3_Objective1Expr"/>
+                </Condition_IsProgressionComplete>
               </Decorator_BeginTurn>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1772,6 +1801,19 @@
       <InterpretedVar VarName="$MinimumAmount03" Target="$(Empire)">
         <Expression>Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityMavros', PopulationCount, true) + 5</Expression>
       </InterpretedVar>
+      <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+        <Expression>Property(Context, @'ClassEmpire', EmpireManpowerStock)</Expression>
+      </InterpretedVar>
+      <Var VarName="$Step1_Objective1Expr" StringValue="Property(Context, @'ClassEmpire', EmpireManpowerStock)"/>
+      <Var VarName="$Step2_Objective1Val">
+        <From Source="$CurrentEmpire.$RevealedNodePercentage"/>
+      </Var>
+      <Var VarName="$Step2_Objective1Expr" StringValue="$(Step2_Objective1Val)"/>
+      <InterpretedVar VarName="$Step3_Objective1Val" Target="$(Empire)">
+        <Expression>Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityMavros', PopulationCount, true)</Expression>
+      </InterpretedVar>
+      <Var VarName="$Step3_Objective1Expr" StringValue="Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityMavros', PopulationCount, true)"/>
+
       <LocalizationVar LocalizationKey="$MinimumAmout01Name" Source="$MinimumAmout01"/>
       <LocalizationVar LocalizationKey="$MinimumAmout02Name" Source="$MinimumAmout02"/>
       <LocalizationVar LocalizationKey="$MinimumAmount03Name" Source="$MinimumAmount03"/>
@@ -1804,7 +1846,7 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step1_Objective1">
+          <Objective StartValue="$Step1_Objective1Val" EndValue="$MinimumAmout01" Name="Step1_Objective1">
             <!-- TODO -->
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
             <Sequence>
@@ -1815,10 +1857,10 @@
                 <Input_PopulationAffinity VarName="$PopAffinity"/>
               </Action_SpawnPopulation>
               <Decorator_BeginTurn>
-                <Condition_HasManpower>
-                  <Input_Location VarName="$CurrentEmpire"/>
-                  <Input_MinimumAmount VarName="$MinimumAmout01"/>
-                </Condition_HasManpower>
+                <Condition_IsProgressionComplete>
+                  <Input_Context VarName="$CurrentEmpire"/>
+                  <Input_Expression VarName="$Step1_Objective1Expr"/>
+                </Condition_IsProgressionComplete>
               </Decorator_BeginTurn>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1842,7 +1884,7 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step2_Objective1">
+          <Objective StartValue="$Step2_Objective1Val" EndValue="$MinimumAmout02" Name="Step2_Objective1">
             <!-- TODO -->
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
             <Sequence>
@@ -1855,15 +1897,16 @@
               <Parallel CompletionPolicy="Any">
                 <Sequence>
                   <Decorator_BeginTurn>
-                    <Condition_ExplorationProgress MinimumState="Revealed">
-                      <Input_Empire VarName="$CurrentEmpire"/>
-                      <Input_Percentage VarName="$MinimumAmout02"/>
-                    </Condition_ExplorationProgress>
+                    <Condition_IsProgressionComplete>
+                      <Input_Expression VarName="$Step2_Objective1Expr"/>
+                    </Condition_IsProgressionComplete>
                   </Decorator_BeginTurn>
                 </Sequence>
                 <Sequence>
                   <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
-                    <Input_MinimumPercentage VarName="$MinimumAmout02"/>
+                    <Condition_IsProgressionComplete>
+                      <Input_Expression VarName="$Step2_Objective1Expr"/>
+                    </Condition_IsProgressionComplete>
                   </Decorator_ExploredNode>
                 </Sequence>
               </Parallel>
@@ -1889,7 +1932,7 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step3_Objective1">
+          <Objective StartValue="$Step3_Objective1Val" EndValue="$MinimumAmount03" Name="Step3_Objective1">
             <!-- TODO -->
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
             <Sequence>
@@ -1901,11 +1944,10 @@
               </Action_SpawnPopulation>
               <Decorator_BeginTurn/>
               <Decorator_BeginTurn>
-                <Condition_HasPopulationAmount>
-                  <Input_Empire VarName="$CurrentEmpire"/>
-                  <Input_MinimumAmount VarName="$MinimumAmount03"/>
-                  <Input_PopulationAffinity VarName="$PopAffinity"/>
-                </Condition_HasPopulationAmount>
+                <Condition_IsProgressionComplete>
+                  <Input_Context VarName="$CurrentEmpire"/>
+                  <Input_Expression VarName="$Step3_Objective1Expr"/>
+                </Condition_IsProgressionComplete>
               </Decorator_BeginTurn>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -1958,6 +2000,18 @@
       <Var VarName="$PoliticalEffectMilitarist" StringValue="PopulationEventSophons03.1Military"/>
       <Var VarName="$PoliticalEffectScientist"  StringValue="PopulationEventSophons03.1Scientist"/>
       <Var VarName="$PoliticalEffectPacifist"   StringValue="PopulationEventSophons03.1Pacifist"/>
+      <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+        <Expression>Property(Context, @'ClassEmpire', EmpireManpowerStock)</Expression>
+      </InterpretedVar>
+      <Var VarName="$Step1_Objective1Expr" StringValue="Property(Context, @'ClassEmpire', EmpireManpowerStock)"/>
+      <Var VarName="$Step2_Objective1Val">
+        <From Source="$CurrentEmpire.$RevealedNodePercentage"/>
+      </Var>
+      <Var VarName="$Step2_Objective1Expr" StringValue="$(Step2_Objective1Val)"/>
+      <InterpretedVar VarName="$Step3_Objective1Val" Target="$(Empire)">
+        <Expression>Property(Context, @'ClassEmpire', Population)</Expression>
+      </InterpretedVar>
+      <Var VarName="$Step3_Objective1Expr" StringValue="Property(Context, @'ClassEmpire', Population)"/>
       <LocalizationVar LocalizationKey="$MinimumAmout01Name" Source="$MinimumAmout01"/>
       <LocalizationVar LocalizationKey="$MinimumAmout02Name" Source="$MinimumAmout02"/>
       <LocalizationVar LocalizationKey="$MinimumAmount03Name" Source="$MinimumAmount03"/>
@@ -1984,15 +2038,15 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectMilitarist"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step1_Objective1">
+          <Objective StartValue="$Step1_Objective1Val" EndValue="$MinimumAmout01" Name="Step1_Objective1">
             <!-- TODO -->
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
             <Sequence>
               <Decorator_BeginTurn>
-                <Condition_HasManpower>
-                  <Input_Location VarName="$CurrentEmpire"/>
-                  <Input_MinimumAmount VarName="$MinimumAmout01"/>
-                </Condition_HasManpower>
+                <Condition_IsProgressionComplete>
+                  <Input_Context VarName="$CurrentEmpire"/>
+                  <Input_Expression VarName="$Step1_Objective1Expr"/>
+                </Condition_IsProgressionComplete>
               </Decorator_BeginTurn>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
@@ -2016,7 +2070,7 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectScientist"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step2_Objective1">
+          <Objective StartValue="$Step2_Objective1Val" EndValue="$MinimumAmout02" Name="Step2_Objective1">
             <!-- TODO -->
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
             <Sequence>
@@ -2031,7 +2085,9 @@
                 </Sequence>
                 <Sequence>
                   <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
-                    <Input_MinimumPercentage VarName="$MinimumAmout02"/>
+                    <Condition_IsProgressionComplete>
+                      <Input_Expression VarName="$Step2_Objective1Expr"/>
+                    </Condition_IsProgressionComplete>
                   </Decorator_ExploredNode>
                 </Sequence>
               </Parallel>
@@ -2057,15 +2113,15 @@
               <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
             </Action_TriggerPopulationEvent>
           </StartActions>
-          <Objective Name="Step3_Objective1">
+          <Objective StartValue="$Step3_Objective1Val" EndValue="$MinimumAmount03" Name="Step3_Objective1">
             <!-- TODO -->
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
             <Sequence>
               <Decorator_BeginTurn>
-                <Condition_HasPopulationAmount>
-                  <Input_Empire VarName="$CurrentEmpire"/>
-                  <Input_MinimumAmount VarName="$MinimumAmount03"/>
-                </Condition_HasPopulationAmount>
+                <Condition_IsProgressionComplete>
+                  <Input_Context VarName="$CurrentEmpire"/>
+                  <Input_Expression VarName="$Step3_Objective1Expr"/>
+                </Condition_IsProgressionComplete>
               </Decorator_BeginTurn>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>

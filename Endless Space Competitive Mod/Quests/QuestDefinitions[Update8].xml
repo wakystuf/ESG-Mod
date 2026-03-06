@@ -51,7 +51,10 @@
             <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityBots', PopulationCount, true) lt 1"/>
             <Var VarName="$Expression02" StringValue="Property(Context, @'ClassEmpire/ClassResearch', QuadrantScienceAndExplorationUnlockedTechnologyCount, true)"/>
             <Var VarName="$Expression03" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet,PlanetTypeSwamp') ge $(Amount05)"/>
-            <Var VarName="$Expression04" StringValue="MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', NetSystemProduction) ge $(Amount03)"/>
+            <InterpretedVar VarName="$Objective3Val" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', NetSystemProduction)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective3Expr" StringValue="MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem', NetSystemProduction)"/>
 
             <LocalizationVar Source="$Amount02"         LocalizationKey="$Amount02Name"/>
             <LocalizationVar Source="$Amount03"         LocalizationKey="$Amount03Name"/>
@@ -166,7 +169,7 @@
 
                 <!--============ STEP 3 - Exploit > Increase your Industry Production ============-->
                 <ObjectiveSet ObjectiveComposition="All">
-                    <Objective Name="Objective3">
+                    <Objective StartValue="$Objective3Val" EndValue="$Amount03" Name="Objective3">
                         <AIHint Category="MaximizeResourceOnSystem" Motivation="0.3">
                             <Resource>Industry</Resource>
                         </AIHint>
@@ -174,10 +177,10 @@
 
                             <Sequence>
                                 <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
+                                    <Condition_IsProgressionComplete>
                                         <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression04"/>
-                                    </Condition_CheckInterpreter>
+                                        <Input_Expression VarName="$Objective3Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_BeginTurn>
                                 <Action_ChooseOutcome Name="Outcome1"/>
                             </Sequence>
@@ -260,12 +263,15 @@
             <Var VarName="$Amount04" IntValue="5"/>
             <Var VarName="$Amount05" IntValue="4"/>
             <Var VarName="$RuinsType" StringValue="CuriosityTypeRuins"/>
-            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassPopulationStarSystemAffinityPilgrims/./ClassColonizedStarSystem', SystemProduction, true) ge $(Amount02)"/>
             <Var VarName="$Expression02" StringValue="Property(Context, @'ClassEmpire/ClassPopulationEmpire,ClassPopulationEmpireAffinityPilgrimsCount', PopulationCount, true) lt 1"/>
 
             <Var VarName="$CuriosityName" StringValue="Curiosity_Quest_MinorPopulation06"/>
             <Var VarName="$CuriosityGUID"/>
             <Var VarName="$Marker01"/>
+            <InterpretedVar VarName="$Objective2Val" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassPopulationStarSystemAffinityPilgrims/./ClassColonizedStarSystem', SystemProduction, true)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective2Expr" StringValue="Property(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassPopulationStarSystemAffinityPilgrims/./ClassColonizedStarSystem', SystemProduction, true)"/>
 
             <LocalizationVar  Source="$Amount02" LocalizationKey="$Amount02Name"/>
             <LocalizationVar  Source="$Amount04" LocalizationKey="$Amount04Name"/>
@@ -367,16 +373,16 @@
 
                 <!--============ STEP 2 - Call the Police ============-->
                 <ObjectiveSet ObjectiveComposition="All">
-                    <Objective Name="Objective2">
+                    <Objective StartValue="$Objective2Val" EndValue="$Amount02" Name="Objective2">
 
                         <Parallel CompletionPolicy="First">
 
                             <Sequence>
                                 <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
+                                    <Condition_IsProgressionComplete>
                                         <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression01"/>
-                                    </Condition_CheckInterpreter>
+                                        <Input_Expression VarName="$Objective2Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_BeginTurn>
                                 <Action_ChooseOutcome Name="Outcome1"/>
                             </Sequence>
@@ -410,16 +416,15 @@
                 </ObjectiveSet>
 
                 <ObjectiveSet ObjectiveComposition="All">
-                    <Objective Name="Objective2">
-
+                    <Objective StartValue="$Objective2Val" EndValue="$Amount02" Name="Objective2">
                         <Parallel CompletionPolicy="First">
 
                             <Sequence>
                                 <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
+                                    <Condition_IsProgressionComplete>
                                         <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression01"/>
-                                    </Condition_CheckInterpreter>
+                                        <Input_Expression VarName="$Objective2Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_BeginTurn>
                                 <Action_ChooseOutcome Name="Outcome1"/>
                             </Sequence>
@@ -501,6 +506,7 @@
 
     <!--    MINOR POPULATION QUEST 06     -->
     <!--              PILGRIMS            -->
+
     <QuestDefinition Name="MinorPopulationQuest06Bis" Category="PopulationQuest" SubCategory="Population" MinimumTurn="1" TriggeringProbability="0.8">
 
 
@@ -535,11 +541,14 @@
             <Var VarName="$Amount06" IntValue="5"/>
             <Var VarName="$RuinsType" StringValue="CuriosityTypeRuins"/>
             <Var VarName="$ApprovalType" StringValue="SubCategoryApproval"/>
-            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassPopulationStarSystemAffinityPilgrims/./ClassColonizedStarSystem', SystemProduction, true) ge $(Amount02)"/>
             <Var VarName="$Expression02" StringValue="Property(Context, @'ClassEmpire/ClassPopulationEmpire,ClassPopulationEmpireAffinityPilgrimsCount', PopulationCount, true) lt 1"/>
 
             <Var VarName="$CuriosityGUID"/>
             <Var VarName="$Marker01"/>
+            <InterpretedVar VarName="$Objective2Val" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassPopulationStarSystemAffinityPilgrims/./ClassColonizedStarSystem', SystemProduction, true)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective2Expr" StringValue="Property(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassPopulationStarSystemAffinityPilgrims/./ClassColonizedStarSystem', SystemProduction, true)"/>
 
             <LocalizationVar  Source="$Amount02" LocalizationKey="$Amount02Name"/>
             <LocalizationVar  Source="$Amount04" LocalizationKey="$Amount04Name"/>
@@ -635,15 +644,15 @@
 
                 <!--============ STEP 2 - Call the Police ============-->
                 <ObjectiveSet ObjectiveComposition="All">
-                    <Objective Name="Objective2">
+                    <Objective StartValue="$Objective2Val" EndValue="$Amount02" Name="Objective2">
                         <Parallel CompletionPolicy="First">
 
                             <Sequence>
                                 <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
+                                    <Condition_IsProgressionComplete>
                                         <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression01"/>
-                                    </Condition_CheckInterpreter>
+                                        <Input_Expression VarName="$Objective2Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_BeginTurn>
                                 <Action_ChooseOutcome Name="Outcome1"/>
                             </Sequence>
@@ -678,15 +687,15 @@
 
                 <!--============ STEP 2 - Call the Police ============-->
                 <ObjectiveSet ObjectiveComposition="All">
-                    <Objective Name="Objective2">
+                    <Objective StartValue="$Objective2Val" EndValue="$Amount02" Name="Objective2">
                         <Parallel CompletionPolicy="First">
 
                             <Sequence>
                                 <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
+                                    <Condition_IsProgressionComplete>
                                         <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression01"/>
-                                    </Condition_CheckInterpreter>
+                                        <Input_Expression VarName="$Objective2Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_BeginTurn>
                                 <Action_ChooseOutcome Name="Outcome1"/>
                             </Sequence>
@@ -797,7 +806,11 @@
             <InterpretedVar VarName="$Amount03" Target="$(Empire)">
                 <Expression>$(Amount02) + 1</Expression>
             </InterpretedVar>
-            <Var VarName="$Expression02" StringValue="Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip/ClassSection/ClassModuleSquadron') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip/ClassSection/ClassModuleSquadron') ge $(Amount03)"/>
+            <InterpretedVar VarName="$Objective3Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip/ClassSection/ClassModuleSquadron') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip/ClassSection/ClassModuleSquadron')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective3Expr" StringValue="Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip/ClassSection/ClassModuleSquadron') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip/ClassSection/ClassModuleSquadron')"/>
+
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03"/>
 
@@ -918,15 +931,15 @@
 
                 <!--============ Build a Science Building ============-->
                 <ObjectiveSet ObjectiveComposition="All">
-                    <Objective Name="Objective3">
+                    <Objective StartValue="$Objective3Val" EndValue="$Amount03" Name="Objective3">
                         <Parallel CompletionPolicy="First">
 
                             <Sequence>
                                 <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
+                                    <Condition_IsProgressionComplete>
                                         <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression02"/>
-                                    </Condition_CheckInterpreter>
+                                        <Input_Expression VarName="$Objective3Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_BeginTurn>
                                 <Action_ChooseOutcome Name="Outcome1"/>
                             </Sequence>
@@ -956,15 +969,15 @@
 
                 <!--============ Build a Science Building ============-->
                 <ObjectiveSet ObjectiveComposition="All">
-                    <Objective Name="Objective3">
+                    <Objective StartValue="$Objective3Val" EndValue="$Amount03" Name="Objective3">
                         <Parallel CompletionPolicy="First">
 
                             <Sequence>
                                 <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
+                                    <Condition_IsProgressionComplete>
                                         <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression02"/>
-                                    </Condition_CheckInterpreter>
+                                        <Input_Expression VarName="$Objective3Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_BeginTurn>
                                 <Action_ChooseOutcome Name="Outcome1"/>
                             </Sequence>
@@ -1063,6 +1076,10 @@
             <Var VarName="$Marker01"/>
 
             <DroplistVar VarName="$AllyShip" Droplist="Droplist_MinorPopulationQuest13" />
+            <InterpretedVar VarName="$Objective3Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero', Level, ge, $(Amount05))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective3Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero', Level, ge, $(Amount05))"/>
 
             <!--Empire Manpower target-->
             <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
@@ -1213,17 +1230,16 @@
 
                 <!--============ Possess X Anomalies in your Empire ============-->
                 <ObjectiveSet ObjectiveComposition="All">
-                    <Objective Name="Objective3">
+                    <Objective StartValue="$Objective3Val" EndValue="$Amount04" Name="Objective3">
                         <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="30" AutoResolutionProbability="1" />
                         <Parallel CompletionPolicy="First">
 
                             <Sequence>
                                 <Decorator_BeginTurn>
-                                    <Condition_HasHeroes HeroAssignationFilter="System">
-                                        <Input_Empire VarName="$CurrentEmpire"/>
-                                        <Input_MinimumAmount VarName="$Amount04"/>
-                                        <Input_MinimumLevel VarName="$Amount05"/>
-                                    </Condition_HasHeroes>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Objective3Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_BeginTurn>
                                 <Action_ChooseOutcome Name="Outcome1"/>
                             </Sequence>
@@ -1319,6 +1335,10 @@
             <Var VarName="$Expression02" StringValue="Count(Context, @'ClassEmpire/ClassDiplomacy/DiplomaticAbilityEffectScienceAgreement,ClassDiplomaticEmpire') ge 1"/>
 
             <Var VarName="$Expression04" StringValue="Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityKalTikMas', PopulationCount, true) lt 1"/>
+            <Var VarName="$Objective2Val">
+                <From Source="$CurrentEmpire.$RevealedNodePercentage"/>
+            </Var>
+            <Var VarName="$Objective2Expr" StringValue="$(Objective2Val)"/>
 
             <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
             <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03"/>
@@ -1457,7 +1477,7 @@
 
                 <!--============ Discover X percent of the Galaxy ============-->
                 <ObjectiveSet ObjectiveComposition="All">
-                    <Objective Name="Objective2">
+                    <Objective StartValue="$Objective2Val" EndValue="$Amount03" Name="Objective2">
                         <AIHint Category="MaximizeExploration" Motivation="0.5"/>
                         <Parallel CompletionPolicy="First">
 
@@ -1473,7 +1493,9 @@
 
                             <Sequence>
                                 <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
-                                    <Input_MinimumPercentage VarName="$Amount03"/>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Expression VarName="$Objective2Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_ExploredNode>
                                 <Action_ChooseOutcome Name="Outcome1"/>
                             </Sequence>
@@ -1504,7 +1526,7 @@
                 </ObjectiveSet>
 
                 <ObjectiveSet ObjectiveComposition="All">
-                    <Objective Name="Objective2">
+                    <Objective StartValue="$Objective2Val" EndValue="$Amount03" Name="Objective2">
                         <AIHint Category="MaximizeExploration" Motivation="0.5"/>
                         <Parallel CompletionPolicy="First">
 
@@ -1520,7 +1542,9 @@
 
                             <Sequence>
                                 <Decorator_ExploredNode MinimumState="Revealed" Initiator="Empire">
-                                    <Input_MinimumPercentage VarName="$Amount03"/>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Expression VarName="$Objective2Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_ExploredNode>
                                 <Action_ChooseOutcome Name="Outcome1"/>
                             </Sequence>
