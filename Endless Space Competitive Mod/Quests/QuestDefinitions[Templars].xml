@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+
+    <!-- ############################################# -->
+    <!-- ####### LOST TEMPLARS QUEST - CHAPTER 2###### -->
+    <!-- ############################################# -->
+
+    <QuestDefinition Name="LostTemplarsQuest-Chapter2-Part1" Category="MajorQuest" SubCategory="Templars" MinimumTurn="5">
+
+        <!--============ TAGS ============-->
+        <Tags>LostTemplarsQuest-Chapter2-Part1</Tags>
+
+        <!--============ CONTEXT ============-->
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$MyHomeSystem">
+                <From Source="$Empire.$HomeStarSystem"/>
+            </Var>
+            <Var VarName="$FleetGUID"/>
+
+            <Var VarName="$PoliticalEffectReligious"         StringValue="PopulationEventLostTemplars2Religious"/>
+            <!--Have X amount of systems of level Y with N temples each-->
+            <Var VarName="$Amount02" IntValue="2"/>
+            <InterpretedVar VarName="$Amount03" Target="$(Empire)">
+                <Expression>Floor((Count(Context, @'ClassEmpire/ClassColonizedStarSystem')/2)+2)</Expression>
+            </InterpretedVar>
+            <Var VarName="$SystemFilterExpresion01" StringValue="Property(Context, @'ClassColonizedStarSystem', NumberOfTemples, true) ge 1"/>
+
+            <!--Pass x amount of religous laws-->
+            <Var VarName="$Politics" StringValue="Politics05"/>
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Min(3,(Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics05') + 1))</Expression>
+            </InterpretedVar>
+            <!--have x amount of non mayor population-->
+            <InterpretedVar VarName="$AmountPop00" Target="$(Empire)">
+                <Expression>SumProperty(Context, @'ClassEmpire/ClassPopulation,PopulationNonMajor', PopulationCount)</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$AmountPop01" Target="$(Empire)">
+                <Expression>SumProperty(Context, @'ClassEmpire/ClassPopulation,PopulationNonMajor', PopulationCount) + 10</Expression>
+            </InterpretedVar>
+            <Var VarName="$Expression01" StringValue="SumProperty(Context, @'ClassEmpire/ClassPopulation,PopulationNonMajor', PopulationCount)"/>
+            <InterpretedVar VarName="$Objective1Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics05')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics05')"/>
+
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+            <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03"/>
+            <LocalizationVar LocalizationKey="$AmountPop01Name" Source="$AmountPop01"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassPopulation,ClassPopulationEmpireAffinityTemplars,PopulationMajor</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite">EmpireTypeMajor/ClassStarSystem,HomeSystem</PathPrerequisite>
+            <!--I have the DLC Templars-->
+            <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCTemplars</DownloadableContentPrerequisite>
+        </Prerequisites>
+
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">../ClassEmpire,AffinityGameplayTemplars</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                    <ChoiceItem ObjectiveSetIndex="2">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">../ClassEmpire,!AffinityGameplayVampirilis</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+
+                <!--============ Choice Index 0: have systems with temples ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective0">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Loop>
+                                <Decorator_ConstructionCompleted>
+                                    <Condition_HasSystems>
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                        <Input_FilterExpression VarName="$SystemFilterExpresion01"/>
+                                        <Input_MinimumAmount VarName="$Amount03"/>
+                                        <Input_MinimumLevel VarName="$Amount02"/>
+                                    </Condition_HasSystems>
+                                </Decorator_ConstructionCompleted>
+                                <Input_Count VarName="$Amount03"/>
+                            </Loop>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>LostTemplarsQuest-Chapter3</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistMultiDust" Picks="1"/>
+                    <Reward Droplist="DroplistRewardRelics" Picks="1"/>
+
+                </ObjectiveSet>
+
+                <!--============ Choice Index 1: have religious laws ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+
+                    <Objective StartValue="$Objective1Val" EndValue="$Amount01" Name="Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Parallel CompletionPolicy="Any">
+                                <Decorator_BeginTurn>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Objective1Expr"/>
+                                    </Condition_IsProgressionComplete>
+                                </Decorator_BeginTurn>
+                                <Decorator_LawActivated>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Objective1Expr"/>
+                                    </Condition_IsProgressionComplete>
+                                </Decorator_LawActivated>
+                            </Parallel>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>LostTemplarsQuest-Chapter3</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistMultiInfluence" Picks="1"/>
+                    <Reward Droplist="DroplistRewardRelics" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ Choice Index 2: Increase minor faction population in your empire ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective Name="Objective2" StartValue="$AmountPop00" EndValue="$AmountPop01">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>LostTemplarsQuest-Chapter3</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+
+                    <Reward Droplist="DroplistStrategics" Picks="1"/>
+                    <Reward Droplist="DroplistRewardRelics" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+</Datatable>

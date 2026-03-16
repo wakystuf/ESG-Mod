@@ -1,6 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
 
+    <!--           POPULATION QUEST 07       -->
+    <!--            Lifting The Lamp         -->
+    <QuestDefinition Name="PopulationQuest07" Category="PopulationQuest" SubCategory="Population" MinimumTurn="20" TriggeringProbability="1">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <InterpretedVar VarName="$TargetedNumberOfFaction" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire', PopulationTypeCount) + 1</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Step01_Objective1Val" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire', PopulationTypeCount)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step01_Objective1Expr" StringValue="Property(Context, @'ClassEmpire', PopulationTypeCount)"/>
+        </Vars>
+
+
+        <!--============ PREREQUISITES ============-->
+
+        <Prerequisites Target="$(Empire)">
+            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @ClassEmpire/ClassResearch, TechnologyQuadrantGlobalProgress) ge 2</InterpreterPrerequisite>
+            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire', PopulationTypeCount) ge 3</InterpreterPrerequisite>
+            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire', ColonizedStarSystemStateColonyCount) ge 3</InterpreterPrerequisite>
+            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step01">
+                <ObjectiveSet>
+                    <Objective StartValue="$Step01_Objective1Val" EndValue="$TargetedNumberOfFaction" Name="Step01_Objective1">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="17" MaxAutoResolutionTurn="25" AutoResolutionProbability="0.75" />
+                        <Sequence>
+                            <!--Check if the Player obtains +1 Faction (compare to the initial one)-->
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step01_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+                <Reward Droplist="DroplistPrestigeEra2" Picks="1"/>
+            </Step>
+        </Steps>
+    </QuestDefinition>
 
     <!--           POPULATION QUEST 10       -->
     <!--          An Excess of Devotion      -->

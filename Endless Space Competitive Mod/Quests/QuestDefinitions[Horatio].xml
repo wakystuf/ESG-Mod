@@ -1484,15 +1484,13 @@
             <Var VarName="$IAEmpire">
                 <From Source="$LesserEmpire"/>
             </Var>
-           
+
             <InterpretedVar VarName="$Amount01" Target="$(Empire)">
                 <Expression>(Property(Context, @../ClassEmpire, NetEmpireEmpirePoint)+100)</Expression>
             </InterpretedVar>
-            <Var VarName="$Expression01" StringValue="Property(Context, NetEmpireEmpirePoint) ge $(Amount01)"/>
-
             <Var VarName="$Amount02" IntValue="2"/>
             <Var VarName="$Amount03" IntValue="6"/>
-            
+
             <Var VarName="$PoliticalEffectReligious"       StringValue="PopulationEventHoratio03-Religious"/>
             <Var VarName="$PoliticalEffectIndustrialist"   StringValue="PopulationEventHoratio03-Industrialist"/>
 
@@ -1510,7 +1508,7 @@
         </Vars>
 
         <!--============ PREREQUISITES ============-->
-      
+
         <!--============ STEPS ============-->
         <Steps>
             <Step Name="Step1">
@@ -1521,9 +1519,9 @@
                         <Prerequisites Target="$(Empire)">
                             <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
                         </Prerequisites>
-                    </ChoiceItem>                  
+                    </ChoiceItem>
                 </Choice>
-                            
+
                 <!--============ Choice Index 0: Religious ============-->
                 <ObjectiveSet>
 
@@ -1540,10 +1538,10 @@
                         <AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_CheckInterpreter>
+                                <Condition_IsProgressionComplete>
                                     <Input_Context VarName="$CurrentEmpire"/>
-                                    <Input_Expression VarName="$Expression01"/>
-                                </Condition_CheckInterpreter>
+                                    <Input_Expression VarName="$Objective_ReligiousExpr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_ChooseOutcome Name="Outcome1"/>
                         </Sequence>
@@ -1556,7 +1554,7 @@
                             </Triggers>
                         </Outcome>
                     </Objective>
-                  
+
                     <Reward Droplist="DroplistRewardQuestHoratio10" Picks="1"/>
                     <Reward Droplist="DroplistRewardQuestHoratioTechReplace_Religious_1" Picks="1"/>
                 </ObjectiveSet>
@@ -1603,7 +1601,7 @@
                             </Triggers>
                         </Outcome>
                     </Objective>
-                   
+
                     <Reward Droplist="DroplistRewardQuestHoratio10" Picks="1"/>
                     <Reward Droplist="DroplistRewardQuestHoratioTechReplace_Industrialist_1" Picks="1"/>
 

@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+    <!-- #################################### -->
+    <!--       UPDATE12  Chapter2 Step2       -->
+    <!-- #################################### -->
+
+    <QuestDefinition Name="UniquePlanetQuest-Chapter2-Step2" Category="SideQuest" SubCategory="Update12" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+
+        <Tags>UniquePlanetQuest-Chapter2-Step2</Tags>
+
+        <!--============ CONTEXT ============-->
+
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$Amount01" IntValue="7"/>
+            <Var VarName="$HeroDefinitionName" IsGlobal="true"/>
+
+            <InterpretedVar VarName="$Objective1Val" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero,HeroUpdate12', Level, true)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective1Expr" StringValue="Property(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero,HeroUpdate12', Level, true)"/>
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$HeroDefinitionNameName" Source="$HeroDefinitionName"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+
+                <ObjectiveSet>
+                    <Objective StartValue="$Objective1Val" EndValue="$Amount01" Name="Objective1">
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>UniquePlanetQuest-Chapter3A</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUniquePlanetQuest04" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #################################### -->
+    <!--       UPDATE12  Chapter2 Step3Bis    -->
+    <!-- #################################### -->
+
+    <QuestDefinition Name="UniquePlanetQuest-Chapter2-Step3Bis" Category="SideQuest" SubCategory="Update12" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+
+        <Tags>UniquePlanetQuest-Chapter2-Step3Bis</Tags>
+
+        <!--============ CONTEXT ============-->
+
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <Var VarName="$MySpecialSystem">
+                <Any>
+                    <From Source="$CurrentEmpire.$ColonizedStarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassColonizedStarSystem/ClassColonizedPlanet,IsUniquePlanet,!HomePlanet,!UniquePlanetAcademy</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+
+            <Var VarName="$MySpecialSystemLocation">
+                <Any>
+                    <From Source="$MySpecialSystem.$StarSystem"/>
+                </Any>
+            </Var>
+
+            <Var VarName="$HeroDefinitionName" IsGlobal="true"/>
+
+            <Var VarName="$Amount01" IntValue="7"/>
+            <Var VarName="$Amount02" IntValue="1"/>
+            <Var VarName="$Marker01"/>
+            <InterpretedVar VarName="$Objective1Val" Target="$(Empire)">
+                <Expression>Property(MySpecialSystem, @'ClassColonizedStarSystem/ClassHero,HeroUpdate12', Level, true)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective1Expr" StringValue="Property(MySpecialSystem, @'ClassColonizedStarSystem/ClassHero,HeroUpdate12', Level, true)"/>
+
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$MySpecialSystemName" Source="$MySpecialSystem"/>
+            <LocalizationVar LocalizationKey="$HeroDefinitionNameName" Source="$HeroDefinitionName"/>
+
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$MySpecialSystemLocation"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective StartValue="$Objective1Val" EndValue="$Amount01" Name="Objective1">
+                        <Sequence>
+                            <Parallel CompletionPolicy="First">
+
+
+                                <Sequence>
+                                    <Decorator_BeginTurn>
+                                        <Condition_HasSystems Inverted="true">
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                            <Input_MinimumAmount VarName="$Amount02"/>
+                                            <Input_Systems VarName="$MySpecialSystemLocation"/>
+                                        </Condition_HasSystems>
+                                    </Decorator_BeginTurn>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                    <Action_Fail/>
+                                </Sequence>
+
+                                <Sequence>
+                                    <Decorator_BeginTurn>
+                                        <Condition_IsProgressionComplete>
+                                            <Input_Context VarName="$CurrentEmpire"/>
+                                            <Input_Expression VarName="$Objective1Expr"/>
+                                        </Condition_IsProgressionComplete>
+                                    </Decorator_BeginTurn>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                    <Action_ChooseOutcome Name ="Outcome2"/>
+                                </Sequence>
+
+                            </Parallel>
+                        </Sequence>
+                        <Outcome Name="Outcome2">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>UniquePlanetQuest-Chapter3B</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUniquePlanetQuest05" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #################################### -->
+    <!--       UPDATE12  Chapter2 Step3       -->
+    <!-- #################################### -->
+
+    <QuestDefinition Name="UniquePlanetQuest-Chapter2-Step3Ter" Category="SideQuest" SubCategory="Update12" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+
+        <Tags>UniquePlanetQuest-Chapter2-Step3Ter</Tags>
+
+        <!--============ CONTEXT ============-->
+
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+
+            <Var VarName="$MySpecialSystem">
+                <From Source="$CurrentEmpire.$ColonizedStarSystems"/>
+            </Var>
+
+            <Var VarName="$MyNewSpecialSystem">
+                <Any>
+                    <From Source="$MySpecialSystem">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassColonizedStarSystem/ClassColonizedPlanet,IsUniquePlanet</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$MyNewSpecialSystemLocation">
+                <From Source="$MyNewSpecialSystem.$StarSystem"/>
+            </Var>
+
+            <Var VarName="$HeroDefinitionName" IsGlobal="true"/>
+
+            <Var VarName="$Amount01" IntValue="7"/>
+            <Var VarName="$Amount02" IntValue="1"/>
+            <Var VarName="$Marker01"/>
+            <InterpretedVar VarName="$Objective1Val" Target="$(Empire)">
+                <Expression>Property(MyNewSpecialSystem, @'ClassColonizedStarSystem/ClassHero,HeroUpdate12', Level, true)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective1Expr" StringValue="Property(MyNewSpecialSystem, @'ClassColonizedStarSystem/ClassHero,HeroUpdate12', Level, true)"/>
+
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$MySpecialSystemName" Source="$MyNewSpecialSystem"/>
+            <LocalizationVar LocalizationKey="$HeroDefinitionNameName" Source="$HeroDefinitionName"/>
+
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$MyNewSpecialSystemLocation"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective StartValue="$Objective1Val" EndValue="$Amount01" Name="Objective1">
+                        <Sequence>
+                            <Parallel CompletionPolicy="First">
+
+
+                                <Sequence>
+                                    <Decorator_BeginTurn>
+                                        <Condition_HasSystems Inverted="true">
+                                            <Input_Empires VarName="$CurrentEmpire"/>
+                                            <Input_MinimumAmount VarName="$Amount02"/>
+                                            <Input_Systems VarName="$MyNewSpecialSystemLocation"/>
+                                        </Condition_HasSystems>
+                                    </Decorator_BeginTurn>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                    <Action_Fail/>
+                                </Sequence>
+
+                                <Sequence>
+                                    <Decorator_BeginTurn>
+                                        <Condition_IsProgressionComplete>
+                                            <Input_Context VarName="$CurrentEmpire"/>
+                                            <Input_Expression VarName="$Objective1Expr"/>
+                                        </Condition_IsProgressionComplete>
+                                    </Decorator_BeginTurn>
+
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                    <Action_ChooseOutcome Name ="Outcome2"/>
+                                </Sequence>
+
+                            </Parallel>
+                        </Sequence>
+                        <Outcome Name="Outcome2">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>UniquePlanetQuest-Chapter3B</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUniquePlanetQuest05" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- #################################### -->
+    <!--       UPDATE12  Chapter3 StepC       -->
+    <!-- #################################### -->
+
+    <QuestDefinition Name="UniquePlanetQuest-Chapter3C" Category="SideQuest" SubCategory="Update12" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+
+        <Tags>UniquePlanetQuest-Chapter3C</Tags>
+
+        <!--============ CONTEXT ============-->
+
+        <QuestContextSolo/>
+
+        <!--============ OCCURRENCE RULES ============-->
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+
+            <InterpretedVar VarName="$MaxHeroLevel" Target="$(Empire)">
+                <Expression>
+                    Max(MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero', Level),
+                    MaxProperty(Context, @'ClassEmpire/ClassGarrison/ClassHero', Level),
+                    MaxProperty(Context, @'ClassEmpire/ClassHero', Level))
+                </Expression>
+            </InterpretedVar>
+
+            <InterpretedVar VarName="$Amount01">
+                <Expression>$(MaxHeroLevel) + 2</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Objective1Val" Target="$(Empire)">
+                <Expression>Max(MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero', Level), MaxProperty(Context, @'ClassEmpire/ClassGarrison/ClassHero', Level), MaxProperty(Context, @'ClassEmpire/ClassHero', Level))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective1Expr" StringValue="Max(MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero', Level), MaxProperty(Context, @'ClassEmpire/ClassGarrison/ClassHero', Level), MaxProperty(Context, @'ClassEmpire/ClassHero', Level))"/>
+
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+
+                <ObjectiveSet>
+                    <Objective StartValue="$Objective1Val" EndValue="$Amount01" Name="Objective1">
+                        <Sequence>
+                            <Decorator_HeroLevelUp Initiator="Empire">
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_HeroLevelUp>
+                            <Action_ChooseOutcome Name ="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>UniquePlanetQuest-Chapter4A</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward Droplist="DroplistUniquePlanetQuest06" Picks="1"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+</Datatable>

@@ -1177,4 +1177,350 @@
     </Steps>
   </QuestDefinition>
 
+    <!-- ################################################ -->
+    <!--          CRAVERS QUEST - Religious Chapter4    -->
+    <!-- ################################################ -->
+
+    <QuestDefinition Name="CraversQuest-Chapter4-Religious" Category="MajorQuest" SubCategory="Cravers">
+
+        <!--============ TAGS ============-->
+        <Tags>CraversQuest-Chapter4-Religious,FactionFinalQuest,FactionQuestCravers</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$AllEmpires">
+                <From Source="$Empires"/>
+            </Var>
+            <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventCravers04Religious"/>
+            <Var VarName="$CraversSystem" IsGlobal="true"/>
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>(Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet') + 5)</Expression>
+            </InterpretedVar>
+            <LocalizationVar VarName="$CraversSystemName" Source="$CraversSystem"/>
+            <LocalizationVar VarName="$Amount01Name" Source="$Amount01"/>
+            <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet')"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective StartValue="$Step1_Objective1Val" EndValue="$Amount01" Name="Step1_Objective1">
+                        <!-- Collect planets -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$AllEmpires"/>
+                                <Input_TargetEntities VarName="$CraversSystem"/>
+                            </Action_SetInvisibility>
+                        </Sequence>
+                    </Objective>
+                </ObjectiveSet>
+                <Reward Droplist="DroplistCraversReward07" Picks="1"/>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ####################################### -->
+    <!--  CRAVERS QUEST Chapter4 Religious       -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="CraversQuest-Chapter4-QuestHeroEndless01-Religious" Category="MajorQuest" SubCategory="Cravers" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>CraversQuest-Chapter4-QuestHeroEndless01-Religious,FactionFinalQuest,FactionQuestCravers</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$IAEmpire">
+                <From Source="$LesserEmpire"/>
+            </Var>
+            <Var VarName="$AllEmpires">
+                <From Source="$Empires"/>
+            </Var>
+            <Var VarName="$PoliticalEffectIndustry" StringValue="PopulationEventCravers04Industry"/>
+            <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventCravers04Religious"/>
+            <Var VarName="$CraversSystem" IsGlobal="true"/>
+            <Var VarName="$GUIDSpawn01"/>
+            <Var VarName="$MissionGUID"/>
+            <Var VarName="$FleetMissionDefinitionName01" StringValue="DefendSystem"/>
+            <DroplistVar VarName="$FleetToSpawn01" Droplist="EndlessFleet"/>
+
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>(Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet') + 5)</Expression>
+            </InterpretedVar>
+
+            <LocalizationVar LocalizationKey="$CraversSystemName" Source="$CraversSystem"/>
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <InterpretedVar VarName="$Step2_Objective1Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step2_Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet')"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+
+                <!--============ STEP 1 - Industry ============-->
+                <ObjectiveSet ObjectiveComposition="All">
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustry"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnFleets>
+                            <Input_Empire VarName="$IAEmpire"/>
+                            <Input_Locations VarName="$CraversSystem"/>
+                            <Input_DroppableFleet VarName="$FleetToSpawn01"/>
+                            <Output_FleetGUIDs VarName="$GUIDSpawn01"/>
+                        </Action_SpawnFleets>
+                        <Action_CreateFleetMissions>
+                            <Input_MissionDefinitionName VarName="$FleetMissionDefinitionName01"/>
+                            <Input_FleetGUIDs VarName="$GUIDSpawn01"/>
+                            <Input_TargetEmpires VarName="$CurrentEmpire"/>
+                            <Output_MissionGUIDs VarName="$MissionGUID"/>
+                        </Action_CreateFleetMissions>
+                    </StartActions>
+                    <Objective Name="Step1_Objective1">
+                        <!-- Invade the Infinite Factory -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_InvadeSystem>
+                                <Input_System VarName="$CraversSystem"/>
+                            </Decorator_InvadeSystem>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$AllEmpires"/>
+                                <Input_TargetEntities VarName="$CraversSystem"/>
+                            </Action_SetInvisibility>
+                        </Sequence>
+                    </Objective>
+                    <Reward Droplist="DroplistCraversReward06" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ STEP 2 - RELIGIOUS ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective StartValue="$Step2_Objective1Val" EndValue="$Amount01" Name="Step2_Objective1">
+                        <!-- Collect planets -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step2_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$AllEmpires"/>
+                                <Input_TargetEntities VarName="$CraversSystem"/>
+                            </Action_SetInvisibility>
+                        </Sequence>
+                    </Objective>
+                    <Reward Droplist="DroplistCraversReward07" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!-- ####################################### -->
+    <!--  CRAVERS QUEST Chapter4 Religious       -->
+    <!-- ####################################### -->
+
+    <QuestDefinition Name="CraversQuest-Chapter4-QuestHeroEndless01-Industry" Category="MajorQuest" SubCategory="Cravers" MinimumTurn="1">
+
+        <!--============ TAGS ============-->
+        <Tags>CraversQuest-Chapter4-QuestHeroEndless01-Industry,FactionFinalQuest,FactionQuestCravers</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$IAEmpire">
+                <From Source="$LesserEmpire"/>
+            </Var>
+            <Var VarName="$AllEmpires">
+                <From Source="$Empires"/>
+            </Var>
+            <Var VarName="$PoliticalEffectIndustry" StringValue="PopulationEventCravers04Industry"/>
+            <Var VarName="$PoliticalEffectReligious" StringValue="PopulationEventCravers04Religious"/>
+            <Var VarName="$CraversSystem" IsGlobal="true"/>
+            <Var VarName="$GUIDSpawn01"/>
+            <Var VarName="$MissionGUID"/>
+            <Var VarName="$FleetMissionDefinitionName01" StringValue="DefendSystem"/>
+            <DroplistVar VarName="$FleetToSpawn01" Droplist="EndlessFleet"/>
+
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>(Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet') + 5)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Amount02" IntValue="1"/>
+            <LocalizationVar LocalizationKey="$CraversSystemName" Source="$CraversSystem"/>
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <InterpretedVar VarName="$Step2_Objective1Val" Target="$(Empire)">
+                <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step2_Objective1Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet')"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <!--============ STEP 0 - Choose ============-->
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                </Choice>
+
+
+                <!--============ STEP 1 - Industry ============-->
+                <ObjectiveSet ObjectiveComposition="All">
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectIndustry"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_SpawnFleets>
+                            <Input_Empire VarName="$IAEmpire"/>
+                            <Input_Locations VarName="$CraversSystem"/>
+                            <Input_DroppableFleet VarName="$FleetToSpawn01"/>
+                            <Output_FleetGUIDs VarName="$GUIDSpawn01"/>
+                        </Action_SpawnFleets>
+                        <Action_CreateFleetMissions>
+                            <Input_MissionDefinitionName VarName="$FleetMissionDefinitionName01"/>
+                            <Input_FleetGUIDs VarName="$GUIDSpawn01"/>
+                            <Input_TargetEmpires VarName="$CurrentEmpire"/>
+                            <Output_MissionGUIDs VarName="$MissionGUID"/>
+                        </Action_CreateFleetMissions>
+                    </StartActions>
+                    <Objective Name="Step1_Objective1">
+                        <!-- Invade the Infinite Factory -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Parallel CompletionPolicy="All">
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_HasSystems>
+                                        <Input_Empires VarName="$CurrentEmpire"/>
+                                        <Input_MinimumAmount VarName="$Amount02"/>
+                                        <Input_Systems VarName="$CraversSystem"/>
+                                    </Condition_HasSystems>
+                                </Decorator_BeginTurn>
+                                <Action_SetInvisibility Invisible="false">
+                                    <Input_Empires VarName="$AllEmpires"/>
+                                    <Input_TargetEntities VarName="$CraversSystem"/>
+                                </Action_SetInvisibility>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_BattleEnded Status="Won" ProgressionIncrement="1">
+                                    <Condition_BattleEnded_FleetDestroyed>
+                                        <Input_FleetGUIDs VarName="$GUIDSpawn01"/>
+                                    </Condition_BattleEnded_FleetDestroyed>
+                                </Decorator_BattleEnded>
+                                <Action_SetInvisibility Invisible="false">
+                                    <Input_Empires VarName="$AllEmpires"/>
+                                    <Input_TargetEntities VarName="$CraversSystem"/>
+                                </Action_SetInvisibility>
+                            </Sequence>
+                        </Parallel>
+                    </Objective>
+                    <Reward Droplist="DroplistCraversReward06" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ STEP 2 - RELIGIOUS ============-->
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectReligious"/>
+                        </Action_TriggerPopulationEvent>
+                    </StartActions>
+                    <Objective StartValue="$Step2_Objective1Val" EndValue="$Amount01" Name="Step2_Objective1">
+                        <!-- Collect planets -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Step2_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                            <Action_SetInvisibility Invisible="false">
+                                <Input_Empires VarName="$AllEmpires"/>
+                                <Input_TargetEntities VarName="$CraversSystem"/>
+                            </Action_SetInvisibility>
+                        </Sequence>
+                    </Objective>
+                    <Reward Droplist="DroplistCraversReward07" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
 </Datatable>
