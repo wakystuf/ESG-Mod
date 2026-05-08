@@ -19,5 +19,4 @@ robocopy "%SOURCE%" "%TARGET%" /e ^
     /xf ".DS_Store" ^
     /r:1 /w:1
 
-pause
 endlocal
