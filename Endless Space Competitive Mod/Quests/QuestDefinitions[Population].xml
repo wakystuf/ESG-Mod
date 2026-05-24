@@ -258,13 +258,21 @@
             <LocalizationVar LocalizationKey="$SystemName02" Source="$SophonsSystem02Location"/>
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+            <InterpretedVar VarName="$C2Step1_Objective1Val" Target="$(Empire)">
+                <Expression>Count(SophonsSystems01, @'ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipForBattle,!ShipRoleHero')</Expression>
+            </InterpretedVar>
+            <Var VarName="$C2Step1_Objective1Expr" StringValue="Count(SophonsSystems01, @'ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipForBattle,!ShipRoleHero')"/>
+            <InterpretedVar VarName="$C2Step1_Objective1AltVal" Target="$(Empire)">
+                <Expression>Count(SophonsSystems01, @'ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipForBattle,!ShipRoleHero')</Expression>
+            </InterpretedVar>
+            <Var VarName="$C2Step1_Objective1AltExpr" StringValue="Count(SophonsSystems01, @'ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipForBattle,!ShipRoleHero')"/>
 
         </Vars>
 
         <!--============ PREREQUISITES ============-->
 
         <Prerequisites Target="$(Empire)">
-            <PathPrerequisite Flags="Prerequisite" Inverted="true">EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>           
+            <PathPrerequisite Flags="Prerequisite" Inverted="true">EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
             <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassEmpire/ColonizedStarSystemStateColony/ClassPopulation,ClassPopulationStarSystemAffinitySophonsCount') ge 2</InterpreterPrerequisite>
         </Prerequisites>
 
@@ -345,22 +353,15 @@
                             <Output_Timer VarName="$Timer"/>
                         </Action_StartTimer>
                     </StartActions>
-                    <Objective Name="C2Step1_Objective1">
-
-
-                        <!-- TODO -->
+                    <Objective Name="C2Step1_Objective1" StartValue="$C2Step1_Objective1Val" EndValue="$Amount02">
                         <AIHint Category="Minimal" MinAutoResolutionTurn="10" MaxAutoResolutionTurn="10" AutoResolutionProbability="0.5" />
                         <Parallel CompletionPolicy="First">
-                           
-                            <Sequence>
-                                <!--Fill 2 Hangars of Sophons System with 2 Ships each-->
-                                <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
-                                        <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression02"/>
-                                    </Condition_CheckInterpreter>                                 
-                                </Decorator_BeginTurn>
-                            </Sequence>                                   
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$C2Step1_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
                                                        
                             <Sequence>
                                 <Decorator_BeginTurn>
@@ -408,22 +409,15 @@
                             <Output_Timer VarName="$Timer"/>
                         </Action_StartTimer>
                     </StartActions>
-                    <Objective Name="C2Step1_Objective1Alt">
-
-
-                        <!-- TODO -->
+                    <Objective Name="C2Step1_Objective1Alt" StartValue="$C2Step1_Objective1AltVal" EndValue="$Amount02">
                         <AIHint Category="Minimal" MinAutoResolutionTurn="10" MaxAutoResolutionTurn="10" AutoResolutionProbability="0.5" />
                         <Parallel CompletionPolicy="First">
-
-                            <Sequence>
-                                <!--Fill 2 Hangars of Sophons System with 2 Ships each-->
-                                <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
-                                        <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression02"/>
-                                    </Condition_CheckInterpreter>
-                                </Decorator_BeginTurn>
-                            </Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$C2Step1_Objective1AltExpr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
 
                             <Sequence>
                                 <Decorator_BeginTurn>
@@ -563,7 +557,16 @@
             <LocalizationVar LocalizationKey="$StarSystem01Name" Source="$StarSystem01"/>
             <LocalizationVar LocalizationKey="$StarSystem02Name" Source="$StarSystem02"/>
             <LocalizationVar LocalizationKey="$StarSystem03Name" Source="$StarSystem03"/>
-            
+            <Var VarName="$Threshold3" IntValue="3"/>
+            <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+                <Expression>Min(1, Max(0, Property(ColonizedStarSystem01, @'ClassColonizedStarSystem/ClassHero', Level, true) - 4)) + Min(1, Max(0, Property(ColonizedStarSystem02, @'ClassColonizedStarSystem/ClassHero', Level, true) - 4)) + Min(1, Max(0, Property(ColonizedStarSystem03, @'ClassColonizedStarSystem/ClassHero', Level, true) - 4))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective1Expr" StringValue="Min(1, Max(0, Property(ColonizedStarSystem01, @'ClassColonizedStarSystem/ClassHero', Level, true) - 4)) + Min(1, Max(0, Property(ColonizedStarSystem02, @'ClassColonizedStarSystem/ClassHero', Level, true) - 4)) + Min(1, Max(0, Property(ColonizedStarSystem03, @'ClassColonizedStarSystem/ClassHero', Level, true) - 4))"/>
+            <InterpretedVar VarName="$Step1_Objective2Val" Target="$(Empire)">
+                <Expression>Min(1, Max(0, Property(ColonizedStarSystem01, @'ClassColonizedStarSystem', Happiness, true) - 59)) + Min(1, Max(0, Property(ColonizedStarSystem02, @'ClassColonizedStarSystem', Happiness, true) - 59)) + Min(1, Max(0, Property(ColonizedStarSystem03, @'ClassColonizedStarSystem', Happiness, true) - 59))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective2Expr" StringValue="Min(1, Max(0, Property(ColonizedStarSystem01, @'ClassColonizedStarSystem', Happiness, true) - 59)) + Min(1, Max(0, Property(ColonizedStarSystem02, @'ClassColonizedStarSystem', Happiness, true) - 59)) + Min(1, Max(0, Property(ColonizedStarSystem03, @'ClassColonizedStarSystem', Happiness, true) - 59))"/>
+
         </Vars>
 
 
@@ -616,24 +619,15 @@
                             <Output_Markers VarName="$Marker03"/>
                         </Action_AddQuestMarkers>
                     </StartActions>
-                    <Objective Name="Step1_Objective1">                
-                        <!-- TODO -->
-                        <AIHint Category="Minimal" MinAutoResolutionTurn="17" MaxAutoResolutionTurn="25" AutoResolutionProbability="0.75" />                    
+                    <Objective Name="Step1_Objective1" StartValue="$Step1_Objective1Val" EndValue="$Threshold3">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="17" MaxAutoResolutionTurn="25" AutoResolutionProbability="0.75" />
                         <Parallel CompletionPolicy="First">
-                            <Sequence>                               
+                            <Sequence>
                                 <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>                                  
-                                        <Input_Context VarName="$CurrentEmpire"/>                                   
-                                        <Input_Expression VarName="$Expression01"/>
-                                    </Condition_CheckInterpreter>
-                                    <Condition_CheckInterpreter>
+                                    <Condition_IsProgressionComplete>
                                         <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression02"/>
-                                    </Condition_CheckInterpreter>
-                                    <Condition_CheckInterpreter>
-                                        <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression03"/>
-                                    </Condition_CheckInterpreter>
+                                        <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_BeginTurn>
                                     <Action_RemoveQuestMarkers>
                                         <Input_Markers VarName="$Marker01"/>
@@ -786,24 +780,15 @@
                             <Output_Markers VarName="$Marker03"/>
                         </Action_AddQuestMarkers>
                     </StartActions>
-                    <Objective Name="Step1_Objective2">
-                        <!-- TODO -->
+                    <Objective Name="Step1_Objective2" StartValue="$Step1_Objective2Val" EndValue="$Threshold3">
                         <AIHint Category="Minimal" MinAutoResolutionTurn="17" MaxAutoResolutionTurn="25" AutoResolutionProbability="0.75" />
                         <Parallel CompletionPolicy="First">
                             <Sequence>
                                 <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
+                                    <Condition_IsProgressionComplete>
                                         <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression05"/>
-                                    </Condition_CheckInterpreter>
-                                    <Condition_CheckInterpreter>
-                                        <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression06"/>
-                                    </Condition_CheckInterpreter>
-                                    <Condition_CheckInterpreter>
-                                        <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression07"/>
-                                    </Condition_CheckInterpreter>
+                                        <Input_Expression VarName="$Step1_Objective2Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_BeginTurn>
                                 <Action_RemoveQuestMarkers>
                                     <Input_Markers VarName="$Marker01"/>

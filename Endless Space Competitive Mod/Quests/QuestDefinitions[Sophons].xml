@@ -1173,6 +1173,10 @@
             <LocalizationVar Source="$Amount01" LocalizationKey="$Amount01Name"/>
             <!--POLITICAL EFFECT -->
             <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventSophons02.1Pacifist"/>
+            <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+                <Expression>Count(ColonizedSystem01, @'ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipForBattle,!ShipRoleHero')</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective1Expr" StringValue="Count(ColonizedSystem01, @'ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipForBattle,!ShipRoleHero')"/>
         </Vars>
 
         <!--============ PREREQUISITES ============-->
@@ -1195,15 +1199,15 @@
                             <Output_Markers VarName="$Marker01"/>
                         </Action_AddQuestMarkers>
                     </StartActions>
-                    <Objective Name="Step1_Objective1">
+                    <Objective Name="Step1_Objective1" StartValue="$Step1_Objective1Val" EndValue="$MinimumAmount">
                         <!-- Garrison 2 Military Ships in the system at the same time. -->
                         <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="20" AutoResolutionProbability="1" />
                         <Sequence>
                             <Decorator_BeginTurn>
-                                <Condition_CheckInterpreter>
+                                <Condition_IsProgressionComplete>
                                     <Input_Context VarName="$CurrentEmpire"/>
-                                    <Input_Expression VarName="$Expression01"/>
-                                </Condition_CheckInterpreter>
+                                    <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
                             </Decorator_BeginTurn>
                             <Action_RemoveQuestMarkers>
                                 <Input_Markers VarName="$Marker01"/>
