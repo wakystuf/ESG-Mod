@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
 
 
@@ -1121,6 +1121,111 @@
       </Step>
     </Steps>
   </QuestDefinition>
+
+  <!--  #######################################  -->
+  <!--           Chapter 2.1 - Diplomacy          -->
+  <!--  #######################################  -->
+  <QuestDefinition Name="SophonsQuest-Chapter2.1-Diplomacy" Category="MajorQuest" SubCategory="Sophons" CheckRandom="false">
+
+        <!--============ TAGS ============-->
+        <Tags>Chapter2.1-Diplomacy</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+            <!--   Define a Hangar of a Random System in the Colonized Star System which is not a Home System-->
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var IsGlobal="true" VarName="$ColonizedSystem01">
+                <Any>
+                    <From Source="$CurrentEmpire.$ColonizedStarSystems">
+                        <Where>
+                            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassColonizedStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$Hangar">
+                <From Source="$ColonizedSystem01.$Hangar"/>
+            </Var>
+            <Var VarName="$ColonizedSystemLocation">
+                <From Source="$ColonizedSystem01.$StarSystem"></From>
+            </Var>
+
+            <Var VarName="$Expression01" StringValue="Count(ColonizedSystem01, @'ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipForBattle,!ShipRoleHero') ge 2"/>
+
+            <!-- Define a Hull and an amount of Ship requiered-->
+            <Var VarName="$MinimumAmount" IntValue="2"/>
+            <Var VarName="$MinimumAmount02" IntValue="1"/>
+            <!--Decorator should count the SHIP whatever the hulls/modules are-->
+            <Var VarName="$BattleShipTag" StringValue="ShipForBattle"/>
+
+            <LocalizationVar LocalizationKey="$SystemName01" Source="$ColonizedSystemLocation"/>
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Amount01" IntValue="2"/>
+            <LocalizationVar Source="$Amount01" LocalizationKey="$Amount01Name"/>
+            <!--POLITICAL EFFECT -->
+            <Var VarName="$PoliticalEffectPacifist" StringValue="PopulationEventSophons02.1Pacifist"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <!--============ STEPS ============-->
+
+        <Steps>
+            <!--============ STEP 1 ============-->
+            <Step Name="Step1">
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_TriggerPopulationEvent>
+                            <Input_Empire VarName="$CurrentEmpire"/>
+                            <Input_Target VarName="$CurrentEmpire"/>
+                            <Input_PopulationEventDefinition VarName="$PoliticalEffectPacifist"/>
+                        </Action_TriggerPopulationEvent>
+                        <Action_AddQuestMarkers RevealsLocation="true">
+                            <Input_Targets VarName="$ColonizedSystemLocation"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Step1_Objective1">
+                        <!-- Garrison 2 Military Ships in the system at the same time. -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="20" AutoResolutionProbability="1" />
+                        <Sequence>
+                            <Decorator_BeginTurn>
+                                <Condition_CheckInterpreter>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$Expression01"/>
+                                </Condition_CheckInterpreter>
+                            </Decorator_BeginTurn>
+                            <Action_RemoveQuestMarkers>
+                                <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_ChooseOutcome Name="Outcome1"/>
+                        </Sequence>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>Chapter2.2-Diplomacy</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                </ObjectiveSet>
+                <Reward Droplist="DroplistLuxuriesEra2" Picks="1"/>
+            </Step>
+
+        </Steps>
+
+    </QuestDefinition>
 
   <!--  #######################################  -->
   <!--            Chapter 2.2 - Diplomacy           -->
