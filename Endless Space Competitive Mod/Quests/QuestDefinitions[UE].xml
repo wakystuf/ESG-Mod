@@ -199,10 +199,13 @@
 				</Any>
 			</Var>
 			<Var VarName="$NewSystemName" StringValue="%UE_Quest-Chapter1.1Outpost"/>
-			<Var VarName="$Expression" StringValue="Property(Context, MaximumEmpireManpowerStock) ge 800"/>
 			<LocalizationVar LocalizationKey="$ManpowerAmountName" Source="$ManpowerAmount"/>
 			<LocalizationVar LocalizationKey="$DustAmoutName" Source="$DustAmout"/>
 			<LocalizationVar LocalizationKey="$LoopCountName" Source="$LoopCount"/>
+			<InterpretedVar VarName="$Step2_1_Objective1Val" Target="$(Empire)">
+				<Expression>Property(Context, MaximumEmpireManpowerStock)</Expression>
+			</InterpretedVar>
+			<Var VarName="$Step2_1_Objective1Expr" StringValue="Property(Context, MaximumEmpireManpowerStock)"/>
 			<InterpretedVar VarName="$Step2_2_Objective1Val" Target="$(Empire)">
 				<Expression>Property(Context, @'ClassEmpire', BankAccount)</Expression>
 			</InterpretedVar>
@@ -271,15 +274,15 @@
 							<Input_PopulationEventDefinition VarName="$PoliticalEffectMilitary"/>
 						</Action_TriggerPopulationEvent>
 					</StartActions>
-					<Objective Name="Step2_1_Objective1">
+					<Objective Name="Step2_1_Objective1" StartValue="$Step2_1_Objective1Val" EndValue="$ManpowerAmount">
 						<!-- TODO -->
 						<AIHint Category="Minimal" MinAutoResolutionTurn="25" MaxAutoResolutionTurn="35" AutoResolutionProbability="1" />
 						<Sequence>
 							<Decorator_BeginTurn>
-								<Condition_CheckInterpreter>
+								<Condition_IsProgressionComplete>
 									<Input_Context VarName="$CurrentEmpire"/>
-									<Input_Expression VarName="$Expression"/>
-								</Condition_CheckInterpreter>
+									<Input_Expression VarName="$Step2_1_Objective1Expr"/>
+								</Condition_IsProgressionComplete>
 							</Decorator_BeginTurn>
 							<Action_ChooseOutcome Name="Outcome1"/>
 						</Sequence>

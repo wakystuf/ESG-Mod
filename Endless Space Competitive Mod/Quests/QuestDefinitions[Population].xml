@@ -173,4 +173,772 @@
         </Steps>
     </QuestDefinition>
 
+
+
+    <!--           POPULATION QUEST 02       -->
+    <!--            Those darn Kids        -->
+
+   <QuestDefinition Name="PopulationQuest02" Category="PopulationQuest" SubCategory="Population" MinimumTurn="40" TriggeringProbability="1">
+       
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn</Tags>
+
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <!--Select a first Colonized System (state colony) with some Sophons inside-->
+            <Var VarName="$SophonsSystems01">
+                <Any>
+                    <From Source="$CurrentEmpire.$ColonizedStarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">//ClassPopulation,ClassPopulationStarSystem,ClassPopulationStarSystemAffinitySophonsCount</PathPrerequisite>
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassColonizedStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$SophonsSystem01Location">
+                <From Source="$SophonsSystems01.$StarSystem"/>
+            </Var>
+            <!--Find its Hangar-->
+            <Var VarName="$HangarOfSophonsSystem01">
+                <From Source="$SophonsSystems01.$Hangar"></From>
+            </Var>
+            <!--Select another System where there are some Sophons inside-->
+            <Var VarName="$SophonsSystems02">
+                <Any>
+                    <From Source="$CurrentEmpire.$ColonizedStarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">//ClassPopulation,ClassPopulationStarSystem,ClassPopulationStarSystemAffinitySophonsCount</PathPrerequisite>
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassColonizedStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                            <IsNot EntityVarName="$SophonsSystems01"/>
+                        </Where>
+
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$SophonsSystem02Location">
+                <From Source="$SophonsSystems02.$StarSystem"/>
+            </Var>
+            <!--Find its Hangar-->
+            <Var VarName="$HangarOfSophonsSystem02">
+                <From Source="$SophonsSystems02.$Hangar"></From>
+            </Var>
+
+            <!--How many ships we need-->
+            <Var VarName="$Amount01" IntValue="3"/>
+            <Var VarName="$Amount02" IntValue="2"/>
+
+            <!--Define the Timer-->           
+            <!--Define the type of Buildings we need-->
+            <Var VarName="$ScienceBuildings" StringValue="SubCategoryScience"/>
+            <!--Define the type of Buildings we DON'T want-->
+
+
+            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire/ClassPopulationEmpire,ClassPopulationEmpireAffinitySophonsCount', PopulationCount, true) lt 1"/>
+
+            <Var VarName="$Timer"/>
+            <InterpretedVar VarName="$Duration" Target="$(Empire)">
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*16</Expression>
+            </InterpretedVar>
+            
+            <LocalizationVar LocalizationKey="$SystemName01" Source="$SophonsSystem01Location"/>
+            <LocalizationVar LocalizationKey="$SystemName02" Source="$SophonsSystem02Location"/>
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+            <InterpretedVar VarName="$C2Step1_Objective1Val" Target="$(Empire)">
+                <Expression>Count(SophonsSystems01, @'ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipForBattle,!ShipRoleHero')</Expression>
+            </InterpretedVar>
+            <Var VarName="$C2Step1_Objective1Expr" StringValue="Count(SophonsSystems01, @'ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipForBattle,!ShipRoleHero')"/>
+            <InterpretedVar VarName="$C2Step1_Objective1AltVal" Target="$(Empire)">
+                <Expression>Count(SophonsSystems01, @'ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipForBattle,!ShipRoleHero')</Expression>
+            </InterpretedVar>
+            <Var VarName="$C2Step1_Objective1AltExpr" StringValue="Count(SophonsSystems01, @'ClassColonizedStarSystem/ClassGarrison/ClassShip,ShipForBattle,!ShipRoleHero')"/>
+
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <Prerequisites Target="$(Empire)">
+            <PathPrerequisite Flags="Prerequisite" Inverted="true">EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassEmpire/ColonizedStarSystemStateColony/ClassPopulation,ClassPopulationStarSystemAffinitySophonsCount') ge 2</InterpreterPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--Let's choose-->
+            <Step Name="Step1">
+                <!--============ STEP 1 - Choose ============-->
+
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                         <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                             <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,AffinityGameplayUmbralChoir</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="2">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">../ClassEmpire,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+
+                <!--============ Build a Science Building ============-->
+                <ObjectiveSet ObjectiveComposition="All">
+                    <StartActions>
+                        <Action_StartTimer>
+                            <Input_Duration VarName="$Duration"/>
+                            <Output_Timer VarName="$Timer"/>
+                        </Action_StartTimer>
+                    </StartActions>
+                    <Objective Name="C1Step1_Objective1" StartValue="0" EndValue="$Amount01">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="10" MaxAutoResolutionTurn="12" AutoResolutionProbability="0.5" />
+                        <Parallel CompletionPolicy="First">
+                     
+                            <Sequence>
+                                <Loop>
+                                    <Decorator_ConstructionCompleted Initiator="Empire" ProgressionIncrement="1">
+                                        <Input_ConstructionSubCategory VarName="$ScienceBuildings"/>
+                                        <Input_ValidType>Building</Input_ValidType>
+                                    </Decorator_ConstructionCompleted>
+                                    <Input_Count VarName="$Amount01"/>
+                                </Loop>
+                            </Sequence>
+                            
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_TimerEnded>
+                                        <Input_Timer VarName="$Timer"/>
+                                    </Condition_TimerEnded>
+                                </Decorator_BeginTurn>
+                                <Action_Fail/>
+                            </Sequence>                       
+                      
+                    <!--If there is no Sophons he/she fails-->                          
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression01"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_Fail/>
+                            </Sequence>       
+                            
+                        </Parallel>
+                    </Objective>
+                    <Reward Droplist="DroplistPopulation03" Picks="1"/>
+                </ObjectiveSet>
+
+                <!--============ STEP 2 - Call the Police ============-->
+                <ObjectiveSet ObjectiveComposition="All">
+                    <StartActions>
+                        <Action_StartTimer>
+                            <Input_Duration VarName="$Duration"/>
+                            <Output_Timer VarName="$Timer"/>
+                        </Action_StartTimer>
+                    </StartActions>
+                    <Objective Name="C2Step1_Objective1" StartValue="$C2Step1_Objective1Val" EndValue="$Amount02">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="10" MaxAutoResolutionTurn="10" AutoResolutionProbability="0.5" />
+                        <Parallel CompletionPolicy="First">
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$C2Step1_Objective1Expr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+                                                       
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression01"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_Fail/>
+                            </Sequence>
+                            
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_TimerEnded>
+                                        <Input_Timer VarName="$Timer"/>
+                                    </Condition_TimerEnded>
+                                </Decorator_BeginTurn>
+                                <Action_Fail/>
+                            </Sequence>
+
+                            <Sequence>                             
+                                <Decorator_InvadeSystem Initiator="OtherEmpires">
+                                    <Input_System VarName="$SophonsSystem01Location"/>
+                                    <Input_GroundBattleOutcomeType>CaptureOrRaze</Input_GroundBattleOutcomeType>
+                                </Decorator_InvadeSystem>
+                                <Action_Fail/>
+                             </Sequence>                            
+                           
+                            <Sequence>
+                                <Decorator_SystemDecolonized Initiator="Empire">
+                                    <Input_Systems VarName="$SophonsSystem01Location"/>
+                                </Decorator_SystemDecolonized>
+                                <Action_Fail/>
+                            </Sequence>                         
+                                                        
+                        </Parallel>
+                    </Objective>
+                    <Reward Droplist="DroplistPopulation02" Picks="1"/>
+                </ObjectiveSet>
+                <!--============ STEP 2 - Call the Police Hisshos Alternative ============-->
+                <ObjectiveSet ObjectiveComposition="All">
+                    <StartActions>
+                        <Action_StartTimer>
+                            <Input_Duration VarName="$Duration"/>
+                            <Output_Timer VarName="$Timer"/>
+                        </Action_StartTimer>
+                    </StartActions>
+                    <Objective Name="C2Step1_Objective1Alt" StartValue="$C2Step1_Objective1AltVal" EndValue="$Amount02">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="10" MaxAutoResolutionTurn="10" AutoResolutionProbability="0.5" />
+                        <Parallel CompletionPolicy="First">
+                            <Decorator_BeginTurn>
+                                <Condition_IsProgressionComplete>
+                                    <Input_Context VarName="$CurrentEmpire"/>
+                                    <Input_Expression VarName="$C2Step1_Objective1AltExpr"/>
+                                </Condition_IsProgressionComplete>
+                            </Decorator_BeginTurn>
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression01"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_Fail/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_TimerEnded>
+                                        <Input_Timer VarName="$Timer"/>
+                                    </Condition_TimerEnded>
+                                </Decorator_BeginTurn>
+                                <Action_Fail/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Decorator_InvadeSystem Initiator="OtherEmpires">
+                                    <Input_System VarName="$SophonsSystem01Location"/>
+                                    <Input_GroundBattleOutcomeType>CaptureOrRaze</Input_GroundBattleOutcomeType>
+                                </Decorator_InvadeSystem>
+                                <Action_Fail/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Decorator_SystemDecolonized Initiator="Empire">
+                                    <Input_Systems VarName="$SophonsSystem01Location"/>
+                                </Decorator_SystemDecolonized>
+                                <Action_Fail/>
+                            </Sequence>
+
+                        </Parallel>
+                    </Objective>
+                    <Reward Droplist="DroplistMinorRewards" Picks="1"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+    <!--           POPULATION QUEST 11       -->
+    <!--               Lord of War           -->
+
+
+   <QuestDefinition Name="PopulationQuest11" Category="PopulationQuest" SubCategory="Population" MinimumTurn="30" TriggeringProbability="1">  
+       
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn</Tags>
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$MyColonizedStarSystems">              
+                    <From Source="$CurrentEmpire.$ColonizedStarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ColonizedStarSystemStateColony/ClassPopulationStarSystemAffinityTerransCount</PathPrerequisite>                           
+                            <!--<PathPrerequisite Flags="Prerequisite" Inverted="true">ClassColonizedStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>-->
+                        </Where>
+                    </From>                
+            </Var>
+            <Var VarName="$ColonizedStarSystem01">
+                <Any>
+                    <From Source="$MyColonizedStarSystems"/>
+                </Any>
+            </Var>
+            <Var VarName="$StarSystem01">
+                <From Source="$ColonizedStarSystem01.$StarSystem"/>
+            </Var>
+            <Var VarName="$ColonizedStarSystem02">
+                <Any>
+                    <From Source="$MyColonizedStarSystems">
+                        <Where>
+                            <IsNot EntityVarName="$ColonizedStarSystem01"/>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$StarSystem02">
+                <From Source="$ColonizedStarSystem02.$StarSystem"/>
+            </Var>
+            <Var VarName="$ColonizedStarSystem03">
+                <Any>
+                    <From Source="$MyColonizedStarSystems">
+                        <Where>
+                            <IsNot EntityVarName="$ColonizedStarSystem01"/>
+                            <IsNot EntityVarName="$ColonizedStarSystem02"/>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+            <Var VarName="$StarSystem03">
+                <From Source="$ColonizedStarSystem03.$StarSystem"/>
+            </Var>
+
+            <Var VarName="$Expression04" StringValue="Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityTerransCount', PopulationCount, true) lt 1"/>
+            
+            <Var VarName="$Expression08" StringValue="Property(Context, @'ClassEmpire', Obedience, true)"/>
+
+            <Var VarName="$Amount01" IntValue="5"/>
+            <Var VarName="$Amount02" IntValue="60"/>
+
+            <InterpretedVar VarName="$Amount03"  Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire', Obedience, true)</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount04"  Target="$(Empire)">
+                <Expression>Min(100, Property(Context, @'ClassEmpire', Obedience, true)+5)</Expression>
+            </InterpretedVar>
+
+            <Var VarName="$Marker01"/>
+            <Var VarName="$Marker02"/>
+            <Var VarName="$Marker03"/>
+            
+            <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
+            <LocalizationVar LocalizationKey="$Amount02Name" Source="$Amount02"/>
+            <LocalizationVar LocalizationKey="$Amount04Name" Source="$Amount04"/>
+            <LocalizationVar LocalizationKey="$StarSystem01Name" Source="$StarSystem01"/>
+            <LocalizationVar LocalizationKey="$StarSystem02Name" Source="$StarSystem02"/>
+            <LocalizationVar LocalizationKey="$StarSystem03Name" Source="$StarSystem03"/>
+            <Var VarName="$Threshold3" IntValue="3"/>
+            <InterpretedVar VarName="$Step1_Objective1Val" Target="$(Empire)">
+                <Expression>Min(1, Max(0, Property(ColonizedStarSystem01, @'ClassColonizedStarSystem/ClassHero', Level, true) - 4)) + Min(1, Max(0, Property(ColonizedStarSystem02, @'ClassColonizedStarSystem/ClassHero', Level, true) - 4)) + Min(1, Max(0, Property(ColonizedStarSystem03, @'ClassColonizedStarSystem/ClassHero', Level, true) - 4))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective1Expr" StringValue="Min(1, Max(0, Property(ColonizedStarSystem01, @'ClassColonizedStarSystem/ClassHero', Level, true) - 4)) + Min(1, Max(0, Property(ColonizedStarSystem02, @'ClassColonizedStarSystem/ClassHero', Level, true) - 4)) + Min(1, Max(0, Property(ColonizedStarSystem03, @'ClassColonizedStarSystem/ClassHero', Level, true) - 4))"/>
+            <InterpretedVar VarName="$Step1_Objective2Val" Target="$(Empire)">
+                <Expression>Min(1, Max(0, Property(ColonizedStarSystem01, @'ClassColonizedStarSystem', Happiness, true) - 59)) + Min(1, Max(0, Property(ColonizedStarSystem02, @'ClassColonizedStarSystem', Happiness, true) - 59)) + Min(1, Max(0, Property(ColonizedStarSystem03, @'ClassColonizedStarSystem', Happiness, true) - 59))</Expression>
+            </InterpretedVar>
+            <Var VarName="$Step1_Objective2Expr" StringValue="Min(1, Max(0, Property(ColonizedStarSystem01, @'ClassColonizedStarSystem', Happiness, true) - 59)) + Min(1, Max(0, Property(ColonizedStarSystem02, @'ClassColonizedStarSystem', Happiness, true) - 59)) + Min(1, Max(0, Property(ColonizedStarSystem03, @'ClassColonizedStarSystem', Happiness, true) - 59))"/>
+
+        </Vars>
+
+
+        <!--============ PREREQUISITES ============-->
+
+        <Prerequisites Target="$(Empire)">               
+            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassEmpire/ColonizedStarSystemStateColony/ClassPopulation,ClassPopulationStarSystemAffinityTerransCount') ge 3</InterpreterPrerequisite>
+            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire/ClassEducation', HeroCount) ge 2</InterpreterPrerequisite>
+            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire', Happiness) ge 50</InterpreterPrerequisite>
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UE_Quest-Chapter4.1-Sheredyn" QuestState="InProgress"/>
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UE_Quest-Chapter4.1-Sheredyn" QuestState="Completed"/>
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UE_Quest-Chapter4.1-Sheredyn" QuestState="Failed"/>
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UE_Quest-Chapter4.1-Mezari" QuestState="InProgress"/>
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UE_Quest-Chapter4.1-Mezari" QuestState="Completed"/>
+            <QuestStatePrerequisite Flags="Prerequisite" Inverted="true" QuestDefinitionName="UE_Quest-Chapter4.1-Mezari" QuestState="Failed"/>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <Step Name="Step1">
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">../ClassEmpire,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="2">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">../ClassEmpire,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>             
+                </Choice>
+           
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$StarSystem01"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$StarSystem02"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker02"/>
+                        </Action_AddQuestMarkers>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$StarSystem03"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker03"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Step1_Objective1" StartValue="$Step1_Objective1Val" EndValue="$Threshold3">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="17" MaxAutoResolutionTurn="25" AutoResolutionProbability="0.75" />
+                        <Parallel CompletionPolicy="First">
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Step1_Objective1Expr"/>
+                                    </Condition_IsProgressionComplete>
+                                </Decorator_BeginTurn>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker01"/>
+                                    </Action_RemoveQuestMarkers>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker02"/>
+                                    </Action_RemoveQuestMarkers>
+                                    <Action_RemoveQuestMarkers>
+                                        <Input_Markers VarName="$Marker03"/>
+                                    </Action_RemoveQuestMarkers>                                
+                            </Sequence>
+                            
+                             <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression04"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                 <Action_RemoveQuestMarkers>
+                                     <Input_Markers VarName="$Marker01"/>
+                                 </Action_RemoveQuestMarkers>
+                                 <Action_RemoveQuestMarkers>
+                                     <Input_Markers VarName="$Marker02"/>
+                                 </Action_RemoveQuestMarkers>
+                                 <Action_RemoveQuestMarkers>
+                                     <Input_Markers VarName="$Marker03"/>
+                                 </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+                            
+                            <Sequence>
+                                <Parallel CompletionPolicy="Any">
+                                    <Sequence>
+                                        <Decorator_InvadeSystem Initiator="OtherEmpires">
+                                            <Input_System VarName="$StarSystem01"/>
+                                            <Input_GroundBattleOutcomeType>CaptureOrRaze</Input_GroundBattleOutcomeType>
+                                        </Decorator_InvadeSystem>
+                                    </Sequence>
+                                    <Sequence>
+                                        <Decorator_InvadeSystem Initiator="OtherEmpires">
+                                            <Input_System VarName="$StarSystem02"/>
+                                            <Input_GroundBattleOutcomeType>CaptureOrRaze</Input_GroundBattleOutcomeType>
+                                        </Decorator_InvadeSystem>
+                                    </Sequence>
+                                    <Sequence>
+                                        <Decorator_InvadeSystem Initiator="OtherEmpires">
+                                            <Input_System VarName="$StarSystem03"/>
+                                            <Input_GroundBattleOutcomeType>CaptureOrRaze</Input_GroundBattleOutcomeType>
+                                        </Decorator_InvadeSystem>
+                                    </Sequence>
+                                </Parallel>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker02"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker03"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Parallel CompletionPolicy="Any">
+                                    <Sequence>
+                                        <Decorator_SystemDecolonized Initiator="Empire">
+                                            <Input_Systems VarName="$StarSystem01"/>                                          
+                                        </Decorator_SystemDecolonized>
+                                    </Sequence>
+                                    <Sequence>
+                                        <Decorator_SystemDecolonized Initiator="Empire">
+                                            <Input_Systems VarName="$StarSystem02"/>
+                                        </Decorator_SystemDecolonized>
+                                    </Sequence>
+                                    <Sequence>
+                                        <Decorator_SystemDecolonized Initiator="Empire">
+                                            <Input_Systems VarName="$StarSystem03"/>
+                                        </Decorator_SystemDecolonized>
+                                    </Sequence>
+                                </Parallel>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker02"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker03"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+
+                          <Sequence>
+                            <Parallel CompletionPolicy="Any">
+                              <Sequence>
+                                <Decorator_SystemDestroyed>
+                                  <Input_Nodes VarName="$StarSystem01"/>
+                                  <Input_Victim VarName="$CurrentEmpire"/>
+                                </Decorator_SystemDestroyed>                               
+                              </Sequence>
+                              <Sequence>
+                                <Decorator_SystemDestroyed>
+                                  <Input_Nodes VarName="$StarSystem02"/>
+                                  <Input_Victim VarName="$CurrentEmpire"/>
+                                </Decorator_SystemDestroyed>
+                              </Sequence>
+                              <Sequence>
+                                <Decorator_SystemDestroyed>
+                                  <Input_Nodes VarName="$StarSystem03"/>
+                                  <Input_Victim VarName="$CurrentEmpire"/>
+                                </Decorator_SystemDestroyed>
+                              </Sequence>                             
+                            </Parallel>
+                            <Action_RemoveQuestMarkers>
+                              <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_RemoveQuestMarkers>
+                              <Input_Markers VarName="$Marker02"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_RemoveQuestMarkers>
+                              <Input_Markers VarName="$Marker03"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_Fail/>
+                          </Sequence>
+                        </Parallel>
+                        
+                        
+                        
+                    </Objective>                    
+                    <Reward Droplist="DroplistTechnology" EvaluationMethod="Dynamic" Picks="1" PreviewLocalizationKey="%RandomTechnologyTitle"/>
+                </ObjectiveSet>
+                
+                <ObjectiveSet>
+                    <StartActions>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$StarSystem01"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$StarSystem02"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker02"/>
+                        </Action_AddQuestMarkers>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$StarSystem03"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker03"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Step1_Objective2" StartValue="$Step1_Objective2Val" EndValue="$Threshold3">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="17" MaxAutoResolutionTurn="25" AutoResolutionProbability="0.75" />
+                        <Parallel CompletionPolicy="First">
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Step1_Objective2Expr"/>
+                                    </Condition_IsProgressionComplete>
+                                </Decorator_BeginTurn>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker02"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker03"/>
+                                </Action_RemoveQuestMarkers>
+                            </Sequence>
+                            <Sequence>
+                                <Parallel CompletionPolicy="First">
+                                    <Sequence>
+                                        <Decorator_InvadeSystem Initiator="OtherEmpires">
+                                            <Input_System VarName="$StarSystem01"/>
+                                            <Input_GroundBattleOutcomeType>CaptureOrRaze</Input_GroundBattleOutcomeType>
+                                        </Decorator_InvadeSystem>
+                                    </Sequence>
+                                    <Sequence>
+                                        <Decorator_InvadeSystem Initiator="OtherEmpires">
+                                            <Input_System VarName="$StarSystem02"/>
+                                             <Input_GroundBattleOutcomeType>CaptureOrRaze</Input_GroundBattleOutcomeType>
+                                        </Decorator_InvadeSystem>
+                                    </Sequence>
+                                    <Sequence>
+                                        <Decorator_InvadeSystem Initiator="OtherEmpires">
+                                            <Input_System VarName="$StarSystem03"/>
+                                            <Input_GroundBattleOutcomeType>CaptureOrRaze</Input_GroundBattleOutcomeType>
+                                        </Decorator_InvadeSystem>
+                                    </Sequence>                                  
+                                </Parallel>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker02"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker03"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Parallel CompletionPolicy="First">
+                                    <Sequence>
+                                        <Decorator_SystemDecolonized Initiator="Empire">
+                                            <Input_Systems VarName="$StarSystem01"/>
+                                        </Decorator_SystemDecolonized>
+                                    </Sequence>
+                                    <Sequence>
+                                        <Decorator_SystemDecolonized Initiator="Empire">
+                                            <Input_Systems VarName="$StarSystem02"/>
+                                        </Decorator_SystemDecolonized>
+                                    </Sequence>
+                                    <Sequence>
+                                        <Decorator_SystemDecolonized Initiator="Empire">
+                                            <Input_Systems VarName="$StarSystem03"/>
+                                        </Decorator_SystemDecolonized>
+                                    </Sequence>
+                                </Parallel>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker02"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker03"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+
+                          <Sequence>
+                            <Parallel CompletionPolicy="Any">
+                              <Sequence>
+                                <Decorator_SystemDestroyed>
+                                  <Input_Nodes VarName="$StarSystem01"/>
+                                  <Input_Victim VarName="$CurrentEmpire"/>
+                                </Decorator_SystemDestroyed>
+                              </Sequence>
+                              <Sequence>
+                                <Decorator_SystemDestroyed>
+                                  <Input_Nodes VarName="$StarSystem02"/>
+                                  <Input_Victim VarName="$CurrentEmpire"/>
+                                </Decorator_SystemDestroyed>
+                              </Sequence>
+                              <Sequence>
+                                <Decorator_SystemDestroyed>
+                                  <Input_Nodes VarName="$StarSystem03"/>
+                                  <Input_Victim VarName="$CurrentEmpire"/>
+                                </Decorator_SystemDestroyed>
+                              </Sequence>
+                            </Parallel>
+                            <Action_RemoveQuestMarkers>
+                              <Input_Markers VarName="$Marker01"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_RemoveQuestMarkers>
+                              <Input_Markers VarName="$Marker02"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_RemoveQuestMarkers>
+                              <Input_Markers VarName="$Marker03"/>
+                            </Action_RemoveQuestMarkers>
+                            <Action_Fail/>
+                          </Sequence>
+                            
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression04"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker02"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker03"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+                        </Parallel>
+                    </Objective>
+                    <Reward Droplist="DroplistTechnology" EvaluationMethod="Dynamic" Picks="1" PreviewLocalizationKey="%RandomTechnologyTitle"/>
+                </ObjectiveSet>
+
+                <ObjectiveSet>                   
+                    <Objective Name="Step1_Objective2Alt" StartValue="$Amount03" EndValue="$Amount04">
+                        <!-- TODO -->
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="17" MaxAutoResolutionTurn="25" AutoResolutionProbability="0.75" />
+                        <Parallel CompletionPolicy="First">
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression08"/>
+                                    </Condition_IsProgressionComplete>
+                                </Decorator_BeginTurn>                              
+                            </Sequence>  
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression04"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>                                
+                                <Action_Fail/>
+                            </Sequence>
+                        </Parallel>
+                    </Objective>
+                    <Reward Droplist="DroplistTechnology" EvaluationMethod="Dynamic" Picks="1" PreviewLocalizationKey="%RandomTechnologyTitle"/>
+                </ObjectiveSet>
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
 </Datatable>

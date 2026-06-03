@@ -432,8 +432,6 @@
       <!--OBJECTIVE 1-->
       <Var VarName="$Amount01" IntValue="70"/>
       <Var VarName="$Amount02" IntValue="2"/>
-      <Var VarName="$Expression01" StringValue="(Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem3') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem4') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem,ObedienceStatusStarSystem3') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem,ObedienceStatusStarSystem4')) ge 2"/>
-
       <!--OBJECTIVE 2-->
       <InterpretedVar VarName="$Amount03" Target="$(Empire)">
         <Expression>Max(0,(Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics04')))</Expression>
@@ -462,6 +460,10 @@
       <LocalizationVar Source="$Amount04"           LocalizationKey="$Amount04Name"/>
       <LocalizationVar Source="$Amount05"           LocalizationKey="$Amount05Name"/>
       <LocalizationVar Source="$Amount06"           LocalizationKey="$Amount06Name"/>
+      <InterpretedVar VarName="$Objective0Val" Target="$(Empire)">
+        <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem3') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem4') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem,ObedienceStatusStarSystem3') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem,ObedienceStatusStarSystem4')</Expression>
+      </InterpretedVar>
+      <Var VarName="$Objective0Expr" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem3') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem4') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem,ObedienceStatusStarSystem3') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem,ObedienceStatusStarSystem4')"/>
     </Vars>
 
     <!--============ PREREQUISITES ============-->
@@ -481,14 +483,14 @@
 
         <!--============ OBJECTIVE SET 0 - Reach Happy in 2 systems ============-->
         <ObjectiveSet>
-          <Objective Name="Objective0">
+          <Objective Name="Objective0" StartValue="$Objective0Val" EndValue="$Amount02">
             <AIHint Category="Minimal" MinAutoResolutionTurn="45" MaxAutoResolutionTurn="60" AutoResolutionProbability="1"/>
             <Sequence>
               <Decorator_BeginTurn>
-                <Condition_CheckInterpreter>
+                <Condition_IsProgressionComplete>
                   <Input_Context VarName="$CurrentEmpire"/>
-                  <Input_Expression VarName="$Expression01"/>
-                </Condition_CheckInterpreter>
+                  <Input_Expression VarName="$Objective0Expr"/>
+                </Condition_IsProgressionComplete>
               </Decorator_BeginTurn>
               <Action_ChooseOutcome Name="Outcome1"/>
             </Sequence>
