@@ -807,9 +807,9 @@
                 <Expression>$(Amount02) + 1</Expression>
             </InterpretedVar>
             <InterpretedVar VarName="$Objective3Val" Target="$(Empire)">
-                <Expression>Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip/ClassSection/ClassModuleSquadron') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip/ClassSection/ClassModuleSquadron')</Expression>
+                <Expression>Count(Context, @'ClassEmpire//ClassShip/ClassSection/ClassModuleSquadron')</Expression>
             </InterpretedVar>
-            <Var VarName="$Objective3Expr" StringValue="Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip/ClassSection/ClassModuleSquadron') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip/ClassSection/ClassModuleSquadron')"/>
+            <Var VarName="$Objective3Expr" StringValue="Count(Context, @'ClassEmpire//ClassShip/ClassSection/ClassModuleSquadron')"/>
 
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03"/>
@@ -1654,29 +1654,29 @@
             <!--OffensivePower min for choice 3-->
           
             <InterpretedVar VarName="$Amount03" Target="$(Empire)">
-                <Expression>Max(MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassGarrisson/ClassShip', OffensiveMilitaryPower), MaxProperty(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip', OffensiveMilitaryPower))+55</Expression>
+                <Expression>MaxProperty(Context, @'ClassEmpire//ClassShip', OffensiveMilitaryPower)+55</Expression>
             </InterpretedVar>
-            
+
             <!--Happiness min for choice 2-->
             <Var VarName="$Amount04" IntValue="70"/>
             <Var VarName="$Amount05" IntValue="2"/>
-            
+
             <!--Manpower min for choice 1-->
             <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire', MaximumEmpireManpowerStock)"/>
             <!--Happiness min for choice 2-->
             <Var VarName="$Expression02" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem3') ge 2 or Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem4') ge 2"/>
-            
-            <!--OffensivePower min for choice 3-->
-            <Var VarName="$Expression03" StringValue="Property(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip', OffensiveMilitaryPower, true) ge $(Amount03)"/>            
+
             <!--If no Tikanan: fail the quest -->
             <Var VarName="$Expression04" StringValue="Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityTikanansCount', PopulationCount, true) lt 1"/>
-            <!--OffensivePower min for choice 3-->
-            <Var VarName="$Expression05" StringValue="Property(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip', OffensiveMilitaryPower, true) ge $(Amount03)"/>
-            
+
             <LocalizationVar Source="$Amount02" LocalizationKey="$Amount02Name"/>
             <LocalizationVar Source="$Amount03" LocalizationKey="$Amount03Name"/>
             <LocalizationVar Source="$Amount04" LocalizationKey="$Amount04Name"/>
             <LocalizationVar Source="$Amount05" LocalizationKey="$Amount05Name"/>
+            <InterpretedVar VarName="$Objective3Val" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire//ClassShip', OffensiveMilitaryPower)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective3Expr" StringValue="MaxProperty(Context, @'ClassEmpire//ClassShip', OffensiveMilitaryPower)"/>
         </Vars>
 
         <!--============ PREREQUISITES ============-->
@@ -1787,26 +1787,16 @@
 
                 <!--============ STEP 3 - Call the Police ============-->
                 <ObjectiveSet ObjectiveComposition="All">
-                    <Objective Name="Objective3">
+                    <Objective StartValue="$Objective3Val" EndValue="$Amount03" Name="Objective3">
                         <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="25" AutoResolutionProbability="1" />
                         <Parallel CompletionPolicy="First">
 
                             <Sequence>
                                 <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
+                                    <Condition_IsProgressionComplete>
                                         <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression03"/>
-                                    </Condition_CheckInterpreter>
-                                </Decorator_BeginTurn>
-                                <Action_ChooseOutcome Name="Outcome1"/>
-                            </Sequence>
-
-                            <Sequence>
-                                <Decorator_BeginTurn>
-                                    <Condition_CheckInterpreter>
-                                        <Input_Context VarName="$CurrentEmpire"/>
-                                        <Input_Expression VarName="$Expression05"/>
-                                    </Condition_CheckInterpreter>
+                                        <Input_Expression VarName="$Objective3Expr"/>
+                                    </Condition_IsProgressionComplete>
                                 </Decorator_BeginTurn>
                                 <Action_ChooseOutcome Name="Outcome1"/>
                             </Sequence>
