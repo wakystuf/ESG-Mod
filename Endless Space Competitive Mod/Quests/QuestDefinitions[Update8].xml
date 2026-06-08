@@ -807,9 +807,9 @@
                 <Expression>$(Amount02) + 1</Expression>
             </InterpretedVar>
             <InterpretedVar VarName="$Objective3Val" Target="$(Empire)">
-                <Expression>Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip/ClassSection/ClassModuleSquadron') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip/ClassSection/ClassModuleSquadron')</Expression>
+                <Expression>Count(Context, @'ClassEmpire//ClassShip/ClassSection/ClassModuleSquadron')</Expression>
             </InterpretedVar>
-            <Var VarName="$Objective3Expr" StringValue="Count(Context, @'ClassEmpire/ClassGarrisonFleet/ClassShip/ClassSection/ClassModuleSquadron') + Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassGarrison/ClassShip/ClassSection/ClassModuleSquadron')"/>
+            <Var VarName="$Objective3Expr" StringValue="Count(Context, @'ClassEmpire//ClassShip/ClassSection/ClassModuleSquadron')"/>
 
             <LocalizationVar LocalizationKey="$Amount01Name" Source="$Amount01"/>
             <LocalizationVar LocalizationKey="$Amount03Name" Source="$Amount03"/>
@@ -1618,6 +1618,213 @@
                     <Reward LocalizationKey="%MinorPopulationQuest22Reward3"/>
                 </ObjectiveSet>
 
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
+
+
+    <QuestDefinition Name="MinorPopulationQuest09" Category="PopulationQuest" SubCategory="Population" MinimumTurn="60" TriggeringProbability="0.8">
+   
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn</Tags>
+
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <!--Manpower min for choice 1-->
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire', MaximumEmpireManpowerStock)</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>Property(Context, @'ClassEmpire', MaximumEmpireManpowerStock)+250</Expression>
+            </InterpretedVar>
+            <!--OffensivePower min for choice 3-->
+          
+            <InterpretedVar VarName="$Amount03" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire//ClassShip', OffensiveMilitaryPower)+55</Expression>
+            </InterpretedVar>
+
+            <!--Happiness min for choice 2-->
+            <Var VarName="$Amount04" IntValue="70"/>
+            <Var VarName="$Amount05" IntValue="2"/>
+
+            <!--Manpower min for choice 1-->
+            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassEmpire', MaximumEmpireManpowerStock)"/>
+            <!--Happiness min for choice 2-->
+            <Var VarName="$Expression02" StringValue="Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem3') ge 2 or Count(Context, @'ClassEmpire/ClassColonizedStarSystem,HappinessStatusStarSystem4') ge 2"/>
+
+            <!--If no Tikanan: fail the quest -->
+            <Var VarName="$Expression04" StringValue="Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityTikanansCount', PopulationCount, true) lt 1"/>
+
+            <LocalizationVar Source="$Amount02" LocalizationKey="$Amount02Name"/>
+            <LocalizationVar Source="$Amount03" LocalizationKey="$Amount03Name"/>
+            <LocalizationVar Source="$Amount04" LocalizationKey="$Amount04Name"/>
+            <LocalizationVar Source="$Amount05" LocalizationKey="$Amount05Name"/>
+            <InterpretedVar VarName="$Objective3Val" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire//ClassShip', OffensiveMilitaryPower)</Expression>
+            </InterpretedVar>
+            <Var VarName="$Objective3Expr" StringValue="MaxProperty(Context, @'ClassEmpire//ClassShip', OffensiveMilitaryPower)"/>
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <Prerequisites Target="$(Empire)">
+            <DownloadableContentPrerequisite>MinorDLCQuests</DownloadableContentPrerequisite>
+            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire/ClassPopulationEmpire,ClassPopulationEmpireAffinityTikanans', PopulationCount, true) ge 8</InterpreterPrerequisite>            
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--Let's choose-->
+            <Step Name="Step1">
+                <!--============ STEP 1 - Choose ============-->
+
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1">
+                        <Prerequisites  Target="$(Empire)">
+                           <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassEmpire,EmpireTypeMajor,AffinityGameplayMajorHisshos</PathPrerequisite>
+                         </Prerequisites>
+                    </ChoiceItem>
+                    <ChoiceItem ObjectiveSetIndex="2"/>
+                </Choice>
+
+                <!--============ Build a Science Building ============-->
+                <ObjectiveSet ObjectiveComposition="All">                  
+                    <Objective Name="Objective1" StartValue="$Amount01" EndValue="$Amount02">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="25" AutoResolutionProbability="1" />
+                        <Parallel CompletionPolicy="First">
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_EmpireWhoseProgressToUpdate VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression01"/>
+                                    </Condition_IsProgressionComplete>
+                                </Decorator_BeginTurn>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                            
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression04"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_Fail/>
+                            </Sequence>
+
+                        </Parallel>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MinorPopulationQuest09-Event01</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward LocalizationKey="%MinorPopulationQuest09Reward1"/>
+                </ObjectiveSet>
+
+                <!--============ STEP 2 - Call the Police ============-->
+                <ObjectiveSet ObjectiveComposition="All">                   
+                    <Objective Name="Objective2">
+                        <AIHint Category="MaximizeResource" Motivation="0.3">
+                            <Resource>Approval</Resource>                            
+                        </AIHint>
+                        <Parallel CompletionPolicy="First">
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression02"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression04"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_Fail/>
+                            </Sequence>
+
+                        </Parallel>
+
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MinorPopulationQuest09-Event02</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward LocalizationKey="%MinorPopulationQuest09Reward2"/>
+
+                </ObjectiveSet>
+
+                <!--============ STEP 3 - Call the Police ============-->
+                <ObjectiveSet ObjectiveComposition="All">
+                    <Objective StartValue="$Objective3Val" EndValue="$Amount03" Name="Objective3">
+                        <AIHint Category="Minimal" MinAutoResolutionTurn="15" MaxAutoResolutionTurn="25" AutoResolutionProbability="1" />
+                        <Parallel CompletionPolicy="First">
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_IsProgressionComplete>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Objective3Expr"/>
+                                    </Condition_IsProgressionComplete>
+                                </Decorator_BeginTurn>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression04"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_Fail/>
+                            </Sequence>
+
+                        </Parallel>
+
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MinorPopulationQuest09-Event03</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward LocalizationKey="%MinorPopulationQuest09Reward3"/>
+
+                </ObjectiveSet>
             </Step>
         </Steps>
     </QuestDefinition>
