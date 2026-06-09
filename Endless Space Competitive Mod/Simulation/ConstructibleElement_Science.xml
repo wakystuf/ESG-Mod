@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/ScienceConstructibleElement.xsd">
-  <!-- Not an actual tech, just a prerequisite for things that should be disabled -->
-  <TechnologyDefinition Name="TechnologyDefinitionUnlockable" Category="CategoryTechnologyQuest" Visibility="Hidden">
-    <Cost ResourceName="EmpireResearch">0</Cost>
-    <PathPrerequisite Flags="DiplomaticTradable">false</PathPrerequisite>
-  </TechnologyDefinition>
   <!-- Terraformation 1 -->
   <TechnologyDefinition Name="TechnologyDefinitionScienceAndExploration9" TechnologyStage="TechnologyStageDefinitionScienceAndExploration3" Category="CategoryTechnologyScienceAndExploration" ScoreProvider="TechnologyUnlocked">
     <CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage3Multiplier) * (1 - (Property(StockLocation,@ClassEmpire/ClassResearch , TechnologyLinkReductionValue) * Count(StockLocation, @'ClassEmpire/ClassResearch,TechnologyLinkScienceAndExploration5To9'))) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantScienceAndExplorationMultiplier)</CustomCost>
@@ -1062,25 +1057,6 @@
     <PopulationEvent Name="PopulationPoliticalEventPacifistTechnology"/>
   </TechnologyDefinition>
   
-  <!-- Citadel Extensions -->
-  <TechnologyDefinition Name="TechnologyDefinitionEmpireDevelopmentJuggernaut5" TechnologyStage="TechnologyStageDefinitionEmpireDevelopment5" Category="CategoryTechnologyEmpireDevelopment" ScoreProvider="TechnologyUnlocked">
-    <CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage5Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostJuggernautMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEmpireDevelopmentMultiplier)</CustomCost>
-    <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCHisshos</DownloadableContentPrerequisite>
-    <PathPrerequisite Flags="Prerequisite,Disable,JuggernautsNotDiscovered">../JuggernautsCanBeResearched</PathPrerequisite>
-    <PathPrerequisite Flags="DiplomaticTradable,IgnoreOnCommand">false</PathPrerequisite>
-    <TechnologyPrerequisite Flags="Prerequisite,Link,Disable">TechnologyLinkDefinitionDependencyEmpireDevelopmentJuggernaut3To5</TechnologyPrerequisite>
-    <SimulationDescriptorReference Name="TechnologyJuggernautCitadelSupportImprovements"/>
-    <SimulationDescriptorReference Name="TechnologyCountEmpireDevelopmentJuggernautIncreaseStage5"/>
-    <SimulationDescriptorReference Name="TechnologyCounter"/>
-    <PopulationEvent Name="PopulationPoliticalEventIndustrialistTechnology"/>
-
-    <HelperVariable Name="IndustryVariable"/>
-    <HelperVariable Name="FoodVariable"/>
-    <HelperVariable Name="DustVariable"/>
-    <HelperVariable Name="CitadelCount"/>
-    <HelperFormula>$(IndustryVariable) - 0.5 * $(FoodVariable) - 0.5 * $(DustVariable) + 5 * $(CitadelCount)</HelperFormula>
-  </TechnologyDefinition>
-  
   <!-- Compact Fusion Methods -->
   <TechnologyDefinition Name="TechnologyDefinitionScienceAndExploration8" TechnologyStage="TechnologyStageDefinitionScienceAndExploration3" Category="CategoryTechnologyScienceAndExploration" ScoreProvider="TechnologyUnlocked">
     <CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage3Multiplier)   * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantScienceAndExplorationMultiplier)</CustomCost>
@@ -1148,13 +1124,101 @@
     <HelperVariable Name="EnemyEmpires"/>
     <HelperFormula>$(TurnVariable) * 50 + 30 * $(EnemyEmpires)</HelperFormula>
   </TechnologyDefinition>
-  
-  <!-- Citadel Basic Upgrade -->
-  <TechnologyDefinition Name="TechnologyDefinitionEmpireDevelopmentJuggernaut3" TechnologyStage="TechnologyStageDefinitionEmpireDevelopment4" Category="CategoryTechnologyEmpireDevelopment" ScoreProvider="TechnologyUnlocked">
-	<CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage4Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostJuggernautMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEmpireDevelopmentMultiplier) * (1 - (Property(StockLocation,@ClassEmpire/ClassResearch , TechnologyLinkReductionValue) * Count(StockLocation, @'ClassEmpire/ClassResearch,TechnologyLinkEmpireDevelopmentJuggernaut2To3')))</CustomCost>
+    
+  <!-- Mission Flexibility -->
+  <TechnologyDefinition Name="TechnologyDefinitionEconomyAndTradeJuggernaut2" TechnologyStage="TechnologyStageDefinitionEmpireDevelopment3" Category="CategoryTechnologyEmpireDevelopment" ScoreProvider="TechnologyUnlocked">
+	<CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage3Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostJuggernautMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEmpireDevelopmentMultiplier)</CustomCost>
 	<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCHisshos</DownloadableContentPrerequisite>
 	<PathPrerequisite Flags="Prerequisite,Disable,JuggernautsNotDiscovered">../JuggernautsCanBeResearched</PathPrerequisite>
 	<PathPrerequisite Flags="DiplomaticTradable,IgnoreOnCommand">false</PathPrerequisite>
+	<SimulationDescriptorReference Name="TechnologyJuggernautFIDS2" />
+	<SimulationDescriptorReference Name="TechnologyJuggernautSupportSlots1" />
+	<SimulationDescriptorReference Name="TechnologyCountEconomyAndTradeJuggernautIncreaseStage3" />
+	<SimulationDescriptorReference Name="TechnologyCounter" />
+	<PopulationEvent Name="PopulationPoliticalEventPacifistTechnology" />
+	<HelperVariable Name="TotalSystems" />
+	<HelperVariable Name="JuggernautCount" />
+	<HelperFormula>$(JuggernautCount) * 4 + $(TotalSystems)</HelperFormula>
+  </TechnologyDefinition>
+
+  <!-- Obliterator Blueprints -->
+  <TechnologyDefinition Name="TechnologyDefinitionMilitaryJuggernaut3" TechnologyStage="TechnologyStageDefinitionEmpireDevelopment4" Category="CategoryTechnologyEmpireDevelopment" ScoreProvider="TechnologyUnlocked">
+	<CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage4Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostJuggernautMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEmpireDevelopmentMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', ObliteratorResearchCostMultiplier)</CustomCost>
+	<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCHisshos</DownloadableContentPrerequisite>
+	<GameSettingPrerequisite Flags="Prerequisite,Discard">AllowSuperWeapons,True</GameSettingPrerequisite>
+	<PathPrerequisite Flags="Prerequisite,Disable,JuggernautsNotDiscovered">../JuggernautsCanBeResearched</PathPrerequisite>
+	<PathPrerequisite Flags="DiplomaticTradable,IgnoreOnCommand">false</PathPrerequisite>
+	<SimulationDescriptorReference Name="TechnologyLinkToMilitaryJuggernaut3" />
+	<SimulationDescriptorReference Name="TechnologyJuggernautObliteratorSpecialization" />
+	<SimulationDescriptorReference Name="TechnologyCountMilitaryJuggernautIncreaseStage4" />
+	<SimulationDescriptorReference Name="TechnologyCounter" />
+	<PopulationEvent Name="PopulationPoliticalEventMilitaristTechnology" />
+	<HelperVariable Name="EnemyEmpires" />
+	<HelperVariable Name="KnownEmpires" />
+	<HelperVariable Name="JuggernautCount" />
+	<HelperFormula>$(JuggernautCount) * 10 + $(EnemyEmpires) * 4 + $(KnownEmpires) * 2</HelperFormula>
+  </TechnologyDefinition>
+
+  <TechnologyDefinition Name="TechnologyDefinitionMilitaryJuggernaut6" TechnologyStage="TechnologyStageDefinitionEmpireDevelopment5" Category="CategoryTechnologyEmpireDevelopment" ScoreProvider="TechnologyUnlocked">
+	<CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage5Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostJuggernautMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEmpireDevelopmentMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', ObliteratorResearchCostMultiplier)</CustomCost>
+	<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCHisshos</DownloadableContentPrerequisite>
+	<GameSettingPrerequisite Flags="Prerequisite,Discard">AllowSuperWeapons,True</GameSettingPrerequisite>
+	<PathPrerequisite Flags="Prerequisite,Disable,JuggernautsNotDiscovered">../JuggernautsCanBeResearched</PathPrerequisite>
+	<PathPrerequisite Flags="DiplomaticTradable,IgnoreOnCommand">false</PathPrerequisite>
+	<TechnologyPrerequisite Inverted="true" Flags="Prerequisite,Link,Disable">TechnologyLinkDefinitionExclusionMilitaryJuggernaut6And7</TechnologyPrerequisite>
+	<TechnologyPrerequisite Flags="Prerequisite,Link,Disable">TechnologyLinkDefinitionDependencyMilitaryJuggernaut3To6</TechnologyPrerequisite>
+	<SimulationDescriptorReference Name="TechnologyLinkToMilitaryJuggernaut6" />
+	<SimulationDescriptorReference Name="TechnologyJuggernautObliteratorFasterShot" />
+	<SimulationDescriptorReference Name="TechnologyCountMilitaryJuggernautIncreaseStage5" />
+	<SimulationDescriptorReference Name="TechnologyCounter" />
+	<PopulationEvent Name="PopulationPoliticalEventMilitaristTechnology" />
+	<HelperVariable Name="EnemyEmpires" />
+	<HelperVariable Name="ObliteratorCount" />
+	<HelperFormula>$(ObliteratorCount) * 10 + $(EnemyEmpires) * 2</HelperFormula>
+  </TechnologyDefinition>
+  <TechnologyDefinition Name="TechnologyDefinitionMilitaryJuggernaut7" TechnologyStage="TechnologyStageDefinitionEmpireDevelopment5" Category="CategoryTechnologyEmpireDevelopment" ScoreProvider="TechnologyUnlocked">
+	<CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage5Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostJuggernautMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEmpireDevelopmentMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', ObliteratorResearchCostMultiplier)</CustomCost>
+	<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCHisshos</DownloadableContentPrerequisite>
+	<GameSettingPrerequisite Flags="Prerequisite,Discard">AllowSuperWeapons,True</GameSettingPrerequisite>
+	<PathPrerequisite Flags="Prerequisite,Disable,JuggernautsNotDiscovered">../JuggernautsCanBeResearched</PathPrerequisite>
+	<PathPrerequisite Flags="DiplomaticTradable,IgnoreOnCommand">false</PathPrerequisite>
+	<TechnologyPrerequisite Inverted="true" Flags="Prerequisite,Link,Disable">TechnologyLinkDefinitionExclusionMilitaryJuggernaut6And7</TechnologyPrerequisite>
+	<TechnologyPrerequisite Flags="Prerequisite,Link,Disable">TechnologyLinkDefinitionDependencyMilitaryJuggernaut3To7</TechnologyPrerequisite>
+	<SimulationDescriptorReference Name="TechnologyLinkToMilitaryJuggernaut7" />
+	<SimulationDescriptorReference Name="TechnologyJuggernautObliteratorFasterCharge" />
+	<SimulationDescriptorReference Name="TechnologyCountMilitaryJuggernautIncreaseStage5" />
+	<SimulationDescriptorReference Name="TechnologyCounter" />
+	<PopulationEvent Name="PopulationPoliticalEventMilitaristTechnology" />
+	<HelperVariable Name="KnownEmpires" />
+	<HelperVariable Name="ObliteratorCount" />
+	<HelperFormula>$(ObliteratorCount) * 10 + $(KnownEmpires) * 1.5</HelperFormula>
+  </TechnologyDefinition>
+  
+  <!-- Citadel Blueprints -->
+  <TechnologyDefinition Name="TechnologyDefinitionEmpireDevelopmentJuggernaut2" TechnologyStage="TechnologyStageDefinitionEconomyAndTrade3" Category="CategoryTechnologyEconomyAndTrade" ScoreProvider="TechnologyUnlocked">
+	<CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage3Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostJuggernautMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEconomyAndTradeMultiplier) * (1 - (Property(StockLocation,@ClassEmpire/ClassResearch , TechnologyLinkReductionValue) * Count(StockLocation, @'ClassEmpire/ClassResearch,TechnologyLinkEmpireDevelopmentJuggernaut2To3')))</CustomCost>
+	<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCHisshos</DownloadableContentPrerequisite>
+	<PathPrerequisite Flags="Prerequisite,Disable,JuggernautsNotDiscovered">../JuggernautsCanBeResearched</PathPrerequisite>
+	<PathPrerequisite Flags="DiplomaticTradable,IgnoreOnCommand">false</PathPrerequisite>
+	<SimulationDescriptorReference Name="TechnologyLinkToEmpireDevelopmentJuggernaut2" />
+	<SimulationDescriptorReference Name="TechnologyJuggernautCitadelSpecialization" />
+	<SimulationDescriptorReference Name="TechnologyJuggernautIncreasedLimit" />
+	<SimulationDescriptorReference Name="TechnologyCountEmpireDevelopmentJuggernautIncreaseStage3" />
+	<SimulationDescriptorReference Name="TechnologyCounter" />
+	<PopulationEvent Name="PopulationPoliticalEventIndustrialistTechnology" />
+	<HelperVariable Name="KnownEmpires" />
+	<HelperVariable Name="EnemyEmpires" />
+	<HelperVariable Name="JuggernautCount" />
+	<HelperFormula>2 * $(KnownEmpires) + 5 * $(EnemyEmpires) + 5 * $(JuggernautCount)</HelperFormula>
+  </TechnologyDefinition>
+
+  <!-- Citadel Basic Upgrade -->
+  <TechnologyDefinition Name="TechnologyDefinitionEmpireDevelopmentJuggernaut3" TechnologyStage="TechnologyStageDefinitionEconomyAndTrade4" Category="CategoryTechnologyEconomyAndTrade" ScoreProvider="TechnologyUnlocked">
+	<CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage4Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostJuggernautMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEconomyAndTradeMultiplier)</CustomCost>
+	<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCHisshos</DownloadableContentPrerequisite>
+	<PathPrerequisite Flags="Prerequisite,Disable,JuggernautsNotDiscovered">../JuggernautsCanBeResearched</PathPrerequisite>
+	<PathPrerequisite Flags="DiplomaticTradable,IgnoreOnCommand">false</PathPrerequisite>
+	<TechnologyPrerequisite Flags="Prerequisite,Link,Disable">TechnologyLinkEmpireDevelopmentJuggernaut2To3</TechnologyPrerequisite>
 	<SimulationDescriptorReference Name="TechnologyLinkToEmpireDevelopmentJuggernaut3"/>
 	<SimulationDescriptorReference Name="TechnologyJuggernautCitadelSpaceBattle"/>
 	<SimulationDescriptorReference Name="TechnologyJuggernautObliteratorShield"/>
@@ -1167,6 +1231,43 @@
 	<HelperVariable Name="EnemyEmpires"/>
 	<HelperFormula>5 * $(KnownEmpires) + 10 * $(EnemyEmpires)</HelperFormula>
   </TechnologyDefinition>
+  
+  <!-- Citadel Advanced Upgrade -->
+  <TechnologyDefinition Name="TechnologyDefinitionEmpireDevelopmentJuggernaut4" TechnologyStage="TechnologyStageDefinitionEconomyAndTrade5" Category="CategoryTechnologyEconomyAndTrade" ScoreProvider="TechnologyUnlocked">
+	<CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage5Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostJuggernautMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEconomyAndTradeMultiplier)</CustomCost>
+	<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCHisshos</DownloadableContentPrerequisite>
+	<PathPrerequisite Flags="Prerequisite,Disable,JuggernautsNotDiscovered">../JuggernautsCanBeResearched</PathPrerequisite>
+	<PathPrerequisite Flags="DiplomaticTradable,IgnoreOnCommand">false</PathPrerequisite>
+	<TechnologyPrerequisite Flags="Prerequisite,Link,Disable">TechnologyLinkDefinitionDependencyEmpireDevelopmentJuggernaut3To4</TechnologyPrerequisite>
+	<SimulationDescriptorReference Name="TechnologyJuggernautCitadelMilitaryImprovements" />
+	<SimulationDescriptorReference Name="TechnologyCountEmpireDevelopmentJuggernautIncreaseStage5" />
+	<SimulationDescriptorReference Name="TechnologyCounter" />
+	<PopulationEvent Name="PopulationPoliticalEventMilitaristTechnology" />
+	<HelperVariable Name="KnownEmpires" />
+	<HelperVariable Name="EnemyEmpires" />
+	<HelperVariable Name="CitadelCount" />
+	<HelperFormula>1 * $(KnownEmpires) + 2 * $(EnemyEmpires) + 5 * $(CitadelCount)</HelperFormula>
+  </TechnologyDefinition>
+  
+  <!-- Citadel Extensions -->
+  <TechnologyDefinition Name="TechnologyDefinitionEmpireDevelopmentJuggernaut5" TechnologyStage="TechnologyStageDefinitionEconomyAndTrade5" Category="CategoryTechnologyEconomyAndTrade" ScoreProvider="TechnologyUnlocked">
+	<CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage5Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostJuggernautMultiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEconomyAndTradeMultiplier)</CustomCost>
+	<DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCHisshos</DownloadableContentPrerequisite>
+	<PathPrerequisite Flags="Prerequisite,Disable,JuggernautsNotDiscovered">../JuggernautsCanBeResearched</PathPrerequisite>
+	<PathPrerequisite Flags="DiplomaticTradable,IgnoreOnCommand">false</PathPrerequisite>
+	<TechnologyPrerequisite Flags="Prerequisite,Link,Disable">TechnologyLinkDefinitionDependencyEmpireDevelopmentJuggernaut3To5</TechnologyPrerequisite>
+	<SimulationDescriptorReference Name="TechnologyJuggernautCitadelSupportImprovements"/>
+	<SimulationDescriptorReference Name="TechnologyCountEmpireDevelopmentJuggernautIncreaseStage5"/>
+	<SimulationDescriptorReference Name="TechnologyCounter"/>
+	<PopulationEvent Name="PopulationPoliticalEventIndustrialistTechnology"/>
+
+	<HelperVariable Name="IndustryVariable"/>
+	<HelperVariable Name="FoodVariable"/>
+	<HelperVariable Name="DustVariable"/>
+	<HelperVariable Name="CitadelCount"/>
+	<HelperFormula>$(IndustryVariable) - 0.5 * $(FoodVariable) - 0.5 * $(DustVariable) + 5 * $(CitadelCount)</HelperFormula>
+  </TechnologyDefinition>
+  
   <!-- Dust Micro Loan -->
   <TechnologyDefinition Name="TechnologyDefinitionEconomyAndTrade27" TechnologyStage="TechnologyStageDefinitionEconomyAndTrade5" Category="CategoryTechnologyEconomyAndTrade" SubCategoryInQuests="TechnoMilitary" ScoreProvider="TechnologyUnlocked">
 	<CustomCost ResourceName="EmpireResearch">Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCurrentCost) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostStage5Multiplier) * Property(StockLocation,@'ClassEmpire/ClassResearch', TechnologyCostQuadrantEconomyAndTradeMultiplier)</CustomCost>
