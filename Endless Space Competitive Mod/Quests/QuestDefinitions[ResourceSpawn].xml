@@ -11,7 +11,7 @@
     -->
 
     <!-- ##### GALAXY GEN QUEST Spawn strategic resources in a way that is evenly distributed among constellations  #####-->
-    <QuestDefinition Name="StrategicResourceGenerationQuest" Category="GalaxyGeneration" SubCategory="ResourceNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="true" MinimumTurn="0">
+    <QuestDefinition Name="StrategicResourceGenerationQuest" Category="GalaxyGeneration" SubCategory="ResourceNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="false" MinimumTurn="0">
       <!--============ TAGS ============-->
       <Tags>StrategicResourceGenerationQuest</Tags>
       <!--============ CONTEXT ============-->
@@ -135,24 +135,24 @@
           </Count>
         </Var>
         <InterpretedVar VarName="$ExpectedSystems">
-          <Expression>Floor($(SystemCount)/$(ConstellationCount))</Expression>
+          <Expression>Floor($(SystemCount)/Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
 
         <!-- Calculate relative performance to find the rump constellation -->
         <InterpretedVar VarName="$Constellation0_RumpBoolean">
-          <Expression>1-Round(($(Constellation0_SystemCount)/$(ExpectedSystems)))</Expression>
+          <Expression>1-Round(($(Constellation0_SystemCount)/Max(1,$(ExpectedSystems))))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$Constellation1_RumpBoolean">
-          <Expression>1-Round(($(Constellation1_SystemCount)/$(ExpectedSystems)))</Expression>
+          <Expression>1-Round(($(Constellation1_SystemCount)/Max(1,$(ExpectedSystems))))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$Constellation2_RumpBoolean">
-          <Expression>1-Round(($(Constellation2_SystemCount)/$(ExpectedSystems)))</Expression>
+          <Expression>1-Round(($(Constellation2_SystemCount)/Max(1,$(ExpectedSystems))))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$Constellation3_RumpBoolean">
-          <Expression>1-Round(($(Constellation3_SystemCount)/$(ExpectedSystems)))</Expression>
+          <Expression>1-Round(($(Constellation3_SystemCount)/Max(1,$(ExpectedSystems))))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$Constellation4_RumpBoolean">
-          <Expression>1-Round(($(Constellation4_SystemCount)/$(ExpectedSystems)))</Expression>
+          <Expression>1-Round(($(Constellation4_SystemCount)/Max(1,$(ExpectedSystems))))</Expression>
         </InterpretedVar>
 
         <!-- Calculate number of deposits to spawn for each resource -->
@@ -160,49 +160,49 @@
           <Expression>Property(Context, @../ClassEmpire, GalaxySize, true)</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C0StrategicT1Count">
-          <Expression>Ceil((5 - (2.5 * $(Constellation0_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((5 - (2.5 * $(Constellation0_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C0StrategicT2Count">
-          <Expression>Ceil((4 - (2 * $(Constellation0_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((4 - (2 * $(Constellation0_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C0StrategicT3Count">
-          <Expression>Ceil((3.5 - (1.75 * $(Constellation0_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation0_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C1StrategicT1Count">
-          <Expression>Ceil((5 - (2.5 * $(Constellation1_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((5 - (2.5 * $(Constellation1_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C1StrategicT2Count">
-          <Expression>Ceil((4 - (2 * $(Constellation1_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((4 - (2 * $(Constellation1_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C1StrategicT3Count">
-          <Expression>Ceil((3.5 - (1.75 * $(Constellation1_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation1_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C2StrategicT1Count">
-          <Expression>Ceil((5 - (2.5 * $(Constellation2_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((5 - (2.5 * $(Constellation2_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C2StrategicT2Count">
-          <Expression>Ceil((4 - (2 * $(Constellation2_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((4 - (2 * $(Constellation2_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C2StrategicT3Count">
-          <Expression>Ceil((3.5 - (1.75 * $(Constellation2_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation2_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C3StrategicT1Count">
-          <Expression>Ceil((5 - (2.5 * $(Constellation3_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((5 - (2.5 * $(Constellation3_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C3StrategicT2Count">
-          <Expression>Ceil((4 - (2 * $(Constellation3_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((4 - (2 * $(Constellation3_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C3StrategicT3Count">
-          <Expression>Ceil((3.5 - (1.75 * $(Constellation3_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation3_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C4StrategicT1Count">
-          <Expression>Ceil((5 - (2.5 * $(Constellation4_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((5 - (2.5 * $(Constellation4_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C4StrategicT2Count">
-          <Expression>Ceil((4 - (2 * $(Constellation4_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((4 - (2 * $(Constellation4_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
         <InterpretedVar VarName="$C4StrategicT3Count">
-          <Expression>Ceil((3.5 - (1.75 * $(Constellation4_RumpBoolean))) * $(GalaxySize) / $(ConstellationCount))</Expression>
+          <Expression>Ceil((3.5 - (1.75 * $(Constellation4_RumpBoolean))) * $(GalaxySize) / Max(1,$(ConstellationCount)))</Expression>
         </InterpretedVar>
 
         <!-- Separate planets by constellation and type (we sample twice from each section to get 2 separate randomized sets so that different resources of the same tier spawn independently) -->
@@ -701,7 +701,7 @@
 
 
   <!-- ##### GALAXY GEN QUEST Spawn strategic resources in a way that is evenly distributed among constellations  #####-->
-  <QuestDefinition Name="LuxuryResourceGenerationQuest" Category="GalaxyGeneration" SubCategory="ResourceNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="true" MinimumTurn="0">
+  <QuestDefinition Name="LuxuryResourceGenerationQuest" Category="GalaxyGeneration" SubCategory="ResourceNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="false" MinimumTurn="0">
     <!--============ TAGS ============-->
     <Tags>LuxuryResourceGenerationQuest</Tags>
     <!--============ CONTEXT ============-->
@@ -825,24 +825,24 @@
         </Count>
       </Var>
       <InterpretedVar VarName="$ExpectedSystems">
-        <Expression>Floor($(SystemCount)/$(ConstellationCount))</Expression>
+        <Expression>Floor($(SystemCount)/Max(1,$(ConstellationCount)))</Expression>
       </InterpretedVar>
 
       <!-- Calculate relative performance to find the rump constellation -->
       <InterpretedVar VarName="$Constellation0_RumpBoolean">
-        <Expression>1-Round(($(Constellation0_SystemCount)/$(ExpectedSystems)))</Expression>
+        <Expression>1-Round(($(Constellation0_SystemCount)/Max(1,$(ExpectedSystems))))</Expression>
       </InterpretedVar>
       <InterpretedVar VarName="$Constellation1_RumpBoolean">
-        <Expression>1-Round(($(Constellation1_SystemCount)/$(ExpectedSystems)))</Expression>
+        <Expression>1-Round(($(Constellation1_SystemCount)/Max(1,$(ExpectedSystems))))</Expression>
       </InterpretedVar>
       <InterpretedVar VarName="$Constellation2_RumpBoolean">
-        <Expression>1-Round(($(Constellation2_SystemCount)/$(ExpectedSystems)))</Expression>
+        <Expression>1-Round(($(Constellation2_SystemCount)/Max(1,$(ExpectedSystems))))</Expression>
       </InterpretedVar>
       <InterpretedVar VarName="$Constellation3_RumpBoolean">
-        <Expression>1-Round(($(Constellation3_SystemCount)/$(ExpectedSystems)))</Expression>
+        <Expression>1-Round(($(Constellation3_SystemCount)/Max(1,$(ExpectedSystems))))</Expression>
       </InterpretedVar>
       <InterpretedVar VarName="$Constellation4_RumpBoolean">
-        <Expression>1-Round(($(Constellation4_SystemCount)/$(ExpectedSystems)))</Expression>
+        <Expression>1-Round(($(Constellation4_SystemCount)/Max(1,$(ExpectedSystems))))</Expression>
       </InterpretedVar>
 
       <!-- Calculate number of deposits to spawn for each resource -->
