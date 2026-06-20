@@ -1,5 +1,624 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Datatable xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="../Schemas/QuestDefinition.xsd">
+
+  <!-- Incoming! (Prerequisites) (missing CF)-->
+  <!-- Check the diplomatic relationship with pirates is Neutral or Aggressive -->
+  <QuestDefinition Name="inxcoming" Category="Quest" SubCategory="Exploration" MinimumTurn="40" TriggeringProbability="0.2">
+
+    <!-- ============ TAGS ============ -->
+    <Tags>BeginTurn,Hidden</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                      NumberOfOccurrencesPerEmpire="1"
+                      NumberOfConcurrentInstances="0"/>
+
+    <!-- ========= VARIABLES ========== -->
+    <Vars>
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+
+      <!-- Get the pirates empire -->
+      <Var VarName="$Pirates">
+        <From Source="$PirateEmpire"/>
+      </Var>
+
+      <Var VarName="$Aggresive" StringValue="DiplomaticRelationStatePirateAggressive"/>
+      <Var VarName="$Neutral"   StringValue="DiplomaticRelationStatePirateNeutral"/>
+      <Var VarName="$Cordial"   StringValue="DiplomaticRelationStatePirateCordial"/>
+      <Var VarName="$Friend"    StringValue="DiplomaticRelationStatePirateBestFriend"/>
+      <Var VarName="$Peace"     StringValue="DiplomaticRelationStatePiratePeace"/>
+
+    </Vars>
+
+    <Prerequisites Target="$(Empire)">
+      <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCDarkMatter</DownloadableContentPrerequisite>
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">TutorialModeBeginner</PathPrerequisite>
+    </Prerequisites>
+
+    <Steps>
+
+      <Step Name="Step1">
+        <ObjectiveSet>
+          <Objective Name="Step1_Objective1">
+            <Sequence>
+
+              <Parallel CompletionPolicy="First">
+                <!--
+                <Sequence>
+                  <Decorator_PostEndTurn>
+                    <Condition_CheckDiplomaticRelation>
+                      <Input_Empire VarName="$CurrentEmpire"/>
+                      <Input_OtherEmpire VarName="$Pirates"/>
+                      <Input_DiplomaticRelationState VarName="$Peace"/>
+                    </Condition_CheckDiplomaticRelation>
+                  </Decorator_PostEndTurn>
+                  <Action_Fail/>
+                </Sequence>
+
+                <Sequence>
+                  <Decorator_PostEndTurn>
+                    <Condition_CheckDiplomaticRelation>
+                      <Input_Empire VarName="$CurrentEmpire"/>
+                      <Input_OtherEmpire VarName="$Pirates"/>
+                      <Input_DiplomaticRelationState VarName="$Friend"/>
+                    </Condition_CheckDiplomaticRelation>
+                  </Decorator_PostEndTurn>
+                  <Action_Fail/>
+                </Sequence>
+
+                <Sequence>
+                  <Decorator_PostEndTurn>
+                    <Condition_CheckDiplomaticRelation>
+                      <Input_Empire VarName="$CurrentEmpire"/>
+                      <Input_OtherEmpire VarName="$Pirates"/>
+                      <Input_DiplomaticRelationState VarName="$Cordial"/>
+                    </Condition_CheckDiplomaticRelation>
+                  </Decorator_PostEndTurn>
+                  <Action_Fail/>
+                </Sequence>
+                -->
+
+                <Sequence>
+                  <Decorator_PostEndTurn>
+                    <Condition_CheckDiplomaticRelation>
+                      <Input_Empire VarName="$CurrentEmpire"/>
+                      <Input_OtherEmpire VarName="$Pirates"/>
+                      <Input_DiplomaticRelationState VarName="$Aggresive"/>
+                    </Condition_CheckDiplomaticRelation>
+                  </Decorator_PostEndTurn>
+                </Sequence>
+
+                <Sequence>
+                  <Decorator_PostEndTurn>
+                    <Condition_CheckDiplomaticRelation>
+                      <Input_Empire VarName="$CurrentEmpire"/>
+                      <Input_OtherEmpire VarName="$Pirates"/>
+                      <Input_DiplomaticRelationState VarName="$Neutral"/>
+                    </Condition_CheckDiplomaticRelation>
+                  </Decorator_PostEndTurn>
+                </Sequence>
+
+              </Parallel>
+
+            </Sequence>
+
+          </Objective>
+        </ObjectiveSet>
+      </Step>
+    </Steps>
+
+  </QuestDefinition>
+
+  <!-- Incoming! (missing CF) -->
+  <!-- Spawn one pirate's fleet in an owned system -->
+  <QuestDefinition Name="incoming" Category="Quest" SubCategory="Exploration" MinimumTurn="40" TriggeringProbability="0.2" CheckRandom="false">
+
+    <!-- ============ TAGS ============ -->
+    <Tags>BeginTurn</Tags>
+    <QuestContextSolo/>
+    <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                       NumberOfOccurrencesPerEmpire="1"
+                       NumberOfConcurrentInstances="0"/>
+
+    <!-- ========= VARIABLES ========== -->
+    <Vars>
+
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+
+      <!-- Get the pirates empire -->
+      <Var VarName="$Pirates">
+        <From Source="$PirateEmpire"/>
+      </Var>
+
+      <Var VarName="$HomeSystem">
+        <From Source="$CurrentEmpire.$StartingNode"/>
+      </Var>
+
+      <!-- Select all stat systems that are available as quest node -->
+      <!--
+      <Var VarName="$AllStarSystems">
+        <From Source="$Constellations.$StarSystems">
+          <Where>
+            <PathPrerequisite Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+          </Where>
+        </From>
+      </Var>
+      -->
+
+      <!-- Select the possible Traitor's Reach (or similar) rewarded system -->
+      <!--
+      <Var VarName="$QuestNodeSystem">
+        <First>
+          <From Source="$AllStarSystems">
+            <OrderBy>
+              <SortSystemByDistance OriginVarName="$HomeSystem" SortBy="Nearest" MinimumDistance="1" MinimumCandidateCount="1" ConsiderFreeMovement="true"/>
+            </OrderBy>
+          </From>
+        </First>
+      </Var>
+      -->
+
+      <!-- Select all empire's colonies except home system, quest node and outposts -->
+      <Var VarName="$AvailableColonies">
+        <From Source="$CurrentEmpire.$ColonizedStarSystems">
+          <Where>
+            <!--<IsNot EntityVarName="$QuestNodeSystem"/>-->
+            <PathPrerequisite Flags="Prerequisite">!HomeSystem,!QuestNode,!ColonizedStarSystemStateOutpost</PathPrerequisite>
+            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassColonizedStarSystem/ClassHero,HeroClassAdmiral</PathPrerequisite>
+          </Where>
+        </From>
+      </Var>
+
+      <!-- Select one random colony -->
+      <Var VarName="$SomeColony">
+        <Any>
+          <From Source="$AvailableColonies"/>
+        </Any>
+      </Var>
+
+      <Var VarName="$ColoniesCount">
+        <Count>
+          <From Source="$AvailableColonies"/>
+        </Count>
+      </Var>
+
+      <Var VarName="$SomeColonyLocation">
+        <From Source="$SomeColony.$StarSystem"/>
+      </Var>
+
+      <InterpretedVar VarName="$GuardianHerosAssignedCount" Target="$(Empire)">
+        <Expression>Count(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero,HeroClassAdmiral')</Expression>
+      </InterpretedVar>
+
+      <DroplistVar VarName="$PiratesFleetToSpawn" Droplist="incoming_quest_pirates_fleet"/>
+
+      <Var VarName="$PiratesFleetGUID"/>
+      <Var VarName="$PiratesFleetCreated"/>
+      <Var VarName="$FleetMission" StringValue="GotoAndInvade"/>
+
+      <Var VarName="$Marker"/>
+      <Var VarName="$Hero"/>
+      <Var VarName="$Timer"/>
+
+      <Var VarName="$HeroClass" StringValue="HeroClassAdmiral"/>
+      <Var VarName="$Expression01" StringValue="ClassColonizedStarSystem/ClassHero,HeroClassAdmiral"/>
+
+      <Var VarName="$Duration" IntValue="5"/>
+
+      <Var VarName="$PiratesFleetName" StringValue="%incoming-PiratesFleetName"/>
+
+      <Var VarName="$Cordial" StringValue="DiplomaticRelationStatePirateCordial"/>
+      <Var VarName="$Friend" StringValue="DiplomaticRelationStatePirateBestFriend"/>
+      <Var VarName="$Peace" StringValue="DiplomaticRelationStatePiratePeace"/>
+
+      <LocalizationVar Source="$SomeColony" LocalizationKey="$YourSiegedSystemName"/>
+      <LocalizationVar Source="$ColoniesCount" LocalizationKey="$ColoniesCountLocale"/>
+
+    </Vars>
+
+    <!-- ======= PREREQUISITES ======== -->
+    <Prerequisites Target="$(Empire)">
+      <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCDarkMatter</DownloadableContentPrerequisite>
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">TutorialModeBeginner</PathPrerequisite>
+      <QuestStatePrerequisite Flags="Prerequisite" QuestDefinitionName="inxcoming" QuestState="Completed"/>
+    </Prerequisites>
+
+    <!-- =========== STEPS ============ -->
+    <Steps>
+
+      <Step Name="Step1">
+        <!--============ STEP 1 ============-->
+        <ObjectiveSet>
+
+          <StartActions>
+            <Action_StartTimer>
+              <Input_Duration VarName="$Duration"/>
+              <Output_Timer VarName="$Timer"/>
+            </Action_StartTimer>
+            <Action_AddQuestMarkers RevealsLocation="true">
+              <Input_Targets VarName="$SomeColony"/>
+              <Input_Empires VarName="$CurrentEmpire"/>
+              <Output_Markers VarName="$Marker"/>
+            </Action_AddQuestMarkers>
+          </StartActions>
+
+          <Objective Name="Step1_Objective1" StartValue="0" EndValue="$Duration">
+
+            <AIHint Category="Minimal" MinAutoResolutionTurn="50" MaxAutoResolutionTurn="70" AutoResolutionProbability="1" />
+
+            <Parallel CompletionPolicy="First">
+
+              <!-- Quest fails if relationship with pirates changes to CORDIAL -->
+              <Sequence>
+                <Decorator_DiplomaticRelationChanged Initiator="Empire">
+                  <Input_OtherEmpire VarName="$Pirates"/>
+                  <Input_DiplomaticRelationState VarName="$Cordial"/>
+                </Decorator_DiplomaticRelationChanged>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker"/>
+                </Action_RemoveQuestMarkers>
+                <Action_DestroyFleets IgnoreFleetExistence="true">
+                  <Input_FleetGUIDs VarName="$PiratesFleetGUID"/>
+                </Action_DestroyFleets>
+                <Action_Fail/>
+              </Sequence>
+
+              <!-- Quest fails if relationship with pirates changes to FRIEND -->
+              <Sequence>
+                <Decorator_DiplomaticRelationChanged Initiator="Empire">
+                  <Input_OtherEmpire VarName="$Pirates"/>
+                  <Input_DiplomaticRelationState VarName="$Friend"/>
+                </Decorator_DiplomaticRelationChanged>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker"/>
+                </Action_RemoveQuestMarkers>
+                <Action_DestroyFleets IgnoreFleetExistence="true">
+                  <Input_FleetGUIDs VarName="$PiratesFleetGUID"/>
+                </Action_DestroyFleets>
+                <Action_Fail/>
+              </Sequence>
+
+              <!-- Quest fails if relationship with pirates changes to PEACE -->
+              <Sequence>
+                <Decorator_DiplomaticRelationChanged Initiator="Empire">
+                  <Input_OtherEmpire VarName="$Pirates"/>
+                  <Input_DiplomaticRelationState VarName="$Peace"/>
+                </Decorator_DiplomaticRelationChanged>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker"/>
+                </Action_RemoveQuestMarkers>
+                <Action_DestroyFleets IgnoreFleetExistence="true">
+                  <Input_FleetGUIDs VarName="$PiratesFleetGUID"/>
+                </Action_DestroyFleets>
+                <Action_Fail/>
+              </Sequence>
+
+              <!-- Quest fails if system is decolonized -->
+              <Sequence>
+                <Decorator_SystemDecolonized Initiator="Empire">
+                  <Input_Systems VarName="$SomeColonyLocation"/>
+                </Decorator_SystemDecolonized>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker"/>
+                </Action_RemoveQuestMarkers>
+                <Action_DestroyFleets IgnoreFleetExistence="true">
+                  <Input_FleetGUIDs VarName="$PiratesFleetGUID"/>
+                </Action_DestroyFleets>
+                <Action_Fail/>
+              </Sequence>
+
+              <!-- Quest fails if player lose system -->
+              <Sequence>
+                <Decorator_InvadeSystem>
+                  <Input_System VarName="$SomeColonyLocation"/>
+                  <Input_GroundBattleOutcomeType>CaptureOrRaze</Input_GroundBattleOutcomeType>
+                </Decorator_InvadeSystem>
+                <Action_DestroyFleets IgnoreFleetExistence="true">
+                  <Input_FleetGUIDs VarName="$PiratesFleetGUID"/>
+                </Action_DestroyFleets>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker"/>
+                </Action_RemoveQuestMarkers>
+                <Action_Fail/>
+              </Sequence>
+
+              <!-- Quest fails if pirates wins the ground battle -->
+              <Sequence>
+                <Decorator_GroundBattleFinished>
+                  <Input_System VarName="$SomeColonyLocation"/>
+                  <Input_AttackerEmpire VarName="$Pirates"/>
+                  <Input_DefenderEmpire VarName="$CurrentEmpire"/>
+                  <Input_Result>AttackerVictory</Input_Result>
+                </Decorator_GroundBattleFinished>
+                <Action_DestroyFleets IgnoreFleetExistence="true">
+                  <Input_FleetGUIDs VarName="$PiratesFleetGUID"/>
+                </Action_DestroyFleets>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker"/>
+                </Action_RemoveQuestMarkers>
+                <Action_Fail/>
+              </Sequence>
+
+              <!-- Quest WINS if empire keep the system -->
+              <Sequence>
+                <Decorator_GroundBattleFinished>
+                  <Input_System VarName="$SomeColonyLocation"/>
+                  <Input_AttackerEmpire VarName="$Pirates"/>
+                  <Input_DefenderEmpire VarName="$CurrentEmpire"/>
+                  <Input_Result>DefenderVictory</Input_Result>
+                </Decorator_GroundBattleFinished>
+                <Action_DestroyFleets IgnoreFleetExistence="true">
+                  <Input_FleetGUIDs VarName="$PiratesFleetGUID"/>
+                </Action_DestroyFleets>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker"/>
+                </Action_RemoveQuestMarkers>
+              </Sequence>
+
+              <!-- Quest fails if the system is destoyed -->
+              <Sequence>
+                <Decorator_SystemDestroyed>
+                  <Input_Nodes VarName="$SomeColonyLocation"/>
+                </Decorator_SystemDestroyed>
+                <Action_DestroyFleets IgnoreFleetExistence="true">
+                  <Input_FleetGUIDs VarName="$PiratesFleetGUID"/>
+                </Action_DestroyFleets>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker"/>
+                </Action_RemoveQuestMarkers>
+                <Action_Fail/>
+              </Sequence>
+
+              <!-- Main mechanic -->
+              <Sequence>
+                <Loop>
+                  <Decorator_BeginTurn ProgressionIncrement="1"/>
+                  <Input_Count VarName="$Duration"/>
+                </Loop>
+
+                <!-- Now the pirates fleet is spawned and the player must defeat it -->
+
+                <Action_SpawnFleets LockShipsInTheFleet="true">
+                  <Input_Empire VarName="$Pirates"/>
+                  <Input_Locations VarName="$SomeColonyLocation"/>
+                  <Input_DroppableFleet VarName="$PiratesFleetToSpawn"/>
+                  <Input_FleetName VarName="$PiratesFleetName"/>
+                  <Output_FleetGUIDs VarName="$PiratesFleetGUID"/>
+                </Action_SpawnFleets>
+
+                <Action_CreateFleetMissions>
+                  <Input_MissionDefinitionName VarName="$FleetMission"/>
+                  <Input_FleetGUIDs VarName="$PiratesFleetGUID"/>
+                  <Input_Targets VarName="$SomeColonyLocation" />
+                </Action_CreateFleetMissions>
+
+                <!-- Quest wins if player defeat pirates -->
+                <Decorator_BattleEnded Status="Won">
+                  <Condition_BattleEnded_FleetDestroyed>
+                    <Input_FleetGUIDs VarName="$PiratesFleetGUID"/>
+                  </Condition_BattleEnded_FleetDestroyed>
+                </Decorator_BattleEnded>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker"/>
+                </Action_RemoveQuestMarkers>
+
+              </Sequence>
+
+              <!-- Quest wins if an Hero is assigned to system -->
+              <Sequence>
+                <Decorator_HeroAssigned>
+                  <Condition_CheckPath>
+                    <Input_SimulationObject VarName="$SomeColony"/>
+                    <Input_Path VarName="$Expression01"/>
+                  </Condition_CheckPath>
+                </Decorator_HeroAssigned>
+                <Action_RemoveQuestMarkers>
+                  <Input_Markers VarName="$Marker"/>
+                </Action_RemoveQuestMarkers>
+                <Action_DestroyFleets IgnoreFleetExistence="true">
+                  <Input_FleetGUIDs VarName="$PiratesFleetGUID"/>
+                </Action_DestroyFleets>
+              </Sequence>
+
+            </Parallel>
+
+          </Objective>
+        </ObjectiveSet>
+
+        <Reward Droplist="DroplistLuxuries" Picks="1"/>
+
+      </Step>
+    </Steps>
+
+  </QuestDefinition>
+
+  <!-- A Matter of Black and White (missing CF) -->
+  <QuestDefinition Name="black_or_white_politics"
+                   Category="Quest" SubCategory="Exploration"
+                   MinimumTurn="40"
+                   TriggeringProbability="0.2">
+
+    <!-- ============ TAGS ================= -->
+    <Tags>BeginTurn</Tags>
+
+    <QuestContextSolo/>
+
+    <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                      NumberOfOccurrencesPerEmpire="1"
+                      NumberOfConcurrentInstances="0"/>
+
+
+    <!-- ============ VARIABLES ============ -->
+    <Vars>
+
+      <Var VarName="$CurrentEmpire">
+        <From Source="$Empire"/>
+      </Var>
+
+      <Var VarName="$IndustrialistPolitic"  StringValue="Politics01"/>
+      <Var VarName="$EcologistPolitic"      StringValue="Politics04"/>
+      <Var VarName="$InfiniteLoop" IntValue="-1"/>
+      <Var VarName="$NumberOfLaws" IntValue="2"/>
+
+      <!-- Current number of Industrialist laws -->
+      <InterpretedVar VarName="$CurrentIndustrialistLaws" Target="$(Empire)">
+        <Expression>Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics01')</Expression>
+      </InterpretedVar>
+
+      <!-- Define the number of Industrialist laws needed -->
+      <InterpretedVar VarName="$IndustrialistLawsObjective" Target="$(Empire)">
+        <Expression>Min(3,(Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics01') + $(NumberOfLaws)))</Expression>
+      </InterpretedVar>
+
+      <!-- Current number of Industrialist laws -->
+      <InterpretedVar VarName="$CurrentEcologistLaws" Target="$(Empire)">
+        <Expression>Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics04')</Expression>
+      </InterpretedVar>
+
+      <!-- Define the number of Ecologist laws needed -->
+      <InterpretedVar VarName="$EcologistLawsObjective" Target="$(Empire)">
+        <Expression>Min(3,(Count(Context, @'ClassEmpire/ClassSenate/ClassLaw,LawPolitics04') + $(NumberOfLaws)))</Expression>
+      </InterpretedVar>
+
+      <LocalizationVar LocalizationKey="$EcologistLawsCountLocale"     Source="$EcologistLawsObjective"/>
+      <LocalizationVar LocalizationKey="$IndustrialistLawsCountLocale" Source="$IndustrialistLawsObjective"/>
+
+    </Vars>
+
+    <!--============ PREREQUISITES ============-->
+    <Prerequisites Target="$(Empire)">
+      <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCDarkMatter</DownloadableContentPrerequisite>
+      <PathPrerequisite Flags="Prerequisite" Inverted="true">TutorialModeBeginner</PathPrerequisite>
+    </Prerequisites>
+
+    <!--============ STEPS ============-->
+    <Steps>
+
+      <Step Name="Step1">
+
+        <!--============ STEP 0 - Choose ============-->
+        <Choice DefaultChoiceIndex="0">
+          <ChoiceItem ObjectiveSetIndex="0"/>
+          <ChoiceItem ObjectiveSetIndex="1"/>
+        </Choice>
+
+        <!-- STEP 1 -->
+        <ObjectiveSet>
+          <Objective Name="Step1_Objective1" StartValue="$CurrentIndustrialistLaws" EndValue="$IndustrialistLawsObjective">
+            <AIHint Category="Minimal" MinAutoResolutionTurn="50" MaxAutoResolutionTurn="70" AutoResolutionProbability="1" />
+            <Parallel CompletionPolicy="First">
+
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_IsProgressionComplete>
+                  </Condition_IsProgressionComplete>
+                </Decorator_BeginTurn>
+              </Sequence>
+
+              <Loop>
+
+                <Parallel CompletionPolicy="Any">
+
+                  <Sequence>
+                    <Decorator_LawActivated Initiator="Empire">
+                      <Input_Politics VarName="$IndustrialistPolitic"/>
+                    </Decorator_LawActivated>
+                    <Action_RefreshInterpretedVariable>
+                      <Output_InterpretedVar VarName="$CurrentIndustrialistLaws"/>
+                    </Action_RefreshInterpretedVariable>
+                    <Action_SetProgress IsIncrement="false" AsRatio="false">
+                      <Input_Value VarName="$CurrentIndustrialistLaws"/>
+                    </Action_SetProgress>
+                  </Sequence>
+
+                  <Sequence>
+                    <Decorator_LawAbrogated Initiator="Empire">
+                      <Input_Politics VarName="$IndustrialistPolitic"/>
+                    </Decorator_LawAbrogated>
+                    <Action_RefreshInterpretedVariable>
+                      <Output_InterpretedVar VarName="$CurrentIndustrialistLaws"/>
+                    </Action_RefreshInterpretedVariable>
+                    <Action_SetProgress IsIncrement="false" AsRatio="false">
+                      <Input_Value VarName="$CurrentIndustrialistLaws"/>
+                    </Action_SetProgress>
+                  </Sequence>
+
+                </Parallel>
+
+                <!--
+                <Decorator_PostEndTurn>
+                  <Condition_HasLaws>
+                    <Input_Empire VarName="$CurrentEmpire"/>
+                    <Input_Politics VarName="$IndustrialistPolitic"/>
+                    <Input_MinimumAmount VarName="$IndustrialistLawsObjective"/>
+                  </Condition_HasLaws>
+                </Decorator_PostEndTurn>
+                -->
+
+                <Input_Count VarName="$InfiniteLoop"/>
+              </Loop>
+            </Parallel>
+
+          </Objective>
+          <Reward PreviewLocalizationKey="%black_or_white_politics_Reward" Droplist="DroplistTechnologyEra3" EvaluationMethod="Dynamic" Picks="1"/>
+        </ObjectiveSet>
+
+        <ObjectiveSet>
+          <Objective Name="Step1_Objective2" StartValue="$CurrentEcologistLaws" EndValue="$EcologistLawsObjective">
+            <AIHint Category="Minimal" MinAutoResolutionTurn="50" MaxAutoResolutionTurn="70" AutoResolutionProbability="1" />
+            <Parallel CompletionPolicy="First">
+
+              <Sequence>
+                <Decorator_BeginTurn>
+                  <Condition_IsProgressionComplete>
+                  </Condition_IsProgressionComplete>
+                </Decorator_BeginTurn>
+              </Sequence>
+
+              <Loop>
+
+                <Parallel CompletionPolicy="Any">
+
+                  <Sequence>
+                    <Decorator_LawActivated Initiator="Empire">
+                      <Input_Politics VarName="$EcologistPolitic"/>
+                    </Decorator_LawActivated>
+                    <Action_RefreshInterpretedVariable>
+                      <Output_InterpretedVar VarName="$CurrentEcologistLaws"/>
+                    </Action_RefreshInterpretedVariable>
+                    <Action_SetProgress IsIncrement="false" AsRatio="false">
+                      <Input_Value VarName="$CurrentEcologistLaws"/>
+                    </Action_SetProgress>
+                  </Sequence>
+
+                  <Sequence>
+                    <Decorator_LawAbrogated Initiator="Empire">
+                      <Input_Politics VarName="$EcologistPolitic"/>
+                    </Decorator_LawAbrogated>
+                    <Action_RefreshInterpretedVariable>
+                      <Output_InterpretedVar VarName="$CurrentEcologistLaws"/>
+                    </Action_RefreshInterpretedVariable>
+                    <Action_SetProgress IsIncrement="false" AsRatio="false">
+                      <Input_Value VarName="$CurrentEcologistLaws"/>
+                    </Action_SetProgress>
+                  </Sequence>
+
+                </Parallel>
+
+                <Input_Count VarName="$InfiniteLoop"/>
+              </Loop>
+            </Parallel>
+          </Objective>
+          <Reward PreviewLocalizationKey="%black_or_white_politics_Reward" Droplist="DroplistTechnologyEra3" EvaluationMethod="Dynamic" Picks="1"/>
+        </ObjectiveSet>
+
+      </Step>
+    </Steps>
+  </QuestDefinition>
+
   <!-- A Galaxy Far Far Away -->
   <QuestDefinition Name="a_galaxy_far_far_away"
 					 Category="Quest" SubCategory="Exploration"
