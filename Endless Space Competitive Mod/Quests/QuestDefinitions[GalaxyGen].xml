@@ -79,45 +79,6 @@
         <Var VarName="$Constellation_5PlanetSurplus2Boolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 2"/>
         <Var VarName="$Constellation_5PlanetBalancedBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 0"/>
 
-        <!-- ===== INLINED from variants C0S1v0-v3 so the work runs on Turn 1 in this quest (no deferred child-quest hop) ===== -->
-        <!-- Inferior systems to upgrade (deficit cases) -->
-        <Var VarName="$SystemsToUpgrade">
-          <From Source="$Constellation0.$StarSystems">
-            <Where>
-                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
-            </Where>
-            <OrderBy>
-                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-            </OrderBy>
-          </From>
-        </Var>
-        <Var VarName="$SystemToUpgradeA"><Select Index="0"><From Source="$SystemsToUpgrade"/></Select></Var>
-        <Var VarName="$SystemToUpgradeB"><Select Index="1"><From Source="$SystemsToUpgrade"/></Select></Var>
-        <!-- Superior systems to downgrade (surplus cases) -->
-        <Var VarName="$SystemsToDowngrade">
-          <From Source="$Constellation0.$StarSystems">
-            <Where>
-                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
-            </Where>
-            <OrderBy>
-                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-            </OrderBy>
-          </From>
-        </Var>
-        <Var VarName="$SystemToDowngradeA"><Select Index="0"><From Source="$SystemsToDowngrade"/></Select></Var>
-        <Var VarName="$SystemToDowngradeB"><Select Index="1"><From Source="$SystemsToDowngrade"/></Select></Var>
-        <!-- Replacement node definitions -->
-        <Var VarName="$DefinitionName1" StringValue="Replacement5pNode1"/>
-        <Var VarName="$DefinitionName2" StringValue="Replacement5pNode2"/>
-        <Var VarName="$DefinitionName99" StringValue="Replacement4pNode1"/>
-        <Var VarName="$DefinitionName98" StringValue="Replacement4pNode2"/>
-
       </Vars>
       <!--============ PREREQUISITES ============-->
       <Prerequisites Target="$(Empires)" AnyTarget="true">
@@ -136,7 +97,7 @@
                           <Input_Expression VarName="$Constellation_5PlanetBalancedBoolean"/>
                         </Condition_CheckInterpreter>
                       </Decorator_HeroAssigned>
-                      <Action_ChooseOutcome Name="DoResource"/>
+                      <Action_ChooseOutcome Name="Outcome0"/>
                     </Sequence>
                     <Sequence>
                       <Decorator_HeroAssigned>
@@ -145,11 +106,7 @@
                           <Input_Expression VarName="$Constellation_5PlanetDeficitBoolean"/>
                         </Condition_CheckInterpreter>
                       </Decorator_HeroAssigned>
-                      <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName1"/>
-                        <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
-                      </Action_ApplyStarSystemDefinition>
-                      <Action_ChooseOutcome Name="DoResource"/>
+                      <Action_ChooseOutcome Name="Outcome1"/>
                     </Sequence>
                     <Sequence>
                       <Decorator_HeroAssigned>
@@ -158,11 +115,7 @@
                           <Input_Expression VarName="$Constellation_5PlanetSurplusBoolean"/>
                         </Condition_CheckInterpreter>
                       </Decorator_HeroAssigned>
-                      <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName99"/>
-                        <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
-                      </Action_ApplyStarSystemDefinition>
-                      <Action_ChooseOutcome Name="DoResource"/>
+                      <Action_ChooseOutcome Name="Outcome2"/>
                     </Sequence>
                     <Sequence>
                       <Decorator_HeroAssigned>
@@ -171,15 +124,7 @@
                           <Input_Expression VarName="$Constellation_5PlanetDeficit2Boolean"/>
                         </Condition_CheckInterpreter>
                       </Decorator_HeroAssigned>
-                      <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName1"/>
-                        <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
-                      </Action_ApplyStarSystemDefinition>
-                      <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName2"/>
-                        <Input_StarSystemNode VarName="$SystemToUpgradeB"/>
-                      </Action_ApplyStarSystemDefinition>
-                      <Action_ChooseOutcome Name="DoResource"/>
+                      <Action_ChooseOutcome Name="Outcome3"/>
                     </Sequence>
                     <Sequence>
                       <Decorator_HeroAssigned>
@@ -188,21 +133,45 @@
                           <Input_Expression VarName="$Constellation_5PlanetSurplus2Boolean"/>
                         </Condition_CheckInterpreter>
                       </Decorator_HeroAssigned>
-                      <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName99"/>
-                        <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
-                      </Action_ApplyStarSystemDefinition>
-                      <Action_ApplyStarSystemDefinition>
-                        <Input_DefinitionName VarName="$DefinitionName98"/>
-                        <Input_StarSystemNode VarName="$SystemToDowngradeB"/>
-                      </Action_ApplyStarSystemDefinition>
-                      <Action_ChooseOutcome Name="DoResource"/>
+                      <Action_ChooseOutcome Name="Outcome4"/>
                     </Sequence>
                   </Parallel>
-                  <Outcome Name="DoResource">
+                  <Outcome Name="Outcome0">
                     <Triggers Weight="1">
                       <QuestTrigger>
                         <Tags>StrategicResourceGenerationQuest</Tags>
+                        <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                      </QuestTrigger>
+                    </Triggers>
+                  </Outcome>
+                  <Outcome Name="Outcome1">
+                    <Triggers Weight="1">
+                      <QuestTrigger>
+                        <Tags>GalaxyGenerationQuest_Planets-C0S1v0</Tags>
+                        <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                      </QuestTrigger>
+                    </Triggers>
+                  </Outcome>
+                  <Outcome Name="Outcome2">
+                    <Triggers Weight="1">
+                      <QuestTrigger>
+                        <Tags>GalaxyGenerationQuest_Planets-C0S1v1</Tags>
+                        <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                      </QuestTrigger>
+                    </Triggers>
+                  </Outcome>
+                  <Outcome Name="Outcome3">
+                    <Triggers Weight="1">
+                      <QuestTrigger>
+                        <Tags>GalaxyGenerationQuest_Planets-C0S1v2</Tags>
+                        <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                      </QuestTrigger>
+                    </Triggers>
+                  </Outcome>
+                  <Outcome Name="Outcome4">
+                    <Triggers Weight="1">
+                      <QuestTrigger>
+                        <Tags>GalaxyGenerationQuest_Planets-C0S1v3</Tags>
                         <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
                       </QuestTrigger>
                     </Triggers>
@@ -216,7 +185,7 @@
   <!-- ##### GALAXY GEN QUEST Constellation 0 Step 1 Version 0: Rectify Deficit #####-->
   <QuestDefinition Name="GalaxyGenerationQuest_Planets-C0S1v0" Category="GalaxyGeneration" SubCategory="SystemNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="false" MinimumTurn="0">
     <!--============ TAGS ============-->
-    <Tags>Hidden, GalaxyGenerationQuest_Planets-C0S1v0</Tags>
+    <Tags>Hidden, BeginTurn, GalaxyGenerationQuest_Planets-C0S1v0</Tags>
     <!--============ CONTEXT ============-->
     <QuestContextSolo/>
     <!--============ OCCURRENCE RULES ============-->
@@ -274,17 +243,19 @@
 
       <!-- Create interpreter tests for determining required adjustments -->
       <Var VarName="$Constellation_5PlanetDeficitB" StringValue="$(Constellation_5PlanetDeficit_Count) ge 2"/>
+      <!-- Self-trigger gate: this variant (deficit, +1) only acts when its case matches -->
+      <Var VarName="$Constellation_5PlanetDeficitBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 1"/>
 
-      <!--Choose inferior systems to replace-->  
+      <!--Choose inferior systems to replace-->
       <Var VarName="$SystemsToUpgrade">
         <From Source="$Constellation0.$StarSystems">
             <Where>
                 <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
                 <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
                 <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>            
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
             </Where>
-            <OrderBy>                        
+            <OrderBy>
                 <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
             </OrderBy>
         </From>
@@ -305,18 +276,27 @@
       <Var VarName="$DefinitionName2"  StringValue="Replacement5pNode2"/>
 
     </Vars>
-    
+    <!--============ PREREQUISITES (self-trigger: only run when BalancedStarts is on) ============-->
+    <Prerequisites Target="$(Empires)" AnyTarget="true">
+        <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
+    </Prerequisites>
     <!--============ STEPS ============-->
-    <Steps>   
+    <Steps>
         <Step Name="Step1">
             <ObjectiveSet>
               <Objective Name="Objective_Fake">
                 <Sequence>
+                  <Decorator_HeroAssigned>
+                    <Condition_CheckInterpreter>
+                      <Input_Context VarName="$ChosenEmpire"/>
+                      <Input_Expression VarName="$Constellation_5PlanetDeficitBoolean"/>
+                    </Condition_CheckInterpreter>
+                  </Decorator_HeroAssigned>
                   <Action_ApplyStarSystemDefinition>
                     <Input_DefinitionName VarName="$DefinitionName1"/>
                     <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
                   </Action_ApplyStarSystemDefinition>
-                  <Action_ChooseOutcome Name="Outcome0"/> 
+                  <Action_ChooseOutcome Name="Outcome0"/>
                 </Sequence>
                 <Outcome Name="Outcome0">
                   <Triggers Weight="1">
@@ -335,7 +315,7 @@
   <!-- ##### GALAXY GEN QUEST Constellation 0 Step 1 Version 1: Rectify Surplus #####-->
   <QuestDefinition Name="GalaxyGenerationQuest_Planets-C0S1v1" Category="GalaxyGeneration" SubCategory="SystemNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="false" MinimumTurn="0">
     <!--============ TAGS ============-->
-    <Tags>Hidden, GalaxyGenerationQuest_Planets-C0S1v1</Tags>
+    <Tags>Hidden, BeginTurn, GalaxyGenerationQuest_Planets-C0S1v1</Tags>
     <!--============ CONTEXT ============-->
     <QuestContextSolo/>
     <!--============ OCCURRENCE RULES ============-->
@@ -393,17 +373,19 @@
 
       <!-- Create interpreter tests for determining required adjustments -->
       <Var VarName="$Constellation_5PlanetSurplusB" StringValue="$(Constellation_5PlanetSurplus_Count) ge 2"/>
-      
-      <!--Choose surplus systems to replace-->  
+      <!-- Self-trigger gate: this variant (surplus, +1) only acts when its case matches -->
+      <Var VarName="$Constellation_5PlanetSurplusBoolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 1"/>
+
+      <!--Choose surplus systems to replace-->
       <Var VarName="$SystemsToDowngrade">
         <From Source="$Constellation0.$StarSystems">
             <Where>
                 <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
                 <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
                 <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>            
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
             </Where>
-            <OrderBy>                        
+            <OrderBy>
                 <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
             </OrderBy>
         </From>
@@ -424,18 +406,27 @@
       <Var VarName="$DefinitionName98" StringValue="Replacement4pNode2"/>
 
     </Vars>
-    
+    <!--============ PREREQUISITES (self-trigger: only run when BalancedStarts is on) ============-->
+    <Prerequisites Target="$(Empires)" AnyTarget="true">
+        <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
+    </Prerequisites>
     <!--============ STEPS ============-->
-    <Steps>   
+    <Steps>
         <Step Name="Step1">
             <ObjectiveSet>
               <Objective Name="Objective_Fake">
                   <Sequence>
+                    <Decorator_HeroAssigned>
+                      <Condition_CheckInterpreter>
+                        <Input_Context VarName="$ChosenEmpire"/>
+                        <Input_Expression VarName="$Constellation_5PlanetSurplusBoolean"/>
+                      </Condition_CheckInterpreter>
+                    </Decorator_HeroAssigned>
                     <Action_ApplyStarSystemDefinition>
                       <Input_DefinitionName VarName="$DefinitionName99"/>
                       <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
-                    </Action_ApplyStarSystemDefinition> 
-                    <Action_ChooseOutcome Name="Outcome0"/> 
+                    </Action_ApplyStarSystemDefinition>
+                    <Action_ChooseOutcome Name="Outcome0"/>
                   </Sequence>
                   <Outcome Name="Outcome0">
                     <Triggers Weight="1">
@@ -454,7 +445,7 @@
   <!-- ##### GALAXY GEN QUEST Constellation 0 Step 1 Version 2: Rectify Large Deficit #####-->
   <QuestDefinition Name="GalaxyGenerationQuest_Planets-C0S1v2" Category="GalaxyGeneration" SubCategory="SystemNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="false" MinimumTurn="0">
     <!--============ TAGS ============-->
-    <Tags>Hidden, GalaxyGenerationQuest_Planets-C0S1v2</Tags>
+    <Tags>Hidden, BeginTurn, GalaxyGenerationQuest_Planets-C0S1v2</Tags>
     <!--============ CONTEXT ============-->
     <QuestContextSolo/>
     <!--============ OCCURRENCE RULES ============-->
@@ -512,17 +503,19 @@
 
       <!-- Create interpreter tests for determining required adjustments -->
       <Var VarName="$Constellation_5PlanetDeficitB" StringValue="$(Constellation_5PlanetDeficit_Count) ge 2"/>
+      <!-- Self-trigger gate: this variant (large deficit, +2) only acts when its case matches -->
+      <Var VarName="$Constellation_5PlanetDeficit2Boolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 2"/>
 
-      <!--Choose inferior systems to replace-->  
+      <!--Choose inferior systems to replace-->
       <Var VarName="$SystemsToUpgrade">
         <From Source="$Constellation0.$StarSystems">
             <Where>
                 <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
                 <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
                 <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>            
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
             </Where>
-            <OrderBy>                        
+            <OrderBy>
                 <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
             </OrderBy>
         </From>
@@ -543,13 +536,22 @@
       <Var VarName="$DefinitionName2"  StringValue="Replacement5pNode2"/>
 
     </Vars>
-    
+    <!--============ PREREQUISITES (self-trigger: only run when BalancedStarts is on) ============-->
+    <Prerequisites Target="$(Empires)" AnyTarget="true">
+        <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
+    </Prerequisites>
     <!--============ STEPS ============-->
-    <Steps>   
+    <Steps>
         <Step Name="Step1">
             <ObjectiveSet>
               <Objective Name="Objective_Fake">
                 <Sequence>
+                  <Decorator_HeroAssigned>
+                    <Condition_CheckInterpreter>
+                      <Input_Context VarName="$ChosenEmpire"/>
+                      <Input_Expression VarName="$Constellation_5PlanetDeficit2Boolean"/>
+                    </Condition_CheckInterpreter>
+                  </Decorator_HeroAssigned>
                   <Action_ApplyStarSystemDefinition>
                     <Input_DefinitionName VarName="$DefinitionName1"/>
                     <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
@@ -557,8 +559,8 @@
                   <Action_ApplyStarSystemDefinition>
                     <Input_DefinitionName VarName="$DefinitionName2"/>
                     <Input_StarSystemNode VarName="$SystemToUpgradeB"/>
-                  </Action_ApplyStarSystemDefinition> 
-                  <Action_ChooseOutcome Name="Outcome0"/> 
+                  </Action_ApplyStarSystemDefinition>
+                  <Action_ChooseOutcome Name="Outcome0"/>
                 </Sequence>
                 <Outcome Name="Outcome0">
                   <Triggers Weight="1">
@@ -577,7 +579,7 @@
   <!-- ##### GALAXY GEN QUEST Constellation 0 Step 1 Version 3: Rectify Large Surplus #####-->
   <QuestDefinition Name="GalaxyGenerationQuest_Planets-C0S1v3" Category="GalaxyGeneration" SubCategory="SystemNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="false" MinimumTurn="0">
     <!--============ TAGS ============-->
-    <Tags>Hidden, GalaxyGenerationQuest_Planets-C0S1v3</Tags>
+    <Tags>Hidden, BeginTurn, GalaxyGenerationQuest_Planets-C0S1v3</Tags>
     <!--============ CONTEXT ============-->
     <QuestContextSolo/>
     <!--============ OCCURRENCE RULES ============-->
@@ -635,17 +637,19 @@
 
       <!-- Create interpreter tests for determining required adjustments -->
       <Var VarName="$Constellation_5PlanetSurplusB" StringValue="$(Constellation_5PlanetSurplus_Count) ge 2"/>
-      
-      <!--Choose surplus systems to replace-->  
+      <!-- Self-trigger gate: this variant (large surplus, +2) only acts when its case matches -->
+      <Var VarName="$Constellation_5PlanetSurplus2Boolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 2"/>
+
+      <!--Choose surplus systems to replace-->
       <Var VarName="$SystemsToDowngrade">
         <From Source="$Constellation0.$StarSystems">
             <Where>
                 <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
                 <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
                 <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>            
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
             </Where>
-            <OrderBy>                        
+            <OrderBy>
                 <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
             </OrderBy>
         </From>
@@ -666,13 +670,22 @@
       <Var VarName="$DefinitionName98" StringValue="Replacement4pNode2"/>
 
     </Vars>
-    
+    <!--============ PREREQUISITES (self-trigger: only run when BalancedStarts is on) ============-->
+    <Prerequisites Target="$(Empires)" AnyTarget="true">
+        <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
+    </Prerequisites>
     <!--============ STEPS ============-->
-    <Steps>   
+    <Steps>
         <Step Name="Step1">
             <ObjectiveSet>
               <Objective Name="Objective_Fake">
                   <Sequence>
+                    <Decorator_HeroAssigned>
+                      <Condition_CheckInterpreter>
+                        <Input_Context VarName="$ChosenEmpire"/>
+                        <Input_Expression VarName="$Constellation_5PlanetSurplus2Boolean"/>
+                      </Condition_CheckInterpreter>
+                    </Decorator_HeroAssigned>
                     <Action_ApplyStarSystemDefinition>
                       <Input_DefinitionName VarName="$DefinitionName99"/>
                       <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
@@ -681,7 +694,7 @@
                       <Input_DefinitionName VarName="$DefinitionName98"/>
                       <Input_StarSystemNode VarName="$SystemToDowngradeB"/>
                     </Action_ApplyStarSystemDefinition>
-                    <Action_ChooseOutcome Name="Outcome0"/> 
+                    <Action_ChooseOutcome Name="Outcome0"/>
                   </Sequence>
                   <Outcome Name="Outcome0">
                     <Triggers Weight="1">
@@ -780,49 +793,13 @@
       <Var VarName="$Constellation_5PlanetSurplus2Boolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 2"/>
       <Var VarName="$Constellation_5PlanetBalancedBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 0"/>
 
-      <!-- ===== INLINED from variants C1S1v0-v3 so the work runs on Turn 1 in this quest (no deferred child-quest hop) ===== -->
-      <Var VarName="$SystemsToUpgrade">
-        <From Source="$TargetConstellation.$StarSystems">
-          <Where>
-              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-              <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
-          </Where>
-          <OrderBy>
-              <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-          </OrderBy>
-        </From>
-      </Var>
-      <Var VarName="$SystemToUpgradeA"><Select Index="0"><From Source="$SystemsToUpgrade"/></Select></Var>
-      <Var VarName="$SystemToUpgradeB"><Select Index="1"><From Source="$SystemsToUpgrade"/></Select></Var>
-      <Var VarName="$SystemsToDowngrade">
-        <From Source="$TargetConstellation.$StarSystems">
-          <Where>
-              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-              <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
-          </Where>
-          <OrderBy>
-              <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-          </OrderBy>
-        </From>
-      </Var>
-      <Var VarName="$SystemToDowngradeA"><Select Index="0"><From Source="$SystemsToDowngrade"/></Select></Var>
-      <Var VarName="$SystemToDowngradeB"><Select Index="1"><From Source="$SystemsToDowngrade"/></Select></Var>
-      <Var VarName="$DefinitionName1" StringValue="Replacement5pNode3"/>
-      <Var VarName="$DefinitionName2" StringValue="Replacement5pNode4"/>
-      <Var VarName="$DefinitionName99" StringValue="Replacement4pNode3"/>
-      <Var VarName="$DefinitionName98" StringValue="Replacement4pNode4"/>
-
     </Vars>
     <!--============ PREREQUISITES ============-->
     <Prerequisites Target="$(Empires)" AnyTarget="true">
         <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
     </Prerequisites>
     <!--============ STEPS ============-->
-    <Steps>
+    <Steps>   
         <Step Name="Step1">
             <ObjectiveSet>
               <Objective Name="Objective_Fake">
@@ -834,10 +811,7 @@
                         <Input_Expression VarName="$Constellation_5PlanetDeficitBoolean"/>
                       </Condition_CheckInterpreter>
                     </Decorator_HeroAssigned>
-                    <Action_ApplyStarSystemDefinition>
-                      <Input_DefinitionName VarName="$DefinitionName1"/>
-                      <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
-                    </Action_ApplyStarSystemDefinition>
+                    <Action_ChooseOutcome Name="Outcome1"/>
                   </Sequence>
                   <Sequence>
                     <Decorator_HeroAssigned>
@@ -846,10 +820,7 @@
                         <Input_Expression VarName="$Constellation_5PlanetSurplusBoolean"/>
                       </Condition_CheckInterpreter>
                     </Decorator_HeroAssigned>
-                    <Action_ApplyStarSystemDefinition>
-                      <Input_DefinitionName VarName="$DefinitionName99"/>
-                      <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
-                    </Action_ApplyStarSystemDefinition>
+                    <Action_ChooseOutcome Name="Outcome2"/>
                   </Sequence>
                   <Sequence>
                     <Decorator_HeroAssigned>
@@ -858,14 +829,7 @@
                         <Input_Expression VarName="$Constellation_5PlanetDeficit2Boolean"/>
                       </Condition_CheckInterpreter>
                     </Decorator_HeroAssigned>
-                    <Action_ApplyStarSystemDefinition>
-                      <Input_DefinitionName VarName="$DefinitionName1"/>
-                      <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
-                    </Action_ApplyStarSystemDefinition>
-                    <Action_ApplyStarSystemDefinition>
-                      <Input_DefinitionName VarName="$DefinitionName2"/>
-                      <Input_StarSystemNode VarName="$SystemToUpgradeB"/>
-                    </Action_ApplyStarSystemDefinition>
+                    <Action_ChooseOutcome Name="Outcome3"/>
                   </Sequence>
                   <Sequence>
                     <Decorator_HeroAssigned>
@@ -874,14 +838,7 @@
                         <Input_Expression VarName="$Constellation_5PlanetSurplus2Boolean"/>
                       </Condition_CheckInterpreter>
                     </Decorator_HeroAssigned>
-                    <Action_ApplyStarSystemDefinition>
-                      <Input_DefinitionName VarName="$DefinitionName99"/>
-                      <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
-                    </Action_ApplyStarSystemDefinition>
-                    <Action_ApplyStarSystemDefinition>
-                      <Input_DefinitionName VarName="$DefinitionName98"/>
-                      <Input_StarSystemNode VarName="$SystemToDowngradeB"/>
-                    </Action_ApplyStarSystemDefinition>
+                    <Action_ChooseOutcome Name="Outcome4"/>
                   </Sequence>
                   <Sequence>
                     <Decorator_HeroAssigned>
@@ -893,6 +850,38 @@
                     <Action_Fail/>
                   </Sequence>
                 </Parallel>
+                <Outcome Name="Outcome1">
+                  <Triggers Weight="1">
+                    <QuestTrigger>
+                      <Tags>GalaxyGenerationQuest_Planets-C1S1v0</Tags>
+                      <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                    </QuestTrigger>
+                  </Triggers>
+                </Outcome>
+                <Outcome Name="Outcome2">
+                  <Triggers Weight="1">
+                    <QuestTrigger>
+                      <Tags>GalaxyGenerationQuest_Planets-C1S1v1</Tags>
+                      <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                    </QuestTrigger>
+                  </Triggers>
+                </Outcome>
+                <Outcome Name="Outcome3">
+                  <Triggers Weight="1">
+                    <QuestTrigger>
+                      <Tags>GalaxyGenerationQuest_Planets-C1S1v2</Tags>
+                      <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                    </QuestTrigger>
+                  </Triggers>
+                </Outcome>
+                <Outcome Name="Outcome4">
+                  <Triggers Weight="1">
+                    <QuestTrigger>
+                      <Tags>GalaxyGenerationQuest_Planets-C1S1v3</Tags>
+                      <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                    </QuestTrigger>
+                  </Triggers>
+                </Outcome>
               </Objective>
             </ObjectiveSet>
         </Step>
@@ -1487,49 +1476,13 @@
     <Var VarName="$Constellation_5PlanetSurplus2Boolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 2"/>
     <Var VarName="$Constellation_5PlanetBalancedBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 0"/>
 
-    <!-- ===== INLINED from variants C2S1v0-v3 so the work runs on Turn 1 in this quest (no deferred child-quest hop) ===== -->
-    <Var VarName="$SystemsToUpgrade">
-      <From Source="$TargetConstellation.$StarSystems">
-        <Where>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
-        </Where>
-        <OrderBy>
-            <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-        </OrderBy>
-      </From>
-    </Var>
-    <Var VarName="$SystemToUpgradeA"><Select Index="0"><From Source="$SystemsToUpgrade"/></Select></Var>
-    <Var VarName="$SystemToUpgradeB"><Select Index="1"><From Source="$SystemsToUpgrade"/></Select></Var>
-    <Var VarName="$SystemsToDowngrade">
-      <From Source="$TargetConstellation.$StarSystems">
-        <Where>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
-        </Where>
-        <OrderBy>
-            <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-        </OrderBy>
-      </From>
-    </Var>
-    <Var VarName="$SystemToDowngradeA"><Select Index="0"><From Source="$SystemsToDowngrade"/></Select></Var>
-    <Var VarName="$SystemToDowngradeB"><Select Index="1"><From Source="$SystemsToDowngrade"/></Select></Var>
-    <Var VarName="$DefinitionName1" StringValue="Replacement5pNode5"/>
-    <Var VarName="$DefinitionName2" StringValue="Replacement5pNode6"/>
-    <Var VarName="$DefinitionName99" StringValue="Replacement4pNode5"/>
-    <Var VarName="$DefinitionName98" StringValue="Replacement4pNode6"/>
-
   </Vars>
   <!--============ PREREQUISITES ============-->
   <Prerequisites Target="$(Empires)" AnyTarget="true">
       <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
   </Prerequisites>
   <!--============ STEPS ============-->
-  <Steps>
+  <Steps>   
       <Step Name="Step1">
           <ObjectiveSet>
             <Objective Name="Objective_Fake">
@@ -1541,10 +1494,7 @@
                       <Input_Expression VarName="$Constellation_5PlanetDeficitBoolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName1"/>
-                    <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
-                  </Action_ApplyStarSystemDefinition>
+                  <Action_ChooseOutcome Name="Outcome1"/>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -1553,10 +1503,7 @@
                       <Input_Expression VarName="$Constellation_5PlanetSurplusBoolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName99"/>
-                    <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
-                  </Action_ApplyStarSystemDefinition>
+                  <Action_ChooseOutcome Name="Outcome2"/>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -1565,14 +1512,7 @@
                       <Input_Expression VarName="$Constellation_5PlanetDeficit2Boolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName1"/>
-                    <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
-                  </Action_ApplyStarSystemDefinition>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName2"/>
-                    <Input_StarSystemNode VarName="$SystemToUpgradeB"/>
-                  </Action_ApplyStarSystemDefinition>
+                  <Action_ChooseOutcome Name="Outcome3"/>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -1581,14 +1521,7 @@
                       <Input_Expression VarName="$Constellation_5PlanetSurplus2Boolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName99"/>
-                    <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
-                  </Action_ApplyStarSystemDefinition>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName98"/>
-                    <Input_StarSystemNode VarName="$SystemToDowngradeB"/>
-                  </Action_ApplyStarSystemDefinition>
+                  <Action_ChooseOutcome Name="Outcome4"/>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -1600,6 +1533,38 @@
                   <Action_Fail/>
                 </Sequence>
               </Parallel>
+              <Outcome Name="Outcome1">
+                <Triggers Weight="1">
+                  <QuestTrigger>
+                    <Tags>GalaxyGenerationQuest_Planets-C2S1v0</Tags>
+                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                  </QuestTrigger>
+                </Triggers>
+              </Outcome>
+              <Outcome Name="Outcome2">
+                <Triggers Weight="1">
+                  <QuestTrigger>
+                    <Tags>GalaxyGenerationQuest_Planets-C2S1v1</Tags>
+                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                  </QuestTrigger>
+                </Triggers>
+              </Outcome>
+              <Outcome Name="Outcome3">
+                <Triggers Weight="1">
+                  <QuestTrigger>
+                    <Tags>GalaxyGenerationQuest_Planets-C2S1v2</Tags>
+                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                  </QuestTrigger>
+                </Triggers>
+              </Outcome>
+              <Outcome Name="Outcome4">
+                <Triggers Weight="1">
+                  <QuestTrigger>
+                    <Tags>GalaxyGenerationQuest_Planets-C2S1v3</Tags>
+                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                  </QuestTrigger>
+                </Triggers>
+              </Outcome>
             </Objective>
           </ObjectiveSet>
       </Step>
@@ -2194,49 +2159,13 @@
     <Var VarName="$Constellation_5PlanetSurplus2Boolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 2"/>
     <Var VarName="$Constellation_5PlanetBalancedBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 0"/>
 
-    <!-- ===== INLINED from variants C3S1v0-v3 so the work runs on Turn 1 in this quest (no deferred child-quest hop) ===== -->
-    <Var VarName="$SystemsToUpgrade">
-      <From Source="$TargetConstellation.$StarSystems">
-        <Where>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
-        </Where>
-        <OrderBy>
-            <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-        </OrderBy>
-      </From>
-    </Var>
-    <Var VarName="$SystemToUpgradeA"><Select Index="0"><From Source="$SystemsToUpgrade"/></Select></Var>
-    <Var VarName="$SystemToUpgradeB"><Select Index="1"><From Source="$SystemsToUpgrade"/></Select></Var>
-    <Var VarName="$SystemsToDowngrade">
-      <From Source="$TargetConstellation.$StarSystems">
-        <Where>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
-        </Where>
-        <OrderBy>
-            <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-        </OrderBy>
-      </From>
-    </Var>
-    <Var VarName="$SystemToDowngradeA"><Select Index="0"><From Source="$SystemsToDowngrade"/></Select></Var>
-    <Var VarName="$SystemToDowngradeB"><Select Index="1"><From Source="$SystemsToDowngrade"/></Select></Var>
-    <Var VarName="$DefinitionName1" StringValue="Replacement5pNode7"/>
-    <Var VarName="$DefinitionName2" StringValue="Replacement5pNode8"/>
-    <Var VarName="$DefinitionName99" StringValue="Replacement4pNode7"/>
-    <Var VarName="$DefinitionName98" StringValue="Replacement4pNode8"/>
-
   </Vars>
   <!--============ PREREQUISITES ============-->
   <Prerequisites Target="$(Empires)" AnyTarget="true">
       <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
   </Prerequisites>
   <!--============ STEPS ============-->
-  <Steps>
+  <Steps>   
       <Step Name="Step1">
           <ObjectiveSet>
             <Objective Name="Objective_Fake">
@@ -2248,10 +2177,7 @@
                       <Input_Expression VarName="$Constellation_5PlanetDeficitBoolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName1"/>
-                    <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
-                  </Action_ApplyStarSystemDefinition>
+                  <Action_ChooseOutcome Name="Outcome1"/>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -2260,10 +2186,7 @@
                       <Input_Expression VarName="$Constellation_5PlanetSurplusBoolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName99"/>
-                    <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
-                  </Action_ApplyStarSystemDefinition>
+                  <Action_ChooseOutcome Name="Outcome2"/>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -2272,14 +2195,7 @@
                       <Input_Expression VarName="$Constellation_5PlanetDeficit2Boolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName1"/>
-                    <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
-                  </Action_ApplyStarSystemDefinition>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName2"/>
-                    <Input_StarSystemNode VarName="$SystemToUpgradeB"/>
-                  </Action_ApplyStarSystemDefinition>
+                  <Action_ChooseOutcome Name="Outcome3"/>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -2288,14 +2204,7 @@
                       <Input_Expression VarName="$Constellation_5PlanetSurplus2Boolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName99"/>
-                    <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
-                  </Action_ApplyStarSystemDefinition>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName98"/>
-                    <Input_StarSystemNode VarName="$SystemToDowngradeB"/>
-                  </Action_ApplyStarSystemDefinition>
+                  <Action_ChooseOutcome Name="Outcome4"/>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -2307,6 +2216,38 @@
                   <Action_Fail/>
                 </Sequence>
               </Parallel>
+              <Outcome Name="Outcome1">
+                <Triggers Weight="1">
+                  <QuestTrigger>
+                    <Tags>GalaxyGenerationQuest_Planets-C3S1v0</Tags>
+                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                  </QuestTrigger>
+                </Triggers>
+              </Outcome>
+              <Outcome Name="Outcome2">
+                <Triggers Weight="1">
+                  <QuestTrigger>
+                    <Tags>GalaxyGenerationQuest_Planets-C3S1v1</Tags>
+                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                  </QuestTrigger>
+                </Triggers>
+              </Outcome>
+              <Outcome Name="Outcome3">
+                <Triggers Weight="1">
+                  <QuestTrigger>
+                    <Tags>GalaxyGenerationQuest_Planets-C3S1v2</Tags>
+                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                  </QuestTrigger>
+                </Triggers>
+              </Outcome>
+              <Outcome Name="Outcome4">
+                <Triggers Weight="1">
+                  <QuestTrigger>
+                    <Tags>GalaxyGenerationQuest_Planets-C3S1v3</Tags>
+                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                  </QuestTrigger>
+                </Triggers>
+              </Outcome>
             </Objective>
           </ObjectiveSet>
       </Step>
@@ -2902,49 +2843,13 @@
     <Var VarName="$Constellation_5PlanetSurplus2Boolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 2"/>
     <Var VarName="$Constellation_5PlanetBalancedBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 0"/>
 
-    <!-- ===== INLINED from variants C4S1v0-v3 so the work runs on Turn 1 in this quest (no deferred child-quest hop) ===== -->
-    <Var VarName="$SystemsToUpgrade">
-      <From Source="$TargetConstellation.$StarSystems">
-        <Where>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
-        </Where>
-        <OrderBy>
-            <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-        </OrderBy>
-      </From>
-    </Var>
-    <Var VarName="$SystemToUpgradeA"><Select Index="0"><From Source="$SystemsToUpgrade"/></Select></Var>
-    <Var VarName="$SystemToUpgradeB"><Select Index="1"><From Source="$SystemsToUpgrade"/></Select></Var>
-    <Var VarName="$SystemsToDowngrade">
-      <From Source="$TargetConstellation.$StarSystems">
-        <Where>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
-        </Where>
-        <OrderBy>
-            <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-        </OrderBy>
-      </From>
-    </Var>
-    <Var VarName="$SystemToDowngradeA"><Select Index="0"><From Source="$SystemsToDowngrade"/></Select></Var>
-    <Var VarName="$SystemToDowngradeB"><Select Index="1"><From Source="$SystemsToDowngrade"/></Select></Var>
-    <Var VarName="$DefinitionName1" StringValue="Replacement5pNode9"/>
-    <Var VarName="$DefinitionName2" StringValue="Replacement5pNode10"/>
-    <Var VarName="$DefinitionName99" StringValue="Replacement4pNode9"/>
-    <Var VarName="$DefinitionName98" StringValue="Replacement4pNode10"/>
-
   </Vars>
   <!--============ PREREQUISITES ============-->
   <Prerequisites Target="$(Empires)" AnyTarget="true">
       <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
   </Prerequisites>
   <!--============ STEPS ============-->
-  <Steps>
+  <Steps>   
       <Step Name="Step1">
           <ObjectiveSet>
             <Objective Name="Objective_Fake">
@@ -2956,10 +2861,7 @@
                       <Input_Expression VarName="$Constellation_5PlanetDeficitBoolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName1"/>
-                    <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
-                  </Action_ApplyStarSystemDefinition>
+                  <Action_ChooseOutcome Name="Outcome1"/>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -2968,10 +2870,7 @@
                       <Input_Expression VarName="$Constellation_5PlanetSurplusBoolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName99"/>
-                    <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
-                  </Action_ApplyStarSystemDefinition>
+                  <Action_ChooseOutcome Name="Outcome2"/>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -2980,14 +2879,7 @@
                       <Input_Expression VarName="$Constellation_5PlanetDeficit2Boolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName1"/>
-                    <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
-                  </Action_ApplyStarSystemDefinition>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName2"/>
-                    <Input_StarSystemNode VarName="$SystemToUpgradeB"/>
-                  </Action_ApplyStarSystemDefinition>
+                  <Action_ChooseOutcome Name="Outcome3"/>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -2996,14 +2888,7 @@
                       <Input_Expression VarName="$Constellation_5PlanetSurplus2Boolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName99"/>
-                    <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
-                  </Action_ApplyStarSystemDefinition>
-                  <Action_ApplyStarSystemDefinition>
-                    <Input_DefinitionName VarName="$DefinitionName98"/>
-                    <Input_StarSystemNode VarName="$SystemToDowngradeB"/>
-                  </Action_ApplyStarSystemDefinition>
+                  <Action_ChooseOutcome Name="Outcome4"/>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -3015,6 +2900,38 @@
                   <Action_Fail/>
                 </Sequence>
               </Parallel>
+              <Outcome Name="Outcome1">
+                <Triggers Weight="1">
+                  <QuestTrigger>
+                    <Tags>GalaxyGenerationQuest_Planets-C4S1v0</Tags>
+                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                  </QuestTrigger>
+                </Triggers>
+              </Outcome>
+              <Outcome Name="Outcome2">
+                <Triggers Weight="1">
+                  <QuestTrigger>
+                    <Tags>GalaxyGenerationQuest_Planets-C4S1v1</Tags>
+                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                  </QuestTrigger>
+                </Triggers>
+              </Outcome>
+              <Outcome Name="Outcome3">
+                <Triggers Weight="1">
+                  <QuestTrigger>
+                    <Tags>GalaxyGenerationQuest_Planets-C4S1v2</Tags>
+                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                  </QuestTrigger>
+                </Triggers>
+              </Outcome>
+              <Outcome Name="Outcome4">
+                <Triggers Weight="1">
+                  <QuestTrigger>
+                    <Tags>GalaxyGenerationQuest_Planets-C4S1v3</Tags>
+                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
+                  </QuestTrigger>
+                </Triggers>
+              </Outcome>
             </Objective>
           </ObjectiveSet>
       </Step>
