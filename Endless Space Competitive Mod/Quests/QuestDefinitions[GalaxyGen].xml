@@ -83,6 +83,47 @@
         <Var VarName="$Constellation_5PlanetSurplus2Boolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 2"/>
         <Var VarName="$Constellation_5PlanetBalancedBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 0"/>
 
+        <!-- ===== INLINED from variants C0S1v0-v3 so the work runs on Turn 1 in this root (no deferred child-quest hop) =====
+             Self-relax: a <From> that resolves to an empty list aborts the whole quest at CheckVariables. The upgrade
+             query (le 3) is empty in a pure-surplus constellation; the downgrade query (ge 5) is empty in a pure-deficit
+             constellation. In each case the empty direction's branch is gated out and its result is never used, so we OR
+             in a quest-var test that matches ALL systems when this direction is inactive ($(...) le 0). That keeps the
+             list non-empty (harmless garbage, discarded) while leaving the ACTIVE direction's selection unchanged. -->
+        <Var VarName="$SystemsToUpgrade">
+          <From Source="$Constellation0.$StarSystems">
+              <Where>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3 or $(Constellation_5PlanetDeficit_Count) le 0</InterpreterPrerequisite>
+              </Where>
+              <OrderBy>
+                  <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+              </OrderBy>
+          </From>
+        </Var>
+        <Var VarName="$SystemToUpgradeA"><Select Index="0"><From Source="$SystemsToUpgrade"/></Select></Var>
+        <Var VarName="$SystemToUpgradeB"><Select Index="1"><From Source="$SystemsToUpgrade"/></Select></Var>
+        <Var VarName="$SystemsToDowngrade">
+          <From Source="$Constellation0.$StarSystems">
+              <Where>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5 or $(Constellation_5PlanetSurplus_Count) le 0</InterpreterPrerequisite>
+              </Where>
+              <OrderBy>
+                  <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+              </OrderBy>
+          </From>
+        </Var>
+        <Var VarName="$SystemToDowngradeA"><Select Index="0"><From Source="$SystemsToDowngrade"/></Select></Var>
+        <Var VarName="$SystemToDowngradeB"><Select Index="1"><From Source="$SystemsToDowngrade"/></Select></Var>
+        <Var VarName="$DefinitionName1" StringValue="Replacement5pNode1"/>
+        <Var VarName="$DefinitionName2" StringValue="Replacement5pNode2"/>
+        <Var VarName="$DefinitionName99" StringValue="Replacement4pNode1"/>
+        <Var VarName="$DefinitionName98" StringValue="Replacement4pNode2"/>
+
       </Vars>
       <!--============ PREREQUISITES ============-->
       <Prerequisites Target="$(Empires)" AnyTarget="true">
@@ -101,7 +142,7 @@
                           <Input_Expression VarName="$Constellation_5PlanetBalancedBoolean"/>
                         </Condition_CheckInterpreter>
                       </Decorator_HeroAssigned>
-                      <Action_ChooseOutcome Name="Outcome0"/>
+                      <Action_ChooseOutcome Name="DoResource"/>
                     </Sequence>
                     <Sequence>
                       <Decorator_HeroAssigned>
@@ -110,7 +151,11 @@
                           <Input_Expression VarName="$Constellation_5PlanetDeficitBoolean"/>
                         </Condition_CheckInterpreter>
                       </Decorator_HeroAssigned>
-                      <Action_ChooseOutcome Name="Outcome1"/>
+                      <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName1"/>
+                        <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
+                      </Action_ApplyStarSystemDefinition>
+                      <Action_ChooseOutcome Name="DoResource"/>
                     </Sequence>
                     <Sequence>
                       <Decorator_HeroAssigned>
@@ -119,7 +164,11 @@
                           <Input_Expression VarName="$Constellation_5PlanetSurplusBoolean"/>
                         </Condition_CheckInterpreter>
                       </Decorator_HeroAssigned>
-                      <Action_ChooseOutcome Name="Outcome2"/>
+                      <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName99"/>
+                        <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
+                      </Action_ApplyStarSystemDefinition>
+                      <Action_ChooseOutcome Name="DoResource"/>
                     </Sequence>
                     <Sequence>
                       <Decorator_HeroAssigned>
@@ -128,7 +177,15 @@
                           <Input_Expression VarName="$Constellation_5PlanetDeficit2Boolean"/>
                         </Condition_CheckInterpreter>
                       </Decorator_HeroAssigned>
-                      <Action_ChooseOutcome Name="Outcome3"/>
+                      <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName1"/>
+                        <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
+                      </Action_ApplyStarSystemDefinition>
+                      <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName2"/>
+                        <Input_StarSystemNode VarName="$SystemToUpgradeB"/>
+                      </Action_ApplyStarSystemDefinition>
+                      <Action_ChooseOutcome Name="DoResource"/>
                     </Sequence>
                     <Sequence>
                       <Decorator_HeroAssigned>
@@ -137,45 +194,24 @@
                           <Input_Expression VarName="$Constellation_5PlanetSurplus2Boolean"/>
                         </Condition_CheckInterpreter>
                       </Decorator_HeroAssigned>
-                      <Action_ChooseOutcome Name="Outcome4"/>
+                      <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName99"/>
+                        <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
+                      </Action_ApplyStarSystemDefinition>
+                      <Action_ApplyStarSystemDefinition>
+                        <Input_DefinitionName VarName="$DefinitionName98"/>
+                        <Input_StarSystemNode VarName="$SystemToDowngradeB"/>
+                      </Action_ApplyStarSystemDefinition>
+                      <Action_ChooseOutcome Name="DoResource"/>
                     </Sequence>
                   </Parallel>
-                  <Outcome Name="Outcome0">
+                  <!-- All branches converge here: the planet work is now done inline above, so the only
+                       remaining trigger is the resource quest (kept one hop later, as in the Turn-2 design).
+                       The C0S1v0-v3 variant quests below are now dead code for C0 (never triggered). -->
+                  <Outcome Name="DoResource">
                     <Triggers Weight="1">
                       <QuestTrigger>
                         <Tags>StrategicResourceGenerationQuest</Tags>
-                        <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
-                      </QuestTrigger>
-                    </Triggers>
-                  </Outcome>
-                  <Outcome Name="Outcome1">
-                    <Triggers Weight="1">
-                      <QuestTrigger>
-                        <Tags>GalaxyGenerationQuest_Planets-C0S1v0</Tags>
-                        <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
-                      </QuestTrigger>
-                    </Triggers>
-                  </Outcome>
-                  <Outcome Name="Outcome2">
-                    <Triggers Weight="1">
-                      <QuestTrigger>
-                        <Tags>GalaxyGenerationQuest_Planets-C0S1v1</Tags>
-                        <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
-                      </QuestTrigger>
-                    </Triggers>
-                  </Outcome>
-                  <Outcome Name="Outcome3">
-                    <Triggers Weight="1">
-                      <QuestTrigger>
-                        <Tags>GalaxyGenerationQuest_Planets-C0S1v2</Tags>
-                        <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
-                      </QuestTrigger>
-                    </Triggers>
-                  </Outcome>
-                  <Outcome Name="Outcome4">
-                    <Triggers Weight="1">
-                      <QuestTrigger>
-                        <Tags>GalaxyGenerationQuest_Planets-C0S1v3</Tags>
                         <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
                       </QuestTrigger>
                     </Triggers>
