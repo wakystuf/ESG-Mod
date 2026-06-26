@@ -84,41 +84,72 @@
         <Var VarName="$Constellation_5PlanetBalancedBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 0"/>
 
         <!-- ===== INLINED from variants C0S1v0-v3 so the work runs on Turn 1 in this root (no deferred child-quest hop) =====
-             Self-relax: a <From> that resolves to an empty list aborts the whole quest at CheckVariables. The upgrade
-             query (le 3) is empty in a pure-surplus constellation; the downgrade query (ge 5) is empty in a pure-deficit
-             constellation. In each case the empty direction's branch is gated out and its result is never used, so we OR
-             in a quest-var test that matches ALL systems when this direction is inactive ($(...) le 0). That keeps the
-             list non-empty (harmless garbage, discarded) while leaving the ACTIVE direction's selection unchanged. -->
-        <Var VarName="$SystemsToUpgrade">
-          <From Source="$Constellation0.$StarSystems">
-              <Where>
-                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3 or $(Constellation_5PlanetDeficit_Count) le 0</InterpreterPrerequisite>
-              </Where>
-              <OrderBy>
-                  <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-              </OrderBy>
-          </From>
+             Empty-query safety: a <From> (list) var that resolves to an empty list aborts the whole quest at
+             CheckVariables ("query returned null or empty list ... variables failed"). The upgrade filter (le 3) is
+             empty in a pure-surplus constellation, the downgrade filter (ge 5) in a pure-deficit one. To avoid the
+             abort we DON'T build an intermediate list var; instead the <Where>/<OrderBy> are inlined directly into each
+             <Select>. A <Select>/<First> over an empty source yields a tolerated null (only list <From> vars abort),
+             and the null is harmless because the matching branch for that direction is gated out and never reads it. -->
+        <Var VarName="$SystemToUpgradeA">
+          <Select Index="0">
+            <From Source="$Constellation0.$StarSystems">
+                <Where>
+                    <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                    <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                    <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                    <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
+                </Where>
+                <OrderBy>
+                    <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+                </OrderBy>
+            </From>
+          </Select>
         </Var>
-        <Var VarName="$SystemToUpgradeA"><Select Index="0"><From Source="$SystemsToUpgrade"/></Select></Var>
-        <Var VarName="$SystemToUpgradeB"><Select Index="1"><From Source="$SystemsToUpgrade"/></Select></Var>
-        <Var VarName="$SystemsToDowngrade">
-          <From Source="$Constellation0.$StarSystems">
-              <Where>
-                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5 or $(Constellation_5PlanetSurplus_Count) le 0</InterpreterPrerequisite>
-              </Where>
-              <OrderBy>
-                  <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-              </OrderBy>
-          </From>
+        <Var VarName="$SystemToUpgradeB">
+          <Select Index="1">
+            <From Source="$Constellation0.$StarSystems">
+                <Where>
+                    <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                    <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                    <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                    <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
+                </Where>
+                <OrderBy>
+                    <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+                </OrderBy>
+            </From>
+          </Select>
         </Var>
-        <Var VarName="$SystemToDowngradeA"><Select Index="0"><From Source="$SystemsToDowngrade"/></Select></Var>
-        <Var VarName="$SystemToDowngradeB"><Select Index="1"><From Source="$SystemsToDowngrade"/></Select></Var>
+        <Var VarName="$SystemToDowngradeA">
+          <Select Index="0">
+            <From Source="$Constellation0.$StarSystems">
+                <Where>
+                    <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                    <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                    <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                    <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
+                </Where>
+                <OrderBy>
+                    <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+                </OrderBy>
+            </From>
+          </Select>
+        </Var>
+        <Var VarName="$SystemToDowngradeB">
+          <Select Index="1">
+            <From Source="$Constellation0.$StarSystems">
+                <Where>
+                    <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                    <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                    <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                    <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
+                </Where>
+                <OrderBy>
+                    <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+                </OrderBy>
+            </From>
+          </Select>
+        </Var>
         <Var VarName="$DefinitionName1" StringValue="Replacement5pNode1"/>
         <Var VarName="$DefinitionName2" StringValue="Replacement5pNode2"/>
         <Var VarName="$DefinitionName99" StringValue="Replacement4pNode1"/>
@@ -810,41 +841,71 @@
       <Var VarName="$Constellation_5PlanetBalancedBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 0"/>
 
       <!-- ===== INLINED from variants C1S1v0-v3 so the work runs on Turn 1 in this root (no deferred child-quest hop) =====
-           Self-relax: a <From> that resolves to an empty list aborts the whole quest at CheckVariables. The upgrade
-           query (le 3) is empty in a pure-surplus constellation; the downgrade query (ge 5) is empty in a pure-deficit
-           constellation. The empty direction's branch is gated out and its result is never used, so we OR in a quest-var
-           test that matches ALL systems when this direction is inactive ($(...) le 0), keeping the list non-empty
-           (harmless garbage, discarded) while leaving the ACTIVE direction's selection unchanged. -->
-      <Var VarName="$SystemsToUpgrade">
-        <From Source="$TargetConstellation.$StarSystems">
-            <Where>
-                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3 or $(Constellation_5PlanetDeficit_Count) le 0</InterpreterPrerequisite>
-            </Where>
-            <OrderBy>
-                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-            </OrderBy>
-        </From>
+           Empty-query safety: a <From> (list) var that resolves to an empty list aborts the whole quest at
+           CheckVariables. The upgrade filter (le 3) is empty in a pure-surplus constellation, the downgrade filter
+           (ge 5) in a pure-deficit one. To avoid the abort we DON'T build an intermediate list var; the <Where>/<OrderBy>
+           are inlined directly into each <Select>. A <Select>/<First> over an empty source yields a tolerated null
+           (only list <From> vars abort), and the null is harmless because that direction's branch is gated out. -->
+      <Var VarName="$SystemToUpgradeA">
+        <Select Index="0">
+          <From Source="$TargetConstellation.$StarSystems">
+              <Where>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
+              </Where>
+              <OrderBy>
+                  <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+              </OrderBy>
+          </From>
+        </Select>
       </Var>
-      <Var VarName="$SystemToUpgradeA"><Select Index="0"><From Source="$SystemsToUpgrade"/></Select></Var>
-      <Var VarName="$SystemToUpgradeB"><Select Index="1"><From Source="$SystemsToUpgrade"/></Select></Var>
-      <Var VarName="$SystemsToDowngrade">
-        <From Source="$TargetConstellation.$StarSystems">
-            <Where>
-                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5 or $(Constellation_5PlanetSurplus_Count) le 0</InterpreterPrerequisite>
-            </Where>
-            <OrderBy>
-                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-            </OrderBy>
-        </From>
+      <Var VarName="$SystemToUpgradeB">
+        <Select Index="1">
+          <From Source="$TargetConstellation.$StarSystems">
+              <Where>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
+              </Where>
+              <OrderBy>
+                  <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+              </OrderBy>
+          </From>
+        </Select>
       </Var>
-      <Var VarName="$SystemToDowngradeA"><Select Index="0"><From Source="$SystemsToDowngrade"/></Select></Var>
-      <Var VarName="$SystemToDowngradeB"><Select Index="1"><From Source="$SystemsToDowngrade"/></Select></Var>
+      <Var VarName="$SystemToDowngradeA">
+        <Select Index="0">
+          <From Source="$TargetConstellation.$StarSystems">
+              <Where>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
+              </Where>
+              <OrderBy>
+                  <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+              </OrderBy>
+          </From>
+        </Select>
+      </Var>
+      <Var VarName="$SystemToDowngradeB">
+        <Select Index="1">
+          <From Source="$TargetConstellation.$StarSystems">
+              <Where>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                  <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                  <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
+              </Where>
+              <OrderBy>
+                  <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+              </OrderBy>
+          </From>
+        </Select>
+      </Var>
       <Var VarName="$DefinitionName1" StringValue="Replacement5pNode3"/>
       <Var VarName="$DefinitionName2" StringValue="Replacement5pNode4"/>
       <Var VarName="$DefinitionName99" StringValue="Replacement4pNode3"/>
@@ -1542,41 +1603,71 @@
     <Var VarName="$Constellation_5PlanetBalancedBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 0"/>
 
     <!-- ===== INLINED from variants C2S1v0-v3 so the work runs on Turn 1 in this root (no deferred child-quest hop) =====
-         Self-relax: a <From> that resolves to an empty list aborts the whole quest at CheckVariables. The upgrade
-         query (le 3) is empty in a pure-surplus constellation; the downgrade query (ge 5) is empty in a pure-deficit
-         constellation. The empty direction's branch is gated out and its result is never used, so we OR in a quest-var
-         test that matches ALL systems when this direction is inactive ($(...) le 0), keeping the list non-empty
-         (harmless garbage, discarded) while leaving the ACTIVE direction's selection unchanged. -->
-    <Var VarName="$SystemsToUpgrade">
-      <From Source="$TargetConstellation.$StarSystems">
-          <Where>
-              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-              <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3 or $(Constellation_5PlanetDeficit_Count) le 0</InterpreterPrerequisite>
-          </Where>
-          <OrderBy>
-              <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-          </OrderBy>
-      </From>
+         Empty-query safety: a <From> (list) var that resolves to an empty list aborts the whole quest at
+         CheckVariables. The upgrade filter (le 3) is empty in a pure-surplus constellation, the downgrade filter
+         (ge 5) in a pure-deficit one. To avoid the abort we DON'T build an intermediate list var; the <Where>/<OrderBy>
+         are inlined directly into each <Select>. A <Select>/<First> over an empty source yields a tolerated null
+         (only list <From> vars abort), and the null is harmless because that direction's branch is gated out. -->
+    <Var VarName="$SystemToUpgradeA">
+      <Select Index="0">
+        <From Source="$TargetConstellation.$StarSystems">
+            <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
+            </Where>
+            <OrderBy>
+                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+            </OrderBy>
+        </From>
+      </Select>
     </Var>
-    <Var VarName="$SystemToUpgradeA"><Select Index="0"><From Source="$SystemsToUpgrade"/></Select></Var>
-    <Var VarName="$SystemToUpgradeB"><Select Index="1"><From Source="$SystemsToUpgrade"/></Select></Var>
-    <Var VarName="$SystemsToDowngrade">
-      <From Source="$TargetConstellation.$StarSystems">
-          <Where>
-              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
-              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
-              <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
-              <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5 or $(Constellation_5PlanetSurplus_Count) le 0</InterpreterPrerequisite>
-          </Where>
-          <OrderBy>
-              <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
-          </OrderBy>
-      </From>
+    <Var VarName="$SystemToUpgradeB">
+      <Select Index="1">
+        <From Source="$TargetConstellation.$StarSystems">
+            <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
+            </Where>
+            <OrderBy>
+                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+            </OrderBy>
+        </From>
+      </Select>
     </Var>
-    <Var VarName="$SystemToDowngradeA"><Select Index="0"><From Source="$SystemsToDowngrade"/></Select></Var>
-    <Var VarName="$SystemToDowngradeB"><Select Index="1"><From Source="$SystemsToDowngrade"/></Select></Var>
+    <Var VarName="$SystemToDowngradeA">
+      <Select Index="0">
+        <From Source="$TargetConstellation.$StarSystems">
+            <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
+            </Where>
+            <OrderBy>
+                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+            </OrderBy>
+        </From>
+      </Select>
+    </Var>
+    <Var VarName="$SystemToDowngradeB">
+      <Select Index="1">
+        <From Source="$TargetConstellation.$StarSystems">
+            <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
+            </Where>
+            <OrderBy>
+                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+            </OrderBy>
+        </From>
+      </Select>
+    </Var>
     <Var VarName="$DefinitionName1" StringValue="Replacement5pNode5"/>
     <Var VarName="$DefinitionName2" StringValue="Replacement5pNode6"/>
     <Var VarName="$DefinitionName99" StringValue="Replacement4pNode5"/>
