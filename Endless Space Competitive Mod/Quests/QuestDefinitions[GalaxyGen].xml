@@ -1945,8 +1945,9 @@
         </OrderBy>
       </From>
     </Var>
+    <!-- C2 = 2nd-nearest constellation to the academy (index 1), matching C2S0-Up. -->
     <Var VarName="$TargetConstellation">
-      <Select Index="0">
+      <Select Index="1">
         <From Source="$ConstellationNearestAcademy"/>
       </Select>
     </Var>
@@ -2575,24 +2576,17 @@
 </QuestDefinition>
 
 <!-- ##### GALAXY GEN QUEST Constellation 1 Step 0: Determine position of Constellation 1 (Deficit, Surplus or Balance) #####-->
-<QuestDefinition Name="GalaxyGenerationQuest_Planets-C3S0" Category="GalaxyGeneration" SubCategory="SystemNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="false" MinimumTurn="0">
-  <!--============ TAGS ============-->
+<!-- ##### GALAXY GEN Constellation 3 UPGRADE root (deficit): fires Turn 1, computes ONLY the le-3 selection. ##### -->
+<QuestDefinition Name="GalaxyGenerationQuest_Planets-C3S0-Up" Category="GalaxyGeneration" SubCategory="SystemNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="false" MinimumTurn="0">
   <Tags>Hidden, BeginTurn</Tags>
-  <!--============ CONTEXT ============-->
   <QuestContextSolo/>
-  <!--============ OCCURRENCE RULES ============-->
   <RepetitionRules  NumberOfOccurrencesPerGame="1"/>
-  <!--============ VARIABLES ============-->
   <Vars>
-    
-    <!-- Choose an Empire, so that it can be fed into the context (no impact on anything; simply needs to be non-null)-->
     <Var VarName="$ChosenEmpire">
       <Select Index="0">
-            <From Source="$Empires"/>
-          </Select>
+        <From Source="$Empires"/>
+      </Select>
     </Var>
-
-    <!-- Find the Academy, just to have an objective frame of reference for this process-->
     <Var VarName="$AcademySystem">
       <From Source="$Constellations.$StarSystems">
           <Where>
@@ -2603,8 +2597,6 @@
     <Var VarName="$Constellation0">
       <From Source="$AcademySystem.$Constellation"/>
     </Var>
-
-    <!-- Count the number of constellations and systems, calculate benchmarks -->
     <Var VarName="$ConstellationCount">
       <Count>
         <From Source="$Constellations"/>
@@ -2618,8 +2610,6 @@
     <InterpretedVar VarName="$Expected5pSystems">
       <Expression>Floor(($(SystemCount)/Max(1,$(ConstellationCount)))/10)</Expression>
     </InterpretedVar>
-
-    <!-- Build the index of constellations -->
     <Var VarName="$ConstellationNearestAcademy">
       <From Source="$Constellations">
         <OrderBy>
@@ -2632,42 +2622,61 @@
         <From Source="$ConstellationNearestAcademy"/>
       </Select>
     </Var>
-
-    <!-- Count the number of 5-planet systems in the constellation -->
     <Var VarName="$Constellation_5PlanetCount">
       <Count>
         <From Source="$TargetConstellation.$StarSystems">
           <Where>
             <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
-            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>            
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
           </Where>
         </From>
       </Count>
     </Var>
-
-    <!-- Calculate performance relative to benchmarks -->
     <InterpretedVar VarName="$Constellation_5PlanetDeficit_Count">
       <Expression>Min(2,($(Expected5pSystems) - $(Constellation_5PlanetCount)))</Expression>
     </InterpretedVar>
-    <InterpretedVar VarName="$Constellation_5PlanetSurplus_Count">
-      <Expression>Min(2,($(Constellation_5PlanetCount) - $(Expected5pSystems)))</Expression>
-    </InterpretedVar>
-
-    <!-- Create interpreter tests for determining required adjustments -->
     <Var VarName="$Constellation_5PlanetDeficitBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 1"/>
-    <Var VarName="$Constellation_5PlanetSurplusBoolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 1"/>
     <Var VarName="$Constellation_5PlanetDeficit2Boolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 2"/>
-    <Var VarName="$Constellation_5PlanetSurplus2Boolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 2"/>
-    <Var VarName="$Constellation_5PlanetBalancedBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 0"/>
-
+    <!-- Idle gate: nothing to upgrade when the constellation is NOT in deficit. -->
+    <Var VarName="$Constellation_5PlanetNotDeficitBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) le 0"/>
+    <Var VarName="$SystemToUpgradeA">
+      <Select Index="0">
+        <From Source="$TargetConstellation.$StarSystems">
+            <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
+            </Where>
+            <OrderBy>
+                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+            </OrderBy>
+        </From>
+      </Select>
+    </Var>
+    <Var VarName="$SystemToUpgradeB">
+      <Select Index="1">
+        <From Source="$TargetConstellation.$StarSystems">
+            <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
+            </Where>
+            <OrderBy>
+                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+            </OrderBy>
+        </From>
+      </Select>
+    </Var>
+    <Var VarName="$DefinitionName1" StringValue="Replacement5pNode7"/>
+    <Var VarName="$DefinitionName2" StringValue="Replacement5pNode8"/>
   </Vars>
-  <!--============ PREREQUISITES ============-->
   <Prerequisites Target="$(Empires)" AnyTarget="true">
       <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
   </Prerequisites>
-  <!--============ STEPS ============-->
-  <Steps>   
+  <Steps>
       <Step Name="Step1">
           <ObjectiveSet>
             <Objective Name="Objective_Fake">
@@ -2679,16 +2688,10 @@
                       <Input_Expression VarName="$Constellation_5PlanetDeficitBoolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ChooseOutcome Name="Outcome1"/>
-                </Sequence>
-                <Sequence>
-                  <Decorator_HeroAssigned>
-                    <Condition_CheckInterpreter>
-                      <Input_Context VarName="$ChosenEmpire"/>
-                      <Input_Expression VarName="$Constellation_5PlanetSurplusBoolean"/>
-                    </Condition_CheckInterpreter>
-                  </Decorator_HeroAssigned>
-                  <Action_ChooseOutcome Name="Outcome2"/>
+                  <Action_ApplyStarSystemDefinition>
+                    <Input_DefinitionName VarName="$DefinitionName1"/>
+                    <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
+                  </Action_ApplyStarSystemDefinition>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -2697,7 +2700,148 @@
                       <Input_Expression VarName="$Constellation_5PlanetDeficit2Boolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ChooseOutcome Name="Outcome3"/>
+                  <Action_ApplyStarSystemDefinition>
+                    <Input_DefinitionName VarName="$DefinitionName1"/>
+                    <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
+                  </Action_ApplyStarSystemDefinition>
+                  <Action_ApplyStarSystemDefinition>
+                    <Input_DefinitionName VarName="$DefinitionName2"/>
+                    <Input_StarSystemNode VarName="$SystemToUpgradeB"/>
+                  </Action_ApplyStarSystemDefinition>
+                </Sequence>
+                <Sequence>
+                  <!-- Idle: nothing to upgrade (constellation not in deficit). Action_Fail ends the quest cleanly. -->
+                  <Decorator_HeroAssigned>
+                    <Condition_CheckInterpreter>
+                      <Input_Context VarName="$ChosenEmpire"/>
+                      <Input_Expression VarName="$Constellation_5PlanetNotDeficitBoolean"/>
+                    </Condition_CheckInterpreter>
+                  </Decorator_HeroAssigned>
+                  <Action_Fail/>
+                </Sequence>
+              </Parallel>
+            </Objective>
+          </ObjectiveSet>
+      </Step>
+  </Steps>
+</QuestDefinition>
+
+<!-- ##### GALAXY GEN Constellation 3 DOWNGRADE root (surplus): fires Turn 1, computes ONLY the >=5 selection. ##### -->
+<QuestDefinition Name="GalaxyGenerationQuest_Planets-C3S0-Down" Category="GalaxyGeneration" SubCategory="SystemNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="false" MinimumTurn="0">
+  <Tags>Hidden, BeginTurn</Tags>
+  <QuestContextSolo/>
+  <RepetitionRules  NumberOfOccurrencesPerGame="1"/>
+  <Vars>
+    <Var VarName="$ChosenEmpire">
+      <Select Index="0">
+        <From Source="$Empires"/>
+      </Select>
+    </Var>
+    <Var VarName="$AcademySystem">
+      <From Source="$Constellations.$StarSystems">
+          <Where>
+              <PathPrerequisite Flags="Prerequisite">WorldAcademy</PathPrerequisite>
+          </Where>
+      </From>
+    </Var>
+    <Var VarName="$Constellation0">
+      <From Source="$AcademySystem.$Constellation"/>
+    </Var>
+    <Var VarName="$ConstellationCount">
+      <Count>
+        <From Source="$Constellations"/>
+      </Count>
+    </Var>
+    <Var VarName="$SystemCount">
+      <Count>
+        <From Source="$Constellations.$StarSystems"/>
+      </Count>
+    </Var>
+    <InterpretedVar VarName="$Expected5pSystems">
+      <Expression>Floor(($(SystemCount)/Max(1,$(ConstellationCount)))/10)</Expression>
+    </InterpretedVar>
+    <Var VarName="$ConstellationNearestAcademy">
+      <From Source="$Constellations">
+        <OrderBy>
+          <SortConstellationByDistance OriginVarName="$Constellation0" SortBy="Nearest"/>
+        </OrderBy>
+      </From>
+    </Var>
+    <Var VarName="$TargetConstellation">
+      <Select Index="2">
+        <From Source="$ConstellationNearestAcademy"/>
+      </Select>
+    </Var>
+    <Var VarName="$Constellation_5PlanetCount">
+      <Count>
+        <From Source="$TargetConstellation.$StarSystems">
+          <Where>
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
+          </Where>
+        </From>
+      </Count>
+    </Var>
+    <InterpretedVar VarName="$Constellation_5PlanetSurplus_Count">
+      <Expression>Min(2,($(Constellation_5PlanetCount) - $(Expected5pSystems)))</Expression>
+    </InterpretedVar>
+    <Var VarName="$Constellation_5PlanetSurplusBoolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 1"/>
+    <Var VarName="$Constellation_5PlanetSurplus2Boolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 2"/>
+    <!-- Idle gate: nothing to downgrade when the constellation is NOT in surplus. -->
+    <Var VarName="$Constellation_5PlanetNotSurplusBoolean" StringValue="$(Constellation_5PlanetSurplus_Count) le 0"/>
+    <Var VarName="$SystemToDowngradeA">
+      <Select Index="0">
+        <From Source="$TargetConstellation.$StarSystems">
+            <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
+            </Where>
+            <OrderBy>
+                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+            </OrderBy>
+        </From>
+      </Select>
+    </Var>
+    <Var VarName="$SystemToDowngradeB">
+      <Select Index="1">
+        <From Source="$TargetConstellation.$StarSystems">
+            <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
+            </Where>
+            <OrderBy>
+                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+            </OrderBy>
+        </From>
+      </Select>
+    </Var>
+    <Var VarName="$DefinitionName99" StringValue="Replacement4pNode7"/>
+    <Var VarName="$DefinitionName98" StringValue="Replacement4pNode8"/>
+  </Vars>
+  <Prerequisites Target="$(Empires)" AnyTarget="true">
+      <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
+  </Prerequisites>
+  <Steps>
+      <Step Name="Step1">
+          <ObjectiveSet>
+            <Objective Name="Objective_Fake">
+              <Parallel CompletionPolicy="First">
+                <Sequence>
+                  <Decorator_HeroAssigned>
+                    <Condition_CheckInterpreter>
+                      <Input_Context VarName="$ChosenEmpire"/>
+                      <Input_Expression VarName="$Constellation_5PlanetSurplusBoolean"/>
+                    </Condition_CheckInterpreter>
+                  </Decorator_HeroAssigned>
+                  <Action_ApplyStarSystemDefinition>
+                    <Input_DefinitionName VarName="$DefinitionName99"/>
+                    <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
+                  </Action_ApplyStarSystemDefinition>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -2706,50 +2850,26 @@
                       <Input_Expression VarName="$Constellation_5PlanetSurplus2Boolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ChooseOutcome Name="Outcome4"/>
+                  <Action_ApplyStarSystemDefinition>
+                    <Input_DefinitionName VarName="$DefinitionName99"/>
+                    <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
+                  </Action_ApplyStarSystemDefinition>
+                  <Action_ApplyStarSystemDefinition>
+                    <Input_DefinitionName VarName="$DefinitionName98"/>
+                    <Input_StarSystemNode VarName="$SystemToDowngradeB"/>
+                  </Action_ApplyStarSystemDefinition>
                 </Sequence>
                 <Sequence>
+                  <!-- Idle: nothing to downgrade (constellation not in surplus). Action_Fail ends the quest cleanly. -->
                   <Decorator_HeroAssigned>
                     <Condition_CheckInterpreter>
                       <Input_Context VarName="$ChosenEmpire"/>
-                      <Input_Expression VarName="$Constellation_5PlanetBalancedBoolean"/>
+                      <Input_Expression VarName="$Constellation_5PlanetNotSurplusBoolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
                   <Action_Fail/>
                 </Sequence>
               </Parallel>
-              <Outcome Name="Outcome1">
-                <Triggers Weight="1">
-                  <QuestTrigger>
-                    <Tags>GalaxyGenerationQuest_Planets-C3S1v0</Tags>
-                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
-                  </QuestTrigger>
-                </Triggers>
-              </Outcome>
-              <Outcome Name="Outcome2">
-                <Triggers Weight="1">
-                  <QuestTrigger>
-                    <Tags>GalaxyGenerationQuest_Planets-C3S1v1</Tags>
-                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
-                  </QuestTrigger>
-                </Triggers>
-              </Outcome>
-              <Outcome Name="Outcome3">
-                <Triggers Weight="1">
-                  <QuestTrigger>
-                    <Tags>GalaxyGenerationQuest_Planets-C3S1v2</Tags>
-                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
-                  </QuestTrigger>
-                </Triggers>
-              </Outcome>
-              <Outcome Name="Outcome4">
-                <Triggers Weight="1">
-                  <QuestTrigger>
-                    <Tags>GalaxyGenerationQuest_Planets-C3S1v3</Tags>
-                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
-                  </QuestTrigger>
-                </Triggers>
-              </Outcome>
             </Objective>
           </ObjectiveSet>
       </Step>
@@ -3279,24 +3399,17 @@
 </QuestDefinition>
 
 <!-- ##### GALAXY GEN QUEST Constellation 1 Step 0: Determine position of Constellation 1 (Deficit, Surplus or Balance) #####-->
-<QuestDefinition Name="GalaxyGenerationQuest_Planets-C4S0" Category="GalaxyGeneration" SubCategory="SystemNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="false" MinimumTurn="0">
-  <!--============ TAGS ============-->
+<!-- ##### GALAXY GEN Constellation 4 UPGRADE root (deficit): fires Turn 1, computes ONLY the le-3 selection. ##### -->
+<QuestDefinition Name="GalaxyGenerationQuest_Planets-C4S0-Up" Category="GalaxyGeneration" SubCategory="SystemNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="false" MinimumTurn="0">
   <Tags>Hidden, BeginTurn</Tags>
-  <!--============ CONTEXT ============-->
   <QuestContextSolo/>
-  <!--============ OCCURRENCE RULES ============-->
   <RepetitionRules  NumberOfOccurrencesPerGame="1"/>
-  <!--============ VARIABLES ============-->
   <Vars>
-    
-    <!-- Choose an Empire, so that it can be fed into the context (no impact on anything; simply needs to be non-null)-->
     <Var VarName="$ChosenEmpire">
       <Select Index="0">
-            <From Source="$Empires"/>
-          </Select>
+        <From Source="$Empires"/>
+      </Select>
     </Var>
-
-    <!-- Find the Academy, just to have an objective frame of reference for this process-->
     <Var VarName="$AcademySystem">
       <From Source="$Constellations.$StarSystems">
           <Where>
@@ -3307,8 +3420,6 @@
     <Var VarName="$Constellation0">
       <From Source="$AcademySystem.$Constellation"/>
     </Var>
-
-    <!-- Count the number of constellations and systems, calculate benchmarks -->
     <Var VarName="$ConstellationCount">
       <Count>
         <From Source="$Constellations"/>
@@ -3322,8 +3433,6 @@
     <InterpretedVar VarName="$Expected5pSystems">
       <Expression>Floor(($(SystemCount)/Max(1,$(ConstellationCount)))/10)</Expression>
     </InterpretedVar>
-
-    <!-- Build the index of constellations -->
     <Var VarName="$ConstellationNearestAcademy">
       <From Source="$Constellations">
         <OrderBy>
@@ -3336,42 +3445,61 @@
         <From Source="$ConstellationNearestAcademy"/>
       </Select>
     </Var>
-
-    <!-- Count the number of 5-planet systems in the constellation -->
     <Var VarName="$Constellation_5PlanetCount">
       <Count>
         <From Source="$TargetConstellation.$StarSystems">
           <Where>
             <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
-            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite> 
-            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>            
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
           </Where>
         </From>
       </Count>
     </Var>
-
-    <!-- Calculate performance relative to benchmarks -->
     <InterpretedVar VarName="$Constellation_5PlanetDeficit_Count">
       <Expression>Min(2,($(Expected5pSystems) - $(Constellation_5PlanetCount)))</Expression>
     </InterpretedVar>
-    <InterpretedVar VarName="$Constellation_5PlanetSurplus_Count">
-      <Expression>Min(2,($(Constellation_5PlanetCount) - $(Expected5pSystems)))</Expression>
-    </InterpretedVar>
-
-    <!-- Create interpreter tests for determining required adjustments -->
     <Var VarName="$Constellation_5PlanetDeficitBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 1"/>
-    <Var VarName="$Constellation_5PlanetSurplusBoolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 1"/>
     <Var VarName="$Constellation_5PlanetDeficit2Boolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 2"/>
-    <Var VarName="$Constellation_5PlanetSurplus2Boolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 2"/>
-    <Var VarName="$Constellation_5PlanetBalancedBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) eq 0"/>
-
+    <!-- Idle gate: nothing to upgrade when the constellation is NOT in deficit. -->
+    <Var VarName="$Constellation_5PlanetNotDeficitBoolean" StringValue="$(Constellation_5PlanetDeficit_Count) le 0"/>
+    <Var VarName="$SystemToUpgradeA">
+      <Select Index="0">
+        <From Source="$TargetConstellation.$StarSystems">
+            <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
+            </Where>
+            <OrderBy>
+                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+            </OrderBy>
+        </From>
+      </Select>
+    </Var>
+    <Var VarName="$SystemToUpgradeB">
+      <Select Index="1">
+        <From Source="$TargetConstellation.$StarSystems">
+            <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') le 3</InterpreterPrerequisite>
+            </Where>
+            <OrderBy>
+                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+            </OrderBy>
+        </From>
+      </Select>
+    </Var>
+    <Var VarName="$DefinitionName1" StringValue="Replacement5pNode9"/>
+    <Var VarName="$DefinitionName2" StringValue="Replacement5pNode10"/>
   </Vars>
-  <!--============ PREREQUISITES ============-->
   <Prerequisites Target="$(Empires)" AnyTarget="true">
       <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
   </Prerequisites>
-  <!--============ STEPS ============-->
-  <Steps>   
+  <Steps>
       <Step Name="Step1">
           <ObjectiveSet>
             <Objective Name="Objective_Fake">
@@ -3383,16 +3511,10 @@
                       <Input_Expression VarName="$Constellation_5PlanetDeficitBoolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ChooseOutcome Name="Outcome1"/>
-                </Sequence>
-                <Sequence>
-                  <Decorator_HeroAssigned>
-                    <Condition_CheckInterpreter>
-                      <Input_Context VarName="$ChosenEmpire"/>
-                      <Input_Expression VarName="$Constellation_5PlanetSurplusBoolean"/>
-                    </Condition_CheckInterpreter>
-                  </Decorator_HeroAssigned>
-                  <Action_ChooseOutcome Name="Outcome2"/>
+                  <Action_ApplyStarSystemDefinition>
+                    <Input_DefinitionName VarName="$DefinitionName1"/>
+                    <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
+                  </Action_ApplyStarSystemDefinition>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -3401,7 +3523,148 @@
                       <Input_Expression VarName="$Constellation_5PlanetDeficit2Boolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ChooseOutcome Name="Outcome3"/>
+                  <Action_ApplyStarSystemDefinition>
+                    <Input_DefinitionName VarName="$DefinitionName1"/>
+                    <Input_StarSystemNode VarName="$SystemToUpgradeA"/>
+                  </Action_ApplyStarSystemDefinition>
+                  <Action_ApplyStarSystemDefinition>
+                    <Input_DefinitionName VarName="$DefinitionName2"/>
+                    <Input_StarSystemNode VarName="$SystemToUpgradeB"/>
+                  </Action_ApplyStarSystemDefinition>
+                </Sequence>
+                <Sequence>
+                  <!-- Idle: nothing to upgrade (constellation not in deficit). Action_Fail ends the quest cleanly. -->
+                  <Decorator_HeroAssigned>
+                    <Condition_CheckInterpreter>
+                      <Input_Context VarName="$ChosenEmpire"/>
+                      <Input_Expression VarName="$Constellation_5PlanetNotDeficitBoolean"/>
+                    </Condition_CheckInterpreter>
+                  </Decorator_HeroAssigned>
+                  <Action_Fail/>
+                </Sequence>
+              </Parallel>
+            </Objective>
+          </ObjectiveSet>
+      </Step>
+  </Steps>
+</QuestDefinition>
+
+<!-- ##### GALAXY GEN Constellation 4 DOWNGRADE root (surplus): fires Turn 1, computes ONLY the >=5 selection. ##### -->
+<QuestDefinition Name="GalaxyGenerationQuest_Planets-C4S0-Down" Category="GalaxyGeneration" SubCategory="SystemNormalization" IsInstant="true" TriggeringProbability="1" CheckRandom="false" MinimumTurn="0">
+  <Tags>Hidden, BeginTurn</Tags>
+  <QuestContextSolo/>
+  <RepetitionRules  NumberOfOccurrencesPerGame="1"/>
+  <Vars>
+    <Var VarName="$ChosenEmpire">
+      <Select Index="0">
+        <From Source="$Empires"/>
+      </Select>
+    </Var>
+    <Var VarName="$AcademySystem">
+      <From Source="$Constellations.$StarSystems">
+          <Where>
+              <PathPrerequisite Flags="Prerequisite">WorldAcademy</PathPrerequisite>
+          </Where>
+      </From>
+    </Var>
+    <Var VarName="$Constellation0">
+      <From Source="$AcademySystem.$Constellation"/>
+    </Var>
+    <Var VarName="$ConstellationCount">
+      <Count>
+        <From Source="$Constellations"/>
+      </Count>
+    </Var>
+    <Var VarName="$SystemCount">
+      <Count>
+        <From Source="$Constellations.$StarSystems"/>
+      </Count>
+    </Var>
+    <InterpretedVar VarName="$Expected5pSystems">
+      <Expression>Floor(($(SystemCount)/Max(1,$(ConstellationCount)))/10)</Expression>
+    </InterpretedVar>
+    <Var VarName="$ConstellationNearestAcademy">
+      <From Source="$Constellations">
+        <OrderBy>
+          <SortConstellationByDistance OriginVarName="$Constellation0" SortBy="Nearest"/>
+        </OrderBy>
+      </From>
+    </Var>
+    <Var VarName="$TargetConstellation">
+      <Select Index="3">
+        <From Source="$ConstellationNearestAcademy"/>
+      </Select>
+    </Var>
+    <Var VarName="$Constellation_5PlanetCount">
+      <Count>
+        <From Source="$TargetConstellation.$StarSystems">
+          <Where>
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,IsolatedNode</PathPrerequisite>
+            <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+            <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
+          </Where>
+        </From>
+      </Count>
+    </Var>
+    <InterpretedVar VarName="$Constellation_5PlanetSurplus_Count">
+      <Expression>Min(2,($(Constellation_5PlanetCount) - $(Expected5pSystems)))</Expression>
+    </InterpretedVar>
+    <Var VarName="$Constellation_5PlanetSurplusBoolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 1"/>
+    <Var VarName="$Constellation_5PlanetSurplus2Boolean" StringValue="$(Constellation_5PlanetSurplus_Count) eq 2"/>
+    <!-- Idle gate: nothing to downgrade when the constellation is NOT in surplus. -->
+    <Var VarName="$Constellation_5PlanetNotSurplusBoolean" StringValue="$(Constellation_5PlanetSurplus_Count) le 0"/>
+    <Var VarName="$SystemToDowngradeA">
+      <Select Index="0">
+        <From Source="$TargetConstellation.$StarSystems">
+            <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
+            </Where>
+            <OrderBy>
+                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+            </OrderBy>
+        </From>
+      </Select>
+    </Var>
+    <Var VarName="$SystemToDowngradeB">
+      <Select Index="1">
+        <From Source="$TargetConstellation.$StarSystems">
+            <Where>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem, QuestNode</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,HomeSystem</PathPrerequisite>
+                <PathPrerequisite Inverted="true" Flags="Prerequisite">ClassStarSystem,ColonizedStarSystemStateOutpost</PathPrerequisite>
+                <InterpreterPrerequisite Flags="Prerequisite">Count(Context, @'ClassStarSystem/ClassPlanet') ge 5</InterpreterPrerequisite>
+            </Where>
+            <OrderBy>
+                <SortSystemByDistance OriginVarName="$AcademySystem" SortBy="Nearest" MinimumDistance="1" MaximumDistance="9999" MinimumCandidateCount="2"/>
+            </OrderBy>
+        </From>
+      </Select>
+    </Var>
+    <Var VarName="$DefinitionName99" StringValue="Replacement4pNode9"/>
+    <Var VarName="$DefinitionName98" StringValue="Replacement4pNode10"/>
+  </Vars>
+  <Prerequisites Target="$(Empires)" AnyTarget="true">
+      <GameSettingPrerequisite>BalancedStarts,True</GameSettingPrerequisite>
+  </Prerequisites>
+  <Steps>
+      <Step Name="Step1">
+          <ObjectiveSet>
+            <Objective Name="Objective_Fake">
+              <Parallel CompletionPolicy="First">
+                <Sequence>
+                  <Decorator_HeroAssigned>
+                    <Condition_CheckInterpreter>
+                      <Input_Context VarName="$ChosenEmpire"/>
+                      <Input_Expression VarName="$Constellation_5PlanetSurplusBoolean"/>
+                    </Condition_CheckInterpreter>
+                  </Decorator_HeroAssigned>
+                  <Action_ApplyStarSystemDefinition>
+                    <Input_DefinitionName VarName="$DefinitionName99"/>
+                    <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
+                  </Action_ApplyStarSystemDefinition>
                 </Sequence>
                 <Sequence>
                   <Decorator_HeroAssigned>
@@ -3410,50 +3673,26 @@
                       <Input_Expression VarName="$Constellation_5PlanetSurplus2Boolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
-                  <Action_ChooseOutcome Name="Outcome4"/>
+                  <Action_ApplyStarSystemDefinition>
+                    <Input_DefinitionName VarName="$DefinitionName99"/>
+                    <Input_StarSystemNode VarName="$SystemToDowngradeA"/>
+                  </Action_ApplyStarSystemDefinition>
+                  <Action_ApplyStarSystemDefinition>
+                    <Input_DefinitionName VarName="$DefinitionName98"/>
+                    <Input_StarSystemNode VarName="$SystemToDowngradeB"/>
+                  </Action_ApplyStarSystemDefinition>
                 </Sequence>
                 <Sequence>
+                  <!-- Idle: nothing to downgrade (constellation not in surplus). Action_Fail ends the quest cleanly. -->
                   <Decorator_HeroAssigned>
                     <Condition_CheckInterpreter>
                       <Input_Context VarName="$ChosenEmpire"/>
-                      <Input_Expression VarName="$Constellation_5PlanetBalancedBoolean"/>
+                      <Input_Expression VarName="$Constellation_5PlanetNotSurplusBoolean"/>
                     </Condition_CheckInterpreter>
                   </Decorator_HeroAssigned>
                   <Action_Fail/>
                 </Sequence>
               </Parallel>
-              <Outcome Name="Outcome1">
-                <Triggers Weight="1">
-                  <QuestTrigger>
-                    <Tags>GalaxyGenerationQuest_Planets-C4S1v0</Tags>
-                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
-                  </QuestTrigger>
-                </Triggers>
-              </Outcome>
-              <Outcome Name="Outcome2">
-                <Triggers Weight="1">
-                  <QuestTrigger>
-                    <Tags>GalaxyGenerationQuest_Planets-C4S1v1</Tags>
-                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
-                  </QuestTrigger>
-                </Triggers>
-              </Outcome>
-              <Outcome Name="Outcome3">
-                <Triggers Weight="1">
-                  <QuestTrigger>
-                    <Tags>GalaxyGenerationQuest_Planets-C4S1v2</Tags>
-                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
-                  </QuestTrigger>
-                </Triggers>
-              </Outcome>
-              <Outcome Name="Outcome4">
-                <Triggers Weight="1">
-                  <QuestTrigger>
-                    <Tags>GalaxyGenerationQuest_Planets-C4S1v3</Tags>
-                    <QuestContextSolo ParticipantsVarName="$ChosenEmpire"/>
-                  </QuestTrigger>
-                </Triggers>
-              </Outcome>
             </Objective>
           </ObjectiveSet>
       </Step>
