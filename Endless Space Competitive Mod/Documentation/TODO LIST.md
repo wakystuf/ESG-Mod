@@ -1,0 +1,38 @@
+- [ ] Make exclusion links make the other tech more expensive, rather than forcing you to pick one or the other
+- [ ] Add many more exclusion and facilitation links
+- [ ] Add new Antimatter and Adamantian Probes to Probes 2 (able to work like Anticloak probes, where they can be placed on systems, requires a new EntityAction variant)
+- [ ] Add additional upgrade to Explorers (maybe also Colonizers?) on Probes 4?
+- [ ] Add new Alliance-only treaties
+  - [ ] Mining Agreement
+  - [ ] Military Agreement
+  - [ ] Access to other factions' unique techs?
+  - [ ] Mutual Hero-Training?
+- [ ] Faction-Specific 1 Tech should give a unique upgrade to that factions' mechanics
+- [ ] Faction-Specific 2 Tech should be locked until a prerequisite faction quest threshold is reached. Tech should give access to some of the less powerful quest rewards from the options you didn't pick
+- [ ] Add new "economic" hacking programs scattered around the tech tree
+- [ ] Add upgrades to the economic hacking programs, scattered around the tech tree (cheaper/more powerful?)
+- [ ] Add upgrades to hacking programs on Hacking 1-3 techs. For additional/stronger effects, make conditional effects similar to portal upgrades, where effect is toggled off once simulation descriptor is active, empire improvement to target specific active programs' costs
+- [ ] Hacking 1 building which gives flat bandwidth + bandwidth per system level (or bandwidth per population, the point is to make it better for tall factions)
+- [ ] Hacking 3 building which gives trace speed and anticloak 2 on the system, should be fairly cheap
+- [ ] Vision 5 tech should reveal any remaining nodes, increase vision radius massively
+- [ ] Discovery 4 trait which allows you to pick between 4 different droplists of faction trait-esque empire improvements, Military, Economic, Empire, and Scientific, droplists should have 5-10 traits each
+- [ ] Moons 5 tech dedicated to Endless Moons compatibility, disabled otherwise
+- [ ] Expansion 4 tech that improves Outpost Actions, more starting buildings, allows Lumeris-like colonization without colonization ships
+- [ ] Trade 5 tech - 
+- [ ] Empire Improvements themed for each political party
+  - [ ] Scientists - Facilitation links are worth more
+  - [ ] Ecologists - Increasing planet size / anomaly enhancement?
+  - [ ] Religious - Stronger contextual diplomacy
+  - [ ] Industrialists - Cheaper construction costs for buildings in previous tiers
+  - [ ] Militarists - Bonuses during the first few turns of a new war 
+- [ ] Vacuum-Protection 2 - Quadrinix/Orichalcix EMP Resist/Repair/Shield Regen, Explorers can innately T2 cloak
+- [ ] Behemoth Generators 2 - Make behemoths pretty fast without engines (at least as fast as other ships), upgraded versions of modules that are on the first tech
+- [ ] Dust Micro Loans needs something entirely new.. open to ideas
+- [ ] Make obliterator techs infinitely repeatable
+- [ ] Merge Economic + Military Behemoths, make mutual slots be mixed support/weapon. Merge Economic into Military since it has more weapon modules
+- [ ] Behemoth Modules 5 should get upgraded versions of modules on Behemoth Weaponization, make some slots on behemoths be mixed support/weapon? 
+- [ ] Misc Modules 5 - Some new strategies
+- [ ] New weapon module type, Energy gatling, add 6 white variants, 6 strategic variants, add to strategic weapon techs
+- [ ] New tactics pack on interleaved orichalcix
+- [ ] Manpower 5, new building that produces a lot of manpower, new hangar building, bonus on fully manned systems?
+- [ ] 
