@@ -185,10 +185,14 @@
 	<Property Name="BetterHoratioTweak"  BaseValue="0" />
 	<Property Name="BetterUnfallenTweak"  BaseValue="0" />
 	<Property Name="BetterCraversTweak"  BaseValue="0" />
-
+	
 	<!-- Custom Faction -->
 	<Property Name="IsCustomFaction" BaseValue="0"/>
-
+	
+	<!-- Ignore Small Systems for Colonization Threshold -->
+	<Property Name="IgnoreSmallSystemsForColonizationThreshold" BaseValue="0"/>
+	<Property Name="TotalSmallSystems"/>
+	
 	<!-- ########################################################## -->
 	<!-- ######################## PROPERTY ######################## -->
 	<!-- ########################################################## -->
@@ -629,6 +633,7 @@
 	<Property Name="OwnedSystems" BaseValue="0" Composition="Sum" />
 	<Property Name="OwnedOutposts" BaseValue="0" Composition="Sum" />
 	<Property Name="OwnedPlanets" BaseValue="0" Composition="Sum" />
+	<Property Name="TotalSystems" BaseValue="0" Composition="Sum"/>
 
 	<Property Name="OwnedGasPlanets" BaseValue="0" Composition="Sum" />
 
@@ -1163,8 +1168,8 @@
 
 	<Modifier TargetProperty="OverColonizationPenaltiesReduction" Operation="Addition" Value="$(OverColonizationPenaltiesReductionHissho)" Priority="-1" Path="ClassEmpire,AffinityGameplayMajorHisshos"/>
 	<Modifier TargetProperty="OverColonizationThreshold" Operation="Addition" Value="$(OverColonizationThresholdHissho)" Priority="-1" Path="ClassEmpire"/>
-	<BinaryModifier TargetProperty="SystemsAboveOverColonizationCount" Operation="Addition" Left="$(OwnedSystems)" BinaryOperation="Subtraction" Right="$(OverColonizationThreshold)" Priority="-1" Path="ClassEmpire"/>
-	<BinaryModifier TargetProperty="IsOverColonizationThreshold" Operation="Addition" Left="$(OverColonizationThreshold)" BinaryOperation="Division" Right="$(OwnedSystems)" Priority="0" Path="ClassEmpire"/>
+	<BinaryModifier TargetProperty="SystemsAboveOverColonizationCount" Operation="Addition" Left="$(TotalSystems)" BinaryOperation="Subtraction" Right="$(OverColonizationThreshold)" Priority="-1" Path="ClassEmpire"/>
+	<BinaryModifier TargetProperty="IsOverColonizationThreshold" Operation="Addition" Left="$(OverColonizationThreshold)" BinaryOperation="Division" Right="$(TotalSystems)" Priority="0" Path="ClassEmpire"/>
 
 	<!--Craver Empire Point and Science from raze-->
 
@@ -1551,7 +1556,10 @@
 	<!-- Overcolonization compensation from temples. -->
 	<Modifier TargetProperty="SystemsForOvercolonization" Operation="Addition" Value="$(ColonizedStarSystemStateColonyCount)" Priority="-2"/>
 	<Modifier TargetProperty="SystemsForOvercolonization" Operation="Subtraction" Value="$(SystemsGivenToAcademy)" Priority="-1"/>
-
+	<BinaryModifier TargetProperty="SystemsForOvercolonization" Operation="Subtraction" Left="$(TotalSmallSystems)" BinaryOperation="Multiplication" Right="$(IgnoreSmallSystemsForColonizationThreshold)" Priority="-3"/>
+	<Modifier TargetProperty="OwnedSystems" Operation="Addition" Value="$(TotalSystems)"/>
+	<BinaryModifier TargetProperty="OwnedSystems" Operation="Subtraction" Left="$(TotalSmallSystems)" BinaryOperation="Multiplication" Right="$(IgnoreSmallSystemsForColonizationThreshold)" Priority="-3"/>
+	
 	<Modifier TargetProperty="EmpireMoney" Operation="Addition" Value="$(AcademySystemsDust)" Path="ClassEmpire"/>
 	<Modifier TargetProperty="EmpireResearch" Operation="Addition" Value="$(AcademySystemsScience)" Path="ClassEmpire"/>
 	<Modifier TargetProperty="EmpireEmpirePoint" Operation="Addition" Value="$(AcademySystemsEmpirePoints)" Path="ClassEmpire"/>
@@ -1823,7 +1831,6 @@
 	<Modifier TargetProperty="TrueNetEmpireManpower"         Operation="Addition"	 Value="$(NetEmpireManpower)"				Path="ClassEmpire"/>
 	<BinaryModifier TargetProperty="TrueNetEmpireManpower"	 Operation="Subtraction" Left="$(EmpireManpowerFromEnrollment)" BinaryOperation="Multiplication" Right="$(EmpireManpowerPercent)"	Path="ClassEmpire,EmpireTypeMajor"/>
 	<BinaryModifier TargetProperty="TrueNetEmpireManpower"	 Operation="Addition"	 Left="$(EnrollmentAppliedToFood)"		BinaryOperation="Multiplication" Right="$(EmpireManpowerPercent)"	Path="ClassEmpire,EmpireTypeMajor"/>
-
   </SimulationDescriptor>
 
   <!--Used for Craver Influence and Science ESG-->
