@@ -315,7 +315,7 @@
     </EntityModifiers>
 
     <PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,FactionTraitCorsairs</PathPrerequisite>
-    <PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,AffinityGameplayMajorHisshos</PathPrerequisite>
+    <PathPrerequisite Flags="Discard" Inverted="true">../ClassEmpire,FactionTraitPirateHaters</PathPrerequisite>
     <TechnologyPrerequisite Flags="Prerequisite,Technology,Discard" UnlockHidden="true">TechnologyPrivateers</TechnologyPrerequisite>
   </PrivateerFleetAction>
 
@@ -684,4 +684,131 @@
     <CancelActions Flags="CancelOnAnything" SameContext="false" SameInitiator="true"/>
 
   </CreatePortalFleetAction>
+  
+  <!-- CF: All pirate entity actions, same as vanilla but checking on Pirate Slayers instead of Hissho Affinity -->
+
+  <!-- Support Pirates -->
+  <TransferResourcesPirateDiplomaticAction Name="SupportPirateAction" ResourceName="PirateReinforcements" GiveToPirate="true" IncrementProperty="SupportPirateActionCount">
+		<CustomCost ResourceName="EmpireMoney" Instant="true">100 * (1 + (0.1 * Property(PirateEmpire,@'ClassEmpire,EmpireTypePirate',SupportPirateActionCount))) * Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * Property(StockLocation,@ClassEmpire,PirateDiplomacyCostMultiplier)</CustomCost>
+      <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCVaulters</DownloadableContentPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">../ClassEmpire,FactionTraitPirateHaters</PathPrerequisite>
+      <InterpreterPrerequisite Flags="Prerequisite,Disable,PirateDiplomacyNotAvailable">Path(Context, @'ClassEmpire/ClassResearch,TechnologyMinorFactionsGameplay') or Path(Context, @'ClassEmpire,FactionTraitCorsairs')</InterpreterPrerequisite>
+      <PirateInterpreterPrerequisite Inverted="true" Flags="Disable,RelationAndReinforcementAlreadyMaxed">(Property(PirateEmpire,@'ClassEmpire,EmpireTypePirate',PirateReinforcementsStock) ge 100) and ($(RelationPoints) ge 100)</PirateInterpreterPrerequisite>
+      <PirateInterpreterPrerequisite Flags="Prerequisite">Property(Context,@'ClassEmpire,EmpireTypePirate',SystemCount) gt 0</PirateInterpreterPrerequisite>
+      <PopulationEvent Name="PopulationEventPiratesSupportMilitarist"/><!-- Hero unlock thingy + population event on player-->
+      <ScoreProvider Name="PirateEmpireSupported"/>
+      <RelationPointsGainFormula>10</RelationPointsGainFormula><!-- Relation points gained. If no formula is there, it's 0. --><!-- Parameters: Empire & PirateEmpire (simulation objects) -->
+      <AmountFormula>7</AmountFormula><!-- Amount of "ResourceName" gained/lost by pirate or player (depending on "GiveToPirate"). -->
+      <TemporaryEffect Name="PirateSupport"/><!-- Temporary effect started on pirate empire. -->
+	</TransferResourcesPirateDiplomaticAction>
+
+  <!-- Sabotage Reinforcements -->
+  <TransferResourcesPirateDiplomaticAction Name="SabotagePirateAction" ResourceName="PirateReinforcements" GiveToPirate="true" IncrementProperty="SabotagePirateActionCount">
+      <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">100 * (1 + (0.2 * Property(PirateEmpire,@'ClassEmpire,EmpireTypePirate',SabotagePirateActionCount)))* Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * Property(StockLocation,@ClassEmpire,PirateDiplomacyCostMultiplier)</CustomCost>
+      <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCVaulters</DownloadableContentPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">../ClassEmpire,FactionTraitPirateHaters</PathPrerequisite>
+      <InterpreterPrerequisite Flags="Prerequisite,Disable,PirateDiplomacyNotAvailable">Path(Context, @'ClassEmpire/ClassResearch,TechnologyMinorFactionsGameplay') or Path(Context, @'ClassEmpire,FactionTraitCorsairs')</InterpreterPrerequisite>
+      <PirateInterpreterPrerequisite Flags="Disable">Property(Context,@'ClassEmpire,EmpireTypePirate',SystemCount) gt 0</PirateInterpreterPrerequisite>
+      <PirateInterpreterPrerequisite Flags="Disable,ReinforcementAlreadyAtMin">Property(Context,@'ClassEmpire,EmpireTypePirate',PirateReinforcementsStock) gt 0</PirateInterpreterPrerequisite>
+      <PopulationEvent Name="PopulationEventPiratesSabotagePacifist"/>
+      <ScoreProvider Name="PirateEmpireSabotaged"/>
+      <AmountFormula>-Min(Property(PirateEmpire,PirateReinforcementsStock), 10)</AmountFormula>
+      <TemporaryEffect Name="PirateSabotage"/>
+  </TransferResourcesPirateDiplomaticAction>
+
+  <!-- Buy Mark -->
+  <TransferResourcesPirateDiplomaticAction Name="BuyMarkPirateAction" ResourceName="PirateMarks" GiveToPirate="false" IncrementProperty="BuyMarkPirateActionCount">
+      <CustomCost ResourceName="EmpireMoney" Instant="true">(250 * (1 + (0.3 * Property(PirateEmpire,@'ClassEmpire,EmpireTypePirate',BuyMarkPirateActionCount)))) * Property(StockLocation,@ClassEmpire,DustInflation) * Property(StockLocation,@ClassEmpire,PirateDiplomacyCostMultiplier)</CustomCost>
+      <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCVaulters</DownloadableContentPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">../ClassEmpire,FactionTraitPirateHaters</PathPrerequisite>
+      <InterpreterPrerequisite Flags="Prerequisite,Disable,PirateDiplomacyNotAvailable">Path(Context, @'ClassEmpire/ClassResearch,TechnologyMinorFactionsGameplay') or Path(Context, @'ClassEmpire,FactionTraitCorsairs')</InterpreterPrerequisite>
+      <InterpreterPrerequisite Flags="Prerequisite,OnlyOnePirateMarkAtOnce">Property(Context,@'ClassEmpire,EmpireTypeMajor',TotalPirateMarks) eq 0</InterpreterPrerequisite>
+      <PirateInterpreterPrerequisite Flags="Disable">Property(Context,@'ClassEmpire,EmpireTypePirate',SystemCount) gt 0</PirateInterpreterPrerequisite>
+      <PopulationEvent Name="PopulationEventPiratesMarkMilitarist"/>
+      <AmountFormula>1</AmountFormula>
+  </TransferResourcesPirateDiplomaticAction>
+
+  <!-- Non Aggression Pact -->
+  <ChangeRelationPirateDiplomaticAction Name="PeacePirateAction" Duration="10" RelationState="DiplomaticRelationStatePiratePeace" Flags="PiratePeace">
+      <CustomCost ResourceName="EmpireEmpirePoint" Instant="true">200 + (100*Property(Context,@'ClassEmpire,EmpireTypeMajor',SystemCount))* Property(StockLocation,@ClassEmpire,DiplomacyCostReduction) * Property(StockLocation,@ClassEmpire,PirateDiplomacyCostMultiplier)</CustomCost>
+      <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCVaulters</DownloadableContentPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">../ClassEmpire,FactionTraitPirateHaters</PathPrerequisite>
+      <PathPrerequisite Flags="Discard">ClassEmpire,FactionTraitCorsairs</PathPrerequisite>
+      <PirateInterpreterPrerequisite Flags="Disable">Property(Context,@'ClassEmpire,EmpireTypePirate',SystemCount) gt 0</PirateInterpreterPrerequisite>
+      <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard" Inverted="true">DiplomaticRelationStatePiratePeace</DiplomaticRelationStatePrerequisite>
+      <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard" Inverted="true">DiplomaticRelationStatePirateBestFriend</DiplomaticRelationStatePrerequisite>
+
+      <PopulationEvent Name="PopulationEventPiratesPactPacifist"/>
+  </ChangeRelationPirateDiplomaticAction>
+  
+  <!-- Place mark -->
+  <AttackSystemPirateDiplomaticAction Name="AttackSystemPirateDiplomaticAction" Duration="15">
+      
+      <EntityModifiers Location="Self">
+          <SimulationAlteration DescriptorReference="HasActivePirateMark"/>
+      </EntityModifiers>
+      
+      <Cost ResourceName="PirateMarks">1</Cost>
+      <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCVaulters</DownloadableContentPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">../ClassEmpire,FactionTraitPirateHaters</PathPrerequisite>
+      <SystemPrerequisites>
+        <PathPrerequisite Flags="Prerequisite,SystemIsBeingFrozen," Inverted="true">TimeBubbleFreezeTime</PathPrerequisite>
+      </SystemPrerequisites>
+
+      <LeechedResource ResourceName="EmpireMoney" PropertyName="SystemMoneyLostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Strategic1"  PropertyName="NetStrategic1LostFromSiege"   Modifier="0.5"/>
+      <LeechedResource ResourceName="Strategic2"  PropertyName="NetStrategic2LostFromSiege"   Modifier="0.5"/>
+      <LeechedResource ResourceName="Strategic3"  PropertyName="NetStrategic3LostFromSiege"   Modifier="0.5"/>
+      <LeechedResource ResourceName="Strategic4"  PropertyName="NetStrategic4LostFromSiege"   Modifier="0.5"/>
+      <LeechedResource ResourceName="Strategic5"  PropertyName="NetStrategic5LostFromSiege"   Modifier="0.5"/>
+      <LeechedResource ResourceName="Strategic6"  PropertyName="NetStrategic6LostFromSiege"   Modifier="0.5"/>
+
+      <LeechedResource ResourceName="Luxury1"     PropertyName="NetLuxury1LostFromSiege"      Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury2"     PropertyName="NetLuxury2LostFromSiege"      Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury3"     PropertyName="NetLuxury3LostFromSiege"      Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury4"     PropertyName="NetLuxury4LostFromSiege"      Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury5"     PropertyName="NetLuxury5LostFromSiege"      Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury6"     PropertyName="NetLuxury6LostFromSiege"      Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury7"     PropertyName="NetLuxury7LostFromSiege"      Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury8"     PropertyName="NetLuxury8LostFromSiege"      Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury9"     PropertyName="NetLuxury9LostFromSiege"      Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury10"    PropertyName="NetLuxury10LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury11"    PropertyName="NetLuxury11LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury12"    PropertyName="NetLuxury12LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury13"    PropertyName="NetLuxury13LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury14"    PropertyName="NetLuxury14LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury15"    PropertyName="NetLuxury15LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury16"    PropertyName="NetLuxury16LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury17"    PropertyName="NetLuxury17LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury18"    PropertyName="NetLuxury18LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury19"    PropertyName="NetLuxury19LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury20"    PropertyName="NetLuxury20LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury21"    PropertyName="NetLuxury21LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury22"    PropertyName="NetLuxury22LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury23"    PropertyName="NetLuxury23LostFromSiege"     Modifier="0.5"/>
+      <LeechedResource ResourceName="Luxury24"    PropertyName="NetLuxury24LostFromSiege"     Modifier="0.5"/>
+
+      <!-- Params: MarkRemainingTurns (float), PirateEmpire, EmpireWhoPlacedMark, TargetEmpire (SimulationObjects) -->
+      <CancelCostFormula>(Property(EmpireWhoPlacedMark, EmpireMoneyCostOfLastPirateMarks)*2) + (50 * $(MarkRemainingTurns))</CancelCostFormula>
+      
+  </AttackSystemPirateDiplomaticAction>
+
+  <PirateDiplomaticAction Name="CancelPeacePirateAction">
+      <DownloadableContentPrerequisite Flags="Prerequisite,Discard">DLCVaulters</DownloadableContentPrerequisite>
+      <PathPrerequisite Flags="Prerequisite,Discard" Inverted="true">../ClassEmpire,FactionTraitPirateHaters</PathPrerequisite>
+      
+      <!-- Cancel peace action (this is the same system as every EntityAction). -->
+      <CancelActions Flags="PiratePeace" SameInitiator="true" SameContext="false"/>
+
+      <!-- Possible only when at peace. -->
+      <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard" Inverted="true">DiplomaticRelationStatePirateAggressive</DiplomaticRelationStatePrerequisite>
+      <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard" Inverted="true">DiplomaticRelationStatePirateNeutral</DiplomaticRelationStatePrerequisite>
+      <DiplomaticRelationStatePrerequisite Flags="Prerequisite,Discard" Inverted="true">DiplomaticRelationStatePirateCordial</DiplomaticRelationStatePrerequisite>
+      
+      <PopulationEvent Name="PopulationEventPiratesCancelPactMilitarist"/>
+
+      <!-- Force relation points to 0 if above. -->
+      <RelationPointsGainFormula>Min(0, -$(RelationPoints))</RelationPointsGainFormula>
+  </PirateDiplomaticAction>  
+  
 </Datatable>
