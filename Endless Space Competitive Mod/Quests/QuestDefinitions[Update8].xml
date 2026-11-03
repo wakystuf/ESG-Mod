@@ -1831,4 +1831,394 @@
         </Steps>
     </QuestDefinition>
 
+    <QuestDefinition Name="MinorPopulationQuest15" Category="PopulationQuest" SubCategory="Population" MinimumTurn="60" TriggeringProbability="0.8">
+
+        <!--============ TAGS ============-->
+        <Tags>BeginTurn</Tags>
+
+
+        <QuestContextSolo/>
+
+
+        <RepetitionRules  NumberOfOccurrencesPerGame="0"
+                          NumberOfOccurrencesPerEmpire="1"
+                          NumberOfConcurrentInstances="0"/>
+
+        <!--============ VARIABLES ============-->
+        <Vars>
+
+            <Var VarName="$CurrentEmpire">
+                <From Source="$Empire"/>
+            </Var>
+            <Var VarName="$IAEmpire">
+                <From Source="$LesserEmpire"/>
+            </Var>
+            <Var VarName="$MyHomeSystem">
+                <Any>
+                    <From Source="$CurrentEmpire.$HomeStarSystem"/>
+                </Any>
+            </Var>
+
+            <Var VarName="$EydersColonizedSystem">
+                <Any>
+                    <From Source="$CurrentEmpire.$ColonizedStarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite">ClassColonizedStarSystem/ClassPopulationStarSystemAffinityEyders</PathPrerequisite>
+                        </Where>
+                    </From>
+                </Any>
+            </Var>
+
+            <Var VarName="$EydersSystemLocalization">
+                <Any>
+                    <From Source="$EydersColonizedSystem.$StarSystem"/> 
+                </Any>
+            </Var>
+
+            <Var VarName="$EydersConstellation">
+                <Any>
+                    <From Source="$EydersSystemLocalization.$Constellation"/>
+                </Any>
+            </Var>
+            
+            <Var VarName="$DistantSystem">
+                <First>
+                    <From Source="$EydersConstellation.$StarSystems">
+                        <Where>
+                            <PathPrerequisite Flags="Prerequisite" Inverted="true">ClassStarSystem,IsolatedNode</PathPrerequisite>
+                        </Where>
+                        <OrderBy>
+                            <SortSystemByDistance SortBy="Farthest" OriginVarName="$EydersSystemLocalization"/>
+                        </OrderBy>                        
+                    </From>
+                </First>
+            </Var>            
+            
+            <InterpretedVar VarName="$Amount01" Target="$(Empire)">
+                <Expression>Max(MaxProperty(Context, @'ClassEmpire/ClassColonizedStarSystem/ClassHero', Level), MaxProperty(Context, @'ClassEmpire/ClassGarrisonFleet/ClassHero', Level))+2</Expression>
+            </InterpretedVar>
+            <InterpretedVar VarName="$Amount02" Target="$(Empire)">
+                <Expression>MaxProperty(Context, @'ClassEmpire//ClassShip', DefensiveMilitaryPower)+55</Expression>
+            </InterpretedVar>
+               <Var VarName="$Timer"/>
+              <InterpretedVar VarName="$Duration" Target="$(Empire)">
+                <Expression>Property(Context, @../ClassEmpire, GameSpeedMultiplier, true)*20</Expression>
+            </InterpretedVar>
+            
+            <DroplistVar Droplist="Droplist_MinorPopulationQuest15" VarName="$Fleet01"/>
+            <Var VarName="$Fleet01GUID"/>
+            <Var VarName="$Marker01"/>
+
+            <Var VarName="$BehaviorDescriptor" StringValue="GoToEyders"/>
+            <Var VarName="$CannotFightDescriptor" StringValue="CannotFight"/>
+            <Var VarName="$NoFreeMovementDescriptor" StringValue="NoFreeMovement"/>
+            
+            <Var VarName="$Expression01" StringValue="Property(Context, @'ClassColonizedStarSystem/ClassHero', Level, true) ge $(Amount01)"/>          
+            <Var VarName="$Expression04" StringValue="Property(Context, @'ClassEmpire/ClassPopulationEmpireAffinityEyders', PopulationCount, true) lt 1"/>   
+            
+            <LocalizationVar Source="$Amount01"           LocalizationKey="$Amount01Name"/>
+            <LocalizationVar Source="$Amount02"           LocalizationKey="$Amount02Name"/>
+            <LocalizationVar Source="$Duration"           LocalizationKey="$DurationName"/>
+            <LocalizationVar Source="$EydersSystemLocalization" LocalizationKey="$EydersSystemLocalizationName"/>
+            
+        </Vars>
+
+        <!--============ PREREQUISITES ============-->
+
+        <Prerequisites Target="$(Empire)">
+            <DownloadableContentPrerequisite>MinorDLCQuests</DownloadableContentPrerequisite>
+            <InterpreterPrerequisite Flags="Prerequisite">Property(Context, @'ClassEmpire/ClassPopulationEmpire,ClassPopulationEmpireAffinityEydersCount', PopulationCount, true) ge 8 </InterpreterPrerequisite>
+        </Prerequisites>
+
+        <!--============ STEPS ============-->
+        <Steps>
+            <!--Let's choose-->
+            <Step Name="Step1">
+                <!--============ STEP 1 - Choose ============-->
+
+                <Choice DefaultChoiceIndex="0">
+                    <ChoiceItem ObjectiveSetIndex="0"/>
+                    <ChoiceItem ObjectiveSetIndex="1"/>
+                    <ChoiceItem ObjectiveSetIndex="2">
+                        <Prerequisites Target="$(Empire)">
+                            <PathPrerequisite Flags="Prerequisite">ClassEmpire/ClassColonizedStarSystem/ClassColonizedPlanet/ClassResourceDeposit,ResourceLuxury22</PathPrerequisite>
+                        </Prerequisites>
+                    </ChoiceItem>
+                </Choice>
+
+                <!--============ Assign a Hero level X to the System X ============-->
+                <ObjectiveSet ObjectiveComposition="All">
+                    <StartActions>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$EydersColonizedSystem"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective1">
+                        <Parallel CompletionPolicy="First">
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$EydersColonizedSystem"/>
+                                        <Input_Expression VarName="$Expression01"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+                          
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression04"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+                                                      
+                            <Sequence>
+                              <Decorator_InvadeSystem Initiator="OtherEmpires">
+                                <Input_System VarName="$EydersSystemLocalization"/>
+                                <Input_GroundBattleOutcomeType>Any</Input_GroundBattleOutcomeType>
+                              </Decorator_InvadeSystem>
+                              <Action_Fail/>
+                            </Sequence>
+                          
+                            <Sequence>
+                              <Decorator_SystemDecolonized Initiator="Empire">
+                                <Input_Systems VarName="$EydersSystemLocalization"/>
+                              </Decorator_SystemDecolonized>
+                              <Action_Fail/>
+                            </Sequence>
+                          
+                            <Sequence>
+                              <Decorator_SystemDestroyed>
+                                <Input_Nodes VarName="$EydersSystemLocalization"/>
+                                <Input_Victim VarName="$CurrentEmpire"/>
+                              </Decorator_SystemDestroyed>
+                              <Action_Fail/>
+                            </Sequence>                              
+                             
+                        </Parallel>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MinorPopulationQuest15-Event01</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward LocalizationKey="%MinorPopulationQuest15Reward1"/>
+                </ObjectiveSet>
+
+                <!--============ STEP 2 - Intercept a Fleet ============-->
+                <ObjectiveSet ObjectiveComposition="All">
+                    <StartActions>
+                        <Action_SpawnFleets>                           
+                            <Input_Empire VarName="$IAEmpire"/>
+                            <Input_Locations VarName="$EydersSystemLocalization"/>
+                            <Input_DroppableFleet VarName="$Fleet01"/>
+                            <Output_FleetGUIDs VarName="$Fleet01GUID"/>
+                        </Action_SpawnFleets>
+                        <Action_CreateFleetMissions>                            
+                            <Input_MissionDefinitionName VarName="$BehaviorDescriptor"/>
+                            <Input_FleetGUIDs VarName="$Fleet01GUID"/>                          
+                        </Action_CreateFleetMissions>                        
+                        <Action_ApplyDescriptor>
+                            <Input_DescriptorName VarName="$CannotFightDescriptor"/>
+                            <Input_TargetGUIDs VarName="$Fleet01GUID"/>
+                        </Action_ApplyDescriptor>
+                        <Action_ApplyDescriptor>
+                            <Input_DescriptorName VarName="$NoFreeMovementDescriptor"/>
+                            <Input_TargetGUIDs VarName="$Fleet01GUID"/>
+                        </Action_ApplyDescriptor>                        
+                        <Action_AddQuestMarkers>
+                            <Input_TargetGUIDs VarName="$Fleet01GUID"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>                            
+                            <Output_Markers VarName="$Marker01"/>
+                        </Action_AddQuestMarkers>
+                        <Action_StartTimer>
+                            <Input_Duration VarName="$Duration"/>
+                            <Output_Timer VarName="$Timer"/>
+                        </Action_StartTimer>
+                    </StartActions>
+                    <Objective Name="Objective2">                       
+                        <Parallel CompletionPolicy="First">
+
+                            <Sequence>
+                               <Decorator_Intercept Initiator="Empire">                                  
+                                   <Input_VictimFleetGUID VarName="$Fleet01GUID"/>
+                               </Decorator_Intercept>
+                                <Action_DestroyFleets>
+                                    <Input_FleetGUIDs VarName="$Fleet01GUID"/>
+                                </Action_DestroyFleets>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression04"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_DestroyFleets>
+                                    <Input_FleetGUIDs VarName="$Fleet01GUID"/>
+                                </Action_DestroyFleets>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+                            
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_TimerEnded>
+                                        <Input_Timer VarName="$Timer"/>
+                                    </Condition_TimerEnded>
+                                </Decorator_BeginTurn>
+                                <Action_DestroyFleets>
+                                    <Input_FleetGUIDs VarName="$Fleet01GUID"/>
+                                </Action_DestroyFleets>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+
+
+                        </Parallel>
+
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MinorPopulationQuest15-Event02</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward LocalizationKey="%MinorPopulationQuest15Reward2"/>
+
+                </ObjectiveSet>
+
+                <!--============ Orbit arround the System X ============-->
+                <ObjectiveSet ObjectiveComposition="All">
+                    <StartActions>
+                        <Action_StartTimer>
+                            <Input_Duration VarName="$Duration"/>
+                            <Output_Timer VarName="$Timer"/>
+                        </Action_StartTimer>
+                        <Action_AddQuestMarkers>
+                            <Input_Targets VarName="$EydersSystemLocalization"/>
+                            <Input_Empires VarName="$CurrentEmpire"/>
+                            <Output_Markers VarName="$Marker01"/>                                
+                        </Action_AddQuestMarkers>
+                    </StartActions>
+                    <Objective Name="Objective3">
+                        <Parallel CompletionPolicy="First">
+
+                            <Sequence>                               
+                                <Decorator_BeginTurn ProgressionIncrement="1">
+                                    <Condition_FleetStatsOnNode>
+                                        <Input_Nodes VarName="$EydersSystemLocalization"/>
+                                        <Input_Empire VarName="$CurrentEmpire"/>
+                                        <Input_MinimumDefensiveMilitaryPower VarName="$Amount02"/>                                   
+                                    </Condition_FleetStatsOnNode>                                  
+                                </Decorator_BeginTurn>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Decorator_FleetDocked>                                  
+                                    <Condition_FleetStatsOnNode>
+                                        <Input_Nodes VarName="$EydersSystemLocalization"/>
+                                        <Input_Empire VarName="$CurrentEmpire"/>
+                                        <Input_MinimumDefensiveMilitaryPower VarName="$Amount02"/>
+                                    </Condition_FleetStatsOnNode>
+                                    <Input_System VarName="$EydersSystemLocalization"/>
+                                </Decorator_FleetDocked>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_ChooseOutcome Name="Outcome1"/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_CheckInterpreter>
+                                        <Input_Context VarName="$CurrentEmpire"/>
+                                        <Input_Expression VarName="$Expression04"/>
+                                    </Condition_CheckInterpreter>
+                                </Decorator_BeginTurn>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+
+                            <Sequence>
+                                <Decorator_InvadeSystem Initiator="OtherEmpires">
+                                    <Input_System VarName="$EydersSystemLocalization"/>
+                                    <Input_GroundBattleOutcomeType>CaptureOrRaze</Input_GroundBattleOutcomeType>
+                                </Decorator_InvadeSystem>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+                            <Sequence>
+                                <Decorator_SystemDecolonized>
+                                    <Input_Systems VarName="$EydersSystemLocalization"/>
+                                </Decorator_SystemDecolonized>
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+                            
+                            <Sequence>
+                                <Decorator_BeginTurn>
+                                    <Condition_TimerEnded>
+                                        <Input_Timer VarName="$Timer"/>
+                                    </Condition_TimerEnded>
+                                </Decorator_BeginTurn>                               
+                                <Action_RemoveQuestMarkers>
+                                    <Input_Markers VarName="$Marker01"/>
+                                </Action_RemoveQuestMarkers>
+                                <Action_Fail/>
+                            </Sequence>
+                            
+                        </Parallel>
+                        <Outcome Name="Outcome1">
+                            <Triggers Weight="1">
+                                <QuestTrigger>
+                                    <Tags>MinorPopulationQuest15-Event03</Tags>
+                                    <QuestContextSolo ParticipantsVarName="$CurrentEmpire"/>
+                                </QuestTrigger>
+                            </Triggers>
+                        </Outcome>
+                    </Objective>
+                    <Reward LocalizationKey="%MinorPopulationQuest15Reward3"/>
+                </ObjectiveSet>
+
+            </Step>
+        </Steps>
+    </QuestDefinition>
+
 </Datatable>
